@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenGadda — Traduzioni</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1814; --paper: #f5f0e8; --accent: #6a5a1a; --accent-light: #b09a3a;
+  --muted: #7a7268; --border: #c8bfaa; --white: #fdfaf5; --tag-bg: #f0ecdc; --tag-text: #6a5a1a;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'EB Garamond',Georgia,serif; background:var(--paper); color:var(--ink); }
+nav { background:var(--ink); border-bottom:2px solid var(--accent); display:flex; align-items:center; padding:0 2.5rem; gap:2rem; height:52px; position:sticky; top:0; z-index:100; }
+.nav-brand { font-family:'DM Mono',monospace; font-size:13px; letter-spacing:0.18em; color:var(--white); text-decoration:none; margin-right:auto; }
+nav a { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#9a9080; text-decoration:none; transition:color 0.2s; }
+nav a:hover, nav a.active { color:#e8c89a; }
+
+header { background:var(--ink); color:var(--white); padding:2.5rem 2.5rem 2rem; border-bottom:3px solid var(--accent); }
+header .eyebrow { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:#5a5248; margin-bottom:0.5rem; }
+header h1 { font-size:2.4rem; font-weight:400; font-style:italic; margin-bottom:0.4rem; }
+header p { color:#9a9080; font-size:1rem; }
+
+
+.lang-map { background:var(--tag-bg); border-bottom:1px solid var(--border); padding:0.85rem 2rem; margin:-1.5rem -2rem 1.25rem; }
+.lang-bubbles { display:flex; flex-wrap:wrap; gap:8px; }
+.lang-bubble { border:1px solid var(--border); border-radius:20px; padding:3px 12px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.05em; cursor:pointer; transition:all 0.15s; color:var(--muted); background:var(--paper); }
+.lang-bubble:hover { border-color:var(--accent); color:var(--accent); }
+.lang-bubble.active { background:var(--accent); border-color:var(--accent); color:var(--white); }
+.lang-bubble .n { opacity:0.65; margin-left:4px; }
+.layout { display:grid; grid-template-columns:240px 1fr 220px; min-height:calc(100vh - 180px); }
+.sidebar { background:var(--white); border-right:1px solid var(--border); padding:1.5rem 1.25rem; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; }
+.sidebar-section { margin-bottom:1.75rem; }
+.sidebar-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:0.6rem; display:block; }
+.sidebar input[type=text] { width:100%; padding:0.5rem 0.6rem; font-family:'EB Garamond',serif; font-size:1rem; border:1px solid var(--border); background:var(--paper); color:var(--ink); border-radius:2px; outline:none; }
+.sidebar input[type=text]:focus { border-color:var(--accent); }
+.filter-group { display:flex; flex-direction:column; gap:3px; }
+.filter-btn { text-align:left; background:none; border:none; padding:0.3rem 0.5rem; font-family:'EB Garamond',serif; font-size:0.9rem; color:var(--muted); cursor:pointer; border-radius:2px; display:flex; justify-content:space-between; align-items:center; transition:background 0.15s,color 0.15s; }
+.filter-btn:hover { background:var(--tag-bg); color:var(--ink); }
+.filter-btn.active { background:var(--accent); color:var(--white); }
+.filter-btn .count { font-family:'DM Mono',monospace; font-size:10px; opacity:0.7; }
+
+.main { padding:1.5rem 2rem; }
+.stats-bar { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:3px; margin-bottom:1.25rem; overflow:hidden; }
+.stat { background:var(--white); padding:0.75rem 1rem; text-align:center; }
+.stat-n { font-family:'DM Mono',monospace; font-size:1.3rem; font-weight:500; color:var(--accent); display:block; }
+.stat-l { font-size:0.8rem; color:var(--muted); }
+
+.entry { border-bottom:1px solid var(--border); padding:0.9rem 0.25rem; display:grid; grid-template-columns:64px 1fr auto; gap:0.75rem; align-items:start; transition:background 0.15s; cursor:pointer; }
+.entry:hover { background:var(--white); padding-left:0.5rem; padding-right:0.5rem; margin:0 -0.25rem; }
+.entry-year { font-family:'DM Mono',monospace; font-size:11px; color:var(--accent); padding-top:3px; text-align:right; }
+.entry-title { font-size:1rem; font-weight:500; font-style:italic; line-height:1.3; color:var(--ink); margin-bottom:3px; }
+.entry-source { font-family:'DM Mono',monospace; font-size:10px; color:#9a9080; letter-spacing:0.04em; }
+.type-tag { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.1em; text-transform:uppercase; background:var(--tag-bg); color:var(--tag-text); padding:2px 6px; border-radius:2px; white-space:nowrap; flex-shrink:0; align-self:start; margin-top:3px; }
+
+.no-results { text-align:center; padding:4rem 1rem; color:var(--muted); font-style:italic; font-size:1.1rem; }
+
+@media(max-width:700px) { .layout { grid-template-columns:1fr; } .sidebar { position:static; height:auto; border-right:none; border-bottom:1px solid var(--border); } }
+
+.person-link { color: var(--accent); cursor: pointer; border-bottom: 1px dotted var(--accent); }
+.person-link:hover { border-bottom-style: solid; }
+.conn-badges { display:flex; gap:4px; flex-wrap:wrap; margin-top:4px; }
+.conn-badge { font-family:'DM Mono',monospace; font-size:9px; padding:1px 6px; border-radius:2px; font-weight:600; letter-spacing:0.05em; white-space:nowrap; cursor:pointer; }
+.filter-banner { display:none; background:#dff0e8; border:1px solid #c8bfaa; border-radius:3px; padding:0.55rem 1rem; margin-bottom:1rem; align-items:center; justify-content:space-between; font-family:'DM Mono',monospace; font-size:11px; }
+.filter-banner.active { display:flex; }
+.filter-banner button { background:none; border:none; cursor:pointer; color:#7a7268; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.08em; }
+.expand-search-btn { color:var(--accent) !important; border:1px solid var(--accent); border-radius:2px; padding:1px 8px; margin-right:8px; }
+
+.export-bar { display:flex; gap:6px; justify-content:flex-end; margin-bottom:0.75rem; }
+.export-btn { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; background:none; border:1px solid var(--border); color:var(--muted); padding:4px 10px; cursor:pointer; border-radius:2px; transition:color 0.15s,border-color 0.15s; }
+.export-btn:hover { color:var(--accent); border-color:var(--accent); }
+
+.viz-panel { background:var(--white); border-left:1px solid var(--border); padding:1.25rem 1rem; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; }
+.viz-section { margin-bottom:1.75rem; }
+.viz-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:0.75rem; display:block; }
+.bar-row { display:flex; align-items:center; gap:6px; margin-bottom:5px; font-size:0.8rem; }
+.bar-row-label { width:90px; text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--ink); font-family:'EB Garamond',serif; flex-shrink:0; cursor:pointer; }
+.bar-row-label:hover { color:var(--accent); }
+.bar-track { flex:1; background:var(--tag-bg); border-radius:2px; height:8px; overflow:hidden; }
+.bar-fill { height:100%; background:var(--accent); border-radius:2px; transition:width 0.3s; }
+.bar-count { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); width:22px; flex-shrink:0; }
+@media(max-width:900px) { .layout { grid-template-columns:240px 1fr; } .viz-panel { display:none; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">OpenGadda</a>
+  <a href="archive.html">Archivio</a>
+  <a href="primary_bibliography.html">Bib. primaria</a>
+  <a href="secondary_bibliography.html">Bib. secondaria</a>
+  <a href="library.html">Biblioteca</a>
+  <a href="epistolario.html">Epistolario</a>
+  <a href="translations.html" class="active">Traduzioni</a>
+</nav>
+
+<header>
+  <div class="eyebrow">OpenGadda</div>
+  <h1>Traduzioni</h1>
+  <p>115 traduzioni · 15 lingue · 1961–oggi</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <span class="sidebar-label">Ricerca</span>
+      <input type="text" id="search" placeholder="Titolo, traduttore…" oninput="applyFilters()">
+    </div>
+    <div class="sidebar-section">
+      <span class="sidebar-label">Ordinamento</span>
+      <div class="filter-group">
+        <button class="filter-btn active" onclick="setSort('year')" id="s-year">Cronologico</button>
+        <button class="filter-btn" onclick="setSort('lang')" id="s-lang">Lingua</button>
+        <button class="filter-btn" onclick="setSort('title')" id="s-title">Titolo</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="lang-map">
+      <div class="lang-bubbles" id="opera-chips"></div>
+    </div>
+        <div class="export-bar">
+      <button class="export-btn" onclick="exportData('csv')">↓ CSV</button>
+      <button class="export-btn" onclick="exportData('json')">↓ JSON</button>
+    </div>
+    <div class="stats-bar">
+      <div class="stat"><span class="stat-n" id="sn-total">115</span><span class="stat-l">traduzioni totali</span></div>
+      <div class="stat"><span class="stat-n" id="sn-shown">0</span><span class="stat-l">risultati</span></div>
+      <div class="stat"><span class="stat-n" id="sn-langs">0</span><span class="stat-l">lingue</span></div>
+    </div>
+    <div id="filter-banner" class="filter-banner">
+      <span id="filter-banner-text"></span>
+      <button class="expand-search-btn" onclick="expandToDataset()">Cerca nel dataset →</button><button onclick="clearFilter()">× Torna a questa sezione</button>
+    </div>
+    <div id="entries"><div style="padding:3rem 1rem;text-align:center;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted)">Caricamento…</div></div>
+  </main>
+
+  <aside class="viz-panel">
+    <div class="viz-section">
+      <span class="viz-label">Lingue</span>
+      <div id="viz-langs"></div>
+    </div>
+  </aside>
+</div>
+
+<script>
+let DATA = [];
+let ALL_DATA = [];
+let themeFilter = null;
+let venueFilter = null;
+let personFilter = null;
+let filtered = [];
+let sortKey = 'year';
+let sortDir = 1;
+let activeLang = '';
+
+function parseTrad(d) {
+  const parts = d.detail ? d.detail.split(' · ') : [];
+  return { pub: parts[0]||'', city: parts[1]||'', translator: parts[2]||'' };
+}
+
+function setLang(lang) {
+  activeLang = lang; currentFilterTerm = lang;
+  applyFilters();
+}
+
+function themeColor(t) {
+  const palette = ['#7a3b1e','#1e4a7a','#1a6a40','#6a3a1a','#5a1e7a','#6a5a1a','#2a5a6a','#7a1e4a','#3a5a1a','#1a3a6a','#6a1a1a','#1a6a5a'];
+  let h = 0; for (let i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) >>> 0;
+  return palette[h % palette.length];
+}
+
+function buildOperaBtns(pool) {
+  if (!pool) pool = ALL_DATA.filter(d => d.category === 'translation');
+  const container = document.getElementById('opera-chips');
+  container.innerHTML = '';
+  const counts = {};
+  pool.forEach(d => (d.themes||[]).filter(Boolean).forEach(t => { counts[t] = (counts[t]||0)+1; }));
+  const operas = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+
+  const allBtn = document.createElement('button');
+  allBtn.className = 'lang-bubble' + (!themeFilter ? ' active' : '');
+  allBtn.textContent = 'Tutte';
+  allBtn.onclick = () => {
+    themeFilter = null;
+    container.querySelectorAll('.lang-bubble').forEach(b => b.classList.remove('active'));
+    allBtn.classList.add('active');
+    document.getElementById('filter-banner').classList.remove('active');
+    applyFilters();
+  };
+  container.appendChild(allBtn);
+
+  operas.forEach(([op, cnt]) => {
+    const btn = document.createElement('button');
+    btn.className = 'lang-bubble' + (themeFilter === op ? ' active' : '');
+    btn.innerHTML = op + ' <span class="n">' + cnt + '</span>';
+    btn.dataset.val = op;
+    btn.onclick = () => {
+      const isActive = themeFilter === op;
+      container.querySelectorAll('.lang-bubble').forEach(b => b.classList.remove('active'));
+      themeFilter = isActive ? null : op;
+      if (!isActive) { btn.classList.add('active'); currentFilterTerm = op; document.getElementById('filter-banner').classList.add('active'); document.getElementById('filter-banner-text').textContent = 'Opera: ' + op; }
+      else { allBtn.classList.add('active'); document.getElementById('filter-banner').classList.remove('active'); }
+      applyFilters();
+    };
+    container.appendChild(btn);
+  });
+}
+
+
+
+function activateCrossFilter(label) {
+  DATA = ALL_DATA;
+  document.getElementById('filter-banner').classList.add('active');
+  document.getElementById('filter-banner-text').textContent = label;
+}
+
+
+let currentFilterTerm = '';
+function expandToDataset() {
+  if (currentFilterTerm) window.location.href = 'search.html?q=' + encodeURIComponent(currentFilterTerm);
+}
+function setThemeFilter(t) {
+  themeFilter = t; currentFilterTerm = t;
+  activeType = null;
+  document.getElementById('search').value = '';
+  document.querySelectorAll('#type-btns .filter-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('filter-banner').classList.add('active');
+  document.getElementById('filter-banner-text').textContent = 'Scheda tematica: ' + t;
+  DATA = ALL_DATA.filter(d => d.category === 'translation');
+  applyFilters();
+}
+
+
+function setVenueFilter(v) {
+  venueFilter = v; currentFilterTerm = v; themeFilter = null; personFilter = null;
+  activateCrossFilter('Ricerca trasversale — Editore: ' + v);
+  applyFilters();
+}
+function setPersonFilter(name) {
+  personFilter = name; currentFilterTerm = name; themeFilter = null; venueFilter = null;
+  activateCrossFilter('Traduttore: ' + name);
+  applyFilters();
+}
+function clearFilter() {
+  themeFilter = null; venueFilter = null; personFilter = null; activeLang = '';
+  DATA = ALL_DATA.filter(d => d.category === 'translation');
+  document.getElementById('filter-banner').classList.remove('active');
+  document.querySelectorAll('#opera-chips .lang-bubble').forEach(b => b.classList.remove('active'));
+  const allBubble = document.querySelector('#opera-chips .lang-bubble');
+  if (allBubble) allBubble.classList.add('active');
+  applyFilters();
+}
+
+function applyFilters() {
+  const q = document.getElementById('search').value.toLowerCase();
+  // Pool without themeFilter — used to compute which opera buttons to show
+  const preThemePool = ALL_DATA.filter(d => {
+    if (d.category !== 'translation') return false;
+    if (activeLang && d.subtitle !== activeLang) return false;
+    if (venueFilter && !(d.detail||'').toLowerCase().includes(venueFilter.toLowerCase())) return false;
+    if (personFilter && !(d.people||[]).some(p => p.name === personFilter)) return false;
+    if (q && !((d.title||'').toLowerCase().includes(q) || (d.detail||'').toLowerCase().includes(q))) return false;
+    return true;
+  });
+  buildOperaBtns(preThemePool);
+  filtered = preThemePool.filter(d => !themeFilter || (d.themes||[]).includes(themeFilter));
+  doSort(); render();
+}
+
+function doSort() {
+  filtered.sort((a,b) => {
+    if (sortKey==='year') return sortDir*(a.year-b.year);
+    if (sortKey==='lang') return sortDir*(a.subtitle||'').localeCompare(b.subtitle||'');
+    return sortDir*(a.title||'').localeCompare(b.title||'');
+  });
+}
+
+function setSort(key) {
+  if (sortKey===key) sortDir*=-1; else {sortKey=key; sortDir=1;}
+  ['year','lang','title'].forEach(k=>document.getElementById('s-'+k).classList.toggle('active',k===key));
+  doSort(); render();
+}
+
+function renderViz(items) {
+  function bars(containerId, entries, onClickFn) {
+    const el = document.getElementById(containerId);
+    el.innerHTML = '';
+    if (!entries.length) {
+      el.innerHTML = '<div style="font-size:0.8rem;color:var(--muted);font-style:italic">—</div>';
+      return;
+    }
+    const max = entries[0][1];
+    entries.forEach(([label, count]) => {
+      const row = document.createElement('div');
+      row.className = 'bar-row';
+      const lbl = document.createElement('div');
+      lbl.className = 'bar-row-label';
+      lbl.title = label;
+      lbl.textContent = label;
+      lbl.addEventListener('click', () => onClickFn(label));
+      const track = document.createElement('div');
+      track.className = 'bar-track';
+      const fill = document.createElement('div');
+      fill.className = 'bar-fill';
+      fill.style.width = Math.round(count / max * 100) + '%';
+      track.appendChild(fill);
+      const cnt = document.createElement('div');
+      cnt.className = 'bar-count';
+      cnt.textContent = count;
+      row.appendChild(lbl);
+      row.appendChild(track);
+      row.appendChild(cnt);
+      el.appendChild(row);
+    });
+  }
+
+  // Languages
+  const langCounts = {};
+  items.forEach(d => { if (d.subtitle) langCounts[d.subtitle] = (langCounts[d.subtitle]||0)+1; });
+  const langEntries = Object.entries(langCounts).sort((a,b) => b[1]-a[1]);
+  bars('viz-langs', langEntries, label => {
+      const btn = [...document.querySelectorAll('#lang-btns .filter-btn')].find(b => b.textContent.trim().startsWith(label));
+    if (btn) btn.classList.add('active');
+    activeLang = label; currentFilterTerm = label; applyFilters();
+  });
+
+}
+
+function render() {
+  document.getElementById('sn-shown').textContent = filtered.length;
+  document.getElementById('sn-langs').textContent = new Set(filtered.map(d=>d.subtitle).filter(Boolean)).size;
+
+  if (!filtered.length) { renderViz([]); document.getElementById('entries').innerHTML='<div class="no-results">Nessuna traduzione trovata.</div>'; return; }
+
+  renderViz(filtered);
+  document.getElementById('entries').innerHTML = filtered.map(d => {
+    const {pub, city, translator} = parseTrad(d);
+    const people = (d.people||[]).filter(p=>p.role==='traduttore');
+    const tradLink = people.length
+      ? people.map(p=>`<span class="person-link" data-name="${p.name.replace(/"/g,'&quot;')}" onclick="event.stopPropagation();setPersonFilter(this.dataset.name)" style="color:var(--muted)">${p.name}</span>`).join('; ')
+      : (translator ? `<span class="person-link" data-name="${translator.replace(/"/g,'&quot;')}" onclick="event.stopPropagation();setPersonFilter(this.dataset.name)" style="color:var(--muted)">${translator}</span>` : '');
+    const sourceParts = [tradLink, pub, city].filter(Boolean);
+    const typeTag = d.subtitle ? `<span class="type-tag">${d.subtitle}</span>` : '';
+    const operaTags = (d.themes||[]).length ? '<div class="conn-badges" style="margin-top:4px">' + (d.themes||[]).map(t => '<span class="type-tag" style="cursor:pointer" data-opera="' + t.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();setThemeFilter(this.dataset.opera)">' + t + '</span>').join(' ') + '</div>' : '';
+    return `<div class="entry" onclick="window.location.href='detail.html?id=${d.id}'">
+      <div class="entry-year">${d.year}</div>
+      <div>
+        <div class="entry-title">${d.title||''}</div>
+        ${sourceParts.length ? `<div class="entry-source">${sourceParts.join(' · ')}</div>` : ''}
+        ${operaTags}
+        ${connBadges(d.id,'translation')}
+      </div>
+      ${typeTag}
+    </div>`;
+  }).join('');
+}
+
+
+let CONN_SUMMARY = {};
+const BADGE_COLORS = {"library": "#7a3b1e", "secondary bibliography": "#1e4a7a", "primary bibliography": "#1a6a40", "archive": "#6a3a1a", "letter": "#5a1e7a", "translation": "#6a5a1a"};
+const BADGE_SHORT = {"library": "Bib.", "secondary bibliography": "Bib. sec.", "primary bibliography": "Bib. prim.", "archive": "Arc.", "letter": "Ep.", "translation": "Trad."};
+function connBadges(id, ownCat) {
+  const cats = CONN_SUMMARY[id];
+  if (!cats || !cats.length) return '';
+  const filtered2 = cats.filter(c => c !== ownCat);
+  if (!filtered2.length) return '';
+  return '<div class="conn-badges">' + filtered2.map(c => {
+    const col = BADGE_COLORS[c] || '#888';
+    const lbl = BADGE_SHORT[c] || c;
+    return `<span class="conn-badge" style="background:${col}18;color:${col};border:1px solid ${col}40" onclick="event.stopPropagation();window.location='detail.html?id=${id}'">${lbl}</span>`;
+  }).join('') + '</div>';
+}
+
+Promise.all([
+  fetch('items.json').then(r => r.json()),
+  fetch('conn_summary.json').then(r => r.json())
+]).then(([allData, summary]) => {
+  ALL_DATA = allData;
+  DATA = allData.filter(d => d.category === 'translation');
+  CONN_SUMMARY = summary;
+  const urlP = new URLSearchParams(window.location.search);
+  if (urlP.get('theme')) setThemeFilter(decodeURIComponent(urlP.get('theme')));
+  else if (urlP.get('venue')) setVenueFilter(decodeURIComponent(urlP.get('venue')));
+  else if (urlP.get('person')) setPersonFilter(decodeURIComponent(urlP.get('person')));
+  else applyFilters();
+}).catch(err => {
+  console.error('Errore caricamento dati:', err);
+  document.getElementById('entries').innerHTML = '<p style="padding:2rem;color:#c00;font-family:monospace">Errore: ' + err + '</p>';
+});
+
+
+function exportData(fmt) {
+  if (!filtered || !filtered.length) return;
+  let content, mime, ext;
+  if (fmt === 'json') {
+    content = JSON.stringify(filtered, null, 2);
+    mime = 'application/json'; ext = 'json';
+  } else {
+    const keys = [...new Set(filtered.flatMap(d => Object.keys(d)))].filter(k => !['themes','people','genitore','figlio'].includes(k));
+    const esc = v => '"' + String(v==null?'':v).replace(/"/g,'""') + '"';
+    const rows = [keys.join(','), ...filtered.map(d => keys.map(k => {
+      const v = d[k];
+      if (Array.isArray(v)) return esc(v.join('; '));
+      return esc(v);
+    }).join(','))];
+    content = rows.join('\n');
+    mime = 'text/csv'; ext = 'csv';
+  }
+  const blob = new Blob([content], {type: mime});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'opengadda_export.' + ext;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

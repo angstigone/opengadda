@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenGadda — Archivio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1814; --paper: #f5f0e8; --accent: #7a3b1e; --accent-light: #c8794a;
+  --muted: #7a7268; --border: #c8bfaa; --white: #fdfaf5; --tag-bg: #f0e8dc; --tag-text: #6a3a1a;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'EB Garamond',Georgia,serif; background:var(--paper); color:var(--ink); }
+nav { background:var(--ink); border-bottom:2px solid var(--accent); display:flex; align-items:center; padding:0 2.5rem; gap:2rem; height:52px; position:sticky; top:0; z-index:100; }
+.nav-brand { font-family:'DM Mono',monospace; font-size:13px; letter-spacing:0.18em; color:var(--white); text-decoration:none; margin-right:auto; }
+nav a { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#9a9080; text-decoration:none; transition:color 0.2s; }
+nav a:hover, nav a.active { color:#e8c89a; }
+
+header { background:var(--ink); color:var(--white); padding:2.5rem 2.5rem 2rem; border-bottom:3px solid var(--accent); }
+header .eyebrow { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:#5a5248; margin-bottom:0.5rem; }
+header h1 { font-size:2.4rem; font-weight:400; font-style:italic; margin-bottom:0.4rem; }
+header p { color:#9a9080; font-size:1rem; }
+
+.layout { display:grid; grid-template-columns:240px 1fr 220px; min-height:calc(100vh - 180px); }
+.sidebar { background:var(--white); border-right:1px solid var(--border); padding:1.5rem 1.25rem; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; }
+.sidebar-section { margin-bottom:1.75rem; }
+.sidebar-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:0.6rem; display:block; }
+.sidebar input[type=text] { width:100%; padding:0.5rem 0.6rem; font-family:'EB Garamond',serif; font-size:1rem; border:1px solid var(--border); background:var(--paper); color:var(--ink); border-radius:2px; outline:none; }
+.sidebar input[type=text]:focus { border-color:var(--accent); }
+.filter-group { display:flex; flex-direction:column; gap:3px; }
+.filter-btn { text-align:left; background:none; border:none; padding:0.3rem 0.5rem; font-family:'EB Garamond',serif; font-size:0.9rem; color:var(--muted); cursor:pointer; border-radius:2px; display:flex; justify-content:space-between; align-items:center; transition:background 0.15s,color 0.15s; line-height:1.3; }
+.filter-btn:hover { background:var(--tag-bg); color:var(--ink); }
+.filter-btn.active { background:var(--accent); color:var(--white); }
+.filter-btn .count { font-family:'DM Mono',monospace; font-size:10px; opacity:0.7; flex-shrink:0; margin-left:6px; }
+
+.main { padding:1.5rem 2rem; }
+.stats-bar { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:3px; margin-bottom:1.25rem; overflow:hidden; }
+.stat { background:var(--white); padding:0.75rem 1rem; text-align:center; }
+.stat-n { font-family:'DM Mono',monospace; font-size:1.3rem; font-weight:500; color:var(--accent); display:block; }
+.stat-l { font-size:0.8rem; color:var(--muted); }
+
+.entry { border-bottom:1px solid var(--border); padding:0.9rem 0.25rem; display:grid; grid-template-columns:64px 1fr auto; gap:0.75rem; align-items:start; transition:background 0.15s; cursor:pointer; }
+.entry:hover { background:var(--white); padding-left:0.5rem; padding-right:0.5rem; margin:0 -0.25rem; }
+.entry-year { font-family:'DM Mono',monospace; font-size:11px; color:var(--accent); padding-top:3px; text-align:right; }
+.entry-title { font-size:1rem; font-weight:500; line-height:1.3; color:var(--ink); margin-bottom:3px; }
+.entry-source { font-family:'DM Mono',monospace; font-size:10px; color:#9a9080; letter-spacing:0.04em; }
+.type-tag { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.1em; text-transform:uppercase; background:var(--tag-bg); color:var(--tag-text); padding:2px 6px; border-radius:2px; white-space:nowrap; flex-shrink:0; align-self:start; margin-top:3px; }
+.no-results { text-align:center; padding:4rem 1rem; color:var(--muted); font-style:italic; font-size:1.1rem; }
+.pagination { display:flex; gap:6px; justify-content:center; margin-top:2rem; flex-wrap:wrap; }
+.page-btn { font-family:'DM Mono',monospace; font-size:11px; border:1px solid var(--border); background:none; color:var(--muted); padding:4px 12px; cursor:pointer; border-radius:2px; }
+.page-btn.active { background:var(--ink); color:var(--white); border-color:var(--ink); }
+.page-btn:hover:not(.active) { background:var(--tag-bg); }
+
+@media(max-width:900px) { .layout { grid-template-columns:240px 1fr; } .viz-panel { display:none; } }
+@media(max-width:700px) { .layout { grid-template-columns:1fr; } .sidebar { position:static; height:auto; border-right:none; border-bottom:1px solid var(--border); } }
+
+.viz-panel { background:var(--white); border-left:1px solid var(--border); padding:1.25rem 1rem; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; }
+.viz-section { margin-bottom:1.75rem; }
+.viz-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:0.75rem; display:block; }
+.bar-row { display:flex; align-items:center; gap:6px; margin-bottom:5px; font-size:0.8rem; }
+.bar-row-label { width:130px; text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--ink); font-family:'EB Garamond',serif; flex-shrink:0; cursor:pointer; }
+.bar-row-label.child { padding-right:4px; font-size:0.75rem; color:var(--muted); }
+.bar-row.child-row { padding-left:8px; }
+.bar-row.child-row .bar-fill { background: var(--accent-light); opacity:0.7; }
+.bar-row-label:hover { color:var(--accent); }
+.bar-track { flex:1; background:var(--tag-bg); border-radius:2px; height:8px; overflow:hidden; }
+.bar-fill { height:100%; background:var(--accent); border-radius:2px; transition:width 0.3s; }
+.bar-count { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); width:22px; flex-shrink:0; }
+
+.facet-link { color:var(--accent); cursor:pointer; border-bottom:1px dotted var(--accent); }
+.facet-link:hover { border-bottom-style:solid; }
+.conn-badges { display:flex; gap:4px; flex-wrap:wrap; margin-top:4px; }
+.conn-badge { font-family:'DM Mono',monospace; font-size:9px; padding:1px 6px; border-radius:2px; font-weight:600; letter-spacing:0.05em; white-space:nowrap; cursor:pointer; }
+.range-wrap { display:flex; gap:6px; align-items:center; font-size:0.85rem; color:var(--muted); }
+.range-wrap input[type=number] { width:68px; padding:0.3rem 0.4rem; font-family:'DM Mono',monospace; font-size:12px; border:1px solid var(--border); background:var(--paper); color:var(--ink); border-radius:2px; outline:none; }
+.filter-banner { display:none; background:#dff0e8; border:1px solid #c8bfaa; border-radius:3px; padding:0.55rem 1rem; margin-bottom:1rem; align-items:center; justify-content:space-between; font-family:'DM Mono',monospace; font-size:11px; }
+.filter-banner.active { display:flex; }
+.filter-banner button { background:none; border:none; cursor:pointer; color:#7a7268; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.08em; }
+.expand-search-btn { color:var(--accent) !important; border:1px solid var(--accent); border-radius:2px; padding:1px 8px; margin-right:8px; }
+.decade-header { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); padding:1.25rem 0.25rem 0.4rem; border-top:2px solid var(--border); margin-top:0.5rem; }
+.decade-header:first-child { border-top:none; margin-top:0; padding-top:0.4rem; }
+
+.opera-tag { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.1em; text-transform:uppercase; background:var(--tag-bg); color:var(--tag-text); padding:2px 6px; border-radius:2px; white-space:nowrap; cursor:pointer; display:inline-block; margin:2px 2px 0 0; border:1px solid transparent; }
+.opera-tag:hover { background:var(--accent); color:var(--white); }
+.export-bar { display:flex; gap:6px; justify-content:flex-end; margin-bottom:0.75rem; }
+.export-btn { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; background:none; border:1px solid var(--border); color:var(--muted); padding:4px 10px; cursor:pointer; border-radius:2px; transition:color 0.15s,border-color 0.15s; }
+.export-btn:hover { color:var(--accent); border-color:var(--accent); }
+.fondo-btn { padding-left:1.4rem; font-size:0.85rem; position:relative; }
+.fondo-btn::before { content:'↳'; position:absolute; left:0.5rem; color:var(--border); font-size:0.75rem; }
+.opera-map { background:#f0e8dc; border-bottom:1px solid var(--border); padding:0.85rem 2rem; margin:-1.5rem -2rem 1.25rem; }
+.opera-bubbles { display:flex; flex-wrap:wrap; gap:8px; }
+.opera-bubble { border:1px solid var(--border); border-radius:20px; padding:3px 12px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.05em; cursor:pointer; transition:all 0.15s; color:var(--muted); background:var(--paper); }
+.opera-bubble:hover { border-color:var(--accent); color:var(--accent); }
+.opera-bubble.active { background:var(--accent); border-color:var(--accent); color:var(--white); }
+.opera-bubble .n { opacity:0.65; margin-left:4px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">OpenGadda</a>
+  <a href="archive.html" class="active">Archivio</a>
+  <a href="primary_bibliography.html">Bib. primaria</a>
+  <a href="secondary_bibliography.html">Bib. secondaria</a>
+  <a href="library.html">Biblioteca</a>
+  <a href="epistolario.html">Epistolario</a>
+  <a href="translations.html">Traduzioni</a>
+</nav>
+
+<header>
+  <div class="eyebrow">OpenGadda</div>
+  <h1>Archivio</h1>
+  <p>736 documenti · 7 istituzioni · 1902–1993</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <span class="sidebar-label">Ricerca</span>
+      <input type="text" id="search" placeholder="Titolo, tipologia…" oninput="applyFilters()">
+    </div>
+    <div class="sidebar-section">
+      <span class="sidebar-label">Anno</span>
+      <div class="range-wrap">
+        <input type="number" id="yearFrom" placeholder="dal" oninput="applyFilters()">
+        <span>—</span>
+        <input type="number" id="yearTo" placeholder="al" oninput="applyFilters()">
+      </div>
+    
+    <div class="sidebar-section">
+      <span class="sidebar-label">Ordinamento</span>
+      <div class="filter-group">
+        <button class="filter-btn active" onclick="setSort('year')" id="s-year">Cronologico</button>
+        <button class="filter-btn" onclick="setSort('title')" id="s-title">Titolo</button>
+        <button class="filter-btn" onclick="setSort('inst')" id="s-inst">Istituzione</button>
+      </div>
+    
+  </aside>
+
+  <main class="main">
+    <div class="opera-map" id="opera-map">
+      <div class="opera-bubbles" id="opera-chips"></div>
+    </div>
+        <div class="export-bar">
+      <button class="export-btn" onclick="exportData('csv')">↓ CSV</button>
+      <button class="export-btn" onclick="exportData('json')">↓ JSON</button>
+    </div>
+    <div class="stats-bar">
+      <div class="stat"><span class="stat-n" id="sn-total">0</span><span class="stat-l">documenti totali</span></div>
+      <div class="stat"><span class="stat-n" id="sn-shown">0</span><span class="stat-l">risultati</span></div>
+      <div class="stat"><span class="stat-n" id="sn-inst">0</span><span class="stat-l">istituzioni</span></div>
+    </div>
+    <div id="filter-banner" class="filter-banner">
+      <span id="filter-banner-text"></span>
+      <button class="expand-search-btn" onclick="expandToDataset()">Cerca nel dataset →</button><button onclick="clearFilter()">× Torna a questa sezione</button>
+    </div>
+    <div id="entries" class="entries"></div>
+    <div id="pagination" class="pagination"></div>
+  </main>
+  <aside class="viz-panel">
+    <div class="viz-section">
+      <span class="viz-label">Archivio</span>
+      <div id="viz-archivi"></div>
+    </div>
+  </aside>
+</div>
+
+<script>
+const PER_PAGE = 40;
+let DATA = [];
+let ALL_DATA = [];
+let themeFilter = null;
+let filtered = [];
+let currentPage = 1;
+let sortKey = 'year';
+let sortDir = 1;
+let activeInst = null;
+let activeFond = null;
+let activeOpera = null;
+
+function getInst(d) { return d.archivio || (d.detail||'').split(' · ')[0] || ''; }
+function getFund(d) { return d.fondo || (d.detail||'').split(' · ')[1] || ''; }
+
+// Manual hierarchy: each entry is [label, instValues[], fondValue|null]
+// instValues = array of d.archivio values that belong to this node
+// fondValue = d.fondo value to filter on (for fondo sub-items), null for institution-level
+const ARCHIVIO_TREE = [
+  { label: 'Archivio A. Bonsanti',                          insts: ['Archivio A. Bonsanti'],                             fond: null, children: [] },
+  { label: 'Archivio Biblioteca Nazionale Centrale (Roma)',  insts: ['Archivio Biblioteca Nazionale Centrale Roma'],       fond: null, children: [] },
+  { label: 'Archivio Biblioteca Trivulziana',                insts: ['Archivio Biblioteca Trivulziana', 'Archivio Garzanti'], fond: null, children: [
+    { label: 'Fondo Citati',      insts: ['Archivio Biblioteca Trivulziana'], fond: 'Fondo Citati' },
+    { label: 'Fondo Roscioni',    insts: ['Archivio Biblioteca Trivulziana'], fond: 'Fondo Roscioni' },
+    { label: 'Archivio Garzanti', insts: ['Archivio Garzanti'],               fond: null },
+  ]},
+  { label: 'Archivio Liberati',                              insts: ['Archivio Liberati'],                                fond: null, children: [] },
+  { label: 'Fondazione Maria Corti',                         insts: ['Fondazione Maria Corti'],                           fond: null, children: [
+    { label: 'Fondo manoscritti Maria Corti', insts: ['Fondazione Maria Corti'], fond: 'Fondo manoscritti Maria Corti' },
+    { label: 'Fondo Gelli',                  insts: ['Fondazione Maria Corti'], fond: 'Fondo Gelli' },
+  ]},
+];
+
+function nodeMatches(d, node) {
+  if (!node.insts.includes(getInst(d))) return false;
+  if (node.fond && getFund(d) !== node.fond) return false;
+  return true;
+}
+
+function isNodeActive(node) {
+  if (node.fond) return activeFond === node.fond && node.insts.includes(activeInst);
+  return node.insts.includes(activeInst) && !activeFond && !node.insts.every(i => i !== activeInst);
+}
+
+
+function updateArchivoBanner(label) {
+  const banner = document.getElementById('filter-banner');
+  const bannerText = document.getElementById('filter-banner-text');
+  if (!label) {
+    banner.classList.remove('active');
+  } else {
+    bannerText.textContent = label;
+    banner.classList.add('active');
+  }
+}
+
+// Opera = d.themes; Schede tematiche = d.subtitle (opera2)
+
+function themeColor(t) {
+  const palette = ['#7a3b1e','#1e4a7a','#1a6a40','#6a3a1a','#5a1e7a','#6a5a1a','#2a5a6a','#7a1e4a','#3a5a1a','#1a3a6a','#6a1a1a','#1a6a5a'];
+  let h = 0; for (let i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) >>> 0;
+  return palette[h % palette.length];
+}
+
+function buildOperaBtns(pool) {
+  if (!pool) pool = ALL_DATA.filter(d => d.category === 'archive');
+  const container = document.getElementById('opera-chips');
+  container.innerHTML = '';
+  const counts = {};
+  pool.forEach(d => (d.themes||[]).forEach(t => { counts[t] = (counts[t]||0)+1; }));
+  const operas = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+
+  const allBtn = document.createElement('button');
+  allBtn.className = 'opera-bubble' + (!activeOpera ? ' active' : '');
+  allBtn.textContent = 'Tutte';
+  allBtn.onclick = () => {
+    activeOpera = null;
+    container.querySelectorAll('.opera-bubble').forEach(b => b.classList.remove('active'));
+    allBtn.classList.add('active');
+    applyFilters();
+  };
+  container.appendChild(allBtn);
+
+  operas.forEach(([op, cnt]) => {
+    const btn = document.createElement('button');
+    btn.className = 'opera-bubble' + (activeOpera === op ? ' active' : '');
+    btn.innerHTML = `${op} <span class="n">${cnt}</span>`;
+    btn.dataset.val = op;
+    btn.onclick = () => {
+      const isActive = activeOpera === op;
+      container.querySelectorAll('.opera-bubble').forEach(b => b.classList.remove('active'));
+      activeOpera = isActive ? null : op;
+      if (!isActive) btn.classList.add('active');
+      else allBtn.classList.add('active');
+      applyFilters();
+    };
+    container.appendChild(btn);
+  });
+}
+
+function setOperaFilter(op) {
+  activeOpera = op; currentFilterTerm = op;
+  document.getElementById('filter-banner').classList.add('active');
+  document.getElementById('filter-banner-text').textContent = 'Opera: ' + op;
+  applyFilters();
+  window.scrollTo(0, 0);
+}
+
+
+let currentFilterTerm = '';
+function expandToDataset() {
+  if (currentFilterTerm) window.location.href = 'search.html?q=' + encodeURIComponent(currentFilterTerm);
+}
+
+function setThemeFilter(t) {
+  themeFilter = t; currentFilterTerm = t;
+  document.getElementById('filter-banner').classList.add('active');
+  document.getElementById('filter-banner-text').textContent = 'Opera: ' + t;
+  applyFilters();
+}
+
+function clearFilter() {
+  themeFilter = null; activeOpera = null; activeInst = null; activeFond = null;
+  document.getElementById('filter-banner').classList.remove('active');
+  document.querySelectorAll('#opera-chips .opera-bubble').forEach(b => b.classList.remove('active'));
+  const allBubble = document.querySelector('#opera-chips .opera-bubble');
+  if (allBubble) allBubble.classList.add('active');
+  applyFilters();
+}
+
+function applyFilters() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const yf = parseInt(document.getElementById('yearFrom').value) || 0;
+  const yt = parseInt(document.getElementById('yearTo').value) || 9999;
+
+  if (themeFilter) {
+    filtered = ALL_DATA.filter(d => (d.themes||[]).includes(themeFilter) || d.subtitle === themeFilter);
+    doSort(); currentPage = 1; render(); return;
+  }
+
+  // Resolve which archivio values are covered by the active node
+  const activeNode = activeInst ? ARCHIVIO_TREE.find(n => n.insts[0] === activeInst) : null;
+  const activeInsts = activeNode ? activeNode.insts : (activeInst ? [activeInst] : null);
+
+  // Pool without opera filter — used to compute which opera buttons to show
+  const preOperaPool = ALL_DATA.filter(d => {
+    if (d.category !== 'archive') return false;
+    if (q && !((d.title||'').toLowerCase().includes(q) || (d.subtitle||'').toLowerCase().includes(q) || (d.detail||'').toLowerCase().includes(q))) return false;
+    if (d.year < yf || d.year > yt) return false;
+    if (activeInsts && !activeInsts.includes(getInst(d))) return false;
+    if (activeFond && getFund(d) !== activeFond) return false;
+    return true;
+  });
+  buildOperaBtns(preOperaPool);
+  filtered = preOperaPool.filter(d => {
+    if (activeOpera && !(d.themes||[]).includes(activeOpera)) return false;
+    return true;
+  });
+  doSort(); currentPage = 1; render();
+}
+
+function doSort() {
+  filtered.sort((a,b) => {
+    if (sortKey==='year') return sortDir*(a.year-b.year);
+    if (sortKey==='title') return sortDir*(a.title||'').localeCompare(b.title||'');
+    return sortDir*getInst(a).localeCompare(getInst(b));
+  });
+}
+
+function setSort(key) {
+  if (sortKey===key) sortDir*=-1; else { sortKey=key; sortDir=1; }
+  ['year','title','inst'].forEach(k => document.getElementById('s-'+k).classList.toggle('active', k===key));
+  doSort(); render();
+}
+
+const CAT_PAGES_MAP = {"library":"library.html","secondary bibliography":"secondary_bibliography.html","primary bibliography":"primary_bibliography.html","archive":"archive.html","letter":"epistolario.html","translation":"translations.html"};
+
+function entryHtml(d) {
+  if (themeFilter && d.category !== 'archive') {
+    // Cross-dataset mode: simplified rendering with clickable category badge
+    const col = BADGE_COLORS[d.category] || '#888';
+    const page = CAT_PAGES_MAP[d.category] || 'index.html';
+    const catBadge = `<a href="${page}?theme=${encodeURIComponent(themeFilter)}" onclick="event.stopPropagation()" style="display:inline-block;background:${col}18;color:${col};border:1px solid ${col}40;font-family:'DM Mono',monospace;font-size:9px;padding:2px 6px;border-radius:2px;text-decoration:none;letter-spacing:0.05em">${BADGE_SHORT[d.category]||d.category}</a>`;
+    const source = [d.subtitle, d.detail].filter(Boolean).join(' · ');
+    return `<div class="entry" onclick="window.location.href='detail.html?id=${d.id}'">
+      <div class="entry-year">${d.year}</div>
+      <div>
+        <div class="entry-title">${(d.title||'').replace(/\n/g,' ')}</div>
+        ${source ? `<div class="entry-source">${source}</div>` : ''}
+        ${connBadges(d.id, d.category)}
+      </div>
+      ${catBadge}
+    </div>`;
+  }
+  const inst = getInst(d);
+  const fund = getFund(d);
+  const genere = d.genere || '';
+  const tipo = d.tipo || d.forma || '';
+  const typeTag = tipo ? `<span class="type-tag">${tipo}</span>` : '';
+  const sourceParts = [inst, fund, genere].filter(Boolean);
+  const operaTags = (d.themes||[]).map(t => {
+    const safe = t.replace(/'/g, "\\'");
+    return `<span class="opera-tag" onclick="event.stopPropagation();setOperaFilter('${safe}')">${t}</span>`;
+  }).join('');
+  const schedaTag = '';
+  const rawTitle = (d.title||'').replace(/\n/g,' ');
+  const shortTitle = rawTitle.length > 90 ? rawTitle.slice(0, 90).replace(/\s\S*$/, '') + '…' : rawTitle;
+  const briefDesc = d.brief_description ? d.brief_description.replace(/\n/g,' ').replace(/ \| /g, ' · ') : '';
+  const briefShort = briefDesc.length > 100 ? briefDesc.slice(0, 100).replace(/\s\S*$/, '') + '…' : briefDesc;
+  return `<div class="entry" onclick="window.location.href='detail.html?id=${d.id}'">
+    <div class="entry-year">${d.year}</div>
+    <div>
+      <div class="entry-title">${shortTitle}</div>
+      ${briefShort ? `<div class="entry-source" style="font-style:italic">${briefShort}</div>` : ''}
+      ${sourceParts.length ? `<div class="entry-source">${sourceParts.join(' · ')}</div>` : ''}
+      ${(operaTags || schedaTag) ? `<div style="margin-top:4px">${operaTags}${schedaTag ? ' ' + schedaTag : ''}</div>` : ''}
+      ${connBadges(d.id,'archive')}
+    </div>
+    ${typeTag}
+  </div>`;
+}
+
+function renderViz(items) {
+  const el = document.getElementById('viz-archivi');
+  if (!el) return;
+  el.innerHTML = '';
+
+  // Count documents per archive+fondo
+  const archCounts = {};
+  const fondCounts = {};
+  items.forEach(d => {
+    const inst = getInst(d); if (!inst) return;
+    archCounts[inst] = (archCounts[inst]||0)+1;
+    const fund = getFund(d);
+    if (fund) {
+      const key = inst + '|' + fund;
+      fondCounts[key] = (fondCounts[key]||0)+1;
+    }
+  });
+
+  // Also count items for nodes that span multiple insts (e.g. Trivulziana node covers Archivio Garzanti too)
+  function nodeCount(node) {
+    return items.filter(d => node.insts.includes(getInst(d)) && (!node.fond || getFund(d) === node.fond)).length;
+  }
+
+  const allItems = ALL_DATA.filter(d => d.category === 'archive');
+  const globalMax = Math.max(...ARCHIVIO_TREE.map(n => nodeCount.call(null, {...n, insts: n.insts})));
+
+  ARCHIVIO_TREE.forEach(node => {
+    const count = nodeCount(node);
+    if (!count) return;
+    const isActive = node.insts.includes(activeInst) && !activeFond && !node.fond;
+
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    const lbl = document.createElement('div');
+    lbl.className = 'bar-row-label';
+    lbl.title = node.label;
+    lbl.textContent = node.label;
+    lbl.style.fontWeight = isActive ? '500' : '';
+    lbl.style.color = isActive ? 'var(--accent)' : '';
+    lbl.addEventListener('click', () => {
+      const firstInst = node.insts[0];
+      activeInst = (activeInst === firstInst && !activeFond) ? null : firstInst;
+      activeFond = null;
+      applyFilters();
+    });
+    const track = document.createElement('div'); track.className = 'bar-track';
+    const fill = document.createElement('div'); fill.className = 'bar-fill';
+    fill.style.width = Math.round(count / globalMax * 100) + '%';
+    track.appendChild(fill);
+    const cnt = document.createElement('div'); cnt.className = 'bar-count'; cnt.textContent = count;
+    row.appendChild(lbl); row.appendChild(track); row.appendChild(cnt);
+    el.appendChild(row);
+
+    // Render children if this node is active or has children
+    if (node.children && node.children.length && node.insts.includes(activeInst)) {
+      node.children.forEach(child => {
+        const childCount = nodeCount(child);
+        if (!childCount) return;
+        const childActive = child.insts.includes(activeInst) && (child.fond ? activeFond === child.fond : !activeFond);
+
+        const crow = document.createElement('div');
+        crow.className = 'bar-row child-row';
+        const clbl = document.createElement('div');
+        clbl.className = 'bar-row-label child';
+        clbl.title = child.label;
+        clbl.textContent = '↳ ' + child.label;
+        clbl.style.color = childActive ? 'var(--accent)' : '';
+        clbl.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (child.fond) {
+            activeInst = child.insts[0];
+            activeFond = activeFond === child.fond ? null : child.fond;
+          } else {
+            activeInst = activeInst === child.insts[0] ? null : child.insts[0];
+            activeFond = null;
+          }
+          applyFilters();
+        });
+        const ctrack = document.createElement('div'); ctrack.className = 'bar-track';
+        const cfill = document.createElement('div'); cfill.className = 'bar-fill';
+        cfill.style.width = Math.round(childCount / globalMax * 100) + '%';
+        ctrack.appendChild(cfill);
+        const ccnt = document.createElement('div'); ccnt.className = 'bar-count'; ccnt.textContent = childCount;
+        crow.appendChild(clbl); crow.appendChild(ctrack); crow.appendChild(ccnt);
+        el.appendChild(crow);
+      });
+    }
+  });
+}
+
+function render() {
+  document.getElementById('sn-total').textContent = ALL_DATA.filter(d => d.category === 'archive').length;
+  document.getElementById('sn-shown').textContent = filtered.length;
+  document.getElementById('sn-inst').textContent = new Set(filtered.map(d => getInst(d))).size;
+  renderViz(filtered);
+
+  if (!filtered.length) {
+    document.getElementById('entries').innerHTML = '<div class="no-results">Nessun documento trovato.</div>';
+    document.getElementById('pagination').innerHTML = ''; return;
+  }
+
+  // Decade grouping when sorted by year
+  if (sortKey === 'year') {
+    const groups = {};
+    filtered.forEach(d => {
+      const dec = Math.floor(d.year / 10) * 10;
+      if (!groups[dec]) groups[dec] = [];
+      groups[dec].push(d);
+    });
+    const decades = Object.keys(groups).sort((a,b) => sortDir*(a-b));
+    document.getElementById('entries').innerHTML = decades.map(dec =>
+      `<div class="decade-header">${dec}s</div>` + groups[dec].map(entryHtml).join('')
+    ).join('');
+    document.getElementById('pagination').innerHTML = '';
+  } else {
+    const start = (currentPage-1)*PER_PAGE;
+    const page = filtered.slice(start, start+PER_PAGE);
+    document.getElementById('entries').innerHTML = page.map(entryHtml).join('');
+    const totalPages = Math.ceil(filtered.length/PER_PAGE);
+    let pages = '';
+    for (let i=1; i<=totalPages; i++) {
+      if (i===1||i===totalPages||Math.abs(i-currentPage)<=3) pages+=`<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+      else if (Math.abs(i-currentPage)===4) pages+=`<span style="padding:4px;color:#999;font-size:11px">…</span>`;
+    }
+    document.getElementById('pagination').innerHTML = pages;
+  }
+}
+
+function goPage(n) { currentPage=n; render(); window.scrollTo(0,0); }
+
+let CONN_SUMMARY = {};
+const BADGE_COLORS = {"library":"#7a3b1e","secondary bibliography":"#1e4a7a","primary bibliography":"#1a6a40","archive":"#6a3a1a","letter":"#5a1e7a","translation":"#6a5a1a"};
+const BADGE_SHORT = {"library":"Bib.","secondary bibliography":"Bib. sec.","primary bibliography":"Bib. prim.","archive":"Arc.","letter":"Ep.","translation":"Trad."};
+function connBadges(id, ownCat) {
+  const cats = CONN_SUMMARY[id];
+  if (!cats || !cats.length) return '';
+  const others = cats.filter(c => c !== ownCat);
+  if (!others.length) return '';
+  return '<div class="conn-badges">' + others.map(c => {
+    const col = BADGE_COLORS[c] || '#888';
+    const lbl = BADGE_SHORT[c] || c;
+    return `<span class="conn-badge" style="background:${col}18;color:${col};border:1px solid ${col}40" onclick="event.stopPropagation();window.location='detail.html?id=${id}'">${lbl}</span>`;
+  }).join('') + '</div>';
+}
+
+Promise.all([
+  fetch('items.json').then(r => r.json()),
+  fetch('conn_summary.json').then(r => r.json())
+]).then(([allData, summary]) => {
+  ALL_DATA = allData;
+  DATA = allData.filter(d => d.category === 'archive');
+  CONN_SUMMARY = summary;
+  const urlP = new URLSearchParams(window.location.search);
+  if (urlP.get('theme')) setThemeFilter(decodeURIComponent(urlP.get('theme')));
+  else if (urlP.get('opera')) setOperaFilter(decodeURIComponent(urlP.get('opera')));
+  else if (urlP.get('inst')) {
+    activeInst = decodeURIComponent(urlP.get('inst'));
+    currentFilterTerm = activeInst;
+    updateArchivoBanner(activeInst);
+    applyFilters();
+  }
+  else if (urlP.get('fund')) {
+    activeFond = decodeURIComponent(urlP.get('fund'));
+    currentFilterTerm = activeFond;
+    updateArchivoBanner(activeFond);
+    applyFilters();
+  }
+  else applyFilters();
+}).catch(err => {
+  console.error('Errore caricamento dati:', err);
+  document.getElementById('entries').innerHTML = '<p style="padding:2rem;color:#c00;font-family:monospace">Errore: ' + err + '</p>';
+});
+
+function exportData(fmt) {
+  if (!filtered || !filtered.length) return;
+  let content, mime, ext;
+  if (fmt === 'json') {
+    content = JSON.stringify(filtered, null, 2);
+    mime = 'application/json'; ext = 'json';
+  } else {
+    const keys = [...new Set(filtered.flatMap(d => Object.keys(d)))].filter(k => !['themes','people','genitore','figlio'].includes(k));
+    const esc = v => '"' + String(v==null?'':v).replace(/"/g,'""') + '"';
+    const rows = [keys.join(','), ...filtered.map(d => keys.map(k => {
+      const v = d[k];
+      if (Array.isArray(v)) return esc(v.join('; '));
+      return esc(v);
+    }).join(','))];
+    content = rows.join('\n');
+    mime = 'text/csv'; ext = 'csv';
+  }
+  const blob = new Blob([content], {type: mime});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'opengadda_export.' + ext;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>
