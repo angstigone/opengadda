@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenGadda — Come citare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1814; --paper: #f5f0e8; --accent: #7a3b1e; --accent-light: #c8794a;
+  --muted: #7a7268; --border: #c8bfaa; --white: #fdfaf5;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'EB Garamond',Georgia,serif; background:var(--paper); color:var(--ink); min-height:100vh; }
+nav { background:var(--ink); border-bottom:2px solid var(--accent); display:flex; align-items:center; padding:0 2.5rem; gap:2rem; height:52px; position:sticky; top:0; z-index:100; }
+.nav-brand { font-family:'DM Mono',monospace; font-size:13px; letter-spacing:0.18em; color:var(--white); text-decoration:none; margin-right:auto; }
+nav a { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#9a9080; text-decoration:none; transition:color 0.2s; }
+nav a:hover { color:#e8c89a; }
+header { background:var(--ink); color:var(--white); padding:2.5rem 2.5rem 2rem; border-bottom:3px solid var(--accent); }
+header .eyebrow { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:#5a5248; margin-bottom:0.5rem; }
+header h1 { font-size:2.4rem; font-weight:400; font-style:italic; }
+.content { max-width:720px; margin:0 auto; padding:3rem 2rem; }
+h2 { font-size:1.3rem; font-weight:400; font-style:italic; margin:2.5rem 0 0.75rem; color:var(--ink); border-bottom:1px solid var(--border); padding-bottom:0.4rem; }
+h2:first-child { margin-top:0; }
+p { font-size:1.05rem; line-height:1.7; margin-bottom:1rem; color:var(--ink); }
+.cite-block {
+  font-family:'EB Garamond',Georgia,serif; font-size:1rem; line-height:1.7;
+  background:var(--white); border:1px solid var(--border); border-left:3px solid var(--accent);
+  border-radius:0 3px 3px 0; padding:1rem 1.25rem; margin:0.75rem 0 1.5rem;
+  position:relative;
+}
+.cite-label { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:0.5rem; display:block; }
+.copy-btn {
+  position:absolute; top:0.75rem; right:0.75rem;
+  font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.08em; text-transform:uppercase;
+  background:none; border:1px solid var(--border); color:var(--muted);
+  padding:2px 8px; border-radius:2px; cursor:pointer;
+}
+.copy-btn:hover { color:var(--accent); border-color:var(--accent); }
+.note { font-size:0.9rem; color:var(--muted); font-style:italic; line-height:1.6; }
+hr { border:none; border-top:1px solid var(--border); margin:2.5rem 0; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">OpenGadda</a>
+  <a href="archive.html">Archivio</a>
+  <a href="primary_bibliography.html">Bib. primaria</a>
+  <a href="secondary_bibliography.html">Bib. secondaria</a>
+  <a href="library.html">Biblioteca</a>
+  <a href="epistolario.html">Epistolario</a>
+  <a href="translations.html">Traduzioni</a>
+</nav>
+
+<header>
+  <div class="eyebrow">OpenGadda</div>
+  <h1>Come citare OpenGadda</h1>
+</header>
+
+<div class="content">
+
+  <h2>Citare il progetto nel suo insieme</h2>
+  <p>Per citare l'intera banca dati OpenGadda come fonte primaria:</p>
+
+  <div class="cite-block">
+    <span class="cite-label">Chicago 17ª ed.</span>
+    <button class="copy-btn" onclick="copyBlock(this)">Copia</button>
+    <em>OpenGadda — Archivio digitale di Carlo Emilio Gadda</em>. Vers. 1.0. Consultato il <span class="today"></span>. &lt;https://opengadda.it&gt;.
+  </div>
+
+  <div class="cite-block">
+    <span class="cite-label">MLA 9ª ed.</span>
+    <button class="copy-btn" onclick="copyBlock(this)">Copia</button>
+    <em>OpenGadda — Archivio digitale di Carlo Emilio Gadda</em>. Vers. 1.0, &lt;https://opengadda.it&gt;. Consultato il <span class="today"></span>.
+  </div>
+
+  <div class="cite-block">
+    <span class="cite-label">BibTeX</span>
+    <button class="copy-btn" onclick="copyBlock(this)">Copia</button>
+    <pre style="font-family:'DM Mono',monospace;font-size:0.82rem;line-height:1.6;white-space:pre-wrap">@misc{OpenGadda,
+  title        = {OpenGadda -- Archivio digitale di Carlo Emilio Gadda},
+  year         = {2025},
+  howpublished = {\url{https://opengadda.it}},
+  note         = {Consultato il <span class="today"></span>}
+}</pre>
+  </div>
+
+  <hr>
+
+  <h2>Citare un singolo record</h2>
+  <p>Ogni scheda ha un pulsante <strong>«Cita questo record»</strong> che genera automaticamente una citazione in formato Chicago, MLA o BibTeX a partire dai campi del record. È sufficiente aprire la scheda e fare clic sul pulsante in fondo alla colonna sinistra.</p>
+  <p>Il formato generico per un singolo record è:</p>
+
+  <div class="cite-block">
+    <span class="cite-label">Chicago — schema generico</span>
+    <em>[Autore/Curatore], Cognome, Nome. «[Titolo]». [Luogo]: [Editore], [Anno]. OpenGadda — [Sezione]. &lt;https://opengadda.it/detail.html?id=[ID]&gt; (consultato il [data]).</em>
+  </div>
+
+  <hr>
+
+  <h2>Citare una sezione o una ricerca filtrata</h2>
+  <p>Per citare una sezione specifica o un insieme di risultati filtrati, indicare la URL completa con i parametri di filtro:</p>
+
+  <div class="cite-block">
+    <span class="cite-label">Esempio — Bib. secondaria filtrata per autore</span>
+    <em>OpenGadda — Archivio digitale di Carlo Emilio Gadda</em>. «Contributi di Contini, Gianfranco». &lt;https://opengadda.it/secondary_bibliography.html?person=Contini%2C+Gianfranco&gt;. Consultato il <span class="today"></span>.
+  </div>
+
+  <hr>
+
+  <h2>Licenza e riutilizzo dei dati</h2>
+  <p>Il dataset di OpenGadda è rilasciato sotto licenza <strong>Creative Commons Attribution 4.0 International (CC BY 4.0)</strong>. È possibile scaricare i dati in formato JSON o CSV dalla <a href="index.html" style="color:var(--accent)">homepage</a> e riutilizzarli liberamente, a condizione di citare la fonte.</p>
+  <p class="note">Per ulteriori informazioni o per segnalare errori, contattare il team di progetto.</p>
+
+</div>
+
+<script>
+var today = new Date().toLocaleDateString('it-IT', {day:'numeric',month:'long',year:'numeric'});
+document.querySelectorAll('.today').forEach(function(el){el.textContent = today;});
+window.copyBlock = function(btn) {
+  var block = btn.closest('.cite-block');
+  var text = block.cloneNode(true);
+  // Remove label and button
+  text.querySelectorAll('.cite-label,.copy-btn').forEach(function(el){el.remove();});
+  navigator.clipboard.writeText(text.textContent.trim()).then(function(){
+    btn.textContent = 'Copiato ✓';
+    setTimeout(function(){btn.textContent = 'Copia';}, 1800);
+  });
+};
+</script>
+</body>
+</html>
