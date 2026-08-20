@@ -1,4 +1,4 @@
-# OpenGadda. OpenData
+# OpenGadda. Open Data
 
 The project behind OpenGadda, Open Data, was built to solve a very common problem in digital methodologies: what can we access and produce when our sources are under copyright?
 
