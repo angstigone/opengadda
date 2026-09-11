@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenGadda — Opere</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1814; --paper: #f5f0e8; --accent:
+#2596be; --accent-light: #b0507a;
+  --muted: #7a7268; --border: #c8bfaa; --white: #fdfaf5; --tag-bg: #f0dce4; --tag-text: #7a1a3a;
+  --font-scale: 1;
+}
+:root.high-contrast {
+  --ink: #000000; --paper: #ffffff; --accent: #4a1024; --accent-light: #4a1024;
+  --muted: #3a3a3a; --border: #000000; --white: #ffffff; --tag-bg: #ecdfe4; --tag-text: #000000;
+}
+html { font-size: calc(16px * var(--font-scale)); }
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'EB Garamond',Georgia,serif; background:var(--paper); color:var(--ink); }
+nav { background:var(--ink); border-bottom:2px solid var(--accent); display:flex; align-items:center; padding:0 2.5rem; gap:2rem; height:52px; position:sticky; top:0; z-index:100; }
+.nav-brand { font-family:'DM Mono',monospace; font-size:13px; letter-spacing:0.18em; color:var(--white); text-decoration:none; margin-right:auto; }
+nav a { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#9a9080; text-decoration:none; transition:color 0.2s; }
+nav a:hover, nav a.active { color:#e8c89a; }
+
+header { background:var(--ink); color:var(--white); padding:2.5rem 2.5rem 2rem; border-bottom:3px solid var(--accent); }
+header .eyebrow { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:#5a5248; margin-bottom:0.5rem; }
+header h1 { font-size:2.4rem; font-weight:400; font-style:italic; margin-bottom:0.4rem; }
+header p { color:#9a9080; font-size:1rem; }
+
+.layout { display:grid; grid-template-columns:240px 1fr 220px; min-height:calc(100vh - 140px); }
+.viz-static-panel { background:var(--white); border-left:1px solid var(--border); padding:1.25rem 1rem; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; }
+.viz-section { margin-bottom:2rem; }
+.viz-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:0.9rem; display:block; }
+.viz-desc { font-size:0.85rem; color:var(--muted); margin-bottom:0.9rem; line-height:1.5; }
+.viz-export-btn { display:flex; align-items:center; justify-content:space-between; width:100%; text-align:left; font-family:'EB Garamond',serif; font-size:1rem; background:var(--paper); border:1px solid var(--border); color:var(--ink); padding:0.65rem 0.9rem; border-radius:3px; cursor:pointer; margin-bottom:8px; transition:border-color 0.15s, background 0.15s; }
+.viz-export-btn:hover { border-color:var(--accent); background:var(--white); }
+.viz-export-btn .ext { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:0.08em; }
+.bar-row { display:flex; align-items:center; gap:6px; margin-bottom:5px; font-size:0.8rem; position:relative; }
+.bar-row-label { flex:1; min-width:0; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--ink); font-family:'EB Garamond',serif; text-decoration:none; }
+.bar-row-label:hover { color:var(--accent); }
+.bar-row-label.active { color:var(--accent); font-weight:600; }
+.bar-tooltip {
+  display:none; position:absolute; bottom:calc(100% + 6px); left:0; max-width:220px;
+  background:var(--ink); color:var(--white); font-family:'EB Garamond',serif;
+  font-size:0.8rem; line-height:1.35; padding:0.5rem 0.65rem; border-radius:4px;
+  box-shadow:0 4px 14px rgba(0,0,0,0.2); z-index:20; pointer-events:none; white-space:normal;
+}
+.bar-tooltip::after {
+  content:''; position:absolute; top:100%; left:1rem;
+  border:5px solid transparent; border-top-color:var(--ink);
+}
+.bar-row:hover .bar-tooltip { display:block; }
+.bar-track { width:56px; flex-shrink:0; background:var(--tag-bg); border-radius:2px; height:7px; overflow:hidden; }
+.bar-fill { height:100%; background:var(--accent); border-radius:2px; transition:width 0.3s; }
+.bar-count { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); width:20px; flex-shrink:0; text-align:right; }
+.a11y-row { display:flex; align-items:center; gap:8px; margin-bottom:0.75rem; }
+.a11y-btn { width:36px; height:36px; border-radius:3px; border:1px solid var(--border); background:var(--paper); color:var(--ink); cursor:pointer; font-family:'DM Mono',monospace; display:flex; align-items:center; justify-content:center; transition:border-color 0.15s, background 0.15s; }
+.a11y-btn:hover { border-color:var(--accent); background:var(--white); }
+.a11y-btn.small { font-size:12px; }
+.a11y-btn.large { font-size:18px; }
+.a11y-reset { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); background:none; border:none; cursor:pointer; }
+.a11y-reset:hover { color:var(--accent); }
+.a11y-toggle-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; font-size:0.9rem; color:var(--ink); }
+.a11y-switch { position:relative; width:38px; height:22px; flex-shrink:0; }
+.a11y-switch input { opacity:0; width:100%; height:100%; margin:0; cursor:pointer; position:absolute; z-index:1; }
+.a11y-switch-track { position:absolute; inset:0; background:var(--border); border-radius:11px; transition:background 0.15s; }
+.a11y-switch-thumb { position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%; background:var(--white); transition:transform 0.15s; }
+.a11y-switch input:checked ~ .a11y-switch-track { background:var(--accent); }
+.a11y-switch input:checked ~ .a11y-switch-thumb { transform:translateX(16px); }
+.report-field { display:block; width:100%; font-family:'EB Garamond',serif; font-size:0.95rem; color:var(--ink); background:var(--paper); border:1px solid var(--border); border-radius:3px; padding:0.6rem 0.75rem; margin-bottom:8px; outline:none; }
+.report-field:focus { border-color:var(--accent); }
+.report-textarea { min-height:80px; resize:vertical; font-family:'EB Garamond',serif; }
+.report-submit { text-align:center; justify-content:center; background:var(--accent); color:var(--white); border-color:var(--accent); }
+.report-submit:hover { background:var(--accent-light); border-color:var(--accent-light); }
+.report-sent { display:none; font-size:0.85rem; color:var(--accent); margin-top:8px; line-height:1.5; }
+.report-sent.show { display:block; }
+.viz-scrim { position:fixed; inset:52px 0 0 0; background:rgba(20,18,14,0.35); opacity:0; pointer-events:none; transition:opacity 0.2s; z-index:150; }
+.viz-scrim.open { opacity:1; pointer-events:all; }
+.export-drawer { position:fixed; top:52px; right:0; width:280px; height:calc(100vh - 52px); background:var(--white); border-left:1px solid var(--border); padding:1.25rem 1.25rem; overflow-y:auto; transform:translateX(100%); transition:transform 0.25s ease; z-index:160; box-shadow:-6px 0 16px rgba(0,0,0,0.1); }
+.export-drawer.open { transform:translateX(0); }
+.viz-edge-tab { position:fixed; top:50%; right:0; transform:translateY(-50%); width:28px; height:64px; background:var(--ink); color:var(--white); border:none; border-radius:6px 0 0 6px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; z-index:161; box-shadow:-3px 0 10px rgba(0,0,0,0.15); transition:right 0.25s ease, background 0.15s; }
+.viz-edge-tab:hover { background: var(--accent); }
+.viz-edge-tab.open { right:280px; }
+.viz-edge-tab .arrow { display:inline-block; transition:transform 0.25s ease; }
+.viz-edge-tab.open .arrow { transform:rotate(180deg); }
+.viz-panel-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; }
+.viz-panel-title { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink); }
+.viz-panel-close { background:none; border:none; cursor:pointer; color:var(--muted); font-size:1.1rem; padding:0; line-height:1; }
+.viz-panel-close:hover { color:var(--accent); }
+.stats-accordion { border:1px solid var(--border); border-radius:3px; margin-bottom:1.25rem; overflow:hidden; }
+.stat { background:var(--white); padding:0.75rem 1rem; text-align:center; cursor:pointer; transition:background 0.15s; border:none; font-family:inherit; width:100%; }
+.stat:hover { background:var(--tag-bg); }
+.stat.active { background:var(--tag-bg); }
+.stats-detail { max-height:0; overflow:hidden; transition:max-height 0.25s ease; border-top:0 solid var(--border); background:var(--white); }
+.stats-detail.open { max-height:320px; overflow-y:auto; border-top-width:1px; padding:1.25rem 1.25rem 0.5rem; }
+.scatter-wrap { width:100%; overflow-x:auto; }
+.scatter-svg { display:block; }
+.scatter-pt { fill:var(--accent); stroke:var(--white); stroke-width:1.5; cursor:pointer; transition:r 0.15s, fill 0.15s; }
+.scatter-pt:hover { fill:var(--accent-light); }
+.scatter-guide { stroke:var(--border); stroke-width:1; }
+.scatter-count { font-family:'DM Mono',monospace; font-size:9px; fill:var(--muted); text-anchor:middle; pointer-events:none; }
+.scatter-label { font-family:'EB Garamond',serif; font-size:10.5px; fill:var(--ink); }
+.scatter-g:hover .scatter-label { fill:var(--accent); }
+.scatter-g:hover .scatter-count { fill:var(--ink); }
+@media(max-width:900px) { .layout { grid-template-columns:240px 1fr; } .viz-static-panel { display:none; } }
+.sidebar { background:var(--white); border-right:1px solid var(--border); padding:1.5rem 1.25rem; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; }
+.sidebar-section { margin-bottom:1.75rem; }
+.sidebar-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:0.6rem; display:block; }
+.sidebar input[type=text] { width:100%; padding:0.5rem 0.6rem; font-family:'EB Garamond',serif; font-size:1rem; border:1px solid var(--border); background:var(--paper); color:var(--ink); border-radius:2px; outline:none; }
+.sidebar input[type=text]:focus { border-color:var(--accent); }
+.filter-group { display:flex; flex-direction:column; gap:3px; }
+.filter-btn { text-align:left; background:none; border:none; padding:0.3rem 0.5rem; font-family:'EB Garamond',serif; font-size:0.9rem; color:var(--muted); cursor:pointer; border-radius:2px; display:flex; justify-content:space-between; align-items:center; transition:background 0.15s,color 0.15s; }
+.filter-btn:hover { background:var(--tag-bg); color:var(--ink); }
+.filter-btn.active { background:var(--accent); color:var(--white); }
+
+.main { padding:1.5rem 2rem; min-width:0; }
+.stats-bar { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); }
+.stat { background:var(--white); padding:0.75rem 1rem; text-align:center; }
+.stat-n { font-family:'DM Mono',monospace; font-size:1.3rem; font-weight:500; color:var(--accent); display:block; }
+.stat-l { font-size:0.8rem; color:var(--muted); }
+
+.section-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin:0 0 0.6rem; display:block; }
+.collections-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:10px; margin-bottom:0.6rem; }
+.collection-card { background:var(--ink); color:var(--white); border-radius:4px; padding:0.9rem 1rem; cursor:pointer; border:2px solid transparent; transition:border-color 0.15s; display:flex; gap:0.85rem; }
+.collection-card:hover { border-color:var(--accent-light); }
+.collection-card.active { border-color:var(--accent-light); background:#2a1420; }
+.collection-thumb { width:52px; height:78px; object-fit:cover; border-radius:2px; border:1px solid rgba(255,255,255,0.2); flex-shrink:0; }
+.collection-card-body { min-width:0; flex:1; }
+.collection-numero { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:#e8c89a; margin-bottom:3px; }
+.collection-title { font-size:1.05rem; font-style:italic; margin-bottom:2px; }
+.collection-meta { font-family:'DM Mono',monospace; font-size:10px; color:#9a9080; margin-bottom:0.6rem; }
+.collection-works { display:flex; flex-wrap:wrap; gap:4px; }
+.collection-work-link { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.05em; padding:2px 7px; border-radius:2px; text-decoration:none; cursor:pointer; background:rgba(255,255,255,0.1); color:#e8c89a; border:1px solid rgba(255,255,255,0.15); }
+.collection-work-link:hover { background:rgba(255,255,255,0.18); }
+.collection-filter-banner { display:flex; align-items:center; justify-content:space-between; background:var(--tag-bg); border:1px solid var(--border); border-radius:3px; padding:0.5rem 1rem; margin-bottom:1.25rem; font-family:'DM Mono',monospace; font-size:11px; color:var(--tag-text); }
+.collection-filter-banner button { background:none; border:none; cursor:pointer; color:var(--muted); font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.08em; }
+
+.decade-header { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted); padding:1.25rem 0.25rem 0.4rem; border-bottom:1px solid var(--border); margin-bottom:0.4rem; }
+.decade-header:first-child { padding-top:0; }
+
+.opera-card { border:1px solid var(--border); background:var(--white); border-radius:4px; padding:1.1rem 1.25rem; margin-bottom:0.9rem; display:flex; gap:1rem; cursor:pointer; transition:border-color 0.15s, box-shadow 0.15s; }
+.opera-card:hover { border-color:var(--accent); box-shadow:0 2px 8px rgba(122,26,58,0.08); }
+.opera-card.static { cursor:default; }
+.opera-card.static:hover { border-color:var(--border); box-shadow:none; }
+.opera-card.static .opera-title { cursor:default; }
+.opera-card.static .opera-title:hover { color:var(--ink); text-decoration:none; }
+.opera-sigla-link { cursor:pointer; }
+.opera-sigla-link:hover { background:var(--accent); color:#fff; }
+.opera-thumb { width:64px; height:96px; object-fit:cover; border-radius:2px; border:1px solid var(--border); flex-shrink:0; }
+.opera-card-body { min-width:0; flex:1; }
+.opera-head { display:flex; align-items:baseline; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.3rem; }
+.opera-title { font-size:1.25rem; font-weight:500; font-style:italic; color:var(--ink); cursor:pointer; }
+.opera-title:hover { color:var(--accent); text-decoration:underline; }
+.opera-sigla { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.08em; color:var(--accent); background:var(--tag-bg); padding:1px 7px; border-radius:2px; }
+.opera-edition { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); margin-bottom:0.55rem; }
+.pub-link { cursor:pointer; text-decoration:underline; text-decoration-color:transparent; transition:color 0.15s, text-decoration-color 0.15s; }
+.pub-link:hover { color:var(--accent); text-decoration-color:var(--accent); }
+.opera-blurb { font-size:0.98rem; line-height:1.5; color:var(--ink); margin-bottom:0.55rem; }
+.opera-raccolta { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); margin-bottom:0.7rem; }
+.opera-links { display:flex; flex-wrap:wrap; gap:6px; }
+.opera-link { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.05em; padding:2px 8px; border-radius:2px; text-decoration:none; cursor:pointer; border:1px solid transparent; }
+.opera-link .n { opacity:0.75; margin-left:3px; }
+.opera-links-empty { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); font-style:italic; }
+
+.no-results { text-align:center; padding:4rem 1rem; color:var(--muted); font-style:italic; font-size:1.1rem; }
+
+.back-btn { display:inline-flex; align-items:center; gap:6px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); background:none; border:1px solid var(--border); border-radius:2px; padding:5px 12px; cursor:pointer; margin-bottom:1.25rem; transition:color 0.15s,border-color 0.15s; }
+.back-btn:hover { color:var(--accent); border-color:var(--accent); }
+.work-header { background:var(--ink); color:var(--white); border-radius:4px; padding:1.25rem 1.5rem; margin-bottom:1.25rem; display:flex; gap:1.25rem; }
+.work-thumb { width:110px; height:165px; object-fit:cover; border-radius:3px; border:1px solid rgba(255,255,255,0.2); flex-shrink:0; }
+.work-header-body { min-width:0; flex:1; }
+.work-header .opera-title { color:var(--white); font-size:1.5rem; cursor:default; }
+.work-header .opera-title:hover { text-decoration:none; }
+.work-header .opera-edition { color:#9a9080; }
+.work-header .opera-blurb { color:#d8d0c0; }
+.work-header .opera-raccolta { color:#9a9080; margin-bottom:0; }
+
+.cat-chip-row { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:1.25rem; }
+.cat-chip { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.06em; padding:4px 11px; border-radius:20px; cursor:pointer; border:1px solid var(--border); background:var(--white); color:var(--muted); }
+.cat-chip.active { background:var(--accent); border-color:var(--accent); color:var(--white); }
+.cat-chip .n { opacity:0.7; margin-left:4px; }
+
+.work-entry { border-bottom:1px solid var(--border); padding:0.85rem 0.25rem; display:grid; grid-template-columns:64px 1fr auto; gap:0.75rem; align-items:start; transition:background 0.15s; cursor:pointer; text-decoration:none; color:inherit; }
+.work-entry:hover { background:var(--white); padding-left:0.5rem; padding-right:0.5rem; margin:0 -0.25rem; }
+.work-entry-year { font-family:'DM Mono',monospace; font-size:11px; color:var(--accent); padding-top:3px; text-align:right; }
+.work-entry-title { font-size:1.1rem; font-weight:500; line-height:1.3; color:var(--ink); margin-bottom:3px; }
+.work-entry-sub { font-family:'DM Mono',monospace; font-size:10px; color:#9a9080; letter-spacing:0.04em; }
+.work-entry-cat { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.08em; text-transform:uppercase; padding:2px 7px; border-radius:2px; white-space:nowrap; flex-shrink:0; }
+
+@media(max-width:700px) { .layout { grid-template-columns:1fr; } .sidebar { position:static; height:auto; border-right:none; border-bottom:1px solid var(--border); } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">OpenGadda</a>
+  <a href="opere.html" class="active">Opere</a>
+  <a href="archive.html">Archivi</a>
+  <a href="primary_bibliography.html">Bib. primaria</a>
+  <a href="secondary_bibliography.html">Bib. secondaria</a>
+  <a href="library.html">Biblioteca</a>
+  <a href="epistolario.html">Epistolario</a>
+  <a href="translations.html">Traduzioni</a>
+</nav>
+
+<header>
+  <div class="eyebrow">OpenGadda</div>
+  <h1>Opere</h1>
+  <p id="header-sub">Caricamento…</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <span class="sidebar-label">Ricerca</span>
+      <input type="text" id="search" placeholder="Titolo…" oninput="applyFilters()">
+    </div>
+    <div class="sidebar-section">
+      <span class="sidebar-label">Ordinamento</span>
+      <div class="filter-group">
+        <button class="filter-btn active" id="s-year" onclick="setSort('year')">Cronologico</button>
+        <button class="filter-btn" id="s-title" onclick="setSort('title')">Alfabetico</button>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <span class="sidebar-label">Raccolta</span>
+      <div class="filter-group" id="collection-filter-group"></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div id="view-list">
+      <span class="section-label">Edizione critica — Garzanti, a cura di Dante Isella (1988–1993)</span>
+      <div class="collections-grid" id="collections"></div>
+      <div id="collection-filter-banner" class="collection-filter-banner" style="display:none">
+        <span id="collection-filter-text"></span>
+        <button onclick="clearAllFilters()">× Mostra tutte le opere</button>
+      </div>
+
+      <span class="section-label">Tutte le opere</span>
+      <div class="stats-accordion">
+        <div class="stats-bar" id="stats-bar">
+          <button class="stat" id="stat-shown" onclick="setStatsPanel('collections')"><span class="stat-n" id="sn-shown">0</span><span class="stat-l">visualizzate</span></button>
+          <button class="stat" id="stat-items" onclick="setStatsPanel('categories')"><span class="stat-n" id="sn-items">0</span><span class="stat-l">schede collegate</span></button>
+          <button class="stat" id="stat-timeline" onclick="setStatsPanel('timeline')"><span class="stat-n" id="sn-timeline">0</span><span class="stat-l">anni coperti</span></button>
+        </div>
+        <div class="stats-detail" id="stats-detail"></div>
+      </div>
+      <div id="entries"><div style="padding:3rem 1rem;text-align:center;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted)">Caricamento…</div></div>
+    </div>
+
+    <div id="view-work" style="display:none">
+      <button class="back-btn" onclick="backToList()">← Tutte le opere</button>
+      <div class="work-header" id="work-header"></div>
+      <span class="section-label" id="alt-editions-label" style="display:none">Altre edizioni</span>
+      <div id="alt-editions"></div>
+      <span class="section-label">Opere correlate</span>
+      <div id="related-works"></div>
+    </div>
+
+    <div id="view-collection" style="display:none">
+      <button class="back-btn" onclick="backToList()">← Tutte le opere</button>
+      <div class="work-header" id="collection-header"></div>
+      <span class="section-label">Opere contenute</span>
+      <div id="collection-works"></div>
+    </div>
+  </main>
+  <aside class="viz-static-panel">
+    <div class="viz-section">
+      <span class="viz-label">Sigle</span>
+      <div id="viz-siglas"></div>
+    </div>
+  </aside>
+</div>
+
+<button class="viz-edge-tab" id="viz-edge-tab" onclick="toggleExportDrawer()" aria-label="Esporta dati e accessibilità"><span class="arrow">‹</span></button>
+<div class="viz-scrim" id="viz-scrim" onclick="toggleExportDrawer()"></div>
+<aside class="export-drawer" id="export-drawer">
+  <div class="viz-panel-head">
+    <span class="viz-panel-title">Esporta &amp; accessibilità</span>
+    <button class="viz-panel-close" onclick="toggleExportDrawer()" aria-label="Chiudi">✕</button>
+  </div>
+  <div class="viz-section">
+    <span class="viz-label">Esporta dati</span>
+    <p class="viz-desc">Scarica l'elenco delle opere attualmente filtrate.</p>
+    <button class="viz-export-btn" onclick="exportData('csv')">Scarica come CSV <span class="ext">.csv</span></button>
+    <button class="viz-export-btn" onclick="exportData('json')">Scarica come JSON <span class="ext">.json</span></button>
+  </div>
+  <div class="viz-section">
+    <span class="viz-label">Accessibilità</span>
+    <p class="viz-desc">Dimensione del testo</p>
+    <div class="a11y-row">
+      <button class="a11y-btn small" onclick="adjustFontScale(-0.1)" aria-label="Riduci testo">A−</button>
+      <button class="a11y-btn large" onclick="adjustFontScale(0.1)" aria-label="Ingrandisci testo">A+</button>
+      <button class="a11y-reset" onclick="resetFontScale()">Reimposta</button>
+    </div>
+    <div class="a11y-toggle-row">
+      <span>Alto contrasto</span>
+      <label class="a11y-switch">
+        <input type="checkbox" id="contrast-toggle" onchange="toggleHighContrast(this.checked)">
+        <span class="a11y-switch-track"></span>
+        <span class="a11y-switch-thumb"></span>
+      </label>
+    </div>
+  </div>
+  <div class="viz-section">
+    <span class="viz-label">Segnala un errore</span>
+    <p class="viz-desc">Hai trovato un dato sbagliato o mancante? Facci sapere cosa e dove.</p>
+    <form id="report-form" onsubmit="submitReport(event)">
+      <textarea class="report-field report-textarea" id="report-desc" placeholder="Descrivi il problema (es. titolo, ID del record, cosa non torna)…" required></textarea>
+      <input class="report-field" id="report-email" type="email" placeholder="La tua email (facoltativa)">
+      <button class="viz-export-btn report-submit" type="submit">Invia segnalazione</button>
+    </form>
+    <p class="report-sent" id="report-sent">Grazie — si è aperto il tuo client email con la segnalazione pronta da inviare.</p>
+  </div>
+</aside>
+
+<script>
+// Individually-known pieces inside a collective sigla (e.g. SD = "Scritti
+// dispersi", a miscellany) that are notable/well-known enough to deserve
+// their own card, even though they don't have their own sigla in the
+// official siglario. Sourced from sigle_gadda.json's `sub_opere` object
+// (populated below, once that file has loaded) — matched by title text
+// against items already correctly tagged with the parent sigla. If the
+// underlying data doesn't have a matching item, the card silently doesn't
+// appear (no synthetic sigla is fabricated).
+let SUB_WORKS = [];
+
+const CAT_PAGES = {"library":"library.html","secondary bibliography":"secondary_bibliography.html","primary bibliography":"primary_bibliography.html","archive":"archive.html","letter":"epistolario.html","translation":"translations.html"};
+const CAT_LABELS = {"library":"Biblioteca","secondary bibliography":"Bib. secondaria","primary bibliography":"Bib. primaria","archive":"Archivio","letter":"Epistolario","translation":"Traduzioni"};
+const CAT_COLORS = {"library":"#7a3b1e","secondary bibliography":"#1e4a7a","primary bibliography":"#1a6a40","archive":"#6a3a1a","letter":"#5a1e7a","translation":"#6a5a1a"};
+// archive/library/primary+secondary bibliography scope their OWN `?theme=`
+// filter to the whole dataset (cross-category, by design — see e.g.
+// archive.html's setThemeFilter). Their `?opera=` filter is the one that
+// actually restricts results to just that page's own category, which is
+// what a per-category badge count here should link to. translation/letter
+// don't have that split — their `?theme=` is already category-scoped.
+const CAT_FILTER_PARAM = {"library":"opera","secondary bibliography":"opera","primary bibliography":"opera","archive":"opera","letter":"theme","translation":"theme"};
+
+// The five volumes of the Garzanti critical edition ("Opere di Carlo Emilio
+// Gadda", collana "I Libri della Spiga", a cura di Dante Isella) that
+// collect the individual works below. Membership is computed from each
+// work's `raccolta` field in sigle_gadda.json (e.g. "RR I, pp. 3-107"), so
+// this stays in sync automatically as that file is edited — nothing here
+// needs updating when a work's raccolta changes.
+const COLLECTIONS = [
+  { id: 'RR I',   numero: 'Opere I',   titolo: 'Romanzi e racconti I',                       anno: 1988, isbn: '88-11-58640-2' },
+  { id: 'RR II',  numero: 'Opere II',  titolo: 'Romanzi e racconti II',                      anno: 1989, isbn: '88-11-58641-0' },
+  { id: 'SGF I',  numero: 'Opere III', titolo: 'Saggi, giornali, favole e altri scritti I',  anno: 1991, isbn: '88-11-58642-9' },
+  { id: 'SGF II', numero: 'Opere IV',  titolo: 'Saggi, giornali, favole e altri scritti II', anno: 1992, isbn: '88-11-58643-7' },
+  { id: 'SVP',    numero: 'Opere V',   titolo: 'Scritti vari e postumi',                     anno: 1993, isbn: '88-11-58644-5' },
+];
+const _RACCOLTA_RE = /^(RR I{1,2}|SGF I{1,2}|SVP)/;
+
+let SIGLE = {};
+let ALL_DATA = []; // raw items.json, kept so work-detail views can pull every matching entry
+let COLLECTION_WORKS = {}; // optional collections.json: { collId: [{titolo, sigla, pagine, note}, ...] }
+let OPERE = []; // [{sigla, titolo_completo, edizione_originale, raccolta, year, blurb, counts:{cat:n}, total}]
+let filtered = [];
+let sortKey = 'year';
+let sortDir = 1;
+let collectionFilter = null; // 'RR I' | 'RR II' | 'SGF I' | 'SGF II' | 'SVP' | null
+let publisherFilter = null;
+
+// "Milano, Garzanti, 1963" → "Garzanti"
+function parsePublisher(edizione) {
+  if (!edizione) return null;
+  const parts = edizione.split(',').map(s => s.trim());
+  return parts.length >= 2 && parts[1] ? parts[1] : null;
+}
+
+function setPublisherFilter(name) {
+  publisherFilter = publisherFilter === name ? null : name;
+  if (currentWork || currentCollection) backToList();
+  refreshFilterBanner();
+  applyFilters();
+}
+
+// Renders "Milano, Garzanti, 1963" with the publisher name as a click-to-filter span.
+function editionHtml(edizione) {
+  if (!edizione) return '';
+  const parts = edizione.split(',');
+  if (parts.length < 2) return edizione;
+  const city = parts[0].trim();
+  const pub = parts[1].trim();
+  const rest = parts.slice(2).map(s => s.trim()).join(', ');
+  return `${city}, <span class="pub-link" onclick="event.stopPropagation();setPublisherFilter(${jsAttr(pub)})">${pub}</span>${rest ? ', ' + rest : ''}`;
+}
+let currentWork = null;      // sigla of the work whose detail view is open, or null
+let currentCollection = null; // id of the collection whose detail view is open, or null
+let workCatFilter = null;    // category filter within the open work's detail view
+
+function extractYear(edizione) {
+  if (!edizione) return null;
+  const m = edizione.match(/\b(1[5-9]\d{2}|20\d{2})\b/);
+  return m ? parseInt(m[0]) : null;
+}
+
+function safeDomId(sigla) {
+  return sigla.replace(/[^A-Za-z0-9]/g, '_');
+}
+
+// Cover images are a mix of .png and .jpg. Try .png first; if that 404s,
+// fall back to .jpg; if that also fails, remove the <img> entirely (no
+// broken-image icon) rather than hardcoding one extension.
+// `fallbackKey` (optional) is a second sigla to try — used for alt-edition
+// cards, so if that edition has no cover of its own (img/<key>.png/.jpg)
+// it falls back to the parent work's cover instead of showing nothing.
+function thumbImgTag(key, cssClass, fallbackKey) {
+  const base = 'img/' + encodeURIComponent(key);
+  const fb = fallbackKey ? 'img/' + encodeURIComponent(fallbackKey) : '';
+  return `<img class="${cssClass}" src="${base}.png" data-fallback="${base}.jpg" data-fallback2="${fb}" alt="" onerror="handleThumbErr(this)">`;
+}
+// Reassigning this.onerror to a new function *from inside the handler
+// that's currently running* doesn't reliably take effect for images
+// inserted via innerHTML (the next error event still fires the original
+// handler in some browsers) — so track fallback state with data
+// attributes instead of swapping the handler itself. Tries: own .png →
+// own .jpg → fallback sigla's .png → fallback sigla's .jpg → give up.
+function handleThumbErr(img) {
+  if (!img.dataset.tried) { img.dataset.tried = '1'; img.src = img.dataset.fallback; return; }
+  if (!img.dataset.tried2 && img.dataset.fallback2) { img.dataset.tried2 = '1'; img.src = img.dataset.fallback2 + '.png'; return; }
+  if (!img.dataset.tried3 && img.dataset.fallback2) { img.dataset.tried3 = '1'; img.src = img.dataset.fallback2 + '.jpg'; return; }
+  img.remove();
+}
+
+// JSON.stringify() wraps in double quotes, which collides with onclick="..."
+// (also double-quoted) — e.g. onclick="showWorkDetail(${JSON.stringify(x)})"
+// renders as onclick="showWorkDetail("MdF")" and the attribute value is cut
+// off at that first embedded quote. Some sigla also contain a literal
+// apostrophe (e.g. "L'A"), so we can't just swap to single-quoted HTML
+// attributes either. This builds a single-quoted JS string literal, safe to
+// drop into a double-quoted HTML attribute regardless of the input.
+function jsAttr(s) {
+  if (s === null) return 'null';
+  return "'" + String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "'";
+}
+
+function collectionOf(raccolta) {
+  return _RACCOLTA_RE.exec(raccolta || '')?.[1] || null;
+}
+
+function formatRaccolta(raccolta) {
+  if (!raccolta) return '';
+  const collId = collectionOf(raccolta);
+  const coll = collId && COLLECTIONS.find(c => c.id === collId);
+  return coll ? `${coll.numero} — ${raccolta}` : raccolta;
+}
+
+function refreshFilterBanner() {
+  const banner = document.getElementById('collection-filter-banner');
+  const parts = [];
+  if (collectionFilter) {
+    const coll = COLLECTIONS.find(c => c.id === collectionFilter);
+    parts.push('in: ' + (coll ? `${coll.numero} — ${coll.titolo}` : collectionFilter));
+  }
+  if (publisherFilter) parts.push('editore: ' + publisherFilter);
+  if (parts.length) {
+    banner.style.display = 'flex';
+    document.getElementById('collection-filter-text').textContent = 'Solo opere ' + parts.join(', ');
+  } else {
+    banner.style.display = 'none';
+  }
+}
+
+function clearAllFilters() {
+  collectionFilter = null;
+  publisherFilter = null;
+  refreshFilterBanner();
+  applyFilters();
+}
+
+function setCollectionFilter(id) {
+  collectionFilter = collectionFilter === id ? null : id;
+  document.getElementById('search').value = '';
+  renderCollections();
+  refreshFilterBanner();
+  applyFilters();
+}
+
+function renderCollections() {
+  const html = COLLECTIONS.map(coll => {
+    const members = Object.entries(SIGLE)
+      .filter(([, meta]) => collectionOf(meta.raccolta) === coll.id)
+      .sort((a,b) => alphaSortKey(a[1].titolo_completo).localeCompare(alphaSortKey(b[1].titolo_completo), 'it'));
+    const workLinks = members.map(([sigla, meta]) =>
+      `<span class="collection-work-link" title="${meta.titolo_completo.replace(/"/g,'&quot;')}" onclick="event.stopPropagation();showWorkDetail(${jsAttr(sigla)})">${sigla}</span>`
+    ).join('');
+    const active = currentCollection === coll.id;
+    const imgName = coll.numero.replace(/\s+/g, ''); // "Opere I" -> "OpereI.png"
+    return `<div class="collection-card${active ? ' active' : ''}" onclick="showCollectionDetail(${jsAttr(coll.id)})">
+      ${thumbImgTag(imgName, 'collection-thumb')}
+      <div class="collection-card-body">
+        <div class="collection-numero">${coll.numero}</div>
+        <div class="collection-title">${coll.titolo}</div>
+        <div class="collection-meta">Garzanti, ${coll.anno} · ISBN ${coll.isbn} · ${members.length} opere</div>
+        <div class="collection-works">${workLinks}</div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('collections').innerHTML = html;
+}
+
+function alphaSortKey(name) {
+  let s = (name || '').trim();
+  let changed = true;
+  while (changed) {
+    changed = false;
+    const noQuote = s.replace(/^[\s"'“”‘’«»″]+/, '');
+    if (noQuote !== s) { s = noQuote; changed = true; }
+    const noParen = s.replace(/^\([^)]*\)\s*/, '');
+    if (noParen !== s) { s = noParen; changed = true; }
+  }
+  return s;
+}
+
+function doSort() {
+  const SD = null;
+  filtered.sort((a,b) => {
+    if (sortKey === 'year') {
+      if (a.year === SD && b.year === SD) return 0;
+      if (a.year === SD) return 1;
+      if (b.year === SD) return -1;
+      return sortDir * (a.year - b.year);
+    }
+    return sortDir * alphaSortKey(a.titolo_completo).localeCompare(alphaSortKey(b.titolo_completo), 'it');
+  });
+}
+
+function setSort(key) {
+  if (sortKey === key) sortDir *= -1; else { sortKey = key; sortDir = 1; }
+  ['year','title'].forEach(k => document.getElementById('s-'+k).classList.toggle('active', k === key));
+  applyFilters();
+}
+
+function applyFilters() {
+  const q = document.getElementById('search').value.toLowerCase();
+  filtered = OPERE.filter(o => {
+    if (collectionFilter && collectionOf(o.raccolta) !== collectionFilter) return false;
+    if (publisherFilter && parsePublisher(o.edizione_originale) !== publisherFilter) return false;
+    if (q && !(o.titolo_completo.toLowerCase().includes(q) || o.sigla.toLowerCase().includes(q))) return false;
+    return true;
+  });
+  doSort();
+  render();
+}
+
+function operaCardHtml(o) {
+  const navSigla = o.realSigla || o.sigla;
+  const catEntries = Object.entries(o.counts).sort((a,b) => b[1]-a[1]);
+  const links = catEntries.length
+    ? catEntries.map(([cat, n]) => {
+        const col = CAT_COLORS[cat] || '#888';
+        const page = CAT_PAGES[cat] || 'index.html';
+        const param = CAT_FILTER_PARAM[cat] || 'theme';
+        return `<a class="opera-link" href="${page}?${param}=${encodeURIComponent(navSigla)}" onclick="event.stopPropagation()" style="background:${col}18;color:${col};border-color:${col}40">${CAT_LABELS[cat]||cat}<span class="n">${n}</span></a>`;
+      }).join('')
+    : '<span class="opera-links-empty">Nessuna scheda collegata nel dataset</span>';
+  const badgeSigla = o.displaySigla || o.sigla;
+  const subWorkNote = o.isSubWork
+    ? `<div class="opera-raccolta">Incluso in: <span style="cursor:pointer;text-decoration:underline" onclick="event.stopPropagation();showWorkDetail(${jsAttr(o.parentSigla)})">${(SIGLE[o.parentSigla]&&SIGLE[o.parentSigla].titolo_completo)||o.parentSigla} (${o.parentSigla})</span></div>`
+    : '';
+  const altEditionNote = o.isAltEdition
+    ? `<div class="opera-raccolta">Altra edizione di: <span style="cursor:pointer;text-decoration:underline" onclick="event.stopPropagation();showWorkDetail(${jsAttr(o.realSigla)})">${o.titolo_completo} (${o.displaySigla})</span></div>`
+    : '';
+  return `<div class="opera-card" id="opera-${safeDomId(o.sigla)}" onclick="showWorkDetail(${jsAttr(navSigla)})">
+    ${o.isAltEdition ? thumbImgTag(o.sigla, 'opera-thumb', navSigla) : thumbImgTag(navSigla, 'opera-thumb')}
+    <div class="opera-card-body">
+      <div class="opera-head">
+        <span class="opera-title">${o.titolo_completo}</span>
+        <span class="opera-sigla">${badgeSigla}</span>
+      </div>
+      ${o.edizione_originale ? `<div class="opera-edition">${editionHtml(o.edizione_originale)}</div>` : ''}
+      ${altEditionNote || subWorkNote || (o.raccolta ? `<div class="opera-raccolta">Edizione critica: ${formatRaccolta(o.raccolta)}</div>` : '')}
+      <div class="opera-links">${links}</div>
+    </div>
+  </div>`;
+}
+
+function render() {
+  document.getElementById('sn-shown').textContent = filtered.length;
+  const totalLinked = filtered.reduce((s,o) => s + o.total, 0);
+  document.getElementById('sn-items').textContent = totalLinked.toLocaleString('it');
+  const yearsCovered = new Set(filtered.filter(o => o.year).map(o => o.year)).size;
+  document.getElementById('sn-timeline').textContent = yearsCovered;
+  refreshStatsPanel();
+  renderCollectionFilterGroup();
+  renderSiglaPanel();
+
+  if (!filtered.length) {
+    document.getElementById('entries').innerHTML = '<div class="no-results">Nessuna opera trovata.</div>';
+    return;
+  }
+
+  // Just 35 works total — a flat sorted list reads better than splitting
+  // into decade buckets. Undated works fall in wherever doSort() places
+  // them (at the end, for the 'year' sort) without a separate section.
+  document.getElementById('entries').innerHTML = filtered.map(operaCardHtml).join('');
+}
+
+// ── Work detail view — every entry across every category for one work ────────
+
+function showWorkDetail(sigla) {
+  currentWork = sigla;
+  workCatFilter = null;
+  document.getElementById('view-list').style.display = 'none';
+  document.getElementById('view-work').style.display = '';
+  history.pushState({work: sigla}, '', 'opere.html?work=' + encodeURIComponent(sigla));
+  renderWorkDetail();
+  window.scrollTo(0, 0);
+}
+
+function backToList() {
+  currentWork = null;
+  currentCollection = null;
+  document.getElementById('view-list').style.display = '';
+  document.getElementById('view-work').style.display = 'none';
+  document.getElementById('view-collection').style.display = 'none';
+  history.pushState(null, '', 'opere.html');
+}
+
+// ── Collection detail view — every work contained in one Garzanti volume ──────
+// Membership currently comes from each work's `raccolta` field (via
+// collectionOf()); this is the natural place to swap in a dedicated mapping
+// file later without touching the rendering below.
+
+function collectionMembers(collId) {
+  // Preferred source: collections.json — the full, curated contents of the
+  // volume, including works that never got their own sigla/OPERE entry.
+  const fromJson = COLLECTION_WORKS[collId];
+  if (fromJson && fromJson.length) {
+    // If an entry only gives `sigla`, fill in title/pages from the existing
+    // catalog entry so you don't have to retype data that's already there.
+    return fromJson.map(w => {
+      const cataloged = w.sigla && SIGLE[w.sigla];
+      return cataloged
+        ? { titolo: cataloged.titolo_completo, pagine: cataloged.raccolta && cataloged.raccolta.match(/pp\.\s*([\d-]+)/) ? cataloged.raccolta.match(/pp\.\s*([\d-]+)/)[1] : '', ...w, fromJson: true }
+        : { ...w, fromJson: true };
+    });
+  }
+  // Fallback (until collections.json exists): derive membership from
+  // `raccolta`, which only ever surfaces works that already have their own
+  // catalog entry — i.e. it silently misses collection-only pieces.
+  return primaryOnly(OPERE).filter(o => collectionOf(o.raccolta) === collId)
+    .sort((a,b) => alphaSortKey(a.titolo_completo).localeCompare(alphaSortKey(b.titolo_completo), 'it'));
+}
+
+// A collections.json entry written ALL CAPS is the volume's own table-of-
+// contents heading for that sigla, not a distinct related work — skip it.
+function isStraightforwardTitle(t) {
+  return !!t && t === t.toUpperCase() && t !== t.toLowerCase();
+}
+
+function relatedCollectionEntries(sigla) {
+  const out = [];
+  Object.values(COLLECTION_WORKS).forEach(arr => {
+    (arr || []).forEach(w => {
+      if (w.sigla === sigla && !isStraightforwardTitle(w.titolo)) out.push(w);
+    });
+  });
+  return out;
+}
+
+function collectionWorkCardHtml(w) {
+  const hasEntry = w.sigla && SIGLE[w.sigla];
+  return `<div class="opera-card static">
+    <div class="opera-card-body">
+      <div class="opera-head">
+        <span class="opera-title">${w.titolo}</span>
+        ${w.sigla ? `<span class="opera-sigla${hasEntry ? ' opera-sigla-link' : ''}"${hasEntry ? ` onclick="showWorkDetail(${jsAttr(w.sigla)})"` : ''}>${w.sigla}</span>` : ''}
+      </div>
+      ${w.pagine ? `<div class="opera-edition">pp. ${w.pagine}</div>` : ''}
+      ${w.note ? `<div class="opera-blurb">${w.note}</div>` : ''}
+      ${!hasEntry ? '<span class="opera-links-empty">Nessuna scheda collegata nel dataset</span>' : ''}
+    </div>
+  </div>`;
+}
+
+function showCollectionDetail(collId) {
+  currentCollection = collId;
+  currentWork = null;
+  document.getElementById('view-list').style.display = 'none';
+  document.getElementById('view-work').style.display = 'none';
+  document.getElementById('view-collection').style.display = '';
+  history.pushState({collection: collId}, '', 'opere.html?collection=' + encodeURIComponent(collId));
+  renderCollectionDetail();
+  window.scrollTo(0, 0);
+}
+
+function renderCollectionDetail() {
+  const coll = COLLECTIONS.find(c => c.id === currentCollection);
+  if (!coll) return;
+  const imgName = coll.numero.replace(/\s+/g, '');
+  document.getElementById('collection-header').innerHTML = `
+    ${thumbImgTag(imgName, 'work-thumb')}
+    <div class="work-header-body">
+      <div class="opera-head">
+        <span class="opera-title">${coll.titolo}</span>
+        <span class="opera-sigla" style="background:rgba(255,255,255,0.15);color:#e8c89a">${coll.numero}</span>
+      </div>
+      <div class="opera-edition">Garzanti, ${coll.anno} · ISBN ${coll.isbn}</div>
+    </div>
+  `;
+  const members = collectionMembers(currentCollection);
+  document.getElementById('collection-works').innerHTML = members.length
+    ? members.map(m => m.fromJson ? collectionWorkCardHtml(m) : operaCardHtml(m)).join('')
+    : '<div class="no-results">Nessuna opera trovata in questa raccolta.</div>';
+}
+
+function renderWorkDetail() {
+  const sigla = currentWork;
+  const work = OPERE.find(o => o.sigla === sigla);
+  const meta = SIGLE[sigla] || {};
+  const titolo = work ? work.titolo_completo : (meta.titolo_completo || sigla);
+  const edizione = work ? work.edizione_originale : (meta.edizione_originale || '');
+  const raccolta = work ? work.raccolta : (meta.raccolta || '');
+  const badgeSigla = (work && work.displaySigla) || sigla;
+
+  const subWorkNote = (work && work.isSubWork)
+    ? `<div class="opera-raccolta">Incluso in: <span style="cursor:pointer;text-decoration:underline;color:inherit" onclick="showWorkDetail(${jsAttr(work.parentSigla)})">${(SIGLE[work.parentSigla]&&SIGLE[work.parentSigla].titolo_completo)||work.parentSigla} (${work.parentSigla})</span></div>`
+    : (raccolta ? `<div class="opera-raccolta">Edizione critica: ${formatRaccolta(raccolta)}</div>` : '');
+
+  const altEditions = OPERE.filter(o => o.isAltEdition && o.realSigla === sigla)
+    .sort((a,b) => (a.year||9999) - (b.year||9999));
+  document.getElementById('alt-editions-label').style.display = altEditions.length ? '' : 'none';
+  document.getElementById('alt-editions').innerHTML = altEditions.map(operaCardHtml).join('');
+
+  const related = relatedCollectionEntries(sigla);
+  document.getElementById('related-works').innerHTML = related.length
+    ? related.map(w => `
+      <div class="opera-card static">
+        <div class="opera-card-body">
+          <div class="opera-head"><span class="opera-title">${w.titolo}</span></div>
+          ${w.pagine ? `<div class="opera-edition">pp. ${w.pagine}</div>` : ''}
+          ${w.note ? `<div class="opera-blurb">${w.note}</div>` : ''}
+        </div>
+      </div>`).join('')
+    : '<div class="no-results">Nessuna opera correlata trovata.</div>';
+
+  document.getElementById('work-header').innerHTML = `
+    ${thumbImgTag(sigla, 'work-thumb')}
+    <div class="work-header-body">
+      <div class="opera-head">
+        <span class="opera-title">${titolo}</span>
+        <span class="opera-sigla" style="background:rgba(255,255,255,0.15);color:#e8c89a">${badgeSigla}</span>
+      </div>
+      ${edizione ? `<div class="opera-edition">${editionHtml(edizione)}</div>` : ''}
+      ${subWorkNote}
+    </div>
+  `;
+}
+
+window.addEventListener('popstate', function(e) {
+  if (e.state && e.state.work) {
+    currentWork = e.state.work;
+    currentCollection = null;
+    workCatFilter = null;
+    document.getElementById('view-list').style.display = 'none';
+    document.getElementById('view-work').style.display = '';
+    document.getElementById('view-collection').style.display = 'none';
+    renderWorkDetail();
+  } else if (e.state && e.state.collection) {
+    currentCollection = e.state.collection;
+    currentWork = null;
+    document.getElementById('view-list').style.display = 'none';
+    document.getElementById('view-work').style.display = 'none';
+    document.getElementById('view-collection').style.display = '';
+    renderCollectionDetail();
+  } else {
+    currentWork = null;
+    currentCollection = null;
+    document.getElementById('view-list').style.display = '';
+    document.getElementById('view-work').style.display = 'none';
+    document.getElementById('view-collection').style.display = 'none';
+  }
+});
+
+function renderCollectionFilterGroup() {
+  const el = document.getElementById('collection-filter-group');
+  if (!el) return;
+  el.innerHTML = COLLECTIONS.map(c =>
+    `<button class="filter-btn${collectionFilter === c.id ? ' active' : ''}" onclick="setCollectionFilter(${jsAttr(c.id)})">${c.numero}</button>`
+  ).join('');
+}
+
+function renderSiglaPanel() {
+  const entries = primaryOnly(filtered)
+    .map(o => [o.displaySigla || o.sigla, o.total, o.sigla, o.titolo_completo])
+    .sort((a,b) => b[1]-a[1]);
+  const el = document.getElementById('viz-siglas');
+  if (!el) return;
+  el.innerHTML = '';
+  if (!entries.length) { el.innerHTML = '<div style="font-size:0.8rem;color:var(--muted);font-style:italic">—</div>'; return; }
+  const max = Math.max(...entries.map(e => e[1])) || 1;
+  entries.forEach(([label, count, sigla, fullTitle]) => {
+    const row = document.createElement('div'); row.className = 'bar-row';
+    const lbl = document.createElement('button'); lbl.type = 'button';
+    lbl.style.cssText = 'background:none;border:none;padding:0;font:inherit;cursor:pointer';
+    lbl.className = 'bar-row-label';
+    lbl.textContent = label;
+    lbl.onclick = () => showWorkDetail(sigla);
+    const track = document.createElement('div'); track.className = 'bar-track';
+    const fill = document.createElement('div'); fill.className = 'bar-fill';
+    fill.style.width = Math.round(count / max * 100) + '%';
+    track.appendChild(fill);
+    const cnt = document.createElement('div'); cnt.className = 'bar-count'; cnt.textContent = count;
+    row.appendChild(lbl); row.appendChild(track); row.appendChild(cnt);
+    if (fullTitle) {
+      const tip = document.createElement('div'); tip.className = 'bar-tooltip'; tip.textContent = fullTitle;
+      row.appendChild(tip);
+    }
+    el.appendChild(row);
+  });
+}
+
+function barListHtml(entries, onClickAttr) {
+  if (!entries.length) return '<div style="font-size:0.85rem;color:var(--muted);font-style:italic">—</div>';
+  const max = Math.max(...entries.map(e => e[1]));
+  const n = entries.length;
+  const width = Math.max(560, n * 56);
+  const height = 220;
+  const padL = 28, padR = 28, padTop = 22, padBottom = 56;
+  const plotW = width - padL - padR;
+  const plotH = height - padTop - padBottom;
+  const points = entries.map(([label, count], i) => {
+    const x = padL + (n === 1 ? plotW/2 : (i/(n-1)) * plotW);
+    const y = padTop + plotH - (count/max) * plotH;
+    const safeLabel = String(label).replace(/"/g,'&quot;');
+    return `
+      <g class="scatter-g" onclick="${onClickAttr(label)}">
+        <line class="scatter-guide" x1="${x}" y1="${y}" x2="${x}" y2="${padTop+plotH}"></line>
+        <text class="scatter-count" x="${x}" y="${y-8}">${count}</text>
+        <circle class="scatter-pt" cx="${x}" cy="${y}" r="5"></circle>
+        <text class="scatter-label" x="0" y="0" transform="translate(${x},${padTop+plotH+14}) rotate(45)">${String(label).length > 22 ? String(label).slice(0,21)+'…' : label}<title>${safeLabel}</title></text>
+      </g>`;
+  }).join('');
+  return `<div class="scatter-wrap"><svg class="scatter-svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+    <line class="scatter-guide" x1="${padL}" y1="${padTop+plotH}" x2="${width-padR}" y2="${padTop+plotH}"></line>
+    ${points}
+  </svg></div>`;
+}
+
+// Alt-edition cards duplicate a parent work's title/schede under a
+// different publisher — excluded here so per-work aggregate stats
+// (collana/timeline/categorie) count each work once, not once per edition.
+function primaryOnly(list) { return list.filter(o => !o.isAltEdition); }
+
+function statsPanelContent(key) {
+  if (key === 'collections') {
+    const counts = {};
+    primaryOnly(filtered).forEach(o => {
+      const collId = collectionOf(o.raccolta);
+      const coll = collId && COLLECTIONS.find(c => c.id === collId);
+      const label = coll ? coll.numero : 'Fuori raccolta';
+      counts[label] = (counts[label]||0) + 1;
+    });
+    const entries = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+    return barListHtml(entries, label => {
+      const coll = COLLECTIONS.find(c => c.numero === label);
+      return `event.stopPropagation();setCollectionFilter(${coll ? jsAttr(coll.id) : 'null'})`;
+    });
+  }
+  if (key === 'categories') {
+    const catCounts = {};
+    primaryOnly(filtered).forEach(o => {
+      Object.entries(o.counts).forEach(([cat, n]) => { catCounts[cat] = (catCounts[cat]||0) + n; });
+    });
+    const entries = Object.entries(catCounts).map(([cat,n]) => [CAT_LABELS[cat]||cat, n]).sort((a,b) => b[1]-a[1]);
+    return barListHtml(entries, () => `event.stopPropagation();`);
+  }
+  if (key === 'timeline') {
+    const counts = {};
+    primaryOnly(filtered).forEach(o => { if (o.year) counts[o.year] = (counts[o.year]||0) + 1; });
+    const entries = Object.entries(counts).sort((a,b) => Number(a[0]) - Number(b[0]));
+    return barListHtml(entries, () => `event.stopPropagation();`);
+  }
+  return '';
+}
+
+let activeStatsPanel = null;
+function setStatsPanel(key) {
+  const detail = document.getElementById('stats-detail');
+  const sameKey = activeStatsPanel === key;
+  document.querySelectorAll('#stats-bar .stat').forEach(b => b.classList.remove('active'));
+  if (sameKey) {
+    activeStatsPanel = null;
+    detail.classList.remove('open');
+    return;
+  }
+  activeStatsPanel = key;
+  document.getElementById(key === 'collections' ? 'stat-shown' : 'stat-items').classList.add('active');
+  detail.innerHTML = statsPanelContent(key);
+  detail.classList.add('open');
+}
+
+function refreshStatsPanel() {
+  if (activeStatsPanel) document.getElementById('stats-detail').innerHTML = statsPanelContent(activeStatsPanel);
+}
+
+function toggleExportDrawer() {
+  document.getElementById('export-drawer').classList.toggle('open');
+  document.getElementById('viz-scrim').classList.toggle('open');
+  document.getElementById('viz-edge-tab').classList.toggle('open');
+}
+
+function applyFontScale(scale) {
+  const clamped = Math.min(1.5, Math.max(0.85, scale));
+  document.documentElement.style.setProperty('--font-scale', clamped);
+  localStorage.setItem('og_font_scale', clamped);
+}
+function adjustFontScale(delta) {
+  const current = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--font-scale')) || 1;
+  applyFontScale(current + delta);
+}
+function resetFontScale() { applyFontScale(1); }
+
+function toggleHighContrast(on) {
+  document.documentElement.classList.toggle('high-contrast', on);
+  localStorage.setItem('og_high_contrast', on ? '1' : '0');
+}
+
+(function initA11y() {
+  const savedScale = parseFloat(localStorage.getItem('og_font_scale'));
+  if (!isNaN(savedScale)) document.documentElement.style.setProperty('--font-scale', savedScale);
+  const savedContrast = localStorage.getItem('og_high_contrast') === '1';
+  if (savedContrast) {
+    document.documentElement.classList.add('high-contrast');
+    document.addEventListener('DOMContentLoaded', () => {
+      const cb = document.getElementById('contrast-toggle');
+      if (cb) cb.checked = true;
+    });
+  }
+})();
+
+function submitReport(evt) {
+  evt.preventDefault();
+  const desc = document.getElementById('report-desc').value.trim();
+  const email = document.getElementById('report-email').value.trim();
+  if (!desc) return;
+  const subject = 'OpenGadda — Segnalazione errore (Opere)';
+  const bodyLines = [
+    desc,
+    '',
+    '---',
+    'Pagina: ' + location.href,
+    email ? 'Email di contatto: ' + email : null
+  ].filter(Boolean);
+  const mailto = 'mailto:segnalazioni@opengadda.it'
+    + '?subject=' + encodeURIComponent(subject)
+    + '&body=' + encodeURIComponent(bodyLines.join('\n'));
+  window.location.href = mailto;
+  document.getElementById('report-sent').classList.add('show');
+  document.getElementById('report-form').reset();
+}
+
+function exportData(fmt) {
+  if (!filtered || !filtered.length) return;
+  const rows = filtered.map(o => ({
+    sigla: o.sigla, titolo_completo: o.titolo_completo, edizione_originale: o.edizione_originale,
+    edizioni_successive: (o.edizioni || []).join('; '),
+    raccolta: o.raccolta, year: o.year, schede_collegate: o.total
+  }));
+  let content, mime, ext;
+  if (fmt === 'json') {
+    content = JSON.stringify(rows, null, 2);
+    mime = 'application/json'; ext = 'json';
+  } else {
+    const keys = Object.keys(rows[0]);
+    const esc = v => '"' + String(v==null?'':v).replace(/"/g,'""') + '"';
+    const csvRows = [keys.join(','), ...rows.map(d => keys.map(k => esc(d[k])).join(','))];
+    content = csvRows.join('\n');
+    mime = 'text/csv'; ext = 'csv';
+  }
+  const blob = new Blob([content], {type: mime});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'opengadda_export.' + ext;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+Promise.all([
+  fetch('items.json').then(r => r.json()),
+  fetch('sigle_gadda.json').then(r => r.json()),
+  // Full per-collection contents — includes works that only exist inside a
+  // given Garzanti volume and never got their own sigla/OPERE entry, so
+  // collectionMembers() can't derive them from `raccolta` alone. Optional:
+  // falls back to the raccolta-based listing until this file is added.
+  // Expected shape: { "RR I": [ { titolo, sigla /* or null */, pagine, note }, ... ], ... }
+  fetch('collections.json').then(r => r.json()).catch(() => ({}))
+]).then(([allData, sigleData, collectionsData]) => {
+  SIGLE = sigleData.sigle || {};
+  ALL_DATA = allData;
+  COLLECTION_WORKS = collectionsData || {};
+  SUB_WORKS = Object.entries(sigleData.sub_opere || {})
+    .filter(([key, sw]) => key !== '_meta' && sw && sw.matchTitle)
+    .map(([key, sw]) => ({ key, ...sw }));
+
+  const counts = {};
+  allData.forEach(it => {
+    (it.themes || []).forEach(t => {
+      if (!SIGLE[t]) return;
+      if (!counts[t]) counts[t] = {};
+      counts[t][it.category] = (counts[t][it.category] || 0) + 1;
+    });
+  });
+
+  OPERE = Object.entries(SIGLE).map(([sigla, meta]) => {
+    const catCounts = counts[sigla] || {};
+    const total = Object.values(catCounts).reduce((s,n) => s+n, 0);
+    return {
+      sigla,
+      titolo_completo: meta.titolo_completo || sigla,
+      edizione_originale: meta.edizione_originale || '',
+      edizioni: meta.edizioni || [],
+      raccolta: meta.raccolta || '',
+      year: extractYear(meta.edizione_originale),
+      counts: catCounts,
+      total,
+    };
+  });
+
+  // Further editions (a work republished by a different publishing house):
+  // sigle_gadda.json's optional `edizioni` array holds one "Città, Editore,
+  // Anno" string per extra edition. Each becomes its own card — same title
+  // and same linked schede as the parent work — rather than a line appended
+  // under the parent's card, so it's independently visible/filterable
+  // (e.g. by publisher) in the main grid.
+  Object.entries(SIGLE).forEach(([sigla, meta]) => {
+    (meta.edizioni || []).forEach((edizione, i) => {
+      const parent = OPERE.find(o => o.sigla === sigla);
+      if (!parent) return;
+      OPERE.push({
+        sigla: sigla + '__ed' + i,
+        realSigla: sigla,
+        displaySigla: sigla,
+        isAltEdition: true,
+        titolo_completo: parent.titolo_completo,
+        edizione_originale: edizione,
+        raccolta: parent.raccolta,
+        year: extractYear(edizione),
+        counts: parent.counts,
+        total: 0, // avoids double-counting the parent's schede in aggregate stats
+      });
+    });
+  });
+
+  // Sub-works: only added when a real matching item exists — never
+  // fabricated. Inherits the parent sigla's raccolta so it still shows up
+  // correctly under the right "Opere I–V" collection filter.
+  SUB_WORKS.forEach(sw => {
+    // Titles are matched loosely against a trailing full stop — some
+    // catalog entries for the same piece were transcribed with one
+    // ("Norme per la redazione di un testo radiofonico.") and some without.
+    const norm = t => (t || '').trim().replace(/\.$/, '');
+    const matches = allData.filter(it => norm(it.title) === norm(sw.matchTitle) && (it.themes||[]).includes(sw.parentSigla));
+    if (!matches.length) return;
+    const catCounts = {};
+    matches.forEach(it => { catCounts[it.category] = (catCounts[it.category]||0) + 1; });
+    const parentMeta = SIGLE[sw.parentSigla] || {};
+    OPERE.push({
+      sigla: sw.key,
+      displaySigla: sw.parentSigla,
+      isSubWork: true,
+      parentSigla: sw.parentSigla,
+      matchTitle: sw.matchTitle,
+      titolo_completo: sw.titolo_completo,
+      edizione_originale: sw.edizione_originale || '',
+      raccolta: parentMeta.raccolta || '',
+      year: extractYear(sw.edizione_originale),
+      counts: catCounts,
+      total: matches.length,
+    });
+    // Further editions, same mechanism as regular sigle (see the `edizioni`
+    // loop above) — each becomes its own card rather than appended text.
+    (sw.edizioni || []).forEach((edizione, i) => {
+      OPERE.push({
+        sigla: sw.key + '__ed' + i,
+        realSigla: sw.key,
+        displaySigla: sw.parentSigla,
+        isAltEdition: true,
+        titolo_completo: sw.titolo_completo,
+        edizione_originale: edizione,
+        raccolta: parentMeta.raccolta || '',
+        year: extractYear(edizione),
+        counts: catCounts,
+        total: 0,
+      });
+    });
+  });
+
+  const totalLinked = OPERE.reduce((s,o) => s + o.total, 0);
+  document.getElementById('header-sub').textContent =
+    `${totalLinked.toLocaleString('it')} schede collegate nel dataset`;
+
+  renderCollections();
+  applyFilters();
+
+  const urlP = new URLSearchParams(window.location.search);
+  if (urlP.get('work')) showWorkDetail(decodeURIComponent(urlP.get('work')));
+  else if (urlP.get('collection')) showCollectionDetail(decodeURIComponent(urlP.get('collection')));
+}).catch(err => {
+  console.error('Errore caricamento dati:', err);
+  document.getElementById('entries').innerHTML = '<p style="padding:2rem;color:#c00;font-family:monospace">Errore: ' + err + '</p>';
+});
+</script>
+</body>
+</html>

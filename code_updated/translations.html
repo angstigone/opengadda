@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenGadda — Traduzioni</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1814; --paper: #f5f0e8; --accent: #6a5a1a; --accent-light: #b09a3a;
+  --muted: #7a7268; --border: #c8bfaa; --white: #fdfaf5; --tag-bg: #f0ecdc; --tag-text: #6a5a1a;
+  --font-scale: 1;
+}
+:root.high-contrast {
+  --ink: #000000; --paper: #ffffff; --accent: #5a4a00; --accent-light: #5a4a00;
+  --muted: #3a3a3a; --border: #000000; --white: #ffffff; --tag-bg: #e6e6e6; --tag-text: #000000;
+}
+html { font-size: calc(16px * var(--font-scale)); }
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'EB Garamond',Georgia,serif; background:var(--paper); color:var(--ink); }
+nav { background:var(--ink); border-bottom:2px solid var(--accent); display:flex; align-items:center; padding:0 2.5rem; gap:2rem; height:52px; position:sticky; top:0; z-index:100; }
+.nav-brand { font-family:'DM Mono',monospace; font-size:13px; letter-spacing:0.18em; color:var(--white); text-decoration:none; margin-right:auto; }
+nav a { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#9a9080; text-decoration:none; transition:color 0.2s; }
+nav a:hover, nav a.active { color:#e8c89a; }
+
+header { background:var(--ink); color:var(--white); padding:2.5rem 2.5rem 2rem; border-bottom:3px solid var(--accent); }
+header .eyebrow { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:#5a5248; margin-bottom:0.5rem; }
+header h1 { font-size:2.4rem; font-weight:400; font-style:italic; margin-bottom:0.4rem; }
+header p { color:#9a9080; font-size:1rem; }
+
+
+.lang-map { background:var(--tag-bg); border-bottom:1px solid var(--border); padding:0.85rem 2rem; margin:-1.5rem -2rem 1.25rem; }
+.lang-bubbles { display:flex; flex-wrap:wrap; gap:8px; }
+.lang-bubble { border:1px solid var(--border); border-radius:20px; padding:3px 12px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.05em; cursor:pointer; transition:border-color 0.15s, color 0.15s, background 0.15s; color:var(--muted); background:var(--paper); }
+.opera-preview { font-family:'EB Garamond',serif; font-size:12px; font-style:italic; color:var(--muted); margin-top:6px; min-height:16px; }
+.lang-bubble:hover { border-color:var(--accent); color:var(--accent); }
+.lang-bubble.active { background:var(--accent); border-color:var(--accent); color:var(--white); }
+.lang-bubble .n { opacity:0.65; margin-left:4px; }
+.layout { display:grid; grid-template-columns:240px 1fr 220px; min-height:calc(100vh - 180px); }
+.viz-static-panel { background:var(--white); border-left:1px solid var(--border); padding:1.25rem 1rem; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; }
+.bar-row { display:flex; align-items:center; gap:6px; margin-bottom:5px; font-size:0.8rem; }
+.bar-row-label { flex:1; min-width:0; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--ink); font-family:'EB Garamond',serif; cursor:pointer; }
+.bar-row-label:hover { color:var(--accent); }
+.bar-row-label.active-bar { color:var(--accent); font-weight:500; }
+.bar-track { width:56px; flex-shrink:0; background:var(--tag-bg); border-radius:2px; height:7px; overflow:hidden; }
+.bar-fill { height:100%; background:var(--accent); border-radius:2px; transition:width 0.3s; }
+.bar-count { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); width:20px; flex-shrink:0; text-align:right; }
+.sidebar-expand-btn { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); background:none; border:none; cursor:pointer; padding:4px 0 0; margin-top:2px; }
+.viz-label-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.9rem; }
+.viz-sort-btn { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); background:none; border:1px solid var(--border); border-radius:2px; cursor:pointer; padding:2px 6px; }
+.viz-sort-btn:hover, .viz-sort-btn.active { color:var(--accent); border-color:var(--accent); }
+.sidebar-expand-btn:hover { text-decoration:underline; }
+.range-wrap { display:flex; gap:6px; align-items:center; font-size:0.85rem; color:var(--muted); }
+.range-wrap input[type=number] { width:68px; padding:0.3rem 0.4rem; font-family:'DM Mono',monospace; font-size:12px; border:1px solid var(--border); background:var(--paper); color:var(--ink); border-radius:2px; outline:none; }
+#lang-filters .filter-btn { align-items:flex-start; gap:8px; padding:0.4rem 0.5rem; }
+.sidebar { background:var(--white); border-right:1px solid var(--border); padding:1.5rem 1.25rem; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; }
+.sidebar-section { margin-bottom:1.75rem; }
+.sidebar-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:0.6rem; display:block; }
+.sidebar input[type=text] { width:100%; padding:0.5rem 0.6rem; font-family:'EB Garamond',serif; font-size:1rem; border:1px solid var(--border); background:var(--paper); color:var(--ink); border-radius:2px; outline:none; }
+.sidebar input[type=text]:focus { border-color:var(--accent); }
+.filter-group { display:flex; flex-direction:column; gap:3px; }
+.filter-btn { text-align:left; background:none; border:none; padding:0.3rem 0.5rem; font-family:'EB Garamond',serif; font-size:0.9rem; color:var(--muted); cursor:pointer; border-radius:2px; display:flex; justify-content:space-between; align-items:center; transition:background 0.15s,color 0.15s; }
+.filter-btn:hover { background:var(--tag-bg); color:var(--ink); }
+.filter-btn.active { background:var(--accent); color:var(--white); }
+.filter-btn .count { font-family:'DM Mono',monospace; font-size:10px; opacity:0.7; }
+
+.main { padding:1.5rem 2rem; min-width: 0; overflow-x: clip; }
+.stats-accordion { border:1px solid var(--border); border-radius:3px; margin-bottom:1.25rem; overflow:hidden; }
+.stats-bar { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); }
+.stat { background:var(--white); padding:0.75rem 1rem; text-align:center; cursor:pointer; transition:background 0.15s; border:none; font-family:inherit; width:100%; }
+.stat:hover { background:var(--tag-bg); }
+.stat.active { background:var(--tag-bg); }
+.stat-n { font-family:'DM Mono',monospace; font-size:1.3rem; font-weight:500; color:var(--accent); display:block; }
+.stat-l { font-size:0.8rem; color:var(--muted); }
+.stats-detail { max-height:0; overflow:hidden; transition:max-height 0.25s ease; border-top:0 solid var(--border); background:var(--white); }
+.stats-detail.open { max-height:320px; overflow-y:auto; border-top-width:1px; padding:1.25rem 1.25rem 0.5rem; }
+.scatter-wrap { width:100%; overflow-x:auto; }
+.scatter-svg { display:block; }
+.scatter-pt { fill:var(--accent); stroke:var(--white); stroke-width:1.5; cursor:pointer; transition:r 0.15s, fill 0.15s; }
+.scatter-pt:hover { fill:var(--accent-light); }
+.scatter-guide { stroke:var(--border); stroke-width:1; }
+.scatter-count { font-family:'DM Mono',monospace; font-size:9px; fill:var(--muted); text-anchor:middle; pointer-events:none; }
+.scatter-label { font-family:'EB Garamond',serif; font-size:10.5px; fill:var(--ink); }
+.scatter-g:hover .scatter-label { fill:var(--accent); }
+.scatter-g:hover .scatter-count { fill:var(--ink); }
+
+.entry { border-bottom:1px solid var(--border); padding:0.9rem 0.25rem; display:grid; grid-template-columns:64px 1fr auto; gap:0.75rem; align-items:start; transition:background 0.15s; cursor:pointer; }
+.entry:hover { background:var(--white); padding-left:0.5rem; padding-right:0.5rem; margin:0 -0.25rem; }
+.entry-year { font-family:'DM Mono',monospace; font-size:11px; color:var(--accent); padding-top:3px; text-align:right; }
+.entry-title { font-size:1rem; font-weight:500; font-style:italic; line-height:1.3; color:var(--ink); margin-bottom:3px; }
+.entry-source { font-family:'DM Mono',monospace; font-size:10px; color:#9a9080; letter-spacing:0.04em; }
+.entry-line { font-size:1.1rem; line-height:1.4; color:var(--ink); }
+.entry-title-inline { font-style:italic; }
+.type-tag { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.1em; text-transform:uppercase; background:var(--tag-bg); color:var(--tag-text); padding:2px 6px; border-radius:2px; white-space:nowrap; flex-shrink:0; align-self:start; margin-top:3px; }
+.type-tag:hover { background:var(--accent); color:var(--white); cursor:pointer; white-space:normal; }
+.tag-full { display:none; font-style:italic; text-transform:none; letter-spacing:0; }
+.tag-full::before { content:' · '; font-style:normal; opacity:0.6; }
+.type-tag:hover .tag-full { display:inline; }
+
+.no-results { text-align:center; padding:4rem 1rem; color:var(--muted); font-style:italic; font-size:1.1rem; }
+
+@media(max-width:700px) { .layout { grid-template-columns:1fr; } .sidebar { position:static; height:auto; border-right:none; border-bottom:1px solid var(--border); } }
+
+.person-link { color: var(--accent); cursor: pointer; border-bottom: 1px dotted var(--accent); }
+.person-link:hover { border-bottom-style: solid; }
+.conn-badges { display:flex; flex-direction:column; gap:4px; margin-top:4px; align-items:flex-start; }
+.conn-badge { font-family:'DM Mono',monospace; font-size:9px; padding:1px 6px; border-radius:2px; font-weight:600; letter-spacing:0.05em; white-space:nowrap; cursor:pointer; }
+.filter-banner { display:none; background:#dff0e8; border:1px solid #c8bfaa; border-radius:3px; padding:0.55rem 1rem; margin-bottom:1rem; align-items:center; justify-content:space-between; font-family:'DM Mono',monospace; font-size:11px; }
+.filter-banner.active { display:flex; }
+.filter-banner button { background:none; border:none; cursor:pointer; color:#7a7268; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.08em; }
+.expand-search-btn { color:var(--accent) !important; border:1px solid var(--accent); border-radius:2px; padding:1px 8px; margin-right:8px; }
+
+.viz-scrim { position:fixed; inset:52px 0 0 0; background:rgba(20,18,14,0.35); opacity:0; pointer-events:none; transition:opacity 0.2s; z-index:150; }
+.viz-scrim.open { opacity:1; pointer-events:all; }
+.viz-panel { position:fixed; top:52px; right:0; width:280px; height:calc(100vh - 52px); background:var(--white); border-left:1px solid var(--border); padding:1.25rem 1.25rem; overflow-y:auto; transform:translateX(100%); transition:transform 0.25s ease; z-index:160; box-shadow:-6px 0 16px rgba(0,0,0,0.1); }
+.viz-panel.open { transform:translateX(0); }
+.viz-edge-tab { position:fixed; top:50%; right:0; transform:translateY(-50%); width:28px; height:64px; background:var(--ink); color:var(--white); border:none; border-radius:6px 0 0 6px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; z-index:161; box-shadow:-3px 0 10px rgba(0,0,0,0.15); transition:right 0.25s ease, background 0.15s; }
+.viz-edge-tab:hover { background: var(--accent); }
+.viz-edge-tab.open { right:280px; }
+.viz-edge-tab .arrow { display:inline-block; transition:transform 0.25s ease; }
+.viz-edge-tab.open .arrow { transform:rotate(180deg); }
+.viz-panel-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; }
+.viz-panel-title { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink); }
+.viz-panel-close { background:none; border:none; cursor:pointer; color:var(--muted); font-size:1.1rem; padding:0; line-height:1; }
+.viz-panel-close:hover { color:var(--accent); }
+.viz-section { margin-bottom:2rem; }
+.viz-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:0.9rem; display:block; }
+.viz-desc { font-size:0.85rem; color:var(--muted); margin-bottom:0.9rem; line-height:1.5; }
+.viz-export-btn { display:flex; align-items:center; justify-content:space-between; width:100%; text-align:left; font-family:'EB Garamond',serif; font-size:1rem; background:var(--paper); border:1px solid var(--border); color:var(--ink); padding:0.65rem 0.9rem; border-radius:3px; cursor:pointer; margin-bottom:8px; transition:border-color 0.15s, background 0.15s; }
+.viz-export-btn:hover { border-color:var(--accent); background:var(--white); }
+.viz-export-btn .ext { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:0.08em; }
+.a11y-row { display:flex; align-items:center; gap:8px; margin-bottom:0.75rem; }
+.a11y-btn { width:36px; height:36px; border-radius:3px; border:1px solid var(--border); background:var(--paper); color:var(--ink); cursor:pointer; font-family:'DM Mono',monospace; display:flex; align-items:center; justify-content:center; transition:border-color 0.15s, background 0.15s; }
+.a11y-btn:hover { border-color:var(--accent); background:var(--white); }
+.a11y-btn.small { font-size:12px; }
+.a11y-btn.large { font-size:18px; }
+.a11y-reset { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); background:none; border:none; cursor:pointer; }
+.a11y-reset:hover { color:var(--accent); }
+.a11y-toggle-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; font-size:0.9rem; color:var(--ink); }
+.a11y-switch { position:relative; width:38px; height:22px; flex-shrink:0; }
+.a11y-switch input { opacity:0; width:100%; height:100%; margin:0; cursor:pointer; position:absolute; z-index:1; }
+.a11y-switch-track { position:absolute; inset:0; background:var(--border); border-radius:11px; transition:background 0.15s; }
+.a11y-switch-thumb { position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%; background:var(--white); transition:transform 0.15s; }
+.a11y-switch input:checked ~ .a11y-switch-track { background:var(--accent); }
+.a11y-switch input:checked ~ .a11y-switch-thumb { transform:translateX(16px); }
+.report-field { display:block; width:100%; font-family:'EB Garamond',serif; font-size:0.95rem; color:var(--ink); background:var(--paper); border:1px solid var(--border); border-radius:3px; padding:0.6rem 0.75rem; margin-bottom:8px; outline:none; }
+.report-field:focus { border-color:var(--accent); }
+.report-textarea { min-height:80px; resize:vertical; font-family:'EB Garamond',serif; }
+.report-submit { text-align:center; justify-content:center; background:var(--accent); color:var(--white); border-color:var(--accent); }
+.report-submit:hover { background:var(--accent-light); border-color:var(--accent-light); }
+.report-sent { display:none; font-size:0.85rem; color:var(--accent); margin-top:8px; line-height:1.5; }
+.report-sent.show { display:block; }
+@media(max-width:900px) { .layout { grid-template-columns:240px 1fr; } .viz-static-panel { display:none; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">OpenGadda</a>
+  <a href="opere.html">Opere</a>
+  <a href="archive.html">Archivi</a>
+  <a href="primary_bibliography.html">Bib. primaria</a>
+  <a href="secondary_bibliography.html">Bib. secondaria</a>
+  <a href="library.html">Biblioteca</a>
+  <a href="epistolario.html">Epistolario</a>
+  <a href="translations.html" class="active">Traduzioni</a>
+</nav>
+
+<header>
+  <div class="eyebrow">OpenGadda</div>
+  <h1>Traduzioni</h1>
+  <p>115 traduzioni · 15 lingue · 1961–oggi</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <span class="sidebar-label">Ricerca</span>
+      <input type="text" id="search" placeholder="Titolo, traduttore…" oninput="applyFilters()">
+    </div>
+    <div class="sidebar-section">
+      <span class="sidebar-label">Anno</span>
+      <div class="range-wrap">
+        <input type="number" id="yearFrom" placeholder="dal" oninput="applyFilters()">
+        <span>—</span>
+        <input type="number" id="yearTo" placeholder="al" oninput="applyFilters()">
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <span class="sidebar-label">Ordinamento</span>
+      <div class="filter-group">
+        <button class="filter-btn active" onclick="setSort('year')" id="s-year">Cronologico</button>
+        <button class="filter-btn" onclick="setSort('author')" id="s-author">Autore</button>
+        <button class="filter-btn" onclick="setSort('title')" id="s-title">Titolo</button>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <span class="sidebar-label">Lingua</span>
+      <div class="filter-group" id="lang-filters"></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="lang-map">
+      <div class="lang-bubbles" id="opera-chips"></div>
+      <div class="opera-preview" id="opera-preview"></div>
+    </div>
+    <div class="stats-accordion">
+      <div class="stats-bar" id="stats-bar">
+        <button class="stat" id="stat-records" onclick="setStatsPanel('records')"><span class="stat-n" id="sn-total">0</span><span class="stat-l">traduzioni totali</span></button>
+        <button class="stat" id="stat-translators" onclick="setStatsPanel('translators')"><span class="stat-n" id="sn-shown">0</span><span class="stat-l">traduttori distinti</span></button>
+        <button class="stat" id="stat-works" onclick="setStatsPanel('works')"><span class="stat-n" id="sn-works">0</span><span class="stat-l">opere</span></button>
+        <button class="stat" id="stat-langs" onclick="setStatsPanel('langs')"><span class="stat-n" id="sn-langs">0</span><span class="stat-l">lingue</span></button>
+      </div>
+      <div class="stats-detail" id="stats-detail"></div>
+    </div>
+    <div id="filter-banner" class="filter-banner">
+      <span id="filter-banner-text"></span>
+      <button class="expand-search-btn" onclick="expandToDataset()">Cerca nel dataset →</button><button onclick="clearFilter()">× Torna a questa sezione</button>
+    </div>
+    <div id="entries"><div style="padding:3rem 1rem;text-align:center;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted)">Caricamento…</div></div>
+  </main>
+  <aside class="viz-static-panel">
+    <div class="viz-section">
+      <div class="viz-label-row">
+        <span class="viz-label" onclick="clearFilter()" style="cursor:pointer;margin-bottom:0" title="Mostra tutti">Traduttori</span>
+        <button class="viz-sort-btn" id="translators-sort-btn" onclick="toggleTranslatorsSort()">A–Z</button>
+      </div>
+      <div id="viz-translators"></div>
+      <button class="sidebar-expand-btn" id="translators-expand-btn" onclick="toggleTranslatorsExpand()">Mostra tutti</button>
+    </div>
+    <div class="viz-section">
+      <span class="viz-label" onclick="clearFilter()" style="cursor:pointer" title="Mostra tutti">Editori</span>
+      <div id="viz-publishers"></div>
+    </div>
+  </aside>
+</div>
+
+<button class="viz-edge-tab" id="viz-edge-tab" onclick="toggleVizPanel()" aria-label="Esporta dati e accessibilità"><span class="arrow">‹</span></button>
+<div class="viz-scrim" id="viz-scrim" onclick="toggleVizPanel()"></div>
+<aside class="viz-panel" id="viz-panel">
+  <div class="viz-panel-head">
+    <span class="viz-panel-title">Esporta &amp; accessibilità</span>
+    <button class="viz-panel-close" onclick="toggleVizPanel()" aria-label="Chiudi">✕</button>
+  </div>
+  <div class="viz-section">
+    <span class="viz-label">Esporta dati</span>
+    <p class="viz-desc">Scarica i record attualmente filtrati.</p>
+    <button class="viz-export-btn" onclick="exportData('csv')">Scarica come CSV <span class="ext">.csv</span></button>
+    <button class="viz-export-btn" onclick="exportData('json')">Scarica come JSON <span class="ext">.json</span></button>
+  </div>
+  <div class="viz-section">
+    <span class="viz-label">Accessibilità</span>
+    <p class="viz-desc">Dimensione del testo</p>
+    <div class="a11y-row">
+      <button class="a11y-btn small" onclick="adjustFontScale(-0.1)" aria-label="Riduci testo">A−</button>
+      <button class="a11y-btn large" onclick="adjustFontScale(0.1)" aria-label="Ingrandisci testo">A+</button>
+      <button class="a11y-reset" onclick="resetFontScale()">Reimposta</button>
+    </div>
+    <div class="a11y-toggle-row">
+      <span>Alto contrasto</span>
+      <label class="a11y-switch">
+        <input type="checkbox" id="contrast-toggle" onchange="toggleHighContrast(this.checked)">
+        <span class="a11y-switch-track"></span>
+        <span class="a11y-switch-thumb"></span>
+      </label>
+    </div>
+  </div>
+  <div class="viz-section">
+    <span class="viz-label">Segnala un errore</span>
+    <p class="viz-desc">Hai trovato un dato sbagliato o mancante? Facci sapere cosa e dove.</p>
+    <form id="report-form" onsubmit="submitReport(event)">
+      <textarea class="report-field report-textarea" id="report-desc" placeholder="Descrivi il problema (es. titolo, ID del record, cosa non torna)…" required></textarea>
+      <input class="report-field" id="report-email" type="email" placeholder="La tua email (facoltativa)">
+      <button class="viz-export-btn report-submit" type="submit">Invia segnalazione</button>
+    </form>
+    <p class="report-sent" id="report-sent">Grazie — si è aperto il tuo client email con la segnalazione pronta da inviare.</p>
+  </div>
+</aside>
+
+<script>
+let DATA = [];
+let ALL_DATA = [];
+let themeFilter = null;
+let venueFilter = null;
+let personFilter = null;
+let filtered = [];
+let sortKey = 'year';
+let sortDir = 1;
+let activeLang = '';
+
+function parseTrad(d) {
+  const parts = d.detail ? d.detail.split(' · ') : [];
+  return { pub: parts[0]||'', city: parts[1]||'', translator: parts[2]||'' };
+}
+
+function setLang(lang) {
+  activeLang = lang; currentFilterTerm = lang;
+  applyFilters();
+}
+
+function themeColor(t) {
+  const palette = ['#7a3b1e','#1e4a7a','#1a6a40','#6a3a1a','#5a1e7a','#6a5a1a','#2a5a6a','#7a1e4a','#3a5a1a','#1a3a6a','#6a1a1a','#1a6a5a'];
+  let h = 0; for (let i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) >>> 0;
+  return palette[h % palette.length];
+}
+
+function buildOperaBtns(pool) {
+  if (!pool) pool = ALL_DATA.filter(d => d.category === 'translation');
+  const container = document.getElementById('opera-chips');
+  container.innerHTML = '';
+  const counts = {};
+  pool.forEach(d => (d.themes||[]).filter(Boolean).forEach(t => { counts[t] = (counts[t]||0)+1; }));
+  const operas = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+
+  const allBtn = document.createElement('button');
+  allBtn.className = 'lang-bubble' + (!themeFilter ? ' active' : '');
+  allBtn.textContent = 'Tutte';
+  allBtn.onclick = () => {
+    themeFilter = null;
+    container.querySelectorAll('.lang-bubble').forEach(b => b.classList.remove('active'));
+    allBtn.classList.add('active');
+    document.getElementById('filter-banner').classList.remove('active');
+    applyFilters();
+  };
+  container.appendChild(allBtn);
+
+  operas.forEach(([op, cnt]) => {
+    const btn = document.createElement('button');
+    btn.className = 'lang-bubble' + (themeFilter === op ? ' active' : '');
+    const fullT = (SIGLE[op] && SIGLE[op].titolo_completo) ? SIGLE[op].titolo_completo : '';
+    btn.innerHTML = op + ' <span class="n">' + cnt + '</span>';
+    if (fullT) {
+      const shortHTML = btn.innerHTML;
+      let leaveTimer;
+      btn.addEventListener('mouseenter', () => { clearTimeout(leaveTimer); btn.innerHTML = '<em style="font-style:italic;text-transform:none;letter-spacing:0">' + fullT + '</em>'; btn.style.whiteSpace = 'normal'; });
+      btn.addEventListener('mouseleave', () => { leaveTimer = setTimeout(() => { btn.innerHTML = shortHTML; btn.style.whiteSpace = ''; }, 200); });
+    }
+    btn.dataset.val = op;
+    btn.onclick = () => {
+      const isActive = themeFilter === op;
+      container.querySelectorAll('.lang-bubble').forEach(b => b.classList.remove('active'));
+      themeFilter = isActive ? null : op;
+      if (!isActive) { btn.classList.add('active'); currentFilterTerm = op; document.getElementById('filter-banner').classList.add('active'); document.getElementById('filter-banner-text').textContent = 'Opera: ' + op; }
+      else { allBtn.classList.add('active'); document.getElementById('filter-banner').classList.remove('active'); }
+      applyFilters();
+    };
+    container.appendChild(btn);
+  });
+}
+
+
+
+function activateCrossFilter(label) {
+  DATA = ALL_DATA;
+  document.getElementById('filter-banner').classList.add('active');
+  document.getElementById('filter-banner-text').textContent = label;
+}
+
+
+let currentFilterTerm = '';
+function expandToDataset() {
+  if (currentFilterTerm) window.location.href = 'search.html?q=' + encodeURIComponent(currentFilterTerm);
+}
+function setThemeFilter(t) {
+  themeFilter = t; currentFilterTerm = t;
+  activeType = null;
+  document.getElementById('search').value = '';
+  document.querySelectorAll('#type-btns .filter-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('filter-banner').classList.add('active');
+  document.getElementById('filter-banner-text').textContent = 'Scheda tematica: ' + t;
+  DATA = ALL_DATA.filter(d => d.category === 'translation');
+  applyFilters();
+}
+
+
+function setVenueFilter(v) {
+  venueFilter = v; currentFilterTerm = v; themeFilter = null; personFilter = null;
+  activateCrossFilter('Ricerca trasversale — Editore: ' + v);
+  applyFilters();
+}
+function setPersonFilter(name) {
+  personFilter = name; currentFilterTerm = name; themeFilter = null; venueFilter = null;
+  activateCrossFilter('Traduttore: ' + name);
+  applyFilters();
+}
+function clearFilter() {
+  themeFilter = null; venueFilter = null; personFilter = null; activeLang = ''; activeDecadeLabel = null;
+  DATA = ALL_DATA.filter(d => d.category === 'translation');
+  document.getElementById('filter-banner').classList.remove('active');
+  document.querySelectorAll('#opera-chips .lang-bubble').forEach(b => b.classList.remove('active'));
+  const allBubble = document.querySelector('#opera-chips .lang-bubble');
+  if (allBubble) allBubble.classList.add('active');
+  applyFilters();
+}
+
+function applyFilters() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const yf = parseInt(document.getElementById('yearFrom').value) || 0;
+  const yt = parseInt(document.getElementById('yearTo').value) || 9999;
+  // Pool without themeFilter — used to compute which opera buttons to show
+  const preThemePool = ALL_DATA.filter(d => {
+    if (d.category !== 'translation') return false;
+    if (activeLang && d.subtitle !== activeLang) return false;
+    if (venueFilter && !(d.detail||'').toLowerCase().includes(venueFilter.toLowerCase())) return false;
+    if (personFilter && !(d.people||[]).some(p => p.name === personFilter)) return false;
+    if (q && !((d.title||'').toLowerCase().includes(q) || (d.detail||'').toLowerCase().includes(q))) return false;
+    if (d.year === null) { if (yf > 0 || yt < 9999) return false; }
+    else if (d.year < yf || d.year > yt) return false;
+    return true;
+  });
+  buildOperaBtns(preThemePool);
+  filtered = preThemePool.filter(d => !themeFilter || (d.themes||[]).includes(themeFilter));
+  doSort(); render();
+}
+
+function alphaSortKey(name) {
+  let s = (name || '').trim();
+  let changed = true;
+  while (changed) {
+    changed = false;
+    const noQuote = s.replace(/^[\s"'“”‘’«»″]+/, '');
+    if (noQuote !== s) { s = noQuote; changed = true; }
+    const noParen = s.replace(/^\([^)]*\)\s*/, '');
+    if (noParen !== s) { s = noParen; changed = true; }
+  }
+  return s;
+}
+
+function doSort() {
+  filtered.sort((a,b) => {
+    if (sortKey==='year') return sortDir*(a.year-b.year);
+    if (sortKey==='author') return sortDir*alphaSortKey(getTranslatorNames(a)[0]||'').localeCompare(alphaSortKey(getTranslatorNames(b)[0]||''), 'it');
+    return sortDir*alphaSortKey(a.title).localeCompare(alphaSortKey(b.title), 'it');
+  });
+}
+
+function setSort(key) {
+  if (sortKey===key) sortDir*=-1; else {sortKey=key; sortDir=1;}
+  ['year','author','title'].forEach(k=>document.getElementById('s-'+k).classList.toggle('active',k===key));
+  doSort(); render();
+}
+
+function buildLangFilters() {
+  const counts = {};
+  DATA.forEach(d => { if (d.subtitle) counts[d.subtitle] = (counts[d.subtitle]||0)+1; });
+  const list = Object.keys(counts).sort((a,b) => counts[b]-counts[a]);
+  const container = document.getElementById('lang-filters');
+  container.innerHTML = '';
+  list.forEach(lang => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.dataset.lang = lang;
+    btn.innerHTML = lang + ' <span class="count">' + counts[lang] + '</span>';
+    btn.onclick = () => {
+      activeLang = activeLang === lang ? '' : lang;
+      currentFilterTerm = activeLang;
+      applyFilters();
+    };
+    container.appendChild(btn);
+  });
+  syncLangButtons();
+}
+
+function syncLangButtons() {
+  document.querySelectorAll('#lang-filters .filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === activeLang);
+  });
+}
+
+function getTranslatorNames(d) {
+  const people = (d.people||[]).filter(p=>p.role==='traduttore').map(p=>p.name);
+  if (people.length) return people;
+  const t = parseTrad(d).translator;
+  return t ? [t] : [];
+}
+
+function renderViz(containerId, entries, onClickFn) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = '';
+  if (!entries.length) { el.innerHTML = '<div style="font-size:0.8rem;color:var(--muted);font-style:italic">—</div>'; return; }
+  const max = entries[0][1];
+  entries.forEach(([label, count]) => {
+    const row = document.createElement('div'); row.className = 'bar-row';
+    const lbl = document.createElement('div'); lbl.className = 'bar-row-label';
+    lbl.title = label; lbl.textContent = label;
+    lbl.addEventListener('click', () => onClickFn(label));
+    const track = document.createElement('div'); track.className = 'bar-track';
+    const fill = document.createElement('div'); fill.className = 'bar-fill';
+    fill.style.width = Math.round(count / max * 100) + '%';
+    track.appendChild(fill);
+    const cnt = document.createElement('div'); cnt.className = 'bar-count'; cnt.textContent = count;
+    row.appendChild(lbl); row.appendChild(track); row.appendChild(cnt);
+    el.appendChild(row);
+  });
+}
+
+let translatorsExpanded = false;
+function toggleTranslatorsExpand() {
+  translatorsExpanded = !translatorsExpanded;
+  renderSidebarViz();
+}
+
+let translatorsSortMode = 'count';
+function toggleTranslatorsSort() {
+  translatorsSortMode = translatorsSortMode === 'count' ? 'alpha' : 'count';
+  if (translatorsSortMode === 'alpha') translatorsExpanded = true;
+  renderSidebarViz();
+}
+
+function renderSidebarViz() {
+  const counts = {};
+  filtered.forEach(d => getTranslatorNames(d).forEach(name => { counts[name] = (counts[name]||0)+1; }));
+  const entries = Object.entries(counts).sort((a,b) =>
+    translatorsSortMode === 'alpha' ? alphaSortKey(a[0]).localeCompare(alphaSortKey(b[0]), 'it') : b[1]-a[1]
+  );
+  const sortBtn = document.getElementById('translators-sort-btn');
+  if (sortBtn) { sortBtn.textContent = translatorsSortMode === 'alpha' ? 'N°' : 'A–Z'; sortBtn.classList.toggle('active', translatorsSortMode === 'alpha'); }
+  const shown = translatorsExpanded ? entries : entries.slice(0, 10);
+  renderViz('viz-translators', shown, label => personFilter === label ? clearFilter() : setPersonFilter(label));
+  document.querySelectorAll('#viz-translators .bar-row-label').forEach(lbl => {
+    lbl.classList.toggle('active-bar', lbl.textContent === personFilter);
+  });
+  const expandBtn = document.getElementById('translators-expand-btn');
+  if (expandBtn) {
+    if (entries.length <= 10) {
+      expandBtn.style.display = 'none';
+    } else {
+      expandBtn.style.display = '';
+      expandBtn.textContent = translatorsExpanded ? 'Mostra meno' : 'Mostra tutti (' + entries.length + ')';
+    }
+  }
+
+  const publisherCounts = {};
+  filtered.forEach(d => { const pub = parseTrad(d).pub; if (pub) publisherCounts[pub] = (publisherCounts[pub]||0)+1; });
+  const publisherEntries = Object.entries(publisherCounts).sort((a,b) => b[1]-a[1]).slice(0, 10);
+  renderViz('viz-publishers', publisherEntries, label => venueFilter === label ? clearFilter() : setVenueFilter(label));
+  document.querySelectorAll('#viz-publishers .bar-row-label').forEach(lbl => {
+    lbl.classList.toggle('active-bar', lbl.textContent === venueFilter);
+  });
+}
+
+function render() {
+  document.getElementById('sn-total').textContent = filtered.length;
+  document.getElementById('sn-shown').textContent = new Set(filtered.flatMap(getTranslatorNames)).size;
+  document.getElementById('sn-langs').textContent = new Set(filtered.map(d=>d.subtitle).filter(Boolean)).size;
+  document.getElementById('sn-works').textContent = new Set(filtered.flatMap(d=>(d.themes||[]).filter(Boolean))).size;
+  refreshStatsPanel();
+  syncLangButtons();
+  renderSidebarViz();
+
+  if (!filtered.length) { document.getElementById('entries').innerHTML='<div class="no-results">Nessuna traduzione trovata.</div>'; return; }
+
+  document.getElementById('entries').innerHTML = filtered.map(d => {
+    const {pub, city, translator} = parseTrad(d);
+    const people = (d.people||[]).filter(p=>p.role==='traduttore');
+    const tradLink = people.length
+      ? people.map(p=>`<span class="person-link" data-name="${p.name.replace(/"/g,'&quot;')}" onclick="event.stopPropagation();setPersonFilter(this.dataset.name)" style="color:var(--muted)">${p.name}</span>`).join('; ')
+      : (translator ? `<span class="person-link" data-name="${translator.replace(/"/g,'&quot;')}" onclick="event.stopPropagation();setPersonFilter(this.dataset.name)" style="color:var(--muted)">${translator}</span>` : '');
+    const titleHtml = `<span class="entry-title-inline">${d.title||''}</span>`;
+    const lineParts = [tradLink, titleHtml, pub, city].filter(Boolean);
+    const typeTag = d.subtitle ? '<span class="type-tag" style="cursor:pointer" data-lang="' + d.subtitle.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();activeLang=activeLang===this.dataset.lang?\'\':this.dataset.lang;applyFilters()">' + d.subtitle + '</span>' : '';
+    const operaTags = (d.themes||[]).length ? '<div class="conn-badges" style="margin-top:4px">' + (d.themes||[]).map(t => '<span class="type-tag" style="cursor:pointer" data-opera="' + t.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();setThemeFilter(this.dataset.opera)">' + t + ((SIGLE[t]&&SIGLE[t].titolo_completo) ? '<span class="tag-full">' + SIGLE[t].titolo_completo + '</span>' : '') + '</span>').join(' ') + '</div>' : '';
+    return `<div class="entry" onclick="goDetail('${d.id}')">
+      <div class="entry-year">${d.year !== null ? d.year : 's.d.'}</div>
+      <div>
+        ${lineParts.length ? `<div class="entry-line">${lineParts.join(' · ')}</div>` : ''}
+        ${operaTags}
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+        ${typeTag}
+        ${connBadges(d.id,'translation')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+
+let CONN_SUMMARY = {};
+const BADGE_COLORS = {"library": "#7a3b1e", "secondary bibliography": "#1e4a7a", "primary bibliography": "#1a6a40", "archive": "#6a3a1a", "letter": "#5a1e7a", "translation": "#6a5a1a"};
+const BADGE_SHORT = {"library": "Bib.", "secondary bibliography": "Bib. sec.", "primary bibliography": "Bib. prim.", "archive": "Arc.", "letter": "Ep.", "translation": "Trad."};
+function connBadges(id, ownCat) {
+  const cats = CONN_SUMMARY[id];
+  if (!cats || !cats.length) return '';
+  const filtered2 = cats.filter(c => c !== ownCat);
+  if (!filtered2.length) return '';
+  return '<div class="conn-badges">' + filtered2.map(c => {
+    const col = BADGE_COLORS[c] || '#888';
+    const lbl = BADGE_SHORT[c] || c;
+    return `<span class="conn-badge" style="background:${col}18;color:${col};border:1px solid ${col}40" onclick="event.stopPropagation();window.location='detail.html?id=${id}'">${lbl}</span>`;
+  }).join('') + '</div>';
+}
+
+let SIGLE = {};
+Promise.all([
+  fetch('items.json').then(r => r.json()),
+  fetch('conn_summary.json').then(r => r.json()),
+  fetch('sigle_gadda.json').then(r => r.json()).catch(() => ({}))
+]).then(([allData, summary, sigleData]) => {
+  SIGLE = sigleData.sigle || {};
+  ALL_DATA = allData;
+  DATA = allData.filter(d => d.category === 'translation');
+  CONN_SUMMARY = summary;
+  buildLangFilters();
+  const urlP = new URLSearchParams(window.location.search);
+  if (urlP.get('theme')) setThemeFilter(decodeURIComponent(urlP.get('theme')));
+  else if (urlP.get('venue')) setVenueFilter(decodeURIComponent(urlP.get('venue')));
+  else if (urlP.get('person')) setPersonFilter(decodeURIComponent(urlP.get('person')));
+  else applyFilters();
+  const _saved = sessionStorage.getItem('og_list_'+location.pathname);
+  if (_saved) {
+    try { const _s=JSON.parse(_saved); setTimeout(()=>window.scrollTo(0,_s.scrollY||0),80); } catch(e){}
+    sessionStorage.removeItem('og_list_'+location.pathname);
+  }
+}).catch(err => {
+  console.error('Errore caricamento dati:', err);
+  document.getElementById('entries').innerHTML = '<p style="padding:2rem;color:#c00;font-family:monospace">Errore: ' + err + '</p>';
+});
+
+window.addEventListener('pageshow', function(e) {
+  if (!e.persisted) return;
+  const _saved = sessionStorage.getItem('og_list_'+location.pathname);
+  if (_saved) {
+    try { setTimeout(()=>window.scrollTo(0,JSON.parse(_saved).scrollY||0),80); } catch(e2){}
+    sessionStorage.removeItem('og_list_'+location.pathname);
+  }
+});
+
+function goDetail(id) { sessionStorage.setItem('og_list_'+location.pathname, JSON.stringify({scrollY:window.scrollY})); window.location.href='detail.html?id='+id; }
+
+let activeStatsPanel = null;
+
+function barListHtml(entries, onClickAttr) {
+  if (!entries.length) return '<div style="font-size:0.85rem;color:var(--muted);font-style:italic">—</div>';
+  const max = Math.max(...entries.map(e => e[1]));
+  const n = entries.length;
+  const width = Math.max(560, n * 56);
+  const height = 220;
+  const padL = 28, padR = 28, padTop = 22, padBottom = 56;
+  const plotW = width - padL - padR;
+  const plotH = height - padTop - padBottom;
+  const points = entries.map(([label, count], i) => {
+    const x = padL + (n === 1 ? plotW/2 : (i/(n-1)) * plotW);
+    const y = padTop + plotH - (count/max) * plotH;
+    const safeLabel = String(label).replace(/"/g,'&quot;');
+    return `
+      <g class="scatter-g" onclick="${onClickAttr(label)}">
+        <line class="scatter-guide" x1="${x}" y1="${y}" x2="${x}" y2="${padTop+plotH}"></line>
+        <text class="scatter-count" x="${x}" y="${y-8}">${count}</text>
+        <circle class="scatter-pt" cx="${x}" cy="${y}" r="5"></circle>
+        <text class="scatter-label" x="0" y="0" transform="translate(${x},${padTop+plotH+14}) rotate(45)">${String(label).length > 22 ? String(label).slice(0,21)+'…' : label}<title>${safeLabel}</title></text>
+      </g>`;
+  }).join('');
+  return `<div class="scatter-wrap"><svg class="scatter-svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+    <line class="scatter-guide" x1="${padL}" y1="${padTop+plotH}" x2="${width-padR}" y2="${padTop+plotH}"></line>
+    ${points}
+  </svg></div>`;
+}
+
+function statsPanelContent(key) {
+  if (key === 'records') {
+    const counts = {};
+    filtered.forEach(d => {
+      const dec = d.year !== null ? Math.floor(d.year/10)*10 + 's' : 'Senza data';
+      counts[dec] = (counts[dec]||0)+1;
+    });
+    const entries = Object.entries(counts).sort((a,b) => {
+      if (a[0] === 'Senza data') return 1;
+      if (b[0] === 'Senza data') return -1;
+      return parseInt(a[0]) - parseInt(b[0]);
+    });
+    return barListHtml(entries, label => `event.stopPropagation();setDecadeFilter('${label}')`);
+  }
+  if (key === 'translators') {
+    const counts = {};
+    filtered.forEach(d => getTranslatorNames(d).forEach(name => { counts[name] = (counts[name]||0)+1; }));
+    const entries = Object.entries(counts).sort((a,b) => b[1]-a[1]).slice(0, 15);
+    return barListHtml(entries, label => `event.stopPropagation();personFilter==='${label.replace(/'/g,"\\'")}'?clearFilter():setPersonFilter('${label.replace(/'/g,"\\'")}')`);
+  }
+  if (key === 'langs') {
+    const counts = {};
+    filtered.forEach(d => { if (d.subtitle) counts[d.subtitle] = (counts[d.subtitle]||0)+1; });
+    const entries = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+    return barListHtml(entries, label => `event.stopPropagation();activeLang=activeLang==='${label.replace(/'/g,"\\'")}'?'':'${label.replace(/'/g,"\\'")}';applyFilters();`);
+  }
+  if (key === 'works') {
+    const counts = {};
+    filtered.forEach(d => (d.themes||[]).filter(Boolean).forEach(op => { counts[op] = (counts[op]||0)+1; }));
+    const entries = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+    return barListHtml(entries, label => `event.stopPropagation();themeFilter==='${label.replace(/'/g,"\\'")}'?clearFilter():setThemeFilter('${label.replace(/'/g,"\\'")}')`);
+  }
+  return '';
+}
+
+let activeDecadeLabel = null;
+function setDecadeFilter(label) {
+  if (activeDecadeLabel === label) {
+    activeDecadeLabel = null;
+    document.getElementById('yearFrom').value=''; document.getElementById('yearTo').value='';
+    applyFilters();
+    return;
+  }
+  activeDecadeLabel = label;
+  if (label === 'Senza data') { document.getElementById('yearFrom').value=''; document.getElementById('yearTo').value=''; }
+  else {
+    const dec = parseInt(label);
+    document.getElementById('yearFrom').value = dec;
+    document.getElementById('yearTo').value = dec+9;
+  }
+  applyFilters();
+}
+
+function setStatsPanel(key) {
+  const detail = document.getElementById('stats-detail');
+  const sameKey = activeStatsPanel === key;
+  document.querySelectorAll('.stat').forEach(b => b.classList.remove('active'));
+  if (sameKey) {
+    activeStatsPanel = null;
+    detail.classList.remove('open');
+    return;
+  }
+  activeStatsPanel = key;
+  document.getElementById('stat-' + key).classList.add('active');
+  detail.innerHTML = statsPanelContent(key);
+  detail.classList.add('open');
+}
+
+function refreshStatsPanel() {
+  if (activeStatsPanel) document.getElementById('stats-detail').innerHTML = statsPanelContent(activeStatsPanel);
+}
+
+function toggleVizPanel() {
+  document.getElementById('viz-panel').classList.toggle('open');
+  document.getElementById('viz-scrim').classList.toggle('open');
+  document.getElementById('viz-edge-tab').classList.toggle('open');
+}
+
+function applyFontScale(scale) {
+  const clamped = Math.min(1.5, Math.max(0.85, scale));
+  document.documentElement.style.setProperty('--font-scale', clamped);
+  localStorage.setItem('og_font_scale', clamped);
+}
+function adjustFontScale(delta) {
+  const current = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--font-scale')) || 1;
+  applyFontScale(current + delta);
+}
+function resetFontScale() { applyFontScale(1); }
+
+function toggleHighContrast(on) {
+  document.documentElement.classList.toggle('high-contrast', on);
+  localStorage.setItem('og_high_contrast', on ? '1' : '0');
+}
+
+(function initA11y() {
+  const savedScale = parseFloat(localStorage.getItem('og_font_scale'));
+  if (!isNaN(savedScale)) document.documentElement.style.setProperty('--font-scale', savedScale);
+  const savedContrast = localStorage.getItem('og_high_contrast') === '1';
+  if (savedContrast) {
+    document.documentElement.classList.add('high-contrast');
+    document.addEventListener('DOMContentLoaded', () => {
+      const cb = document.getElementById('contrast-toggle');
+      if (cb) cb.checked = true;
+    });
+  }
+})();
+
+function submitReport(evt) {
+  evt.preventDefault();
+  const desc = document.getElementById('report-desc').value.trim();
+  const email = document.getElementById('report-email').value.trim();
+  if (!desc) return;
+  const subject = 'OpenGadda — Segnalazione errore (Traduzioni)';
+  const bodyLines = [
+    desc,
+    '',
+    '---',
+    'Pagina: ' + location.href,
+    email ? 'Email di contatto: ' + email : null
+  ].filter(Boolean);
+  const mailto = 'mailto:segnalazioni@opengadda.it'
+    + '?subject=' + encodeURIComponent(subject)
+    + '&body=' + encodeURIComponent(bodyLines.join('\n'));
+  window.location.href = mailto;
+  document.getElementById('report-sent').classList.add('show');
+  document.getElementById('report-form').reset();
+}
+
+function exportData(fmt) {
+  if (!filtered || !filtered.length) return;
+  let content, mime, ext;
+  if (fmt === 'json') {
+    content = JSON.stringify(filtered, null, 2);
+    mime = 'application/json'; ext = 'json';
+  } else {
+    const keys = [...new Set(filtered.flatMap(d => Object.keys(d)))].filter(k => !['themes','people','genitore','figlio'].includes(k));
+    const esc = v => '"' + String(v==null?'':v).replace(/"/g,'""') + '"';
+    const rows = [keys.join(','), ...filtered.map(d => keys.map(k => {
+      const v = d[k];
+      if (Array.isArray(v)) return esc(v.join('; '));
+      return esc(v);
+    }).join(','))];
+    content = rows.join('\n');
+    mime = 'text/csv'; ext = 'csv';
+  }
+  const blob = new Blob([content], {type: mime});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'opengadda_export.' + ext;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

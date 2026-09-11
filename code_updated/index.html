@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenGadda — Archivio digitale di Carlo Emilio Gadda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1814;
+  --paper: #f5f0e8;
+  --paper2: #ede8dc;
+  --accent: #7a3b1e;
+  --accent-light: #c8794a;
+  --muted: #7a7268;
+  --border: #c8bfaa;
+  --white: #fdfaf5;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'EB Garamond', Georgia, serif; background: var(--ink); color: var(--ink); min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ── NAV ── */
+nav { background:var(--ink); border-bottom:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; padding:0 2.5rem; gap:2rem; height:52px; position:fixed; top:0; left:0; right:0; z-index:100; }
+.nav-brand { font-family:'DM Mono',monospace; font-size:13px; letter-spacing:0.18em; color:var(--white); text-decoration:none; margin-right:auto; }
+nav a { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:rgba(255,255,255,0.4); text-decoration:none; transition:color 0.2s; }
+nav a:hover, nav a.active { color:rgba(255,255,255,0.85); }
+
+/* ── HERO ── */
+.hero {
+  flex: 1;
+  min-height: 100vh;
+  background: var(--ink);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+  padding: 6rem 2rem 3rem;
+  position: relative;
+}
+.hero-eyebrow {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--accent-light); margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-size: clamp(3rem, 8vw, 6rem); font-weight: 400;
+  font-style: italic; letter-spacing: -0.02em; line-height: 1.05;
+  color: var(--white); margin-bottom: 1.25rem;
+}
+.hero h1 em { color: var(--accent-light); font-style: normal; }
+.hero-sub {
+  font-size: 1.1rem; color: rgba(255,255,255,0.45);
+  max-width: 480px; line-height: 1.7; margin-bottom: 3rem;
+}
+.hero-divider {
+  width: 40px; height: 1px; background: var(--accent);
+  margin: 0 auto 3rem;
+}
+.hero-stats {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 1.75rem 2.25rem;
+  margin-top: -1.75rem; margin-bottom: 3rem;
+}
+.hero-stat { text-align: center; }
+.hero-stat-count {
+  font-family: 'DM Mono', monospace; font-size: 1.3rem; color: var(--white);
+}
+.hero-stat-label {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: rgba(255,255,255,0.4); margin-top: 0.35rem;
+}
+
+/* ── BOTTOM SECTIONS ── */
+.bottom-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  background: var(--paper2);
+}
+@media (max-width: 700px) { .bottom-grid { grid-template-columns: 1fr; } }
+
+.bottom-cell {
+  padding: 2.5rem 3rem;
+  border-right: 1px solid var(--border);
+  text-decoration: none; color: var(--ink);
+  transition: background 0.2s;
+}
+.bottom-cell:last-child { border-right: none; }
+.bottom-cell:hover { background: var(--paper); }
+.bottom-cell-label {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--muted); display: block; margin-bottom: 0.6rem;
+}
+.bottom-cell-title {
+  font-size: 1.1rem; font-weight: 500; color: var(--ink);
+  margin-bottom: 0.4rem;
+}
+.bottom-cell-desc {
+  font-size: 0.875rem; color: var(--muted); line-height: 1.5;
+}
+
+/* ── OVERLAY ── */
+.search-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(20,18,14,0.82);
+  display: flex; flex-direction: column; align-items: center;
+  padding-top: 80px;
+  opacity: 0; pointer-events: none; transition: opacity 0.18s;
+}
+.search-overlay.open { opacity: 1; pointer-events: all; }
+.overlay-box { width: min(640px, 90vw); }
+.overlay-input-wrap { position: relative; margin-bottom: 8px; }
+.overlay-input {
+  width: 100%; background: var(--white); border: 1px solid var(--border);
+  border-radius: 6px; padding: 0.85rem 3rem 0.85rem 1.1rem;
+  font-family: 'EB Garamond', Georgia, serif; font-size: 1.15rem;
+  color: var(--ink); outline: none;
+}
+.overlay-input:focus { border-color: var(--accent); }
+.overlay-close {
+  position: absolute; right: 0.85rem; top: 50%; transform: translateY(-50%);
+  background: none; border: none; color: var(--muted); font-size: 1.2rem;
+  cursor: pointer; padding: 0;
+}
+.s-results {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 6px; overflow: hidden;
+  max-height: 420px; overflow-y: auto; display: none;
+}
+.s-results.open { display: block; }
+.s-result {
+  padding: 0.6rem 1rem; border-bottom: 1px solid var(--border);
+  cursor: pointer; display: flex; gap: 10px; align-items: baseline;
+  transition: background 0.1s;
+}
+.s-result:last-of-type { border-bottom: none; }
+.s-result:hover { background: var(--paper); }
+.s-year { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); flex-shrink: 0; }
+.s-badge { font-family: 'DM Mono', monospace; font-size: 9px; padding: 1px 5px; border-radius: 2px; white-space: nowrap; flex-shrink: 0; }
+.s-title { font-size: 0.9rem; font-weight: 500; color: var(--ink); line-height: 1.3; }
+.s-sub { font-size: 0.82rem; color: var(--muted); }
+.s-hint { padding: 0.5rem 1rem; font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); border-top: 1px solid var(--border); background: var(--paper2); }
+.s-empty, .s-loading { padding: 1rem; text-align: center; color: var(--muted); font-size: 0.9rem; font-style: italic; }
+
+/* ── NAV SEARCH BUTTON ── */
+.nav-search-btn {
+  margin-left: auto; background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 4px;
+  padding: 4px 10px; cursor: pointer; color: rgba(255,255,255,0.4);
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em;
+  display: flex; align-items: center; gap: 6px; transition: all 0.2s;
+}
+.nav-search-btn:hover { border-color: var(--accent-light); color: var(--accent-light); }
+
+/* ── ADVANCED SEARCH PANEL ── */
+.adv-toggle-btn {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.1em;
+  text-transform: uppercase; background: none; border: none; cursor: pointer;
+  color: rgba(255,255,255,0.35); padding: 4px 0; margin-top: 6px;
+  display: block; transition: color 0.15s;
+}
+.adv-toggle-btn:hover { color: rgba(255,255,255,0.7); }
+.adv-panel {
+  display: none; margin-top: 10px;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 6px; padding: 1.25rem;
+}
+.adv-panel.open { display: block; }
+.adv-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;
+}
+.adv-field label {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 4px;
+}
+.adv-field input {
+  width: 100%; padding: 6px 8px; font-family: 'EB Garamond', serif; font-size: 1rem;
+  border: 1px solid var(--border); background: var(--paper); color: var(--ink);
+  border-radius: 2px; outline: none;
+}
+.adv-field input:focus { border-color: var(--accent); }
+.adv-year-wrap { display: flex; gap: 6px; align-items: center; }
+.adv-year-wrap input { font-family: 'DM Mono', monospace; font-size: 12px; }
+.adv-year-wrap span { color: var(--muted); flex-shrink: 0; }
+.adv-cats {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;
+}
+.adv-cats label {
+  font-family: 'DM Mono', monospace; font-size: 10px; cursor: pointer;
+  display: flex; align-items: center; gap: 4px; color: var(--ink);
+}
+.adv-actions { display: flex; gap: 8px; }
+.adv-btn-run {
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em;
+  text-transform: uppercase; background: var(--accent); color: #fff;
+  border: none; padding: 6px 18px; border-radius: 2px; cursor: pointer;
+}
+.adv-btn-clear {
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em;
+  text-transform: uppercase; background: none; color: var(--muted);
+  border: 1px solid var(--border); padding: 5px 14px; border-radius: 2px; cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">OpenGadda</a>
+  <a href="opere.html">Opere</a>
+  <a href="archive.html">Archivi</a>
+  <a href="primary_bibliography.html">Bib. primaria</a>
+  <a href="secondary_bibliography.html">Bib. secondaria</a>
+  <a href="library.html">Biblioteca</a>
+  <a href="epistolario.html">Epistolario</a>
+  <a href="translations.html">Traduzioni</a>
+  <button class="nav-search-btn" id="overlay-open-btn" aria-label="Apri ricerca">⌕ Cerca</button>
+</nav>
+<div class="hero">
+  <div class="hero-eyebrow">Entra</div>
+  <h1>Open<em>Gadda</em></h1>
+  <div class="hero-divider"></div>
+  <p class="hero-sub">Archivio digitale aperto dedicato a Carlo Emilio Gadda (1893–1973): opere, biblioteca personale, critica, epistolario, manoscritti e traduzioni.</p>
+  <div class="hero-stats" id="hero-stats"></div>
+</div>
+
+<div class="bottom-grid">
+  <a href="contacts.html" class="bottom-cell">
+    <span class="bottom-cell-label">Documentazione</span>
+    <div class="bottom-cell-title">Una guida alla piattaforma</div>
+    <p class="bottom-cell-desc">Contiene il workflow utilizzato e una spiegazione del sito</p>
+  </a>
+  <a href="credits.html" class="bottom-cell">
+    <span class="bottom-cell-label">Crediti</span>
+    <div class="bottom-cell-title">Il team di ricerca</div>
+    <p class="bottom-cell-desc">Responsabili scientifici, collaboratori e istituzioni che hanno reso possibile questa edizione.</p>
+  </a>
+  <a href="terms.html" class="bottom-cell">
+    <span class="bottom-cell-label">Termini e condizioni</span>
+    <div class="bottom-cell-title">Licenza e utilizzo</div>
+    <p class="bottom-cell-desc">Condizioni di utilizzo dei dati, licenza aperta e norme per la citazione.</p>
+  </a>
+</div>
+
+
+<div class="search-overlay" id="search-overlay" role="dialog" aria-modal="true" aria-label="Ricerca globale">
+  <div class="overlay-box">
+    <div class="overlay-input-wrap">
+      <input id="overlay-search" class="overlay-input" type="text" placeholder="Cerca in tutto l'archivio…" autocomplete="off" spellcheck="false">
+      <button class="overlay-close" id="overlay-close-btn" aria-label="Chiudi">✕</button>
+    </div>
+    <button class="adv-toggle-btn" id="adv-toggle-btn">Ricerca avanzata ▾</button>
+    <div class="adv-panel" id="adv-panel">
+      <div class="adv-grid">
+        <div class="adv-field">
+          <label>Titolo</label>
+          <input id="adv-title" type="text" placeholder="es. Pasticciaccio">
+        </div>
+        <div class="adv-field">
+          <label>Autore / Persona</label>
+          <input id="adv-author" type="text" placeholder="es. Contini, Gianfranco">
+        </div>
+        <div class="adv-field">
+          <label>Editore / Rivista</label>
+          <input id="adv-pub" type="text" placeholder="es. Einaudi">
+        </div>
+        <div class="adv-field">
+          <label>Anno (da — a)</label>
+          <div class="adv-year-wrap">
+            <input id="adv-from" type="number" placeholder="1900">
+            <span>—</span>
+            <input id="adv-to" type="number" placeholder="2025">
+          </div>
+        </div>
+      </div>
+      <div class="adv-cats" id="adv-cats">
+        <label><input type="checkbox" value="archive" checked> Archivi</label>
+        <label><input type="checkbox" value="primary bibliography" checked> Bib. primaria</label>
+        <label><input type="checkbox" value="secondary bibliography" checked> Bib. secondaria</label>
+        <label><input type="checkbox" value="library" checked> Biblioteca</label>
+        <label><input type="checkbox" value="letter" checked> Epistolario</label>
+        <label><input type="checkbox" value="translation" checked> Traduzioni</label>
+      </div>
+      <div class="adv-actions">
+        <button class="adv-btn-run" id="adv-run">Cerca</button>
+        <button class="adv-btn-clear" id="adv-clear">Azzera</button>
+      </div>
+    </div>
+    <div class="s-results" id="overlay-results"></div>
+  </div>
+</div>
+
+
+<script>
+(function() {
+  var CAT_COLORS = {"library": "#7a3b1e", "secondary bibliography": "#1e4a7a", "primary bibliography": "#1a6a40", "archive": "#6a3a1a", "letter": "#5a1e7a", "translation": "#6a5a1a"};
+  var CAT_LABELS = {"library": "Biblioteca", "secondary bibliography": "Bib. secondaria", "primary bibliography": "Bib. primaria", "archive": "Archivi", "letter": "Epistolario", "translation": "Traduzioni"};
+  var ALL_DATA = null;
+  var loadPromise = null;
+
+  function loadData() {
+    if (loadPromise) return loadPromise;
+    loadPromise = fetch('items.json').then(function(r) { return r.json(); }).then(function(d) { ALL_DATA = d; return d; });
+    return loadPromise;
+  }
+
+  function renderResults(hits, q, container) {
+    container.innerHTML = '';
+    if (!hits.length) {
+      var empty = document.createElement('div');
+      empty.className = 's-empty';
+      empty.textContent = 'Nessun risultato per «' + q + '»';
+      container.appendChild(empty);
+      container.classList.add('open');
+      return;
+    }
+    hits.forEach(function(d) {
+      var col = CAT_COLORS[d.category] || '#888';
+      var lbl = CAT_LABELS[d.category] || d.category;
+      var row = document.createElement('div');
+      row.className = 's-result';
+      row.dataset.id = d.id;
+      var year = document.createElement('span');
+      year.className = 's-year';
+      year.textContent = d.year;
+      var badge = document.createElement('span');
+      badge.className = 's-badge';
+      badge.style.cssText = 'background:' + col + '18;color:' + col + ';border:1px solid ' + col + '40';
+      badge.textContent = lbl;
+      var info = document.createElement('div');
+      var title = document.createElement('div');
+      title.className = 's-title';
+      title.textContent = d.title || '';
+      info.appendChild(title);
+      if (d.subtitle && d.subtitle !== d.title) {
+        var sub = document.createElement('div');
+        sub.className = 's-sub';
+        sub.textContent = d.subtitle;
+        info.appendChild(sub);
+      }
+      row.appendChild(year);
+      row.appendChild(badge);
+      row.appendChild(info);
+      container.appendChild(row);
+    });
+    var hint = document.createElement('div');
+    hint.className = 's-hint';
+    hint.textContent = hits.length === 30 ? 'Primi 30 risultati — affina la ricerca' : hits.length + ' risultati';
+    container.appendChild(hint);
+    container.classList.add('open');
+  }
+
+  // Navigate on click via event delegation
+  document.addEventListener('click', function(e) {
+    var row = e.target.closest('.s-result[data-id]');
+    if (row) { window.location.href = 'detail.html?id=' + row.dataset.id; }
+  });
+
+  function doSearch(q, container) {
+    if (!q || q.length < 2) { container.classList.remove('open'); return; }
+    if (!ALL_DATA) {
+      container.innerHTML = '<div class="s-loading">Caricamento…</div>';
+      container.classList.add('open');
+      loadData().then(function() { doSearch(q, container); });
+      return;
+    }
+    var ql = q.toLowerCase();
+    var hits = ALL_DATA.filter(function(d) {
+      return (d.title||'').toLowerCase().includes(ql) ||
+             (d.subtitle||'').toLowerCase().includes(ql) ||
+             (d.detail||'').toLowerCase().includes(ql);
+    }).slice(0, 30);
+    renderResults(hits, q, container);
+  }
+
+  function bindInput(inputEl, resultsEl) {
+    var t;
+    inputEl.addEventListener('focus', function() { loadData(); });
+    inputEl.addEventListener('input', function() {
+      clearTimeout(t);
+      var q = this.value.trim();
+      if (q.length < 2) { resultsEl.classList.remove('open'); return; }
+      t = setTimeout(function() { doSearch(q, resultsEl); }, 200);
+    });
+    inputEl.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') { resultsEl.classList.remove('open'); inputEl.value = ''; }
+    });
+  }
+
+  // Overlay search
+  var overlay = document.getElementById('search-overlay');
+  var overlayInput = document.getElementById('overlay-search');
+  var overlayResults = document.getElementById('overlay-results');
+  var openBtn = document.getElementById('overlay-open-btn');
+  var closeBtn = document.getElementById('overlay-close-btn');
+  var advToggle = document.getElementById('adv-toggle-btn');
+  var advPanel = document.getElementById('adv-panel');
+
+  advToggle.addEventListener('click', function() {
+    var open = advPanel.classList.toggle('open');
+    advToggle.textContent = open ? 'Ricerca avanzata ▴' : 'Ricerca avanzata ▾';
+  });
+
+  document.getElementById('adv-run').addEventListener('click', function() {
+    loadData().then(function(data) {
+      var title  = document.getElementById('adv-title').value.trim().toLowerCase();
+      var author = document.getElementById('adv-author').value.trim().toLowerCase();
+      var pub    = document.getElementById('adv-pub').value.trim().toLowerCase();
+      var from   = parseInt(document.getElementById('adv-from').value) || 0;
+      var to     = parseInt(document.getElementById('adv-to').value) || 9999;
+      var cats   = Array.from(document.querySelectorAll('#adv-cats input:checked')).map(function(c){ return c.value; });
+      var hits = data.filter(function(d) {
+        if (!cats.includes(d.category)) return false;
+        if (d.year < from || d.year > to) return false;
+        if (title  && !(d.title||'').toLowerCase().includes(title)) return false;
+        if (author && !(d.people||[]).some(function(p){ return p.name.toLowerCase().includes(author); })) return false;
+        if (pub    && ![(d.detail||''),(d.editore||''),(d.rivista||''),(d.casa_editrice||'')].join(' ').toLowerCase().includes(pub)) return false;
+        return true;
+      }).slice(0, 40);
+      renderResults(hits, title || author || pub || 'ricerca avanzata', overlayResults);
+    });
+  });
+
+  document.getElementById('adv-clear').addEventListener('click', function() {
+    ['adv-title','adv-author','adv-pub','adv-from','adv-to'].forEach(function(id){ document.getElementById(id).value = ''; });
+    document.querySelectorAll('#adv-cats input').forEach(function(c){ c.checked = true; });
+    overlayResults.classList.remove('open');
+  });
+
+  function openOverlay() {
+    overlay.classList.add('open');
+    setTimeout(function() { overlayInput.focus(); }, 50);
+    loadData();
+  }
+  function closeOverlay() {
+    overlay.classList.remove('open');
+    overlayInput.value = '';
+    overlayResults.classList.remove('open');
+    advPanel.classList.remove('open');
+    advToggle.textContent = 'Ricerca avanzata ▾';
+  }
+
+  if (openBtn) {
+    openBtn.addEventListener('click', openOverlay);
+    closeBtn.addEventListener('click', closeOverlay);
+    overlay.addEventListener('click', function(e) { if (e.target === overlay) closeOverlay(); });
+    bindInput(overlayInput, overlayResults);
+    overlayInput.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeOverlay(); });
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      if (overlay && overlay.classList.contains('open')) closeOverlay();
+      else openOverlay();
+    }
+  });
+
+  // Render per-category record counts in the hero
+  var CAT_ORDER = ["archive", "primary bibliography", "secondary bibliography", "library", "letter", "translation"];
+  var statsEl = document.getElementById('hero-stats');
+  if (statsEl) {
+    loadData().then(function(data) {
+      var counts = {};
+      data.forEach(function(d) { counts[d.category] = (counts[d.category] || 0) + 1; });
+      statsEl.innerHTML = '';
+      CAT_ORDER.forEach(function(cat) {
+        if (!counts[cat]) return;
+        var stat = document.createElement('div');
+        stat.className = 'hero-stat';
+        var count = document.createElement('div');
+        count.className = 'hero-stat-count';
+        count.textContent = counts[cat];
+        var label = document.createElement('div');
+        label.className = 'hero-stat-label';
+        label.textContent = CAT_LABELS[cat] || cat;
+        stat.appendChild(count);
+        stat.appendChild(label);
+        statsEl.appendChild(stat);
+      });
+      var totalStat = document.createElement('div');
+      totalStat.className = 'hero-stat';
+      var totalCount = document.createElement('div');
+      totalCount.className = 'hero-stat-count';
+      totalCount.textContent = data.length;
+      var totalLabel = document.createElement('div');
+      totalLabel.className = 'hero-stat-label';
+      totalLabel.textContent = 'Totale';
+      totalStat.appendChild(totalCount);
+      totalStat.appendChild(totalLabel);
+      statsEl.appendChild(totalStat);
+    });
+  }
+
+  // Auto-open search if ?q= param is present (e.g. from section page "expand" button)
+  var urlQ = new URLSearchParams(window.location.search).get('q');
+  if (urlQ) {
+    openOverlay();
+    overlayInput.value = decodeURIComponent(urlQ);
+    loadData().then(function() {
+      doSearch(decodeURIComponent(urlQ), overlayResults);
+    });
+  }
+
+})();
+</script>
+</body>
+</html>

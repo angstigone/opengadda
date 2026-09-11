@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenGadda — Epistolario</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1814; --paper: #f5f0e8; --accent: #5a1e7a; --accent-light: #9a5abf;
+  --muted: #7a7268; --border: #c8bfaa; --white: #fdfaf5; --tag-bg: #ecdff0; --tag-text: #5a1e7a;
+  --font-scale: 1;
+}
+:root.high-contrast {
+  --ink: #000000; --paper: #ffffff; --accent: #3a1450; --accent-light: #3a1450;
+  --muted: #3a3a3a; --border: #000000; --white: #ffffff; --tag-bg: #e8e0ec; --tag-text: #000000;
+}
+html { font-size: calc(16px * var(--font-scale)); }
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'EB Garamond',Georgia,serif; background:var(--paper); color:var(--ink); }
+nav { background:var(--ink); border-bottom:2px solid var(--accent); display:flex; align-items:center; padding:0 2.5rem; gap:2rem; height:52px; position:sticky; top:0; z-index:100; }
+.nav-brand { font-family:'DM Mono',monospace; font-size:13px; letter-spacing:0.18em; color:var(--white); text-decoration:none; margin-right:auto; }
+nav a { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#9a9080; text-decoration:none; transition:color 0.2s; }
+nav a:hover, nav a.active { color:#e8c89a; }
+
+header { background:var(--ink); color:var(--white); padding:2.5rem 2.5rem 2rem; border-bottom:3px solid var(--accent); }
+header .eyebrow { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:#5a5248; margin-bottom:0.5rem; }
+header h1 { font-size:2.4rem; font-weight:400; font-style:italic; margin-bottom:0.4rem; }
+header p { color:#9a9080; font-size:1rem; }
+
+.layout { display:grid; grid-template-columns:240px 1fr 220px; min-height:calc(100vh - 140px); }
+.viz-static-panel { background:var(--white); border-left:1px solid var(--border); padding:1.25rem 1rem; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; }
+.bar-row { display:flex; align-items:center; gap:6px; margin-bottom:5px; font-size:0.8rem; }
+.bar-row-label { flex:1; min-width:0; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--ink); font-family:'EB Garamond',serif; cursor:pointer; }
+.bar-row-label:hover { color:var(--accent); }
+.bar-row-label.active-bar { color:var(--accent); font-weight:500; }
+.bar-row-label.bar-row-disabled { color:var(--muted); opacity:0.55; cursor:help; }
+.bar-row-label.bar-row-disabled:hover { color:var(--muted); }
+.bar-track { width:56px; flex-shrink:0; background:var(--tag-bg); border-radius:2px; height:7px; overflow:hidden; }
+.bar-fill { height:100%; background:var(--accent); border-radius:2px; transition:width 0.3s; }
+.bar-count { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); width:20px; flex-shrink:0; text-align:right; }
+.sidebar-expand-btn { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); background:none; border:none; cursor:pointer; padding:4px 0 0; margin-top:2px; }
+.sidebar-expand-btn:hover { text-decoration:underline; }
+.viz-label-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.9rem; }
+.viz-sort-btn { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); background:none; border:1px solid var(--border); border-radius:2px; cursor:pointer; padding:2px 6px; }
+.viz-sort-btn:hover, .viz-sort-btn.active { color:var(--accent); border-color:var(--accent); }
+@media(max-width:900px) { .layout { grid-template-columns:240px 1fr; } .viz-static-panel { display:none; } }
+.sidebar { background:var(--white); border-right:1px solid var(--border); padding:1.5rem 1.25rem; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; }
+.sidebar-section { margin-bottom:1.75rem; }
+.sidebar-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:0.6rem; display:block; }
+.sidebar input[type=text] { width:100%; padding:0.5rem 0.6rem; font-family:'EB Garamond',serif; font-size:1rem; border:1px solid var(--border); background:var(--paper); color:var(--ink); border-radius:2px; outline:none; }
+.sidebar input[type=text]:focus { border-color:var(--accent); }
+.range-wrap { display:flex; gap:6px; align-items:center; font-size:0.85rem; color:var(--muted); }
+.range-wrap input[type=number] { width:68px; padding:0.3rem 0.4rem; font-family:'DM Mono',monospace; font-size:12px; border:1px solid var(--border); background:var(--paper); color:var(--ink); border-radius:2px; outline:none; }
+.filter-group { display:flex; flex-direction:column; gap:3px; }
+.filter-btn { text-align:left; background:none; border:none; padding:0.3rem 0.5rem; font-family:'EB Garamond',serif; font-size:0.9rem; color:var(--muted); cursor:pointer; border-radius:2px; display:flex; justify-content:space-between; align-items:center; transition:background 0.15s,color 0.15s; }
+.filter-btn:hover { background:var(--tag-bg); color:var(--ink); }
+.filter-btn.active { background:var(--accent); color:var(--white); }
+.filter-btn .count { font-family:'DM Mono',monospace; font-size:10px; opacity:0.7; }
+
+.main { padding:1.5rem 2rem; }
+.stats-accordion { border:1px solid var(--border); border-radius:3px; margin-bottom:1.25rem; overflow:hidden; }
+.stats-bar { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); }
+.stat { background:var(--white); padding:0.75rem 1rem; text-align:center; cursor:pointer; transition:background 0.15s; border:none; font-family:inherit; width:100%; }
+.stat:hover { background:var(--tag-bg); }
+.stat.active { background:var(--tag-bg); }
+.stat-n { font-family:'DM Mono',monospace; font-size:1.3rem; font-weight:500; color:var(--accent); display:block; }
+.stat-l { font-size:0.8rem; color:var(--muted); }
+.stats-detail { max-height:0; overflow:hidden; transition:max-height 0.25s ease; border-top:0 solid var(--border); background:var(--white); }
+.stats-detail.open { max-height:320px; overflow-y:auto; border-top-width:1px; padding:1.25rem 1.25rem 0.5rem; }
+.scatter-wrap { width:100%; overflow-x:auto; }
+.scatter-svg { display:block; }
+.scatter-pt { fill:var(--accent); stroke:var(--white); stroke-width:1.5; cursor:pointer; transition:r 0.15s, fill 0.15s; }
+.scatter-pt:hover { fill:var(--accent-light); }
+.scatter-guide { stroke:var(--border); stroke-width:1; }
+.scatter-count { font-family:'DM Mono',monospace; font-size:9px; fill:var(--muted); text-anchor:middle; pointer-events:none; }
+.scatter-label { font-family:'EB Garamond',serif; font-size:10.5px; fill:var(--ink); }
+.scatter-g:hover .scatter-label { fill:var(--accent); }
+.scatter-g:hover .scatter-count { fill:var(--ink); }
+.scatter-pt-disabled { fill:var(--muted); opacity:0.5; cursor:help; }
+.scatter-g-disabled { cursor:help; }
+.scatter-g-disabled:hover .scatter-label { fill:var(--muted); }
+.scatter-g-disabled .scatter-pt-disabled:hover { fill:var(--muted); }
+.viz-scrim { position:fixed; inset:52px 0 0 0; background:rgba(20,18,14,0.35); opacity:0; pointer-events:none; transition:opacity 0.2s; z-index:150; }
+.viz-scrim.open { opacity:1; pointer-events:all; }
+.export-drawer { position:fixed; top:52px; right:0; width:280px; height:calc(100vh - 52px); background:var(--white); border-left:1px solid var(--border); padding:1.25rem 1.25rem; overflow-y:auto; transform:translateX(100%); transition:transform 0.25s ease; z-index:160; box-shadow:-6px 0 16px rgba(0,0,0,0.1); }
+.export-drawer.open { transform:translateX(0); }
+.viz-edge-tab { position:fixed; top:50%; right:0; transform:translateY(-50%); width:28px; height:64px; background:var(--ink); color:var(--white); border:none; border-radius:6px 0 0 6px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; z-index:161; box-shadow:-3px 0 10px rgba(0,0,0,0.15); transition:right 0.25s ease, background 0.15s; }
+.viz-edge-tab:hover { background: var(--accent); }
+.viz-edge-tab.open { right:280px; }
+.viz-edge-tab .arrow { display:inline-block; transition:transform 0.25s ease; }
+.viz-edge-tab.open .arrow { transform:rotate(180deg); }
+.viz-panel-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; }
+.viz-panel-title { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink); }
+.viz-panel-close { background:none; border:none; cursor:pointer; color:var(--muted); font-size:1.1rem; padding:0; line-height:1; }
+.viz-panel-close:hover { color:var(--accent); }
+.viz-section { margin-bottom:2rem; }
+.viz-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:0.9rem; display:block; }
+.viz-desc { font-size:0.85rem; color:var(--muted); margin-bottom:0.9rem; line-height:1.5; }
+.viz-export-btn { display:flex; align-items:center; justify-content:space-between; width:100%; text-align:left; font-family:'EB Garamond',serif; font-size:1rem; background:var(--paper); border:1px solid var(--border); color:var(--ink); padding:0.65rem 0.9rem; border-radius:3px; cursor:pointer; margin-bottom:8px; transition:border-color 0.15s, background 0.15s; }
+.viz-export-btn:hover { border-color:var(--accent); background:var(--white); }
+.viz-export-btn .ext { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:0.08em; }
+.a11y-row { display:flex; align-items:center; gap:8px; margin-bottom:0.75rem; }
+.a11y-btn { width:36px; height:36px; border-radius:3px; border:1px solid var(--border); background:var(--paper); color:var(--ink); cursor:pointer; font-family:'DM Mono',monospace; display:flex; align-items:center; justify-content:center; transition:border-color 0.15s, background 0.15s; }
+.a11y-btn:hover { border-color:var(--accent); background:var(--white); }
+.a11y-btn.small { font-size:12px; }
+.a11y-btn.large { font-size:18px; }
+.a11y-reset { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); background:none; border:none; cursor:pointer; }
+.a11y-reset:hover { color:var(--accent); }
+.a11y-toggle-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; font-size:0.9rem; color:var(--ink); }
+.a11y-switch { position:relative; width:38px; height:22px; flex-shrink:0; }
+.a11y-switch input { opacity:0; width:100%; height:100%; margin:0; cursor:pointer; position:absolute; z-index:1; }
+.a11y-switch-track { position:absolute; inset:0; background:var(--border); border-radius:11px; transition:background 0.15s; }
+.a11y-switch-thumb { position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%; background:var(--white); transition:transform 0.15s; }
+.a11y-switch input:checked ~ .a11y-switch-track { background:var(--accent); }
+.a11y-switch input:checked ~ .a11y-switch-thumb { transform:translateX(16px); }
+.report-field { display:block; width:100%; font-family:'EB Garamond',serif; font-size:0.95rem; color:var(--ink); background:var(--paper); border:1px solid var(--border); border-radius:3px; padding:0.6rem 0.75rem; margin-bottom:8px; outline:none; }
+.report-field:focus { border-color:var(--accent); }
+.report-textarea { min-height:80px; resize:vertical; font-family:'EB Garamond',serif; }
+.report-submit { text-align:center; justify-content:center; background:var(--accent); color:var(--white); border-color:var(--accent); }
+.report-submit:hover { background:var(--accent-light); border-color:var(--accent-light); }
+.report-sent { display:none; font-size:0.85rem; color:var(--accent); margin-top:8px; line-height:1.5; }
+.report-sent.show { display:block; }
+
+/* Tab bar */
+.tab-bar { display:flex; gap:0; border-bottom:2px solid var(--border); margin-bottom:1.25rem; }
+.tab-btn { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; background:none; border:none; border-bottom:2px solid transparent; margin-bottom:-2px; padding:0.55rem 1.1rem; cursor:pointer; color:var(--muted); transition:color 0.15s,border-color 0.15s; }
+.tab-btn:hover { color:var(--ink); }
+.tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:500; }
+
+/* Sender cards grid */
+.sender-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:12px; }
+.sender-card {
+  background:var(--white); border:1px solid var(--border); border-radius:4px;
+  padding:1rem 1.1rem; cursor:pointer; transition:border-color 0.15s, box-shadow 0.15s;
+  display:flex; flex-direction:column; gap:6px;
+  position:relative;
+}
+.sender-card:hover { border-color:var(--accent); box-shadow:0 2px 8px rgba(90,30,122,0.08); }
+.sender-card.no-letters { opacity:0.5; cursor:help; }
+.card-tooltip {
+  display:none; position:absolute; bottom:calc(100% + 8px); left:0; right:0;
+  background:var(--ink); color:var(--white); font-family:'EB Garamond',serif;
+  font-size:0.8rem; line-height:1.4; padding:0.55rem 0.7rem; border-radius:4px;
+  box-shadow:0 4px 14px rgba(0,0,0,0.2); z-index:20; pointer-events:none;
+}
+.card-tooltip::after {
+  content:''; position:absolute; top:100%; left:1.1rem;
+  border:5px solid transparent; border-top-color:var(--ink);
+}
+.sender-card.no-letters:hover .card-tooltip { display:block; }
+.sender-card.no-letters:hover { border-color:var(--border); box-shadow:none; }
+.sender-name { font-size:1rem; font-weight:500; line-height:1.3; color:var(--ink); }
+.sender-meta { display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:2px; }
+.sender-tipo { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.08em; text-transform:uppercase; background:var(--tag-bg); color:var(--tag-text); padding:1px 6px; border-radius:2px; }
+.sender-range { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); }
+.sender-count { font-family:'DM Mono',monospace; font-size:10px; color:var(--accent); margin-left:auto; }
+.sender-archives { font-family:'DM Mono',monospace; font-size:9px; color:var(--muted); }
+.sender-titolo { font-family:'EB Garamond',serif; font-size:0.85rem; font-style:italic; color:var(--muted); line-height:1.3; margin-top:2px; }
+.sender-sigla { font-family:'DM Mono',monospace; font-size:9px; font-style:normal; background:var(--tag-bg); color:var(--tag-text); padding:1px 5px; border-radius:2px; vertical-align:middle; margin-right:3px; }
+
+/* Letter list (drill-down) */
+.back-btn { display:inline-flex; align-items:center; gap:6px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); background:none; border:1px solid var(--border); border-radius:2px; padding:5px 12px; cursor:pointer; margin-bottom:1.25rem; transition:color 0.15s,border-color 0.15s; }
+.back-btn:hover { color:var(--accent); border-color:var(--accent); }
+.sender-header { margin-bottom:1.25rem; }
+.sender-header h2 { font-size:1.6rem; font-weight:400; font-style:italic; }
+.sender-header .sh-meta { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); margin-top:4px; }
+
+.entry { border-bottom:1px solid var(--border); padding:0.9rem 0.25rem; display:grid; grid-template-columns:64px 1fr auto; gap:0.75rem; align-items:start; transition:background 0.15s; cursor:pointer; }
+.entry:hover { background:var(--white); padding-left:0.5rem; padding-right:0.5rem; margin:0 -0.25rem; }
+.entry-year { font-family:'DM Mono',monospace; font-size:11px; color:var(--accent); padding-top:3px; text-align:right; }
+.entry-title { font-size:1.1rem; font-weight:500; line-height:1.3; color:var(--ink); margin-bottom:3px; }
+.entry-title .arrow { color:var(--accent); margin:0 5px; }
+.entry-source { font-family:'DM Mono',monospace; font-size:10px; color:#9a9080; letter-spacing:0.04em; }
+.type-tag { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.1em; text-transform:uppercase; background:var(--tag-bg); color:var(--tag-text); padding:2px 6px; border-radius:2px; white-space:nowrap; flex-shrink:0; align-self:start; margin-top:3px; }
+.type-tag:hover { background:var(--accent); color:var(--white); cursor:pointer; white-space:normal; }
+.tag-full { display:none; font-style:italic; text-transform:none; letter-spacing:0; }
+.tag-full::before { content:' · '; font-style:normal; opacity:0.6; }
+.type-tag:hover .tag-full { display:inline; }
+.corpus-tag { font-family:'DM Mono',monospace; font-size:9px; padding:2px 7px; border-radius:2px; white-space:nowrap; background:#5a1e7a18; color:#5a1e7a; border:1px solid #5a1e7a40; cursor:pointer; display:inline-block; }
+.corpus-tag:hover { background:#5a1e7a28; }
+
+.no-results { text-align:center; padding:4rem 1rem; color:var(--muted); font-style:italic; font-size:1.1rem; }
+.pagination { display:flex; gap:6px; justify-content:center; margin-top:2rem; flex-wrap:wrap; }
+.page-btn { font-family:'DM Mono',monospace; font-size:11px; border:1px solid var(--border); background:none; color:var(--muted); padding:4px 12px; cursor:pointer; border-radius:2px; }
+.page-btn.active { background:var(--ink); color:var(--white); border-color:var(--ink); }
+.page-btn:hover:not(.active) { background:var(--tag-bg); }
+
+.conn-badges { display:flex; flex-direction:column; gap:4px; margin-top:4px; align-items:flex-start; }
+.conn-badge { font-family:'DM Mono',monospace; font-size:9px; padding:1px 6px; border-radius:2px; font-weight:600; letter-spacing:0.05em; white-space:nowrap; cursor:pointer; }
+.filter-banner { display:none; background:#dff0e8; border:1px solid #c8bfaa; border-radius:3px; padding:0.55rem 1rem; margin-bottom:1rem; align-items:center; justify-content:space-between; font-family:'DM Mono',monospace; font-size:11px; }
+.filter-banner.active { display:flex; }
+.filter-banner button { background:none; border:none; cursor:pointer; color:#7a7268; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.08em; }
+.expand-search-btn { color:var(--accent) !important; border:1px solid var(--accent); border-radius:2px; padding:1px 8px; margin-right:8px; }
+
+@media(max-width:700px) { .layout { grid-template-columns:1fr; } .sidebar { position:static; height:auto; border-right:none; border-bottom:1px solid var(--border); } .sender-grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">OpenGadda</a>
+  <a href="opere.html">Opere</a>
+  <a href="archive.html">Archivi</a>
+  <a href="primary_bibliography.html">Bib. primaria</a>
+  <a href="secondary_bibliography.html">Bib. secondaria</a>
+  <a href="library.html">Biblioteca</a>
+  <a href="epistolario.html" class="active">Epistolario</a>
+  <a href="translations.html">Traduzioni</a>
+</nav>
+
+<header>
+  <div class="eyebrow">OpenGadda</div>
+  <h1>Epistolario</h1>
+  <p id="header-sub">Caricamento…</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Senders sidebar -->
+    <div id="sb-senders">
+      <div class="sidebar-section">
+        <span class="sidebar-label">Ricerca</span>
+        <input type="text" id="search-senders" placeholder="Nome mittente…" oninput="renderSenders()">
+      </div>
+      <div class="sidebar-section">
+        <span class="sidebar-label">Anno</span>
+        <div class="range-wrap">
+          <input type="number" id="yearFromS" placeholder="dal" oninput="renderSenders()">
+          <span>—</span>
+          <input type="number" id="yearToS" placeholder="al" oninput="renderSenders()">
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <span class="sidebar-label">Ordinamento</span>
+        <div class="filter-group">
+          <button class="filter-btn active" id="ss-alpha" onclick="setSenderSort('alpha')">Alfabetico</button>
+          <button class="filter-btn" id="ss-count" onclick="setSenderSort('count')">Per n. lettere</button>
+          <button class="filter-btn" id="ss-chrono" onclick="setSenderSort('chrono')">Cronologico</button>
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <span class="sidebar-label">Tipologia</span>
+        <div class="filter-group" id="tipo-btns"></div>
+      </div>
+    </div>
+
+    <!-- Letters sidebar -->
+    <div id="sb-letters" style="display:none">
+      <div class="sidebar-section">
+        <span class="sidebar-label">Ricerca</span>
+        <input type="text" id="search-letters" placeholder="Titolo, luogo…" oninput="applyLetterFilters()">
+      </div>
+      <div class="sidebar-section">
+        <span class="sidebar-label">Anno</span>
+        <div class="range-wrap">
+          <input type="number" id="yearFrom" placeholder="dal" oninput="applyLetterFilters()">
+          <span>—</span>
+          <input type="number" id="yearTo" placeholder="al" oninput="applyLetterFilters()">
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <span class="sidebar-label">Pubblicazione</span>
+        <div class="filter-group">
+          <button class="filter-btn active" id="pf-all" onclick="setPublishedFilter(null)">Tutte</button>
+          <button class="filter-btn" id="pf-pub" onclick="setPublishedFilter(true)">Pubblicate</button>
+          <button class="filter-btn" id="pf-unpub" onclick="setPublishedFilter(false)">Non pubblicate</button>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+  <main class="main">
+
+    <!-- Senders view -->
+    <div id="view-senders">
+      <div class="tab-bar">
+        <button class="tab-btn active" id="tab-riceve" onclick="switchTab('riceve')">Gadda riceve</button>
+        <button class="tab-btn" id="tab-scrive" onclick="switchTab('scrive')">Gadda scrive</button>
+      </div>
+      <div class="stats-accordion">
+        <div class="stats-bar" id="stats-bar-s">
+          <button class="stat" id="stat-s-letters" onclick="setStatsPanel('s','letters')"><span class="stat-n" id="sn-letters-s">0</span><span class="stat-l" id="sl-letters-s">lettere ricevute</span></button>
+          <button class="stat" id="stat-s-pub" onclick="setStatsPanel('s','pub')"><span class="stat-n" id="sn-published-s">0</span><span class="stat-l">lettere pubblicate</span></button>
+          <button class="stat" id="stat-s-people" onclick="setStatsPanel('s','people')"><span class="stat-n" id="sn-total-s">0</span><span class="stat-l" id="sl-total-s">mittenti</span></button>
+        </div>
+        <div class="stats-detail" id="stats-detail-s"></div>
+      </div>
+      <div class="sender-grid" id="sender-grid"></div>
+    </div>
+
+    <!-- Letters view -->
+    <div id="view-letters" style="display:none">
+      <button class="back-btn" id="back-btn" onclick="showSendersView()">← Tutti i mittenti</button>
+      <div class="sender-header" id="sender-header"></div>
+      <div class="stats-accordion">
+        <div class="stats-bar" id="stats-bar-l">
+          <button class="stat" id="stat-l-records" onclick="setStatsPanel('l','records')"><span class="stat-n" id="sn-total-l">0</span><span class="stat-l">lettere totali</span></button>
+          <button class="stat" id="stat-l-pub" onclick="setStatsPanel('l','pub')"><span class="stat-n" id="sn-published-l">0</span><span class="stat-l">lettere pubblicate</span></button>
+          <button class="stat" id="stat-l-archivio" onclick="setStatsPanel('l','archivio')"><span class="stat-n" id="sn-shown-l">0</span><span class="stat-l">visualizzate</span></button>
+        </div>
+        <div class="stats-detail" id="stats-detail-l"></div>
+      </div>
+      <div id="filter-banner" class="filter-banner">
+        <span id="filter-banner-text"></span>
+        <button class="expand-search-btn" onclick="expandToDataset()">Cerca nel dataset →</button>
+        <button onclick="clearCrossFilter()">× Torna a questa sezione</button>
+      </div>
+      <div id="entries"></div>
+      <div id="pagination" class="pagination"></div>
+    </div>
+
+  </main>
+  <aside class="viz-static-panel">
+    <div class="viz-section">
+      <span class="viz-label" id="viz-archivi-label" onclick="resetArchivioPanel()" style="cursor:pointer" title="Mostra tutti">Archivi</span>
+      <div id="viz-archivi"></div>
+    </div>
+    <div class="viz-section">
+      <div class="viz-label-row">
+        <span class="viz-label" onclick="showSendersView()" style="cursor:pointer;margin-bottom:0" title="Mostra tutti" id="viz-people-label">Mittenti</span>
+        <button class="viz-sort-btn" id="people-sort-btn" onclick="togglePeopleSort()">A–Z</button>
+      </div>
+      <div id="viz-people"></div>
+      <button class="sidebar-expand-btn" id="people-expand-btn" onclick="togglePeopleExpand()">Mostra tutti</button>
+    </div>
+  </aside>
+</div>
+
+<button class="viz-edge-tab" id="viz-edge-tab" onclick="toggleExportDrawer()" aria-label="Esporta dati e accessibilità"><span class="arrow">‹</span></button>
+<div class="viz-scrim" id="viz-scrim" onclick="toggleExportDrawer()"></div>
+<aside class="export-drawer" id="export-drawer">
+  <div class="viz-panel-head">
+    <span class="viz-panel-title">Esporta &amp; accessibilità</span>
+    <button class="viz-panel-close" onclick="toggleExportDrawer()" aria-label="Chiudi">✕</button>
+  </div>
+  <div class="viz-section">
+    <span class="viz-label">Esporta dati</span>
+    <p class="viz-desc">Scarica i dati attualmente visualizzati (mittenti/destinatari o lettere, a seconda della vista).</p>
+    <button class="viz-export-btn" onclick="exportData('csv')">Scarica come CSV <span class="ext">.csv</span></button>
+    <button class="viz-export-btn" onclick="exportData('json')">Scarica come JSON <span class="ext">.json</span></button>
+  </div>
+  <div class="viz-section">
+    <span class="viz-label">Accessibilità</span>
+    <p class="viz-desc">Dimensione del testo</p>
+    <div class="a11y-row">
+      <button class="a11y-btn small" onclick="adjustFontScale(-0.1)" aria-label="Riduci testo">A−</button>
+      <button class="a11y-btn large" onclick="adjustFontScale(0.1)" aria-label="Ingrandisci testo">A+</button>
+      <button class="a11y-reset" onclick="resetFontScale()">Reimposta</button>
+    </div>
+    <div class="a11y-toggle-row">
+      <span>Alto contrasto</span>
+      <label class="a11y-switch">
+        <input type="checkbox" id="contrast-toggle" onchange="toggleHighContrast(this.checked)">
+        <span class="a11y-switch-track"></span>
+        <span class="a11y-switch-thumb"></span>
+      </label>
+    </div>
+  </div>
+  <div class="viz-section">
+    <span class="viz-label">Segnala un errore</span>
+    <p class="viz-desc">Hai trovato un dato sbagliato o mancante? Facci sapere cosa e dove.</p>
+    <form id="report-form" onsubmit="submitReport(event)">
+      <textarea class="report-field report-textarea" id="report-desc" placeholder="Descrivi il problema (es. titolo, ID del record, cosa non torna)…" required></textarea>
+      <input class="report-field" id="report-email" type="email" placeholder="La tua email (facoltativa)">
+      <button class="viz-export-btn report-submit" type="submit">Invia segnalazione</button>
+    </form>
+    <p class="report-sent" id="report-sent">Grazie — si è aperto il tuo client email con la segnalazione pronta da inviare.</p>
+  </div>
+</aside>
+
+<script>
+const PER_PAGE = 50;
+let MITTENTI = [];
+let DESTINATARI = [];
+let ALL_DATA = [];
+let CONN_SUMMARY = {};
+let activeTipo = null;
+let senderSort = 'alpha';
+let currentSender = null;
+let currentTab = 'riceve'; // 'riceve' | 'scrive'
+
+let letterFiltered = [];
+let letterPage = 1;
+let themeFilter = null;
+let personFilter = null;
+let archivioFilter = null;
+let publishedFilter = null; // null = tutte, true = pubblicate, false = non pubblicate
+let currentFilterTerm = '';
+const NO_LETTERS_REASON = "Conteggio d'archivio (Bonsanti/Liberati): nessuna lettera è stata catalogata singolarmente per questa persona.";
+let lastSendersShown = [];
+let lastTabLetters = [];
+
+// ── Tab switching ─────────────────────────────────────────────────────────────
+
+function switchTab(tab) {
+  currentTab = tab;
+  activeTipo = null;
+  activeArchivio = null;
+  document.getElementById('tab-riceve').classList.toggle('active', tab === 'riceve');
+  document.getElementById('tab-scrive').classList.toggle('active', tab === 'scrive');
+  document.getElementById('search-senders').placeholder = tab === 'riceve' ? 'Nome mittente…' : 'Nome destinatario…';
+  document.getElementById('sl-total-s').textContent = tab === 'riceve' ? 'mittenti' : 'destinatari';
+  document.getElementById('sl-letters-s').textContent = tab === 'riceve' ? 'lettere censite' : 'lettere di Gadda';
+  buildTipoBtns();
+  renderSenders();
+}
+
+// ── Senders/Destinatari view ──────────────────────────────────────────────────
+
+function activePool() {
+  return currentTab === 'riceve' ? MITTENTI : DESTINATARI;
+}
+
+function buildTipoBtns() {
+  const container = document.getElementById('tipo-btns');
+  container.innerHTML = '';
+  const pool = activePool();
+  const tipos = [...new Set(pool.map(m => m.tipologia).filter(Boolean))].sort();
+  if (!tipos.length) { container.closest('.sidebar-section').style.display = 'none'; return; }
+  container.closest('.sidebar-section').style.display = '';
+  tipos.forEach(t => {
+    const cnt = pool.filter(m => m.tipologia === t).length;
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (activeTipo === t ? ' active' : '');
+    btn.innerHTML = `${t} <span class="count">${cnt}</span>`;
+    btn.onclick = () => {
+      activeTipo = activeTipo === t ? null : t;
+      container.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      if (activeTipo) btn.classList.add('active');
+      renderSenders();
+    };
+    container.appendChild(btn);
+  });
+}
+
+function alphaSortKey(name) {
+  let s = (name || '').trim();
+  let changed = true;
+  while (changed) {
+    changed = false;
+    const noQuote = s.replace(/^[\s"'“”‘’«»″]+/, '');
+    if (noQuote !== s) { s = noQuote; changed = true; }
+    const noParen = s.replace(/^\([^)]*\)\s*/, '');
+    if (noParen !== s) { s = noParen; changed = true; }
+  }
+  return s;
+}
+
+function firstYear(m) {
+  const match = (m.date_range || '').match(/\d{4}/);
+  return match ? parseInt(match[0]) : Infinity;
+}
+
+function yearSpan(m) {
+  const matches = (m.date_range || '').match(/\d{4}/g);
+  if (!matches) return [null, null];
+  const nums = matches.map(Number);
+  return [Math.min(...nums), Math.max(...nums)];
+}
+
+function setSenderSort(key) {
+  senderSort = key;
+  document.getElementById('ss-alpha').classList.toggle('active', key === 'alpha');
+  document.getElementById('ss-count').classList.toggle('active', key === 'count');
+  document.getElementById('ss-chrono').classList.toggle('active', key === 'chrono');
+  renderSenders();
+}
+
+function renderSenders() {
+  const q = document.getElementById('search-senders').value.toLowerCase();
+  const yf = parseInt(document.getElementById('yearFromS').value) || 0;
+  const yt = parseInt(document.getElementById('yearToS').value) || 9999;
+  const pool = activePool();
+
+  const allLetters = ALL_DATA.filter(d => d.category === 'letter');
+  const tabLetters = currentTab === 'riceve'
+    ? allLetters.filter(d => (d.people||[]).some(p => p.name === 'Gadda Carlo Emilio' && p.role === 'destinatario'))
+    : allLetters.filter(d => (d.people||[]).some(p => p.name === 'Gadda Carlo Emilio' && p.role === 'mittente'));
+
+  const archivioNames = new Set();
+  if (activeArchivio) {
+    tabLetters.filter(d => d.archivio === activeArchivio).forEach(d => {
+      (d.people||[]).forEach(p => {
+        if (p.name !== 'Gadda Carlo Emilio') archivioNames.add(p.name);
+      });
+    });
+  }
+
+  let shown = pool.filter(m => {
+    if (activeTipo && m.tipologia !== activeTipo) return false;
+    if (q && !m.name.toLowerCase().includes(q)) return false;
+    if (activeArchivio && !archivioNames.has(m.name)) return false;
+    if (yf > 0 || yt < 9999) {
+      const [minY, maxY] = yearSpan(m);
+      if (minY === null) return false;
+      if (maxY < yf || minY > yt) return false;
+    }
+    return true;
+  });
+  if (senderSort === 'alpha') shown.sort((a,b) => alphaSortKey(a.name).localeCompare(alphaSortKey(b.name), 'it'));
+  else if (senderSort === 'chrono') shown.sort((a,b) => firstYear(a) - firstYear(b));
+  else shown.sort((a,b) => b.count - a.count);
+
+  const publishedLetters = tabLetters.filter(d => (d.themes||[]).some(t => SIGLA_SET.has(t)));
+  // For 'riceve', the true total includes letters only tallied in the
+  // Bonsanti/Liberati archives, not just those individually catalogued.
+  const totalLetters = currentTab === 'riceve'
+    ? MITTENTI.reduce((s, m) => s + (m.count || 0), 0)
+    : tabLetters.length;
+
+  document.getElementById('sn-total-s').textContent = pool.length;
+  document.getElementById('sn-published-s').textContent = publishedLetters.length.toLocaleString('it');
+  document.getElementById('sn-letters-s').textContent = totalLetters.toLocaleString('it');
+  lastSendersShown = shown;
+  lastTabLetters = tabLetters;
+  refreshStatsPanel('s');
+  renderRightPanel();
+
+  const TIPO_ABBR = {
+    'Familiari': 'Fam.',
+    'Amici': 'Amici',
+    'Contatti letterari': 'Lett.',
+    'Editori, riviste e quotidiani': 'Ed.',
+    'Istituzioni, associazioni ed enti pubblici': 'Ist.',
+    'Ingegneria e divulgazione tecnica': 'Ing.',
+    'Compagni di guerra e di prigionia': 'Guerra',
+    'Varia': 'Varia',
+  };
+
+  const grid = document.getElementById('sender-grid');
+  grid.onclick = e => {
+    const card = e.target.closest('.sender-card');
+    if (card && card.dataset.clickable === 'true') showLettersView(card.dataset.senderName);
+  };
+  grid.innerHTML = shown.map(m => {
+    const clickable = m.has_letters;
+    let bottomLine = '';
+    if (currentTab === 'riceve') {
+      const archParts = [];
+      if (m.bonsanti) archParts.push(`Bonsanti: ${m.bonsanti}`);
+      if (m.liberati) archParts.push(`Liberati: ${m.liberati}`);
+      if (archParts.length) bottomLine = `<div class="sender-archives">${archParts.join(' · ')}</div>`;
+    } else {
+      // no extra info for computed destinatari
+    }
+    return `<div class="sender-card${clickable ? '' : ' no-letters'}" data-sender-name="${m.name.replace(/"/g,'&quot;')}" data-clickable="${clickable}">
+      ${clickable ? '' : `<div class="card-tooltip">${NO_LETTERS_REASON}</div>`}
+      <div class="sender-name">${m.name}</div>
+      <div class="sender-meta">
+        ${m.tipologia ? `<span class="sender-tipo">${TIPO_ABBR[m.tipologia] || m.tipologia}</span>` : ''}
+        ${m.date_range ? `<span class="sender-range">${m.date_range}</span>` : ''}
+        <span class="sender-count">${m.count} lett.</span>
+      </div>
+      ${bottomLine}
+    </div>`;
+  }).join('');
+}
+
+// ── Letters view ─────────────────────────────────────────────────────────────
+
+function parseLetter(d) {
+  const parts = d.title.includes('→') ? d.title.split('→') : [d.title, ''];
+  return { sender: parts[0].trim(), recipient: parts[1].trim() };
+}
+
+function showSendersView() {
+  currentSender = null;
+  document.getElementById('view-senders').style.display = '';
+  document.getElementById('view-letters').style.display = 'none';
+  document.getElementById('sb-senders').style.display = '';
+  document.getElementById('sb-letters').style.display = 'none';
+  history.replaceState(null, '', 'epistolario.html');
+}
+
+function showLettersView(personName) {
+  currentSender = personName;
+  history.pushState({sender: personName}, '', 'epistolario.html?sender=' + encodeURIComponent(personName));
+  const pool = activePool();
+  const entry = pool.find(m => m.name === personName);
+  themeFilter = null; personFilter = null; publishedFilter = null; activeArchivio = null;
+  document.getElementById('pf-all').classList.add('active');
+  document.getElementById('pf-pub').classList.remove('active');
+  document.getElementById('pf-unpub').classList.remove('active');
+  document.getElementById('filter-banner').classList.remove('active');
+
+  document.getElementById('view-senders').style.display = 'none';
+  document.getElementById('view-letters').style.display = '';
+  document.getElementById('sb-senders').style.display = 'none';
+  document.getElementById('sb-letters').style.display = '';
+
+  const backLabel = currentTab === 'riceve' ? '← Tutti i mittenti' : '← Tutti i destinatari';
+  document.getElementById('back-btn').textContent = backLabel;
+
+
+  document.getElementById('sender-header').innerHTML = `
+    <h2>${personName}</h2>
+    <div class="sh-meta">${entry ? (entry.tipologia + (entry.date_range ? ' · ' + entry.date_range : '')) : ''}</div>
+  `;
+
+  applyLetterFilters();
+}
+
+function applyLetterFilters() {
+  const q = (document.getElementById('search-letters').value || '').toLowerCase();
+  const yf = parseInt(document.getElementById('yearFrom').value) || 0;
+  const yt = parseInt(document.getElementById('yearTo').value) || 9999;
+  const letters = ALL_DATA.filter(d => d.category === 'letter');
+  letterFiltered = letters.filter(d => {
+    const {sender, recipient} = parseLetter(d);
+    if (themeFilter) {
+      if (!(d.themes||[]).includes(themeFilter)) return false;
+    } else if (personFilter) {
+      if (!(d.people||[]).some(p => p.name === personFilter)) return false;
+    } else if (archivioFilter) {
+      if (d.archivio !== archivioFilter) return false;
+    } else if (currentSender) {
+      if (currentTab === 'riceve') {
+        if (!(d.people||[]).some(p => p.name === currentSender && p.role === 'mittente')) return false;
+      } else {
+        if (!(d.people||[]).some(p => p.name === currentSender && p.role === 'destinatario')) return false;
+        if (!(d.people||[]).some(p => p.name === 'Gadda Carlo Emilio' && p.role === 'mittente')) return false;
+      }
+    }
+    if (q && !(sender.toLowerCase().includes(q) || recipient.toLowerCase().includes(q) || (d.detail||'').toLowerCase().includes(q))) return false;
+    if (d.year === null) {
+      // Letters with no recoverable year: only excluded when a year range is actively set.
+      if (yf > 0 || yt < 9999) return false;
+    } else if (d.year < yf || d.year > yt) return false;
+    if (publishedFilter !== null) {
+      const isPublished = (d.themes||[]).some(t => SIGLA_SET.has(t));
+      if (publishedFilter !== isPublished) return false;
+    }
+    if (activeArchivio && d.archivio !== activeArchivio) return false;
+    return true;
+  });
+  doLetterSort(); letterPage = 1; renderLetters();
+}
+
+function setPublishedFilter(val) {
+  publishedFilter = val;
+  document.getElementById('pf-all').classList.toggle('active', val === null);
+  document.getElementById('pf-pub').classList.toggle('active', val === true);
+  document.getElementById('pf-unpub').classList.toggle('active', val === false);
+  applyLetterFilters();
+}
+
+function doLetterSort() {
+  // Undated letters (date === null) sort to the end rather than being
+  // miscast as 1970-01-01 by `new Date(null)`.
+  letterFiltered.sort((a,b) => {
+    if (!a.date && !b.date) return 0;
+    if (!a.date) return 1;
+    if (!b.date) return -1;
+    return new Date(a.date) - new Date(b.date);
+  });
+}
+
+function renderLetters() {
+  const letters = ALL_DATA.filter(d => d.category === 'letter');
+  const senderLetters = letters.filter(d => {
+    if (!currentSender) return true;
+    if (currentTab === 'riceve') {
+      return (d.people||[]).some(p => p.name === currentSender && p.role === 'mittente');
+    }
+    return (d.people||[]).some(p => p.name === currentSender && p.role === 'destinatario')
+      && (d.people||[]).some(p => p.name === 'Gadda Carlo Emilio' && p.role === 'mittente');
+  });
+  // Full archive total (Bonsanti + Liberati combined) for this specific
+  // sender/recipient, falling back to the catalogued count when unavailable
+  // (e.g. cross-filter views, or 'scrive' where no archive tally exists).
+  let fullTotal = senderLetters.length;
+  if (currentSender) {
+    const entry = activePool().find(m => m.name === currentSender);
+    if (entry && typeof entry.count === 'number') fullTotal = entry.count;
+  }
+  document.getElementById('sn-total-l').textContent = fullTotal.toLocaleString('it');
+  document.getElementById('sn-published-l').textContent = senderLetters
+    .filter(d => (d.themes||[]).some(t => SIGLA_SET.has(t))).length.toLocaleString('it');
+  document.getElementById('sn-shown-l').textContent = letterFiltered.length.toLocaleString('it');
+  refreshStatsPanel('l');
+  renderRightPanel(senderLetters);
+
+  const start = (letterPage - 1) * PER_PAGE;
+  const page = letterFiltered.slice(start, start + PER_PAGE);
+  if (!page.length) {
+    document.getElementById('entries').innerHTML = '<div class="no-results">Nessuna lettera trovata.</div>';
+    document.getElementById('pagination').innerHTML = '';
+    return;
+  }
+
+  document.getElementById('entries').innerHTML = page.map(d => {
+    const {sender, recipient} = parseLetter(d);
+    // d.date_raw holds the original scholarly text verbatim for approximate/
+    // uncertain dates (e.g. '[1934] apr. 28', '[tra il 1930 e il 1934]') —
+    // show that as-is rather than the fabricated YYYY-01-01 placeholder date.
+    let dateFmt;
+    if (d.date_raw) dateFmt = d.date_raw;
+    else if (d.date) dateFmt = new Date(d.date).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'});
+    else dateFmt = 's.d.'; // senza data
+    const sourceParts = [dateFmt, d.archivio || '', d.luogo_di_invio || '', d.luogo_destinatario || ''].filter(Boolean);
+    const typeTag = (d.subtitle || d.genere) ? `<span class="type-tag">${d.subtitle || d.genere}</span>` : '';
+    const sigla = (d.themes||[])[0];
+    const pubName = sigla ? (SIGLA_TO_NAME[sigla] || d.sigla_sciolta || sigla) : '';
+    const pubTag = pubName ? `<div style="margin-top:3px"><span class="corpus-tag" onclick="event.stopPropagation();setThemeFilter(${JSON.stringify(sigla)})">✉ ${pubName}</span></div>` : '';
+    return `<div class="entry" onclick="goDetail('${d.id}')">
+      <div class="entry-year">${d.year !== null ? d.year : 's.d.'}</div>
+      <div>
+        <div class="entry-title"><em>${sender}</em><span class="arrow">→</span><em>${recipient}</em></div>
+        <div class="entry-source">${sourceParts.join(' · ')}</div>
+        ${pubTag}
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+        ${typeTag}
+        ${connBadges(d.id, 'letter')}
+      </div>
+    </div>`;
+  }).join('');
+
+  const totalPages = Math.ceil(letterFiltered.length / PER_PAGE);
+  let pages = '';
+  for (let i = 1; i <= totalPages; i++) {
+    if (i === 1 || i === totalPages || Math.abs(i - letterPage) <= 3)
+      pages += `<button class="page-btn ${i === letterPage ? 'active' : ''}" onclick="goPage(${i})">${i}</button>`;
+    else if (Math.abs(i - letterPage) === 4)
+      pages += `<span style="padding:4px;color:#999;font-size:11px">…</span>`;
+  }
+  document.getElementById('pagination').innerHTML = pages;
+}
+
+function goPage(n) { letterPage = n; renderLetters(); window.scrollTo(0,0); }
+function goDetail(id) { sessionStorage.setItem('og_list_'+location.pathname, JSON.stringify({page:letterPage,scrollY:window.scrollY,sender:currentSender})); window.location.href='detail.html?id='+id; }
+
+// ── Cross-filter (from detail.html) ──────────────────────────────────────────
+
+function setThemeFilter(t) {
+  themeFilter = t; currentFilterTerm = t; personFilter = null; archivioFilter = null;
+  showLettersView_cross();
+  document.getElementById('filter-banner-text').textContent = 'Scheda tematica: ' + t;
+  document.getElementById('filter-banner').classList.add('active');
+  applyLetterFilters();
+}
+
+function setPersonFilter(name) {
+  personFilter = name; currentFilterTerm = name; themeFilter = null; archivioFilter = null;
+  showLettersView_cross();
+  document.getElementById('filter-banner-text').textContent = 'Persona: ' + name;
+  document.getElementById('filter-banner').classList.add('active');
+  applyLetterFilters();
+}
+
+function setArchivioFilter(name) {
+  archivioFilter = name; currentFilterTerm = name; themeFilter = null; personFilter = null;
+  showLettersView_cross();
+  document.getElementById('filter-banner-text').textContent = 'Archivio: ' + name;
+  document.getElementById('filter-banner').classList.add('active');
+  applyLetterFilters();
+}
+
+function showLettersView_cross() {
+  currentSender = null;
+  document.getElementById('view-senders').style.display = 'none';
+  document.getElementById('view-letters').style.display = '';
+  document.getElementById('sb-senders').style.display = 'none';
+  document.getElementById('sb-letters').style.display = '';
+  document.getElementById('sender-header').innerHTML = '';
+  document.getElementById('search-letters').value = '';
+  document.getElementById('yearFrom').value = '';
+  document.getElementById('yearTo').value = '';
+  publishedFilter = null;
+  document.getElementById('pf-all').classList.add('active');
+  document.getElementById('pf-pub').classList.remove('active');
+  document.getElementById('pf-unpub').classList.remove('active');
+}
+
+function clearCrossFilter() {
+  themeFilter = null; personFilter = null; archivioFilter = null; activeArchivio = null;
+  document.getElementById('filter-banner').classList.remove('active');
+  showSendersView();
+}
+
+function expandToDataset() {
+  if (currentFilterTerm) window.location.href = 'search.html?q=' + encodeURIComponent(currentFilterTerm);
+}
+
+// ── Connection badges ─────────────────────────────────────────────────────────
+
+const BADGE_COLORS = {"library":"#7a3b1e","secondary bibliography":"#1e4a7a","primary bibliography":"#1a6a40","archive":"#6a3a1a","letter":"#5a1e7a","translation":"#6a5a1a"};
+const BADGE_SHORT = {"library":"Bib.","secondary bibliography":"Bib. sec.","primary bibliography":"Bib. prim.","archive":"Arc.","letter":"Ep.","translation":"Trad."};
+function barListHtml(entries, onClickAttr) {
+  if (!entries.length) return '<div style="font-size:0.85rem;color:var(--muted);font-style:italic">—</div>';
+  const max = Math.max(...entries.map(e => e[1]));
+  const n = entries.length;
+  const width = Math.max(560, n * 56);
+  const height = 220;
+  const padL = 28, padR = 28, padTop = 22, padBottom = 56;
+  const plotW = width - padL - padR;
+  const plotH = height - padTop - padBottom;
+  const points = entries.map(([label, count, disabledReason], i) => {
+    const x = padL + (n === 1 ? plotW/2 : (i/(n-1)) * plotW);
+    const y = padTop + plotH - (count/max) * plotH;
+    const safeLabel = String(label).replace(/"/g,'&quot;');
+    const safeReason = disabledReason ? String(disabledReason).replace(/"/g,'&quot;') : '';
+    const shortLabel = String(label).length > 22 ? String(label).slice(0,21)+'…' : label;
+    return `
+      <g class="scatter-g${disabledReason ? ' scatter-g-disabled' : ''}" onclick="${disabledReason ? '' : onClickAttr(label)}">
+        <line class="scatter-guide" x1="${x}" y1="${y}" x2="${x}" y2="${padTop+plotH}"></line>
+        <text class="scatter-count" x="${x}" y="${y-8}">${count}</text>
+        <circle class="scatter-pt${disabledReason ? ' scatter-pt-disabled' : ''}" cx="${x}" cy="${y}" r="5"><title>${disabledReason ? safeReason : safeLabel}</title></circle>
+        <text class="scatter-label" x="0" y="0" transform="translate(${x},${padTop+plotH+14}) rotate(45)">${shortLabel}<title>${disabledReason ? safeReason : safeLabel}</title></text>
+      </g>`;
+  }).join('');
+  return `<div class="scatter-wrap"><svg class="scatter-svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+    <line class="scatter-guide" x1="${padL}" y1="${padTop+plotH}" x2="${width-padR}" y2="${padTop+plotH}"></line>
+    ${points}
+  </svg></div>`;
+}
+
+function renderViz(containerId, entries, onClickFn) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = '';
+  if (!entries.length) { el.innerHTML = '<div style="font-size:0.8rem;color:var(--muted);font-style:italic">—</div>'; return; }
+  const max = Math.max(...entries.map(e => e[1]));
+  entries.forEach(([label, count, disabledReason]) => {
+    const row = document.createElement('div'); row.className = 'bar-row';
+    const lbl = document.createElement('div'); lbl.className = 'bar-row-label';
+    lbl.textContent = label;
+    if (disabledReason) {
+      lbl.classList.add('bar-row-disabled');
+      lbl.title = disabledReason;
+    } else {
+      lbl.title = label;
+      lbl.addEventListener('click', () => onClickFn(label));
+    }
+    const track = document.createElement('div'); track.className = 'bar-track';
+    const fill = document.createElement('div'); fill.className = 'bar-fill';
+    fill.style.width = Math.round(count / max * 100) + '%';
+    track.appendChild(fill);
+    const cnt = document.createElement('div'); cnt.className = 'bar-count'; cnt.textContent = count;
+    row.appendChild(lbl); row.appendChild(track); row.appendChild(cnt);
+    el.appendChild(row);
+  });
+}
+
+let peopleExpanded = false;
+function togglePeopleExpand() {
+  peopleExpanded = !peopleExpanded;
+  renderRightPanel(lastArchiviLetters);
+}
+
+let peopleSortMode = 'count';
+function togglePeopleSort() {
+  peopleSortMode = peopleSortMode === 'count' ? 'alpha' : 'count';
+  if (peopleSortMode === 'alpha') peopleExpanded = true;
+  renderRightPanel(lastArchiviLetters);
+}
+
+let lastArchiviLetters = null;
+function renderRightPanel(lettersOverride) {
+  lastArchiviLetters = lettersOverride || null;
+  const archSource = lettersOverride || lastTabLetters;
+  const archCounts = {};
+  archSource.forEach(d => { if (d.archivio) archCounts[d.archivio] = (archCounts[d.archivio]||0)+1; });
+  const archEntries = Object.entries(archCounts).sort((a,b) => b[1]-a[1]);
+  const archLabel = document.getElementById('viz-archivi-label');
+  if (archLabel) archLabel.textContent = currentSender ? 'Archivi — ' + currentSender : 'Archivi';
+  renderViz('viz-archivi', archEntries, label => toggleArchivioFilter(label));
+  document.querySelectorAll('#viz-archivi .bar-row-label').forEach(lbl => {
+    lbl.classList.toggle('active-bar', lbl.textContent === activeArchivio);
+  });
+
+  document.getElementById('viz-people-label').textContent = currentTab === 'riceve' ? 'Mittenti' : 'Destinatari';
+  const pool = activePool();
+  const peopleEntries = pool.map(m => [m.name, m.count || 0, m.has_letters ? null : NO_LETTERS_REASON]).sort((a,b) =>
+    peopleSortMode === 'alpha' ? alphaSortKey(a[0]).localeCompare(alphaSortKey(b[0]), 'it') : b[1]-a[1]
+  );
+  const sortBtn = document.getElementById('people-sort-btn');
+  if (sortBtn) { sortBtn.textContent = peopleSortMode === 'alpha' ? 'N°' : 'A–Z'; sortBtn.classList.toggle('active', peopleSortMode === 'alpha'); }
+  const shown = peopleExpanded ? peopleEntries : peopleEntries.slice(0, 10);
+  renderViz('viz-people', shown, label => showLettersView(label));
+  document.querySelectorAll('#viz-people .bar-row-label').forEach(lbl => {
+    lbl.classList.toggle('active-bar', lbl.textContent === currentSender);
+  });
+  const expandBtn = document.getElementById('people-expand-btn');
+  if (peopleEntries.length <= 10) {
+    expandBtn.style.display = 'none';
+  } else {
+    expandBtn.style.display = '';
+    expandBtn.textContent = peopleExpanded ? 'Mostra meno' : 'Mostra tutti (' + peopleEntries.length + ')';
+  }
+}
+
+function statsPanelContent(scope, key) {
+  if (scope === 's') {
+    if (key === 'people') {
+      const entries = lastSendersShown
+        .map(m => [m.name, m.count || 0, m.has_letters ? null : NO_LETTERS_REASON])
+        .sort((a,b) => b[1]-a[1]).slice(0, 15);
+      return barListHtml(entries, label => `event.stopPropagation();showLettersView('${label.replace(/'/g,"\\'")}')`);
+    }
+    if (key === 'letters') {
+      const counts = {};
+      lastTabLetters.forEach(d => {
+        const dec = d.year !== null ? Math.floor(d.year/10)*10 + 's' : 'Senza data';
+        counts[dec] = (counts[dec]||0)+1;
+      });
+      const entries = Object.entries(counts).sort((a,b) => {
+        if (a[0] === 'Senza data') return 1;
+        if (b[0] === 'Senza data') return -1;
+        return parseInt(a[0]) - parseInt(b[0]);
+      });
+      return barListHtml(entries, label => `event.stopPropagation();setSenderDecadeFilter('${label}')`);
+    }
+    if (key === 'pub') {
+      const pubN = lastTabLetters.filter(d => (d.themes||[]).some(t => SIGLA_SET.has(t))).length;
+      const unpubN = lastTabLetters.length - pubN;
+      const entries = [['Pubblicate', pubN], ['Non pubblicate', unpubN]];
+      return barListHtml(entries, () => `event.stopPropagation();`);
+    }
+  }
+  if (scope === 'l') {
+    if (key === 'records') {
+      const counts = {};
+      letterFiltered.forEach(d => {
+        const dec = d.year !== null ? Math.floor(d.year/10)*10 + 's' : 'Senza data';
+        counts[dec] = (counts[dec]||0)+1;
+      });
+      const entries = Object.entries(counts).sort((a,b) => {
+        if (a[0] === 'Senza data') return 1;
+        if (b[0] === 'Senza data') return -1;
+        return parseInt(a[0]) - parseInt(b[0]);
+      });
+      return barListHtml(entries, label => `event.stopPropagation();setLetterDecadeFilter('${label}')`);
+    }
+    if (key === 'pub') {
+      const pubN = letterFiltered.filter(d => (d.themes||[]).some(t => SIGLA_SET.has(t))).length;
+      const unpubN = letterFiltered.length - pubN;
+      const entries = [['Pubblicate', pubN], ['Non pubblicate', unpubN]];
+      return barListHtml(entries, label => `event.stopPropagation();setPublishedFilter(${label === 'Pubblicate' ? 'true' : 'false'})`);
+    }
+    if (key === 'archivio') {
+      const counts = {};
+      letterFiltered.forEach(d => { if (d.archivio) counts[d.archivio] = (counts[d.archivio]||0)+1; });
+      const entries = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+      return barListHtml(entries, label => `event.stopPropagation();toggleArchivioFilter('${label.replace(/'/g,"\\'")}')`);
+    }
+  }
+  return '';
+}
+
+let activeLetterDecadeLabel = null;
+function setLetterDecadeFilter(label) {
+  if (activeLetterDecadeLabel === label) {
+    activeLetterDecadeLabel = null;
+    document.getElementById('yearFrom').value = ''; document.getElementById('yearTo').value = '';
+    applyLetterFilters();
+    return;
+  }
+  activeLetterDecadeLabel = label;
+  if (label === 'Senza data') { document.getElementById('yearFrom').value = ''; document.getElementById('yearTo').value = ''; }
+  else {
+    const dec = parseInt(label);
+    document.getElementById('yearFrom').value = dec;
+    document.getElementById('yearTo').value = dec + 9;
+  }
+  applyLetterFilters();
+}
+
+let activeSenderDecadeLabel = null;
+function setSenderDecadeFilter(label) {
+  if (activeSenderDecadeLabel === label) {
+    activeSenderDecadeLabel = null;
+    document.getElementById('yearFromS').value = ''; document.getElementById('yearToS').value = '';
+    renderSenders();
+    return;
+  }
+  activeSenderDecadeLabel = label;
+  if (label === 'Senza data') { document.getElementById('yearFromS').value = ''; document.getElementById('yearToS').value = ''; }
+  else {
+    const dec = parseInt(label);
+    document.getElementById('yearFromS').value = dec;
+    document.getElementById('yearToS').value = dec + 9;
+  }
+  renderSenders();
+}
+
+let activeArchivio = null;
+function toggleArchivioFilter(name) {
+  activeArchivio = activeArchivio === name ? null : name;
+  const inLettersView = document.getElementById('view-letters').style.display !== 'none';
+  if (inLettersView) applyLetterFilters(); else renderSenders();
+}
+
+function resetArchivioPanel() {
+  activeArchivio = null;
+  const inLettersView = document.getElementById('view-letters').style.display !== 'none';
+  if (inLettersView) applyLetterFilters(); else renderSenders();
+}
+
+let activeStatsPanel = { s: null, l: null };
+function setStatsPanel(scope, key) {
+  const detail = document.getElementById('stats-detail-' + scope);
+  const sameKey = activeStatsPanel[scope] === key;
+  document.querySelectorAll('#stats-bar-' + scope + ' .stat').forEach(b => b.classList.remove('active'));
+  if (sameKey) {
+    activeStatsPanel[scope] = null;
+    detail.classList.remove('open');
+    return;
+  }
+  activeStatsPanel[scope] = key;
+  document.getElementById('stat-' + scope + '-' + key).classList.add('active');
+  detail.innerHTML = statsPanelContent(scope, key);
+  detail.classList.add('open');
+}
+
+function refreshStatsPanel(scope) {
+  if (activeStatsPanel[scope]) document.getElementById('stats-detail-' + scope).innerHTML = statsPanelContent(scope, activeStatsPanel[scope]);
+}
+
+function toggleExportDrawer() {
+  document.getElementById('export-drawer').classList.toggle('open');
+  document.getElementById('viz-scrim').classList.toggle('open');
+  document.getElementById('viz-edge-tab').classList.toggle('open');
+}
+
+function applyFontScale(scale) {
+  const clamped = Math.min(1.5, Math.max(0.85, scale));
+  document.documentElement.style.setProperty('--font-scale', clamped);
+  localStorage.setItem('og_font_scale', clamped);
+}
+function adjustFontScale(delta) {
+  const current = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--font-scale')) || 1;
+  applyFontScale(current + delta);
+}
+function resetFontScale() { applyFontScale(1); }
+
+function toggleHighContrast(on) {
+  document.documentElement.classList.toggle('high-contrast', on);
+  localStorage.setItem('og_high_contrast', on ? '1' : '0');
+}
+
+(function initA11y() {
+  const savedScale = parseFloat(localStorage.getItem('og_font_scale'));
+  if (!isNaN(savedScale)) document.documentElement.style.setProperty('--font-scale', savedScale);
+  const savedContrast = localStorage.getItem('og_high_contrast') === '1';
+  if (savedContrast) {
+    document.documentElement.classList.add('high-contrast');
+    document.addEventListener('DOMContentLoaded', () => {
+      const cb = document.getElementById('contrast-toggle');
+      if (cb) cb.checked = true;
+    });
+  }
+})();
+
+function submitReport(evt) {
+  evt.preventDefault();
+  const desc = document.getElementById('report-desc').value.trim();
+  const email = document.getElementById('report-email').value.trim();
+  if (!desc) return;
+  const subject = 'OpenGadda — Segnalazione errore (Epistolario)';
+  const bodyLines = [
+    desc,
+    '',
+    '---',
+    'Pagina: ' + location.href,
+    email ? 'Email di contatto: ' + email : null
+  ].filter(Boolean);
+  const mailto = 'mailto:segnalazioni@opengadda.it'
+    + '?subject=' + encodeURIComponent(subject)
+    + '&body=' + encodeURIComponent(bodyLines.join('\n'));
+  window.location.href = mailto;
+  document.getElementById('report-sent').classList.add('show');
+  document.getElementById('report-form').reset();
+}
+
+function exportData(fmt) {
+  const inLettersView = document.getElementById('view-letters').style.display !== 'none';
+  const rows = inLettersView ? letterFiltered : lastSendersShown;
+  if (!rows || !rows.length) return;
+  let content, mime, ext;
+  if (fmt === 'json') {
+    content = JSON.stringify(rows, null, 2);
+    mime = 'application/json'; ext = 'json';
+  } else {
+    const keys = [...new Set(rows.flatMap(d => Object.keys(d)))].filter(k => !['themes','people','years'].includes(k));
+    const esc = v => '"' + String(v==null?'':v).replace(/"/g,'""') + '"';
+    const csvRows = [keys.join(','), ...rows.map(d => keys.map(k => {
+      const v = d[k];
+      if (Array.isArray(v)) return esc(v.join('; '));
+      return esc(v);
+    }).join(','))];
+    content = csvRows.join('\n');
+    mime = 'text/csv'; ext = 'csv';
+  }
+  const blob = new Blob([content], {type: mime});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'opengadda_export.' + ext;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function connBadges(id, ownCat) {
+  const cats = CONN_SUMMARY[id];
+  if (!cats || !cats.length) return '';
+  const f = cats.filter(c => c !== ownCat);
+  if (!f.length) return '';
+  return '<div class="conn-badges">' + f.map(c => {
+    const col = BADGE_COLORS[c] || '#888';
+    return `<span class="conn-badge" style="background:${col}18;color:${col};border:1px solid ${col}40" onclick="event.stopPropagation();window.location='detail.html?id=${id}'">${BADGE_SHORT[c]||c}</span>`;
+  }).join('') + '</div>';
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+
+let SIGLA_TO_NAME = {};
+let SIGLE = {};
+let SIGLA_SET = new Set();
+
+Promise.all([
+  fetch('items.json').then(r => r.json()),
+  fetch('mittenti.json').then(r => r.json()),
+  fetch('conn_summary.json').then(r => r.json()),
+  fetch('destinatari.json').then(r => r.json()).catch(() => []),
+  fetch('sigle_gadda.json').then(r => r.json()).catch(() => ({}))
+]).then(([allData, mittenti, summary, destinatari, sigleData]) => {
+  SIGLE = sigleData.sigle || {};
+  destinatari.forEach(d => { if (d.sigla && d.titolo && !SIGLA_TO_NAME[d.sigla]) SIGLA_TO_NAME[d.sigla] = d.titolo; });
+  ALL_DATA = allData;
+  CONN_SUMMARY = summary;
+
+  // Letters published in an opera: those whose theme sigla matches a
+  // destinatari.json entry (i.e. belongs to a published edition/reference).
+  SIGLA_SET = new Set(destinatari.map(d => d.sigla).filter(Boolean));
+
+  // Compute has_letters for mittenti: only those who sent to Gadda
+  const senderPeople = new Set(
+    allData.filter(d => d.category === 'letter')
+           .flatMap(d => (d.people||[]).filter(p => p.role === 'mittente').map(p => p.name))
+  );
+  MITTENTI = mittenti.map(m => ({...m, has_letters: senderPeople.has(m.name)}));
+
+  // Compute DESTINATARI from letters where Gadda is the sender. Tipologia isn't
+  // tracked for computed destinatari, so fall back to the MITTENTI record for
+  // the same person where one exists (most recipients are also senders).
+  const mittentiTipologia = {};
+  MITTENTI.forEach(m => { if (m.tipologia) mittentiTipologia[m.name] = m.tipologia; });
+  const destMap = {};
+  allData.filter(d =>
+    d.category === 'letter' &&
+    (d.people||[]).some(p => p.name === 'Gadda Carlo Emilio' && p.role === 'mittente')
+  ).forEach(d => {
+    (d.people||[]).filter(p => p.role === 'destinatario').forEach(p => {
+      if (!destMap[p.name]) destMap[p.name] = { name: p.name, count: 0, years: [], tipologia: mittentiTipologia[p.name] || '', bonsanti: 0, liberati: 0 };
+      destMap[p.name].count++;
+      if (d.year) destMap[p.name].years.push(d.year);
+    });
+  });
+  DESTINATARI = Object.values(destMap).map(d => {
+    const yrs = d.years;
+    const range = yrs.length ? (Math.min(...yrs) === Math.max(...yrs) ? String(Math.min(...yrs)) : `${Math.min(...yrs)}–${Math.max(...yrs)}`) : '';
+    return { ...d, date_range: range, has_letters: true };
+  });
+
+  const totalLettersArchived = mittenti.reduce((s, m) => s + (m.count || 0), 0);
+  const publishedLetters = allData.filter(d =>
+    d.category === 'letter' && (d.themes || []).some(t => SIGLA_SET.has(t))
+  ).length;
+  document.getElementById('header-sub').textContent =
+    `${MITTENTI.length.toLocaleString('it')} mittenti · ${totalLettersArchived.toLocaleString('it')} lettere totali · ${publishedLetters.toLocaleString('it')} pubblicate`;
+
+  buildTipoBtns();
+  renderSenders();
+
+  const urlP = new URLSearchParams(window.location.search);
+  const hasUrlFilter = urlP.get('theme') || urlP.get('person') || urlP.get('archivio') || urlP.get('sender');
+  if (urlP.get('theme')) setThemeFilter(decodeURIComponent(urlP.get('theme')));
+  else if (urlP.get('person')) setPersonFilter(decodeURIComponent(urlP.get('person')));
+  else if (urlP.get('archivio')) setArchivioFilter(decodeURIComponent(urlP.get('archivio')));
+  else if (urlP.get('sender')) showLettersView(decodeURIComponent(urlP.get('sender')));
+  if (hasUrlFilter) sessionStorage.removeItem('og_list_'+location.pathname);
+  const _saved = hasUrlFilter ? null : sessionStorage.getItem('og_list_'+location.pathname);
+  if (_saved) {
+    try {
+      const _s = JSON.parse(_saved);
+      if (_s.sender) { showLettersView(_s.sender); letterPage = _s.page||1; renderLetters(); }
+      setTimeout(() => window.scrollTo(0, _s.scrollY||0), 80);
+    } catch(e2) {}
+    sessionStorage.removeItem('og_list_'+location.pathname);
+  }
+}).catch(err => {
+  document.getElementById('sender-grid').innerHTML = `<p style="padding:2rem;color:#c00;font-family:monospace">Errore: ${err}</p>`;
+});
+
+window.addEventListener('popstate', function(e) {
+  if (e.state && e.state.sender) {
+    currentSender = e.state.sender;
+    applyLetterFilters();
+    document.getElementById('view-senders').style.display = 'none';
+    document.getElementById('view-letters').style.display = '';
+    document.getElementById('sb-senders').style.display = 'none';
+    document.getElementById('sb-letters').style.display = '';
+  } else {
+    showSendersView();
+  }
+});
+
+window.addEventListener('pageshow', function(e) {
+  if (!e.persisted) return;
+  const _saved = sessionStorage.getItem('og_list_'+location.pathname);
+  if (_saved) {
+    try {
+      const _s = JSON.parse(_saved);
+      if (_s.sender) {
+        currentSender = _s.sender; letterPage = _s.page||1;
+        applyLetterFilters();
+        document.getElementById('view-senders').style.display = 'none';
+        document.getElementById('view-letters').style.display = '';
+        document.getElementById('sb-senders').style.display = 'none';
+        document.getElementById('sb-letters').style.display = '';
+      }
+      setTimeout(() => window.scrollTo(0, _s.scrollY||0), 80);
+    } catch(e2) {}
+    sessionStorage.removeItem('og_list_'+location.pathname);
+  }
+});
+</script>
+</body>
+</html>
