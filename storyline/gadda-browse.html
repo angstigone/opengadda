@@ -71,7 +71,7 @@
 <body>
 
 <h1>Carlo Emilio Gadda — browse by reparto</h1>
-<p class="sub">the four reparto graphs (letters, library, secondary bibliography, archive), each kept exactly as its own file — switch between them below.</p>
+<p class="sub">the four reparto graphs (letters, library, secondary bibliography, archive) plus everyone undifferentiated, each kept exactly as its own file — switch between them below.</p>
 <div class="tab-bar" id="tab-bar"></div>
 <div class="frame-wrap">
   <iframe id="graph-frame" title="reparto graph"></iframe>
@@ -82,12 +82,14 @@
   // each reparto's accent matches the correspondent-line color used in its
   // own graph file (letters stays the original purple; the other three were
   // given distinct palettes so browsing between them reads as browsing
-  // between distinct collections, not just different pages).
+  // between distinct collections, not just different pages). The
+  // undifferentiated view uses a neutral slate, matching its grey palette.
   const tabs = [
     { key: "letters", label: "Letters", file: "gadda-reparto-letter-range-declutter.html", accent: "#6d2a9e" },
     { key: "library", label: "Library", file: "gadda-reparto-library-declutter.html", accent: "#c05727" },
     { key: "secondaryBib", label: "Secondary bibliography", file: "gadda-reparto-secondary-bibliography-declutter.html", accent: "#1d4e9e" },
     { key: "archive", label: "Archive", file: "gadda-reparto-archive.html", accent: "#9e1d47" },
+    { key: "undifferentiated", label: "Everyone (undifferentiated)", file: "gadda-reparto-undifferentiated.html", accent: "#4a5059" },
   ];
 
   const tabBar = document.getElementById("tab-bar");
