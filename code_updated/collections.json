@@ -1,0 +1,852 @@
+{
+  "RR I": [
+    {
+      "titolo":"Al parco, in una sera di maggio", "sigla":"L'A", "pagine": "481"
+    },
+    {
+      "titolo":"Approdo alle Zàttere", "sigla":"CdU", "pagine": "202"
+    },
+    {
+      "titolo":"Autunno", "sigla":"CdD", "pagine": "767"
+    },
+    {
+      "titolo":"Certezza", "sigla":"MdF", "pagine": "39"
+    },
+    {
+      "titolo":"Chiarimenti indispensabili", "sigla":"CdD", "pagine": "771"
+    },
+    {
+      "titolo":"Cinema", "sigla":"MdF", "pagine": "49"
+    },
+    {
+      "titolo":"Claudio disimpara a vivere", "sigla":"L'A", "pagine": "343"
+    },
+    {
+      "titolo":"Compagni di prigionia", "sigla":"CdU", "pagine": "156"
+    },
+    {
+      "titolo":"Crociera mediterranea", "sigla":"CdU", "pagine": "179"
+    },
+    {
+      "titolo":"Dal castello di Udine verso i monti", "sigla":"CdU", "pagine": "147"
+    },
+    {
+      "titolo":"Dal Golfo all'Etna", "sigla":"CdU", "pagine": "186"
+    },
+    {
+      "titolo":"Della musica milanese", "sigla":"CdU", "pagine": "221"
+    },
+    {
+      "titolo":"Diario di Bordo", "sigla":"MdF", "pagine": "46"
+    },
+    {
+      "titolo":"Elogio di alcuni valentuomini", "sigla":"CdU", "pagine": "127"
+    },
+  {
+      "titolo":"IL CASTELLO D'UDINE", "sigla":"CdU", "pagine": "109"
+    }, {
+      "titolo":"Il castello d'Udine", "sigla":"CdU", "pagine": "125"
+    }
+    , {
+      "titolo":"Il fontanone a Montorio", "sigla":"CdU", "pagine": "255"
+    }
+    , {
+      "titolo":"Immagine di Calvi", "sigla":"CdU", "pagine": "167"
+    }, {
+      "titolo":"Impossibilità di un diario di guerra", "sigla":"CdU", "pagine": "134"
+    }, {
+      "titolo":"I ritagli del tempo", "sigla":"L'A", "pagine": "407"
+    }, {
+      "titolo":"I SOGNI E LA FOLGORE", "sigla":"SF", "pagine": "1"
+    },{
+      "titolo":"La chiesa antica", "sigla":"CdU", "pagine": "247"
+    }, {
+      "titolo":"LA COGNIZIONE DEL DOLORE", "sigla":"CdD", "pagine": "565"
+    }, {
+      "titolo":"L'Adalgisa", "sigla":"L'A", "pagine": "509"
+    }, {
+      "titolo":"L'ADALGISA - DISEGNI MILANESI", "sigla":"L'A", "pagine": "283"
+    }, {
+      "titolo":"La festa dell'uva a Marino", "sigla":"CdU", "pagine": "233"
+    },{
+      "titolo":"La fidanzata di Elio", "sigla":"CdU", "pagine": "225"
+    },{
+      "titolo":"LA MADONNA DEI FILOSOFI", "sigla":"MdF", "pagine": "3"
+    },{
+      "titolo":"La Madonna dei Filosofi", "sigla":"MdF", "pagine": "69"
+    },{
+      "titolo":"La morte di Puck", "sigla":"MdF", "pagine": "45"
+    },{
+      "titolo":"L'antica basilica", "sigla":"MdF", "pagine": "41"
+    },{
+      "titolo":"L'Editore chiede venia del recupero chiamando in causa l'Autore", "sigla":"CdD", "pagine": "759"
+    },{
+      "titolo":"Manovre di artiglieria da campagna", "sigla":"MdF", "pagine": "21"
+    },{
+      "titolo":"Navi approdano a Parapagàl", "sigla":"L'A", "pagine": "425"
+    },{
+      "titolo":"Notte di Luna", "sigla":"L'A", "pagine": "289"
+    },{
+      "titolo":"Polemiche e pace", "sigla":"CdU", "pagine": "219"
+    },{
+      "titolo":"Polemiche e pace nel direttissimo", "sigla":"CdU", "pagine": "723"
+    },{
+      "titolo":"Preghiera", "sigla":"MdF", "pagine": "38"
+    },{
+      "titolo":"Quando Girolamo ha smesso...", "sigla":"L'A", "pagine": "299"
+    },{
+      "titolo":"Quattro figlie ebbe e ciascuna regina", "sigla":"L'A", "pagine": "353"
+    },{
+      "titolo":"Sabbia di Tripoli", "sigla":"SD", "pagine": "197"
+    },{
+      "titolo":"Sibili dentro le valli", "sigla":"CdU", "pagine": "265"
+    },{
+      "titolo":"Sogno Ligure", "sigla":"MdF", "pagine": "44"
+    },{
+      "titolo":"Strane dicerie contristano i Bertoloni", "sigla":"L'A", "pagine": "379"
+    },{
+      "titolo":"Studi Imperfetti", "sigla":"MdF", "pagine": "35"
+    },{
+      "titolo":"Teatro", "sigla":"MdF", "pagine": "9"
+    },
+    {
+      "titolo":"Tendo al mio fine", "sigla":"CdU", "pagine": "119"
+    },{
+      "titolo":"Tirreno in crociera", "sigla":"CdU", "pagine": "181"
+    },{
+      "titolo":"Treno celere nell'Italia centrale", "sigla":"MdF", "pagine": "40"
+    },{
+      "titolo":"Tripolitana in torpedone", "sigla":"CdU", "pagine": "192"
+    },{
+      "titolo":"Un concerto di centoventi professori", "sigla":"L'A", "pagine": "441"
+    }
+  ],
+  "RR II": [{
+      "titolo":"ACCOPPIAMENTI GIUDIZIOSI", "sigla":"AG", "pagine": "591-920"
+    }, 
+    {"titolo":"Accoppiamenti Giudizioni", "sigla":"AG", "pagine": "891"
+    },
+    {"titolo":"Cugino barbiere", "sigla":"AG", "pagine": "595"
+    },{
+      "titolo":"Dejanira Classis", "sigla":"RaI", "pagine": "1027"
+    },
+    {
+      "titolo":"Domingo del señorito en escasez", "sigla":"RD", "pagine": "1001"
+    }
+    ,
+    {
+      "titolo":"Dopo il silenzio", "sigla":"AG", "pagine": "637"
+    },
+    {
+      "titolo":"Fuga a Tor di Nona", "sigla":"RD", "pagine": "979"
+    },
+    {
+      "titolo":"Il bar", "sigla":"AG", "pagine": "849"
+    },
+    {
+      "titolo":"Il club delle ombre", "sigla":"AG", "pagine": "841"
+    },
+    {
+      "titolo":"Il seccatore", "sigla":"RD", "pagine": "995"
+    }, {
+      "titolo":"La casa", "sigla":"RaI", "pagine": "1107"
+    }, {
+      "titolo":"La cenere delle battaglie", "sigla":"AG", "pagine": "857"
+    }, {
+      "titolo":"La domenica", "sigla":"AG", "pagine": "781"
+    },{
+      "titolo":"La gazza ladra", "sigla":"AG", "pagine": "833"
+    },{
+      "titolo":"La mamma", "sigla":"AG", "pagine": "745"
+    },{
+      "titolo":"LA MECCANICA", "sigla":"M", "pagine": "461"
+    },{
+      "titolo":"La passeggiata autunnale", "sigla":"RD", "pagine": "925"
+    },{
+      "titolo":"La sposa di campagna", "sigla":"AG", "pagine": "823"
+    },{
+      "titolo":"Le bizze del capitano in congendo", "sigla":"RD", "pagine": "967"
+    },{
+      "titolo":"Le novissime armi", "sigla":"AG", "pagine": "631"
+    },{
+      "titolo":"L'incendio di via Keplero", "sigla":"AG", "pagine": "699"
+    },{
+      "titolo":"Notte di Luna", "sigla":"RaI", "pagine": "1071"
+    },{
+      "titolo":"Papà e mamma", "sigla":"AG", "pagine": "613"
+    },{
+      "titolo":"Prima divisione nella notte", "sigla":"AG", "pagine": "867"
+    },{
+      "titolo":"QUER PASTICCIACCIO BRUTTO DE VIA MERULANA", "sigla":"QP", "pagine": "11"
+    },{
+      "titolo":"QUER PASTICCIACCIO BRUTTO DE VIA MERULANA - Redazione di «Letteratura» 1946-1947", "sigla":"QPL", "pagine": "277"
+    },{
+      "titolo":"RACCONTI DISPERSI", "sigla":"RD", "pagine": "921"
+    },{
+      "titolo":"RACCONTI INCOMPIUTI", "sigla":"RaI", "pagine": "1023"
+    },{
+      "titolo":"San Giorgio in casa Brocchi", "sigla":"AG", "pagine": "643"
+    },{
+      "titolo":"Socer generque", "sigla":"AG", "pagine": "791"
+    },{
+      "titolo":"Una brutta nutrizione", "sigla":"AG", "pagine": "761"
+    },{
+      "titolo":"Una fornitura importante", "sigla":"RD", "pagine": "987"
+    },{
+      "titolo":"Una visita medica", "sigla":"AG", "pagine": "715"
+    },{
+      "titolo":"Un inchino rispettoso", "sigla":"AG", "pagine": "815"
+    },{
+      "titolo":"Viaggi di Gulliver, cioè del Gaddus", "sigla":"RD", "pagine": "953"
+    }
+  ],
+  "SGF I": [{
+      "titolo":"«Agostino» di Alberto Moravia", "sigla":"VM", "pagine": "606"
+    },
+  {
+      "titolo":"Albori di teatro americano", "sigla":"SD", "pagine": "903"
+    },
+  {
+      "titolo":"Alla borsa di Milano", "sigla":"MdI", "pagine": "31"
+    },
+  {
+      "titolo":"Alla borsa di Milano", "sigla":"VlC", "pagine": "303"
+    },
+  {
+      "titolo":"Alla fiera di Milano", "sigla":"VlC", "pagine": "347"
+    },
+    {
+      "titolo":"All'insegna dell'alta cultura", "sigla":"SD", "pagine": "874"
+    },
+    {
+      "titolo":"Al Teatro della Floridiana: Le corna di Don Friolera", "sigla":"SD", "pagine": "1029"
+    },
+    {
+      "titolo":"Amleto al Teatro Valle", "sigla":"VN", "pagine": "539"
+    },
+    {
+      "titolo":"Anastomosi", "sigla":"A", "pagine": "263"
+    },
+    {
+      "titolo":"Anastomosi", "sigla":"VlC", "pagine": "329"
+    },
+    {
+      "titolo":"Anime e schemi", "sigla":"VM", "pagine": "600"
+    },
+    {
+      "titolo":"Anno XIV, restauri del duomo", "sigla":"SD", "pagine": "802"
+    },
+    {
+      "titolo":"Apologia manzoniana", "sigla":"SD", "pagine": "679"
+    },
+    {
+      "titolo":"Apologo del Gran Sasso d'Italia", "sigla":"MdI", "pagine": "133"
+    },
+    {
+      "titolo":"A Raffaele Mattioli dedicando queste pagine", "sigla":"VlC", "pagine": "277"
+    },
+    {
+      "titolo":"Arsia. Viaggio nel profondo", "sigla":"MdI", "pagine": "186"
+    },
+    {
+      "titolo":"Arte del belli", "sigla":"VM", "pagine": "548"
+    },
+    {
+      "titolo":"Automobili e automotrici azionate ad ammoniaca", "sigla":"DT", "pagine": "131"
+    },
+    {
+      "titolo":"Bonaventura Tecchi «Idilli moravi»", "sigla":"SD", "pagine": "847"
+    },
+    {
+      "titolo":"Carabattole a porta Ludovica", "sigla":"A", "pagine": "231"
+    },{
+      "titolo":"Carabottole a porta Ludovica", "sigla":"VlC", "pagine": "309"
+    }
+    ,{
+      "titolo":"Carraria", "sigla":"MdI", "pagine": "175"
+    },
+    {
+      "titolo":"Casi ed uomini in un mondo che dura quindici giorni", "sigla":"MdI", "pagine": "67"
+    },
+    {
+      "titolo":"Catullo-Quasimodo", "sigla":"SD", "pagine": "898"
+    },
+    {
+      "titolo":"Come i nomi i titoli dei libri: dipende da chi li porta", "sigla":"SD", "pagine": "1120"
+    },
+    {
+      "titolo":"Come lavoro", "sigla":"VM", "pagine": "427"
+    },
+    {
+      "titolo":"Conforti di poesia", "sigla":"SD", "pagine": "959"
+    },
+    {
+      "titolo":"Cristoforo Colombo", "sigla":"L'A", "pagine": "989"
+    },
+    {
+      "titolo":"Cronaca della serata", "sigla":"MdI", "pagine": "63"
+    },
+    {
+      "titolo":"Cronaca del passato prossimo", "sigla":"SD", "pagine": "701"
+    },
+    {"titolo":"Da Buenos Aires a Resistencia", "sigla":"MdI", "pagine": "105"
+    },
+    {
+      "titolo":"Dalla Terra alla Luna", "sigla":"SD", "pagine": "1045"
+    },
+    {
+      "titolo":"Dalle mondine, in risaia", "sigla":"MdI", "pagine": "169"
+    },
+    {
+      "titolo":"Dalle mondine, in risaia", "sigla":"VlC", "pagine": "341"
+    },
+     {
+      "titolo":"Dalle specchiere dei laghi", "sigla":"A", "pagine": "225"
+    },
+    {
+      "titolo":"Dalle specchiere dei laghi", "sigla":"VlC", "pagine": "297"
+    },
+    {
+      "titolo":"Da Ottaviano a Teodosio", "sigla":"SD", "pagine": "1181"
+    },
+    {
+      "titolo":"Del Bo in dodici racconti", "sigla":"SD", "pagine": "1042"
+    },
+    {
+      "titolo":"Del duomo di Como", "sigla":"A", "pagine": "219"
+    },
+    {
+      "titolo":"Del duomo di Como", "sigla":"VlC", "pagine": "291"
+    },
+    {
+      "titolo":"«Diavole» dicono i nonni", "sigla":"SD", "pagine": "1126"
+    },
+    {
+      "titolo":"Dicembre", "sigla":"SD", "pagine": "1003"
+    },
+    {
+      "titolo":"Divagazione e garbuglio", "sigla":"SD", "pagine": "1221"
+    },
+    {
+      "titolo":"Emilio e Narciso", "sigla":"VM", "pagine": "633"
+    },
+    {
+      "titolo":"Fatti e miti della Marsica nelle fortune de' suoi antichi patroni", "sigla":"MdI", "pagine": "139"
+    },
+    {
+      "titolo":"Fatto personale... o quasi", "sigla":"VM", "pagine": "495"
+    },
+    {
+      "titolo":"Frammento - Sostando nella necropoli comunale", "sigla":"MdI", "pagine": "102"
+    },
+    {
+      "titolo":"Franca Corcos", "sigla":"SD", "pagine": "951"
+    },
+    {
+      "titolo":"Fu vera gloria? Questa è l'«ardua sentenza» dei posteri", "sigla":"SD", "pagine": "1009"
+    },
+    {
+      "titolo":"Gadda, come va la vita", "sigla":"SD", "pagine": "950"
+    },
+    {
+      "titolo":"Gadda contro Gadda", "sigla":"SD", "pagine": "749"
+    }
+    ,
+    {
+      "titolo":"Galileo Ferraris e gli scienziati piemontesi", "sigla":"SD", "pagine": "980"
+    },
+    {
+      "titolo":"Genti e terre d'Abruzzo", "sigla":"MdI", "pagine": "152"
+    }
+    ,
+    {
+      "titolo":"Giani Stuparich, «Guerra del'15»", "sigla":"SD", "pagine": "745"
+    }
+    ,
+    {
+      "titolo":"Gioia della chiarità marina", "sigla":"SD", "pagine": "1001"
+    },
+    {
+      "titolo":"Giorgio Pasquali", "sigla":"SD", "pagine": "1025"
+    }   ,
+    {
+      "titolo":"Giuseppe Berto, «Il male oscuro»", "sigla":"SD", "pagine": "1200"
+    } ,
+    {
+      "titolo":"Gli Anni", "sigla":"A", "pagine": "201"
+    }
+    ,
+    {
+      "titolo":"Grandezza e biografia", "sigla":"SD", "pagine": "825"
+    }
+    ,
+    {
+      "titolo":"I grandi uomini", "sigla":"SD", "pagine": "976"
+    }
+    ,
+    {
+      "titolo":"Il buon àugure celebra l'augurio col buon whisky", "sigla":"SD", "pagine": "1078"
+    },
+    {
+      "titolo":"Carbone dell'Arsa", "sigla":"MdI", "pagine": "181"
+    },
+    {
+      "titolo":"Il cetriolo del Crivelli", "sigla":"SD", "pagine": "1182"
+    },
+    {
+      "titolo":"Il difetto e la stravaganza che amiamo", "sigla":"SD", "pagine": "1057"
+    }
+    ,
+    {
+      "titolo":"Il Faust tradotto da Manacorda", "sigla":"SD", "pagine": "1208"
+    }
+    ,
+    {
+      "titolo":"Il faut d'abord être coupable", "sigla":"VM", "pagine": "612"
+    }
+    , {
+      "titolo":"Il gatto sul palcoscenico", "sigla":"SD", "pagine": "894"
+    }
+    , {
+      "titolo":"Il latino nel sangue", "sigla":"SD", "pagine": "1153"
+    }
+    , {
+      "titolo":"Il mondo di ieri", "sigla":"VM", "pagine": "595"
+    }, 
+    {
+      "titolo":"«Il Mulino del Po» di Riccardo Bacchelli", "sigla":"SD", "pagine": "831"
+    },
+    {
+      "titolo":"Il pasticciaccio", "sigla":"VM", "pagine": "506"
+    },
+    {
+      "titolo":"Il Petrarca a Milano", "sigla":"VlC", "pagine": "387"
+    },
+    {
+      "titolo":"Il pozzo numero quattordici", "sigla":"MdI", "pagine": "118"
+    },
+    {
+      "titolo":"Il premio di poesia «Le Grazie»", "sigla":"VM", "pagine": "623"
+    }
+  ,
+    {
+      "titolo":"Il Savonarola di Roberto Rodolfi", "sigla":"SD", "pagine": "1047"
+    },
+    {
+      "titolo":"Il simbolismo", "sigla":"SD", "pagine": "1059"
+    },
+    {
+      "titolo":"Il terrore del dàttilo", "sigla":"VM", "pagine": "515"
+    },
+    {
+      "titolo":"Il viaggio delle acque", "sigla":"A", "pagine": "205"
+    },
+    {
+      "titolo":"Il viaggio delle acque", "sigla":"VlC", "pagine": "281"
+    }, {
+      "titolo":"Immagine di Lombardia", "sigla":"SD", "pagine": "855"
+    }, {
+      "titolo":"Immagine di Luigi Russo", "sigla":"SD", "pagine": "1188"
+    }, {
+      "titolo":"Incantagione e paura", "sigla":"SD", "pagine": "1213"
+    }, {
+      "titolo":"«Inchiesta sulla terza pagina»", "sigla":"SD", "pagine": "1079"
+    }, {
+      "titolo":"Intervista al microfono", "sigla":"VM", "pagine": "502"
+    }, {
+      "titolo":"Introduzione a «I Markurell» di H. Bergman", "sigla":"SD", "pagine": "919"
+    }, {
+      "titolo":"I numeri e le lettere che preferiscono: quasi una cabala", "sigla":"SD", "pagine": "1008"
+    }, {
+      "titolo":"I quattro Luigi", "sigla":"SD", "pagine": "1011"
+    }, {
+      "titolo":"I tre imperi", "sigla":"SD", "pagine": "933"
+    }, {
+      "titolo":"I VIAGGI E LA MORTE", "sigla":"VM", "pagine": "419"
+    }, {
+      "titolo":"I viaggi e la morte", "sigla":"VM", "pagine": "561"
+    }, {
+      "titolo":"Je meurs de seuf au près de la fontaine", "sigla":"VM", "pagine": "522"
+    }, {
+      "titolo":"La battaglia dei topi e delle rane", "sigla":"SD", "pagine": "1162"
+    }, {
+      "titolo":"La cena delle beffe", "sigla":"SD", "pagine": "885"
+    }, {
+      "titolo":"I VIAGGI E LA MORTE", "sigla":"VM", "pagine": "419"
+    }, {
+      "titolo":"I viaggi e la morte", "sigla":"VM", "pagine": "561"
+    }, {
+      "titolo":"Je meurs de seuf au près de la fontaine", "sigla":"VM", "pagine": "522"
+    }, {
+      "titolo":"La battaglia dei topi e delle rane", "sigla":"SD", "pagine": "1162"
+    }, {
+      "titolo":"«Lady Cathleen»", "sigla":"SD", "pagine": "896"
+    },{
+      "titolo":"La funivia della neve", "sigla":"MdI", "pagine": "127"
+    },{
+      "titolo":"«La guerra» di Emilio Bono", "sigla":"SD", "pagine": "799"
+    },{
+      "titolo":"La lirica spagnolo del '400", "sigla":"SD", "pagine": "1072"
+    },{
+      "titolo":"L'alpinismo", "sigla":"SD", "pagine": "997"
+    },{
+      "titolo":"La Madragola filtro di giovinezza", "sigla":"SD", "pagine": "1091"
+    },{
+      "titolo":"La Mostra d'arte sacra - Consensi e dissensi", "sigla":"SD", "pagine": "780"
+    }
+    ,{
+      "titolo":"La «Mostra Leonardesca» di Milano", "sigla":"MdI", "pagine": "401"
+    },{
+      "titolo":"L'angelo assicuratore", "sigla":"SD", "pagine": "1039"
+    },{
+      "titolo":"La nostra casa si trasforma: e l'inquilino la deve subire", "sigla":"VlC", "pagine": "373"
+    },{
+      "titolo":"La novellistica del '400", "sigla":"SD", "pagine": "1121"
+    },{
+      "titolo":"«La Rassegna»", "sigla":"SD", "pagine": "1112"
+    },{
+      "titolo":"La Scapigliatura milanese", "sigla":"SD", "pagine": "691"
+    },{
+      "titolo":"La «Scienza Nuova»", "sigla":"SD", "pagine": "691"
+    },{
+      "titolo":"La storia di Milano", "sigla":"SD", "pagine": "1099"
+    },{
+      "titolo":"La Terra dei fiori, dei suoni e dei carmi...", "sigla":"SD", "pagine": "943"
+    },{
+      "titolo":"La vivandiera e la locandiera", "sigla":"SD", "pagine": "1031"
+    },{
+      "titolo":"Le belle lettere e i contributi espressivi delle tecniche", "sigla":"VM", "pagine": "475"
+    },{
+      "titolo":"L'egoista", "sigla":"VM", "pagine": "654"
+    },{
+      "titolo":"LE MERAVIGLIE D'ITALIA", "sigla":"MdI", "pagine": "11"
+    },{
+      "titolo":"Le stravaganze di Pasquali", "sigla":"SD", "pagine": "1017"
+    },{
+      "titolo":"Le tre rose di Collemaggio", "sigla":"MdI", "pagine": "160"
+    },{
+      "titolo":"Le tre rose di Collemaggio", "sigla":"VlC", "pagine": "317"
+    },{
+      "titolo":"Le tre sorelle", "sigla":"SD", "pagine": "1051"
+    },{
+      "titolo":"Lettera a Leonardo Sinisgalli", "sigla":"SD", "pagine": "1065"
+    },{
+      "titolo":"Libello", "sigla":"MdI", "pagine": "87"
+    },{
+      "titolo":"Lingua letteraria e lingua dell'uso", "sigla":"VM", "pagine": "489"
+    },{
+      "titolo":"L'istituto di Studi romani", "sigla":"SD", "pagine": "863"
+    },{
+      "titolo":"Lo rividi direttore alla «Fiera»", "sigla":"SD", "pagine": "986"
+    },{
+      "titolo":"L'ortolano di Rapallo", "sigla":"MdF", "pagine": "37"
+    },{
+      "titolo":"Luigi Tonelli, «Manzoni»", "sigla":"SD", "pagine": "689"
+    },{
+      "titolo":"L'ultima rimeditazione", "sigla":"SD", "pagine": "1212"
+    },{
+      "titolo":"L'ultimo libro di Gianna Manzini", "sigla":"SD", "pagine": "771"
+    },{
+      "titolo":"L'uomo e la macchina", "sigla":"A", "pagine": "255"
+    },{
+      "titolo":"Manzoni diviso in tre busturi di Moravia", "sigla":"SD", "pagine": "1176"
+    },{
+      "titolo":"Marcel Arland, «Essais critiques»", "sigla":"SD", "pagine": "715"
+    },{
+      "titolo":"Meditazione breve circa il dire e il fare", "sigla":"VM", "pagine": "444"
+    },{
+      "titolo":"Mercato di frutta e verdura", "sigla":"MdI", "pagine": "38"
+    },{
+      "titolo":"«Mestieri»", "sigla":"SD", "pagine": "984"
+    },{
+      "titolo":"Milano", "sigla":"SD", "pagine": "1075"
+    },{
+      "titolo":"Montale o l'uomo-mùsico", "sigla":"SD", "pagine": "881"
+    },{
+      "titolo":"Nata col secolo", "sigla":"SD", "pagine": "1195"
+    },{
+      "titolo":"Nella notte", "sigla":"MdI", "pagine": "61"
+    },{
+      "titolo":"Niccolà Ugo e l'«aurea beltade»", "sigla":"SD", "pagine": "1146"
+    },{
+      "titolo":"Nord-Sud, ancora", "sigla":"SD", "pagine": "914"
+    },{
+      "titolo":"Norme per la redazione di un testo radiofonico", "sigla":"SD", "pagine": "1081"
+    },{
+      "titolo":"Nuove trasmissioni del '54 - «La Rassegna»", "sigla":"SD", "pagine": "1095"
+    },{
+      "titolo":"Orazio", "sigla":"SD", "pagine": "1097"
+    },{
+      "titolo":"Palombari sull'Alpe", "sigla":"SD", "pagine": "955"
+    },{
+      "titolo":"Paola Masino, «Monte Ignoso»", "sigla":"SD", "pagine": "712"
+    },{
+      "titolo":"Parlano del loro primo scritto alcuni fra i più noti autori di oggi", "sigla":"SD", "pagine": "1119"
+    },{
+      "titolo":"Parliamo della mamma: per tante canzoni che volano forse qualche pensierino che resta", "sigla":"SD", "pagine": "1005"
+    },{
+      "titolo":"Perché cinema radio e scrittori ci parlano in romanesco?", "sigla":"SD", "pagine": "1144"
+    },{
+      "titolo":"Per un barbiere", "sigla":"VlC", "pagine": "379"
+    },{
+      "titolo":"Pianta di Milano - Decoro dei palazzi", "sigla":"MdI", "pagine": "57"
+    },{
+      "titolo":"Pierre Abraham, «Créatures chez Balzas»", "sigla":"SD", "pagine": "723"
+    },{
+      "titolo":"Poesia di Montale", "sigla":"SD", "pagine": "765"
+    },{
+      "titolo":"Poesia 1931-1932", "sigla":"SD", "pagine": "1215"
+    },{
+      "titolo":"Postille a una analisi stilistica", "sigla":"SD", "pagine": "815"
+    },{
+      "titolo":"Processo alla lingua italiana (4 domande)", "sigla":"SD", "pagine": "1190"
+    },{
+      "titolo":"Psicanalisi e letteratura", "sigla":"VM", "pagine": "455"
+    },{
+      "titolo":"Può uno scrittore vivere della sua penna?", "sigla":"SD", "pagine": "1145"
+    },{
+      "titolo":"Quando le idee costruiscono una civiltà (Per Giuseppe Addison)", "sigla":"SD", "pagine": "888"
+    },{
+      "titolo":"Quartieri suburbani", "sigla":"SD", "pagine": "1128"
+    },{
+      "titolo":"Rappresentare la Celestina?", "sigla":"VM", "pagine": "534"
+    },{
+      "titolo":"Riccardo Bacchelli, «La congiura di Don Giulio d'Este»", "sigla":"SD", "pagine": "732"
+    },{
+      "titolo":"Riccardo Bacchelli, «Mal d'Africa»", "sigla":"SD", "pagine": "792"
+    },{
+      "titolo":"Risotto patrio. Rècipe", "sigla":"VlC", "pagine": "369"
+    },{
+      "titolo":"Risposta a un'inchiesta tra gli scrittori laureati da Bagutta", "sigla":"SD", "pagine": "812"
+    },{
+      "titolo":"Ritratto di Roma barocca in ventiquattro sonetti del Belli", "sigla":"SD", "pagine": "1063"
+    },{
+      "titolo":"Ritratto di Santayana", "sigla":"SD", "pagine": "1027"
+    },{
+      "titolo":"Rivelazioni e bonae literae lungo la storia ascendente", "sigla":"SD", "pagine": "905"
+    },{
+      "titolo":"Ronda al castello", "sigla":"MdI", "pagine": "97"
+    },{
+      "titolo":"Salvacondotto per l'eternità o soltanto un busto in marmo al giardino comunale", "sigla":"SD", "pagine": "1021"
+    },{
+      "titolo":"Scherza coi fanti e lascia stare i... santoni ", "sigla":"SD", "pagine": "948"
+    },{
+      "titolo":"SCRITTI DISPERSI", "sigla":"SD", "pagine": "669"
+    },{
+      "titolo":"Silvio Benco, «'Il Piccolo' di Trieste»", "sigla":"SD", "pagine": "756"
+    },{
+      "titolo":"Spume sotto i Piani d'Invrea", "sigla":"A", "pagine": "215"
+    },{
+      "titolo":"Spume sotto i Piani d'Invrea", "sigla":"VlC", "pagine": "313"
+    },{
+      "titolo":"Storia del Risorgimento", "sigla":"SD", "pagine": "843"
+    },{
+      "titolo":"Sull'Alpe di marmo", "sigla":"MdI", "pagine": "194"
+    },{
+      "titolo":"Sul Neptunia", "sigla":"MdI", "pagine": "80"
+    },{
+      "titolo":"Sul Neptunia: marzo 1935", "sigla":"VlC", "pagine": "355"
+    },{
+      "titolo":"...tàciti anni fuggono, catalogati dagli almanacchi...", "sigla":"SD", "pagine": "791"
+    },{
+      "titolo":"Teatro patriottico anno XX", "sigla":"SD", "pagine": "911"
+    },{
+      "titolo":"Tecnica e poesia", "sigla":"A", "pagine": "239"
+    },{
+      "titolo":"Tecnica e poesia", "sigla":"VM", "pagine": "474"
+    },{
+      "titolo":"Terra lombarda", "sigla":"A", "pagine": "211"
+    },{
+      "titolo":"Terra lombarda", "sigla":"VlC", "pagine": "287"
+    },{
+      "titolo":"Trinnanzi", "sigla":"DT", "pagine": "973"
+    },{
+      "titolo":"Toscanelli e Colombo", "sigla":"SD", "pagine": "992"
+    },{
+      "titolo":"Tutti ridiamo e tutti, forse, facciamo ridere", "sigla":"SD", "pagine": "1125"
+    },{
+      "titolo":"Ugo Betti, «Caino e altre novelle»", "sigla":"SD", "pagine": "687"
+    },{
+      "titolo":"Umanità degli umili", "sigla":"SD", "pagine": "1124"
+    },{
+      "titolo":"Una mattina ai macelli", "sigla":"MdI", "pagine": "19"
+    },{
+      "titolo":"Una mostra di Ensor", "sigla":"VM", "pagine": "587"
+    },{
+      "titolo":"Uan speranza frustrata", "sigla":"SD", "pagine": "1175"
+    },{
+      "titolo":"Una tigre nel parco", "sigla":"MdI", "pagine": "74"
+    },{
+      "titolo":"Un cantiere nelle solitudini", "sigla":"MdI", "pagine": "73"
+    },{
+      "titolo":"Un libro di poesie «Il re Pensieroso» di Ugo Betti", "sigla":"SD", "pagine": "671"
+    },{
+      "titolo":"Una narratore: Bonaventura Tecchi", "sigla":"SD", "pagine": "698"
+    },{
+      "titolo":"Un'opinione sul neorealismo", "sigla":"VN", "pagine": "629"
+    },{
+      "titolo":"Un romanzo giallo nella geologia", "sigla":"MdI", "pagine": "145"
+    },{
+      "titolo":"Un testimone", "sigla":"SD", "pagine": "944"
+    },{
+      "titolo":"Versilia", "sigla":"VlC", "pagine": "363"
+    },{
+      "titolo":"Verso Teramo", "sigla":"A", "pagine": "235"
+    },{
+      "titolo":"Verso Teramo", "sigla":"VlC", "pagine": "325"
+    },{
+      "titolo":"Viaggi in Italia", "sigla":"SD", "pagine": "1116"
+    },{
+      "titolo":"Ville verso l'Adda", "sigla":"MdI", "pagine": "52"
+    },{
+      "titolo":"Vocabolarietto dell'Italiano: Furberia", "sigla":"SD", "pagine": "1151"
+    },{
+      "titolo":"... voilà le Prèsident cèlibataire", "sigla":"SD", "pagine": "942"
+    }
+  ],
+  "SGF II": [{
+      "titolo":"È nato a Milano quattordici giorni...", "sigla":"SA", "pagine": "872"
+    },{
+      "titolo":"Entr'acte. Le «Bourgeois gentilhomme»", "sigla":"LdF", "pagine": "203"
+    },
+    {
+      "titolo":"EROS E PRIAPO (DA FURORE A CENERE)", "sigla":"EP", "pagine": "213"
+    }    ,
+    {
+      "titolo":"GIORNALE DI GUERRA E PRIGIONIA", "sigla":"GGP", "pagine": "431"
+    }
+    , {
+      "titolo":"IL GUERRIERO, L'AMAZZONE, LO SPIRITO DELLA POESİA NEL VERSO IMMORTALE DEL FOSCOLO", "sigla":"GASP", "pagine": "375"
+    },
+    {
+      "titolo":"IL PRIMO LIBRO DELLE FAVOLE", "sigla":"PLF", "pagine": "11"
+    },
+    {
+      "titolo":"I LUIGI DI FRANCIA", "sigla":"LdF", "pagine": "85"
+    }, {
+      "titolo":"I natali di Carlo Emilio Gadda...", "sigla":"SA", "pagine": "871"
+    }, {
+      "titolo":"Nato a Milano, il 14 novembre 1983...", "sigla":"SA", "pagine": "873"
+    }, {
+      "titolo":"POESIE", "sigla":"P", "pagine": "877"
+    }, {
+      "titolo":"SCHEDE AUTOBIOGRAFICHE", "sigla":"SA", "pagine": "869"
+    }
+    
+],
+  "SVP": [{
+      "titolo":"[Adriana Pincherle]", "sigla":"AS", "pagine": "1145"},
+      {
+      "titolo":"Alessandro Volta e il metano", "sigla":"DT", "pagine": "196"
+    },
+     {
+      "titolo":"ALTRI SCRITTI", "sigla":"AS", "pagine": "1143"
+    },
+    {
+      "titolo":"A tavola", "sigla":"AS", "pagine": "1158"
+    },
+    {
+      "titolo":"A zonzo per la Fiera", "sigla":"DT", "pagine": "87"
+    },
+    {
+      "titolo":"Azoto atmosferisco tramutato in pane", "sigla":"DT", "pagine": "119"
+    },
+    {
+      "titolo":"Caratteristiche del problema idroelettrico", "sigla":"DT", "pagine": "17"
+    },
+    {"titolo":"Dal Carso alla sala di proiezione", "sigla":"AS", "pagine": "1170"
+    },
+    {"titolo":"[Due traduzioni di E. A. Robinson]", "sigla":"AS", "pagine": "1167"
+    },
+    {
+      "titolo":"Favola delle Pasque e del loro e di chiacchiere inutili", "sigla":"UI", "pagine": "1135"
+    }
+    ,
+    {
+      "titolo":"Gli impianti tecnici del Vaticano. La centrale termoelettrica", "sigla":"DT", "pagine": "108"
+    },
+    {
+      "titolo":"GONNELLA BUFFONE", "sigla":"GB", "pagine": "989"
+    },
+    {
+      "titolo":"HÁRY JÁNOS", "sigla":"HJ", "pagine": "1037"
+    },
+    {
+      "titolo":"I grandiosi impianti tecnici in Vaticano", "sigla":"DT", "pagine": "102"
+    },
+    {
+      "titolo":"Il brindisi di Mastro Monta", "sigla":"AS", "pagine": "1167"
+    }
+    ,
+    {
+      "titolo":"IL PALAZZO DEGLI ORI", "sigla":"PdO", "pagine": "925"
+    },
+    {
+      "titolo":"IL TEVERE", "sigla":"Te", "pagine": "1093"
+    },
+    {
+      "titolo":"Il viaggio di saggezza (La peregrinación sabia) di Alonso J. de Salas Barbadillo", "sigla":"TR", "pagine": "209"
+    }, {
+      "titolo":"I materiali da costruzione", "sigla":"DT", "pagine": "114"
+    }, {
+      "titolo":"I metalli leggeri", "sigla":"DT", "pagine": "33"
+    }, {
+      "titolo":"I metalli leggeri: leghe di magnesio", "sigla":"DT", "pagine": "44"
+    }, {
+      "titolo":"I metalli leggeri nel futuro prossimo", "sigla":"DT", "pagine": "59"
+    }, {
+      "titolo":"I metalli leggeri. Produzione e consumo", "sigla":"DT", "pagine": "52"
+    }, {
+      "titolo":"I MITI DEL SOMARO", "sigla":"MdS", "pagine": "895"
+    }, {
+      "titolo":"Immagini di Rosai", "sigla":"AS", "pagine": "1148"
+    }, {
+      "titolo":"In ufficio", "sigla":"AS", "pagine": "1162"
+    }, {
+      "titolo":"I problemi della lignite", "sigla":"DT", "pagine": "151"
+    }, {
+      "titolo":"La calcionamide", "sigla":"DT", "pagine": "77"
+    }, {
+      "titolo":"La centrale di Conigliano", "sigla":"VM", "pagine": "419"
+    }, {
+      "titolo":"La chirurgia dei quadri all'Istituto Centrale dell'Editore chiede venia del recupero Restauro", "sigla":"DT", "pagine": "188"
+    },{
+      "titolo":"La grande bonificazione ferrarese", "sigla":"DT", "pagine": "156"
+    }, {
+      "titolo":"La verità sospetta (La verdad sospechosa) di Juan Ruiz De Alarcón", "sigla":"TR", "pagine": "297"
+    }, {
+      "titolo":"L'azoto", "sigla":"DT", "pagine": "68"
+    }, {
+      "titolo":"Le funivie Savona-San Giuseppe di Cairo e la loro funzione autarchica nell'economia", "sigla":"DT", "pagine": "136"
+    },{
+      "titolo":"Le ligniti e la loro utilizzazione autarchica", "sigla":"DT", "pagine": "146"
+    },{
+      "titolo":"L'esposizione e il Congresso di Fonderia", "sigla":"DT", "pagine": "23"
+    },{
+      "titolo":"Matematica e prosa", "sigla":"AS", "pagine": "1154"
+    },{
+      "titolo":"MEDITAZIONE MILANESE", "sigla":"MM", "pagine": "615"
+    },{
+      "titolo":"Molti sono i chiamati", "sigla":"AS", "pagine": "1169"
+    },{
+      "titolo":"PAGINE DI DIVULGAZIONE TECNICA", "sigla":"DT", "pagine": "13"
+    },{
+      "titolo":"Pane e chimica sintetica", "sigla":"DT", "pagine": "125"
+    },{
+      "titolo":"Per Filippo De Pisis", "sigla":"AS", "pagine": "1151"
+    },{
+      "titolo":"Per la Novella: «Il monumento a Gutierrez»", "sigla":"UI", "pagine": "1138"
+    },{
+      "titolo":"RACCONTO ITALIANO DI IGNOTO DEL NOVECENTO", "sigla":"RI", "pagine": "381"
+    },{
+      "titolo":"Terreno, piogge, fiumi e impianti idroelettrici nell'Atlante Fisico-Economico della Consociazione Turistica Italiana", "sigla":"DT", "pagine": "171"
+    },{
+      "titolo":"TRADUZIONI", "sigla":"TR", "pagine": "205"
+    },{
+      "titolo":"ULTIMI INEDITI", "sigla":"UI", "pagine": "1133"
+    },{
+      "titolo":"Ultimo giro alla fiera", "sigla":"DT", "pagine": "94"
+    }
+    ]
+
+}

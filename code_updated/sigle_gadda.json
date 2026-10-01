@@ -1,0 +1,302 @@
+{
+  "_meta": {
+    "descrizione": "Sigle delle opere di Carlo Emilio Gadda usate negli indici dei volumi (edizione Garzanti a cura di D. Isella, RR I-II, SGF I-II, SVP)",
+    "fonte_principale": "Siglario ufficiale - Fondo Gadda, Università di Pavia (www-5.unipv.it/gaddaman/fondi/siglario.pdf)",
+    "fonte_locale": "Legenda riprodotta negli indici del volume: 'AS = Altri scritti; RD = Racconti dispersi; RaI = Racconti incompiuti; SA = Schede autobiografiche; SD = Scritti dispersi; DT = Pagine di divulgazione tecnica; TR = Traduzioni; UI = Ultimi inediti'",
+    "note": "TR nel volume corrisponde alla sigla 'Tr' del siglario ufficiale (Traduzioni)"
+  },
+  "sigle": {
+    "A": {
+      "titolo_completo": "Gli Anni",
+      "edizione_originale": "Firenze, Parenti, 1943",
+      "raccolta": "SGF I, pp. 201-272"
+    },
+    "AG": {
+      "titolo_completo": "Accoppiamenti giudiziosi (I Racconti – 1924-1958)",
+      "edizione_originale": "Milano, Garzanti, 1963",
+      "raccolta": "RR II, pp. 591-920",
+      "edizioni": [
+        "a cura di Paola Italia, Milano, Adelphi, 2011"
+      ]
+    },
+    "AS": {
+      "titolo_completo": "Altri scritti",
+      "raccolta": "SVP, pp. 1143-1175"
+    },
+     "Biz": {
+      "titolo_completo": "Le bizze del capitano in congedo e altri racconti",
+      "edizione_originale": "Milano, All'insegna del pesce d'oro, 1981",
+      "edizioni": [
+        "Milano, Adelphi, 1981"
+      ]
+    },
+    "CdD": {
+      "titolo_completo": "La cognizione del dolore",
+      "edizione_originale": "Torino, Einaudi, 1963 (IV ed. 1970)",
+      "edizioni": [
+        "Milano, Garzanti, 1988",
+        "A cura di Claudio Vela, Milano, Adelphi, 2024"
+      ],
+      "raccolta": "RR I, pp. 565-772"
+    },
+    "CdU": {
+      "titolo_completo": "Il castello di Udine",
+      "edizione_originale": "Firenze, Edizioni di Solaria, 1934 (II ed. Einaudi 1955)",
+      "raccolta": "RR I, pp. 119-281", 
+      "edizioni": [
+        "a cura di Paola Italia, Giorgio Pinotti, Claudio Vela, Milano, Adelphi, 2017"
+      ]   
+    },
+    "DG": {
+      "titolo_completo": "Divagazioni e garbuglio",
+      "raccolta": "SVP, pp. 13-203",
+      "nota": "comprende anche Az (Azoto e altri scritti di divulgazione scientifica)",
+      "edizioni": [
+        "a cura di Liliana Milano, Adelphi, 2019"
+      ]
+    },
+    "DT": {
+      "titolo_completo": "Pagine di divulgazione tecnica",
+      "raccolta": "SVP, pp. 13-203",
+      "nota": "comprende anche Az (Azoto e altri scritti di divulgazione scientifica)"
+    },
+    "EP": {
+      "titolo_completo": "Eros e Priapo (da furore a cenere)",
+      "edizione_originale": "a cura di Paola Italia e Giorgio Pinotti, Milano, Adelphi, 2016"
+    },
+      "EP67": {
+      "titolo_completo": "Eros e Priapo (da furore a cenere)",
+      "edizione_originale": "Milano, Garzanti, 1967",
+      "raccolta": "SGF II, pp. 213-374"
+    },
+    "GASP": {
+      "titolo_completo": "Il guerriero, l'amazzone, lo spirito della poesia nel verso immortale del Foscolo – Conversazione a tre voci",
+      "edizione_originale": "Milano, Garzanti, 1967",
+      "raccolta": "SGF II, pp. 375-429",
+      "edizioni": [
+        "a cura di Claudio Vela, Milano, Adelphi, 2015"
+      ]
+    },
+    "GB": {
+      "titolo_completo": "Gonnella buffone",
+      "edizione_originale": "Parma, Guanda, 1985",
+      "raccolta": "SVP, pp. 989-1036"
+    },
+    "GGP": {
+      "titolo_completo": "Giornale di guerra e di prigionia",
+      "edizione_originale": "Firenze, Sansoni, 1955 (II ed. Einaudi 1965)",
+      "raccolta": "SGF II, pp. 431-867",
+       "edizioni": [
+        "a cura di Paola Italia, con una nota di Eleonora Cardinale, Milano, Adelphi, 2023"
+      ]
+      
+    },
+    "HJ": {
+      "titolo_completo": "Háry János",
+      "raccolta": "SVP, pp. 1037-1091"
+    },
+    "L'A": {
+      "titolo_completo": "L'Adalgisa",
+      "edizione_originale": "Firenze, Le Monnier, 1944 (III ed. Einaudi 1955)",
+      "raccolta": "RR I, pp. 283-564",
+      "edizioni": [
+        "a cura di Claudio Vela, Milano, Adelphi, 2012"
+      ]
+    },
+    "LdF": {
+      "titolo_completo": "I Luigi di Francia",
+      "edizione_originale": "Milano, Garzanti, 1964",
+      "raccolta": "SGF II, pp. 85-211",
+      "edizioni": [
+        "a cura di Martina Bertoldi, Adelphi, 2021"
+      ]
+    },
+    "M": {
+      "titolo_completo": "La meccanica",
+      "edizione_originale": "Milano, Garzanti, 1970",
+      "raccolta": "RR II, pp. 461-589"
+    },
+    "MdF": {
+      "titolo_completo": "La Madonna dei Filosofi",
+      "edizione_originale": "Firenze, Edizioni di Solaria, 1931 (II ed. Einaudi 1955)",
+      "raccolta": "RR I, pp. 3-107"
+    },
+    "MdI": {
+      "titolo_completo": "Le meraviglie d'Italia",
+      "edizione_originale": "Firenze, Parenti, 1939",
+      "raccolta": "SGF I, pp. 11-199"
+    },
+    "MdS": {
+      "titolo_completo": "I miti del somaro",
+      "edizione_originale": "a cura di A. Andreini, Milano, Libri Scheiwiller, 1988",
+      "raccolta": "SVP, pp. 893-924"
+    },
+    "MM": {
+      "titolo_completo": "Meditazione milanese",
+      "edizione_originale": "a cura di G.C. Roscioni, Torino, Einaudi, 1974",
+      "raccolta": "SVP, pp. 615-894"
+    },
+    "NdF": {
+      "titolo_completo": "Novelle dal Ducato in Fiamme",
+      "edizione_originale": "Firenze, Vallecchi, 1953"
+    },
+     "NS": {
+      "titolo_completo": "Novella Seconda",
+      "edizione_originale": "Milano, Garzanti, 1971",
+      "raccolta": "SGF II"
+    },
+     "P": {
+      "titolo_completo": "Poesie",
+      "edizione_originale": "Torino, Einaudi, 1993"
+    },
+    "PdO": {
+      "titolo_completo": "Il palazzo degli ori",
+      "edizione_originale": "Torino, Einaudi, 1983",
+      "raccolta": "SVP, pp. 925-987"
+    },
+    "PLF": {
+      "titolo_completo": "Il primo libro delle Favole",
+      "edizione_originale": "Venezia, Pozza, 1952",
+      "raccolta": "SGF II, pp. 11-84"
+    },
+    "QP": {
+      "titolo_completo": "Quer pasticciaccio brutto de via Merulana",
+      "edizione_originale": "Milano, Garzanti, 1957",
+      "raccolta": "RR II, pp. 11-276",
+      "edizioni": [
+        "a cura di Giorgio Pinotti, Adelphi, 2018"
+      ]
+      
+    },
+    "QPL": {
+      "titolo_completo": "Quer pasticciaccio brutto de via Merulana (versione di «Letteratura»)",
+      "raccolta": "RR II, pp. 277-470"
+    },
+    "RaI": {
+      "titolo_completo": "Racconti incompiuti",
+      "raccolta": "RR II, pp. 1023-1132",
+      "nota": "comprende Novella seconda (NS)"
+    },
+    "RD": {
+      "titolo_completo": "Racconti dispersi",
+      "raccolta": "RR II, pp. 921-1021"
+    },
+    "RI": {
+      "titolo_completo": "Racconto italiano di ignoto del novecento (Cahier d'études)",
+      "edizione_originale": "a cura di D. Isella, Torino, Einaudi, 1983",
+      "raccolta": "SVP, pp. 381-613"
+    },
+    "SA": {
+      "titolo_completo": "Schede autobiografiche",
+      "raccolta": "SGF II, pp. 869-876"
+    },
+    "SD": {
+      "titolo_completo": "Scritti dispersi",
+      "raccolta": "SGF I, pp. 669-1226",
+      "nota": "comprende Il tempo e le opere (TO)"
+    },
+     "SF": {
+      "titolo_completo": "I sogni e la folgore",
+      "edizione_originale": "Torino, Einaudi, 1955",
+      "raccolta": "RR I"
+    },
+    "Te": {
+      "titolo_completo": "Il Tevere",
+      "edizione_originale": "a cura di D. Isella, Fondazione Schlesinger, Lugano-Milano, 1991",
+      "raccolta": "SVP, pp. 1093-1131"
+    },
+     "TO": {
+      "titolo_completo": "Il tempo e le opere",
+      "edizione_originale": "a cura di Dante Isella, Milano, Adelphi, 1982",
+      "raccolta": "SVP, pp. 1093-1131"
+    },
+    "TR": {
+      "titolo_completo": "Traduzioni",
+      "raccolta": "SVP, pp. 205-378",
+      "nota": "corrisponde alla sigla 'Tr' del siglario ufficiale; comprende La verità sospetta (VS) e altre versioni (es. Il mondo com'è di Quevedo, Il viaggio di saggezza di Salas Barbadillo)"
+    },
+    "UI": {
+      "titolo_completo": "Ultimi inediti",
+      "raccolta": "SVP, pp. 1133-1141"
+    },
+    "VlC": {
+      "titolo_completo": "Verso la Certosa",
+      "edizione_originale": "Milano-Napoli, Ricciardi, 1961",
+      "raccolta": "SGF I, pp. 273-418",
+      "edizioni": [
+        "a cura di Liliana OrlandoMilano, Adelphi, 2013"
+      ]
+    },
+    "VM": {
+      "titolo_completo": "I viaggi la morte",
+      "edizione_originale": "Milano, Garzanti, 1958",
+      "raccolta": "SGF I, pp. 419-667",
+      "edizioni": [
+        "a cura di Mariarosa Bricchi, Milano, Adelphi, 2013"
+      ]
+    },
+    "CAC": {
+      "titolo_completo": "Carteggio dell'Ing. Carlo Emilio Gadda con l'Ammonia Casale S.A.",
+      "edizione_originale": "a cura di Dante Isella e con la collaborazione di Umberto Zardi, Verona, Stamperia Valdonega, 1982"
+    },
+    "LAM": {
+      "titolo_completo": "Lettere agli amici milanesi",
+      "edizione_originale": "a cura di Emma Sassi, Milano, Il Saggiatore, 1983"
+    },
+    "LGS": {
+      "titolo_completo": "Lettere a una gentile signora",
+      "edizione_originale": "a cura di Giuseppe Marcenaro, Milano, Adelphi, 1983"
+    },
+    "AF": {
+      "titolo_completo": "A un amico fraterno. Lettere a Bonaventura Tecchi",
+      "edizione_originale": "a cura di Marcello Carlino, Milano, Garzanti, 1984"
+    },
+    "IF": {
+      "titolo_completo": "L’ingegner fantasia. Lettere a Ugo Betti 1919-1930",
+      "edizione_originale": "a cura di Giulio Ungarelli, Milano, Rizzoli, 1984"
+    },
+    "LS": {
+      "titolo_completo": "Lettere alla sorella 1920-1924",
+      "edizione_originale": "a cura di Gianfranco Colombo, Milano, Rosellina Archinto, 1987"
+    },
+    "LGC": {
+      "titolo_completo": "Lettere a Gianfranco Contini a cura del destinatario 1934-1967",
+      "edizione_originale": "Milano, Garzanti, 1988"
+    },
+    "CaGia": {
+      "titolo_completo": "Carissimo Gianfranco. Lettere ritrovate",
+      "edizione_originale": "a cura di Giulio Ungarelli, Milano, Rosellina Archinto, 1998"
+    },
+    "LPBi": {
+      "titolo_completo": "Lettere a Piero",
+      "edizione_originale": "a cura di Simona Priami e contiene Quattro saggi su Gadda di Piero Bigongiari, Firenze, Polistampa, 1999"
+    }
+    ,
+    "CaCe": {
+      "titolo_completo": "Cara Anita, caro Emilio",
+      "edizione_originale": "a cura di Federico Roncoroni. Raccolta di ventisei lettere di Gadda al nipote Emilio Fornasini e a sua moglie Anita, Roma, Edizioni di Gabriele e Mariateresa Benincasa, 2002"
+    } ,
+    "UG": {
+      "titolo_completo": "Un gomitolo di concause. Lettere a Pietro Citati (1957-1969)",
+      "edizione_originale": " a cura di Giorgio Pinotti, Milano, Adelphi, 2013"
+    }
+    ,
+    "SMVCSF": {
+      "titolo_completo": "«Se mi vede Cecchi, sono fritto». Corrispondenza e scritti 1962-1973",
+      "edizione_originale": "a cura di Domenico Scarpa, Milano, Adelphi, 2015"
+    }
+    
+  },
+  "sub_opere": {
+    "_meta": "Individually-known pieces inside a collective sigla (e.g. a miscellany like SD) that are notable enough to deserve their own card in opere.html, even though they don't have their own official sigla in the siglario. `parentSigla` is the collective sigla they belong to; `matchTitle` is matched (loosely, ignoring a trailing full stop) against items.json titles within that sigla's themes to find their linked schede — a sub-opera card only appears if at least one matching item exists.",
+    "SD__norme_radiofonico": {
+      "titolo_completo": "Norme per la redazione di un testo radiofonico",
+      "edizione_originale": "Torino, ERI, 1953 (pubblicato anonimo)",
+      "edizioni": [
+        "a cura di Mariarosa Bricchi, Milano, Adelphi, 2018"
+      ],
+      "parentSigla": "SD",
+      "matchTitle": "Norme per la redazione di un testo radiofonico"
+    }
+  }
+}

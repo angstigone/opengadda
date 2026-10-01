@@ -1,0 +1,579 @@
+{
+  "new_records": [
+    {
+      "id": "bibsec3034",
+      "category": "secondary bibliography",
+      "tipo": "Capitolo in volume",
+      "title": "Vocazione mediterranea, Ceschina",
+      "subtitle": "Gadda Conti, Piero",
+      "rivista": "",
+      "year": 1939,
+      "date": "1939-01-01",
+      "editore": "Milano",
+      "detail": "",
+      "themes": [
+        "MdF"
+      ],
+      "people": [
+        {
+          "name": "Gadda Conti, Piero",
+          "role": "autore"
+        }
+      ],
+      "citazione": "Gadda Conti, Piero, Vocazione mediterranea, Ceschina, Milano, 1939, pp. 269-75",
+      "repub_di": "bibsec534",
+      "pub_detail": "pp. 269-75",
+      "sito_web": "",
+      "da_verificare": ""
+    },
+    {
+      "id": "bibsec3035",
+      "category": "secondary bibliography",
+      "tipo": "Ristampa in rivista",
+      "title": "Gadda al vaglio della critica (1931-1943), a cura di R. Stracuzzi",
+      "subtitle": "Gadda Conti, Piero",
+      "rivista": "The Edinburgh Journal of Gadda Studies",
+      "year": 1931,
+      "date": "1931-01-01",
+      "editore": "",
+      "detail": "",
+      "themes": [
+        "MdF"
+      ],
+      "people": [
+        {
+          "name": "Gadda Conti, Piero",
+          "role": "autore"
+        }
+      ],
+      "citazione": "Gadda al vaglio della critica (1931-1943), a cura di R. Stracuzzi, in «The Edinburgh Journal of Gadda Studies», Supplement 7, 6, 2007",
+      "repub_di": "bibsec534",
+      "pub_detail": "",
+      "sito_web": "",
+      "da_verificare": "curator: R. Stracuzzi"
+    },
+    {
+      "id": "bibsec3036",
+      "category": "secondary bibliography",
+      "tipo": "Capitolo in volume",
+      "title": "La Madonna dei filosofi, in Memorie critiche",
+      "subtitle": "Franchi, Raffaello",
+      "rivista": "",
+      "year": 1938,
+      "date": "1938-01-01",
+      "editore": "Firenze",
+      "detail": "Parenti",
+      "themes": [
+        "MdF"
+      ],
+      "people": [
+        {
+          "name": "Franchi, Raffaello",
+          "role": "autore"
+        }
+      ],
+      "citazione": "Franchi, Raffaello, La Madonna dei filosofi, in Memorie critiche, Firenze, Parenti, 1938, pp. 167-70",
+      "repub_di": "bibsec529",
+      "pub_detail": "pp. 167-70",
+      "sito_web": "",
+      "da_verificare": ""
+    },
+    {
+      "id": "bibsec3037",
+      "category": "secondary bibliography",
+      "tipo": "Ristampa in rivista",
+      "title": "Gadda al vaglio della critica (1931-1943), a cura di R. Stracuzzi",
+      "subtitle": "Franchi, Raffaello",
+      "rivista": "The Edinburgh Journal of Gadda Studies",
+      "year": 1931,
+      "date": "1931-01-01",
+      "editore": "",
+      "detail": "",
+      "themes": [
+        "MdF"
+      ],
+      "people": [
+        {
+          "name": "Franchi, Raffaello",
+          "role": "autore"
+        }
+      ],
+      "citazione": "Gadda al vaglio della critica (1931-1943), a cura di R. Stracuzzi, in «The Edinburgh Journal of Gadda Studies», Supplement 7, 6, 2007",
+      "repub_di": "bibsec529",
+      "pub_detail": "",
+      "sito_web": "",
+      "da_verificare": "curator: R. Stracuzzi"
+    },
+    {
+      "id": "bibsec3038",
+      "category": "secondary bibliography",
+      "tipo": "Capitolo in volume",
+      "title": "Scrittori italiani del Novecento, Le Monnier",
+      "subtitle": "De Robertis, Giuseppe",
+      "rivista": "",
+      "year": 1940,
+      "date": "1940-01-01",
+      "editore": "Firenze",
+      "detail": "",
+      "themes": [
+        "CdU"
+      ],
+      "people": [
+        {
+          "name": "De Robertis, Giuseppe",
+          "role": "autore"
+        }
+      ],
+      "citazione": "De Robertis, Giuseppe, Scrittori italiani del Novecento, Le Monnier, Firenze, 1940, pp. 573-76",
+      "repub_di": "bibsec512",
+      "pub_detail": "pp. 573-76",
+      "sito_web": "",
+      "da_verificare": ""
+    },
+    {
+      "id": "bibsec3039",
+      "category": "secondary bibliography",
+      "tipo": "Ristampa in rivista",
+      "title": "Gadda al vaglio della critica (1931-1943), a cura di R. Stracuzzi",
+      "subtitle": "De Robertis, Giuseppe",
+      "rivista": "The Edinburgh Journal of Gadda Studies",
+      "year": 1931,
+      "date": "1931-01-01",
+      "editore": "",
+      "detail": "",
+      "themes": [
+        "CdU"
+      ],
+      "people": [
+        {
+          "name": "De Robertis, Giuseppe",
+          "role": "autore"
+        }
+      ],
+      "citazione": "Gadda al vaglio della critica (1931-1943), a cura di R. Stracuzzi, in «The Edinburgh Journal of Gadda Studies», Supplement 7, 6, 2007",
+      "repub_di": "bibsec512",
+      "pub_detail": "",
+      "sito_web": "",
+      "da_verificare": "curator: R. Stracuzzi"
+    },
+    {
+      "id": "bibsec3040",
+      "category": "secondary bibliography",
+      "tipo": "Ristampa in rivista",
+      "title": "Gadda al vaglio della critica (1931-1943), a cura di R. Stracuzzi",
+      "subtitle": "Linati, Carlo",
+      "rivista": "The Edinburgh Journal of Gadda Studies",
+      "year": 1931,
+      "date": "1931-01-01",
+      "editore": "",
+      "detail": "",
+      "themes": [
+        "CdU"
+      ],
+      "people": [
+        {
+          "name": "Linati, Carlo",
+          "role": "autore"
+        }
+      ],
+      "citazione": "Gadda al vaglio della critica (1931-1943), a cura di R. Stracuzzi, in «The Edinburgh Journal of Gadda Studies», Supplement 7, 6, 2007",
+      "repub_di": "bibsec554",
+      "pub_detail": "",
+      "sito_web": "",
+      "da_verificare": "curator: R. Stracuzzi"
+    },
+    {
+      "id": "bibsec3041",
+      "category": "secondary bibliography",
+      "tipo": "Ristampa in rivista",
+      "title": "Gadda al vaglio della critica (1931-1943), a cura di R. Stracuzzi",
+      "subtitle": "Masciotta, Michelangelo",
+      "rivista": "The Edinburgh Journal of Gadda Studies",
+      "year": 1931,
+      "date": "1931-01-01",
+      "editore": "",
+      "detail": "",
+      "themes": [
+        "CdU"
+      ],
+      "people": [
+        {
+          "name": "Masciotta, Michelangelo",
+          "role": "autore"
+        }
+      ],
+      "citazione": "Gadda al vaglio della critica (1931-1943), a cura di R. Stracuzzi, in «The Edinburgh Journal of Gadda Studies», Supplement 7, 6, 2007",
+      "repub_di": "bibsec561",
+      "pub_detail": "",
+      "sito_web": "",
+      "da_verificare": "curator: R. Stracuzzi"
+    },
+    {
+      "id": "bibsec3042",
+      "category": "secondary bibliography",
+      "tipo": "Capitolo in volume",
+      "title": "Itinerario stilistico, Le Monnier",
+      "subtitle": "Devoto, Giacomo",
+      "rivista": "",
+      "year": 1975,
+      "date": "1975-01-01",
+      "editore": "Firenze",
+      "detail": "",
+      "themes": [
+        "CdU"
+      ],
+      "people": [
+        {
+          "name": "Devoto, Giacomo",
+          "role": "autore"
+        }
+      ],
+      "citazione": "Devoto, Giacomo, Itinerario stilistico, Le Monnier, Firenze, 1975",
+      "repub_di": "bibsec517",
+      "pub_detail": "",
+      "sito_web": "",
+      "da_verificare": ""
+    },
+    {
+      "id": "bibsec3043",
+      "category": "secondary bibliography",
+      "tipo": "Ristampa in rivista",
+      "title": "Gadda al vaglio della critica (1931-1943), a cura di R. Stracuzzi",
+      "subtitle": "Devoto, Giacomo",
+      "rivista": "The Edinburgh Journal of Gadda Studies",
+      "year": 1931,
+      "date": "1931-01-01",
+      "editore": "",
+      "detail": "",
+      "themes": [
+        "CdU"
+      ],
+      "people": [
+        {
+          "name": "Devoto, Giacomo",
+          "role": "autore"
+        }
+      ],
+      "citazione": "Gadda al vaglio della critica (1931-1943), a cura di R. Stracuzzi, in «The Edinburgh Journal of Gadda Studies», Supplement 7, 6, 2007",
+      "repub_di": "bibsec517",
+      "pub_detail": "",
+      "sito_web": "",
+      "da_verificare": "curator: R. Stracuzzi"
+    },
+    {
+      "id": "bibsec3044",
+      "category": "secondary bibliography",
+      "tipo": "Ristampa in rivista",
+      "title": "Gadda al vaglio della critica (1931-1943), a cura di R. Stracuzzi",
+      "subtitle": "Falqui, Enrico",
+      "rivista": "The Edinburgh Journal of Gadda Studies",
+      "year": 1931,
+      "date": "1931-01-01",
+      "editore": "",
+      "detail": "",
+      "themes": [],
+      "people": [
+        {
+          "name": "Falqui, Enrico",
+          "role": "autore"
+        }
+      ],
+      "citazione": "Gadda al vaglio della critica (1931-1943), a cura di R. Stracuzzi, in «The Edinburgh Journal of Gadda Studies», Supplement 7, 6, 2007",
+      "repub_di": "bibsec521",
+      "pub_detail": "",
+      "sito_web": "",
+      "da_verificare": "curator: R. Stracuzzi"
+    },
+    {
+      "id": "bibsec3045",
+      "category": "secondary bibliography",
+      "tipo": "Capitolo in volume",
+      "title": "Novecento letterario, serie quarta",
+      "subtitle": "Falqui, Enrico",
+      "rivista": "",
+      "year": 1961,
+      "date": "1961-01-01",
+      "editore": "Vallecchi",
+      "detail": "Firenze",
+      "themes": [
+        "MdI"
+      ],
+      "people": [
+        {
+          "name": "Falqui, Enrico",
+          "role": "autore"
+        }
+      ],
+      "citazione": "Falqui, Enrico, Novecento letterario, serie quarta, Vallecchi, Firenze, 1961, pp. 450-54",
+      "repub_di": "bibsec522",
+      "pub_detail": "pp. 450-54",
+      "sito_web": "",
+      "da_verificare": ""
+    },
+    {
+      "id": "bibsec3046",
+      "category": "secondary bibliography",
+      "tipo": "Ristampa in rivista",
+      "title": "Gadda al vaglio della critica (1931-1943), a cura di R. Stracuzzi",
+      "subtitle": "Falqui, Enrico",
+      "rivista": "The Edinburgh Journal of Gadda Studies",
+      "year": 1931,
+      "date": "1931-01-01",
+      "editore": "",
+      "detail": "",
+      "themes": [
+        "MdI"
+      ],
+      "people": [
+        {
+          "name": "Falqui, Enrico",
+          "role": "autore"
+        }
+      ],
+      "citazione": "Gadda al vaglio della critica (1931-1943), a cura di R. Stracuzzi, in «The Edinburgh Journal of Gadda Studies», Supplement 7, 6, 2007",
+      "repub_di": "bibsec522",
+      "pub_detail": "",
+      "sito_web": "",
+      "da_verificare": "curator: R. Stracuzzi"
+    },
+    {
+      "id": "bibsec3047",
+      "category": "secondary bibliography",
+      "tipo": "Capitolo in volume",
+      "title": "Varianti e altra linguistica, Einaudi",
+      "subtitle": "Contini, Gianfranco",
+      "rivista": "",
+      "year": 1970,
+      "date": "1970-01-01",
+      "editore": "Torino",
+      "detail": "",
+      "themes": [],
+      "people": [
+        {
+          "name": "Contini, Gianfranco",
+          "role": "autore"
+        }
+      ],
+      "citazione": "Contini, Gianfranco, Varianti e altra linguistica, Einaudi, Torino, 1970, pp. 303-307",
+      "repub_di": "bibsec503",
+      "pub_detail": "pp. 303-307",
+      "sito_web": "",
+      "da_verificare": ""
+    },
+    {
+      "id": "bibsec3048",
+      "category": "secondary bibliography",
+      "tipo": "Capitolo in volume",
+      "title": "Quarant'anni d'amicizia, Einaudi",
+      "subtitle": "Contini, Gianfranco",
+      "rivista": "",
+      "year": 1989,
+      "date": "1989-01-01",
+      "editore": "Torino",
+      "detail": "",
+      "themes": [],
+      "people": [
+        {
+          "name": "Contini, Gianfranco",
+          "role": "autore"
+        }
+      ],
+      "citazione": "Contini, Gianfranco, Quarant'anni d'amicizia, Einaudi, Torino, 1989, pp. 3-10",
+      "repub_di": "bibsec503",
+      "pub_detail": "pp. 3-10",
+      "sito_web": "",
+      "da_verificare": ""
+    },
+    {
+      "id": "bibsec3049",
+      "category": "secondary bibliography",
+      "tipo": "Ristampa in rivista",
+      "title": "Gadda al vaglio della critica (1931-1943), a cura di R. Stracuzzi",
+      "subtitle": "Contini, Gianfranco",
+      "rivista": "The Edinburgh Journal of Gadda Studies",
+      "year": 1931,
+      "date": "1931-01-01",
+      "editore": "",
+      "detail": "",
+      "themes": [],
+      "people": [
+        {
+          "name": "Contini, Gianfranco",
+          "role": "autore"
+        }
+      ],
+      "citazione": "Gadda al vaglio della critica (1931-1943), a cura di R. Stracuzzi, in «The Edinburgh Journal of Gadda Studies», Supplement 7, 6, 2007",
+      "repub_di": "bibsec503",
+      "pub_detail": "",
+      "sito_web": "",
+      "da_verificare": "curator: R. Stracuzzi"
+    },
+    {
+      "id": "bibsec3050",
+      "category": "secondary bibliography",
+      "tipo": "Capitolo in volume",
+      "title": "Varianti e altra linguistica. Una raccolta di saggi (1939-1968), Einaudi",
+      "subtitle": "Contini, Gianfranco",
+      "rivista": "",
+      "year": 1939,
+      "date": "1939-01-01",
+      "editore": "Torino",
+      "detail": "",
+      "themes": [],
+      "people": [
+        {
+          "name": "Contini, Gianfranco",
+          "role": "autore"
+        }
+      ],
+      "citazione": "Contini, Gianfranco, Varianti e altra linguistica. Una raccolta di saggi (1939-1968), Einaudi, Torino, 1970, pp. 661-71",
+      "repub_di": "bibsec504",
+      "pub_detail": "pp. 661-71",
+      "sito_web": "",
+      "da_verificare": ""
+    },
+    {
+      "id": "bibsec3051",
+      "category": "secondary bibliography",
+      "tipo": "Ristampa in rivista",
+      "title": "Gadda al vaglio della critica (1931-1943), a cura di R. Stracuzzi",
+      "subtitle": "Contini, Gianfranco",
+      "rivista": "The Edinburgh Journal of Gadda Studies",
+      "year": 1931,
+      "date": "1931-01-01",
+      "editore": "",
+      "detail": "",
+      "themes": [],
+      "people": [
+        {
+          "name": "Contini, Gianfranco",
+          "role": "autore"
+        }
+      ],
+      "citazione": "Gadda al vaglio della critica (1931-1943), a cura di R. Stracuzzi, in «The Edinburgh Journal of Gadda Studies», Supplement 7, 6, 2007",
+      "repub_di": "bibsec504",
+      "pub_detail": "",
+      "sito_web": "",
+      "da_verificare": "curator: R. Stracuzzi"
+    },
+    {
+      "id": "bibsec3052",
+      "category": "secondary bibliography",
+      "tipo": "Capitolo in volume",
+      "title": "Novecento letterario, serie quarta",
+      "subtitle": "Falqui, Enrico",
+      "rivista": "",
+      "year": 1961,
+      "date": "1961-01-01",
+      "editore": "Vallecchi",
+      "detail": "Firenze",
+      "themes": [],
+      "people": [
+        {
+          "name": "Falqui, Enrico",
+          "role": "autore"
+        }
+      ],
+      "citazione": "Falqui, Enrico, Novecento letterario, serie quarta, Vallecchi, Firenze, 1961, pp. 459-67",
+      "repub_di": "bibsec526",
+      "pub_detail": "pp. 459-67",
+      "sito_web": "",
+      "da_verificare": ""
+    },
+    {
+      "id": "bibsec3053",
+      "category": "secondary bibliography",
+      "tipo": "Capitolo in volume",
+      "title": "Torino",
+      "subtitle": "Una pietra sopra. Discorsi di letteratura e società, Einaudi",
+      "rivista": "",
+      "year": 1980,
+      "date": "1980-01-01",
+      "editore": "",
+      "detail": "",
+      "themes": [],
+      "people": [
+        {
+          "name": "Calvino, Italo",
+          "role": "autore"
+        }
+      ],
+      "citazione": "Una pietra sopra. Discorsi di letteratura e società, Einaudi, Torino, 1980",
+      "repub_di": "bibsec481",
+      "pub_detail": "",
+      "sito_web": "",
+      "da_verificare": ""
+    },
+    {
+      "id": "bibsec3054",
+      "category": "secondary bibliography",
+      "tipo": "Capitolo in volume",
+      "title": "a cura di M. Barenghi, Milano",
+      "subtitle": "Saggi 1945-1985, I-II",
+      "rivista": "",
+      "year": 1945,
+      "date": "1945-01-01",
+      "editore": "Mondadori",
+      "detail": "",
+      "themes": [],
+      "people": [
+        {
+          "name": "Calvino, Italo",
+          "role": "autore"
+        }
+      ],
+      "citazione": "Saggi 1945-1985, I-II, a cura di M. Barenghi, Milano, Mondadori, 1995, p. 51",
+      "repub_di": "bibsec481",
+      "pub_detail": "p. 51",
+      "sito_web": "",
+      "da_verificare": ""
+    }
+  ],
+  "orig_modifications": {
+    "bibsec534": [
+      "bibsec3034",
+      "bibsec3035"
+    ],
+    "bibsec529": [
+      "bibsec3036",
+      "bibsec3037"
+    ],
+    "bibsec512": [
+      "bibsec3038",
+      "bibsec3039"
+    ],
+    "bibsec554": [
+      "bibsec3040"
+    ],
+    "bibsec561": [
+      "bibsec3041"
+    ],
+    "bibsec517": [
+      "bibsec3042",
+      "bibsec3043"
+    ],
+    "bibsec521": [
+      "bibsec3044"
+    ],
+    "bibsec522": [
+      "bibsec3045",
+      "bibsec3046"
+    ],
+    "bibsec503": [
+      "bibsec3047",
+      "bibsec3048",
+      "bibsec3049"
+    ],
+    "bibsec504": [
+      "bibsec3050",
+      "bibsec3051"
+    ],
+    "bibsec526": [
+      "bibsec3052"
+    ],
+    "bibsec481": [
+      "bibsec3053",
+      "bibsec3054"
+    ]
+  }
+}

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenGadda — Persone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1814;
+  --paper: #f5f0e8;
+  --paper2: #ede8dc;
+  --accent: #1e6a6a;
+  --accent-light: #4aa8a8;
+  --muted: #7a7268;
+  --border: #c8bfaa;
+  --white: #fdfaf5;
+  --tag-bg: #dcecec;
+  --tag-text: #1e6a6a;
+  --font-scale: 1;
+}
+html { font-size: calc(16px * var(--font-scale)); }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'EB Garamond', Georgia, serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
+
+/* This page is intentionally standalone for now — not linked from any
+   other page's nav, not wired into cross-page filters beyond linking OUT
+   to search.html's existing ?person= filter (already works, unmodified). */
+nav { background:var(--ink); border-bottom:2px solid var(--accent); display:flex; align-items:center; padding:0 2.5rem; gap:2rem; height:52px; position:sticky; top:0; z-index:100; }
+.nav-brand { font-family:'DM Mono',monospace; font-size:13px; letter-spacing:0.18em; color:var(--white); text-decoration:none; margin-right:auto; }
+nav a { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#9a9080; text-decoration:none; transition:color 0.2s; }
+nav a:hover, nav a.active { color:#e8c89a; }
+
+header { background:var(--ink); color:var(--white); padding:2.5rem 2.5rem 2rem; border-bottom:3px solid var(--accent); }
+header .eyebrow { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:#5a5248; margin-bottom:0.5rem; }
+header h1 { font-size:2.4rem; font-weight:400; font-style:italic; margin-bottom:0.4rem; }
+header p { color:#9a9080; font-size:1rem; }
+
+.layout { display: grid; grid-template-columns: 240px 1fr 220px; min-height: calc(100vh - 52px); }
+.sidebar {
+  background: var(--white); border-right: 1px solid var(--border);
+  padding: 1.5rem 1.25rem; position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto;
+}
+.sidebar-section { margin-bottom: 1.75rem; }
+.sidebar-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; display: block; }
+.sidebar input[type=text] {
+  width: 100%; padding: 0.5rem 0.6rem;
+  font-family: 'EB Garamond', serif; font-size: 1rem;
+  border: 1px solid var(--border); background: var(--paper);
+  color: var(--ink); border-radius: 2px; outline: none;
+}
+.sidebar input[type=text]:focus { border-color: var(--accent); }
+.filter-group { display: flex; flex-direction: column; gap: 3px; }
+.filter-btn {
+  text-align: left; background: none; border: none;
+  padding: 0.3rem 0.5rem; font-family: 'EB Garamond', serif; font-size: 0.9rem;
+  color: var(--muted); cursor: pointer; border-radius: 2px;
+  display: flex; justify-content: space-between; align-items: center;
+  transition: background 0.15s, color 0.15s;
+}
+.filter-btn:hover { background: var(--tag-bg); color: var(--ink); }
+.filter-btn.active { background: var(--accent); color: var(--white); }
+.filter-btn .count { font-family: 'DM Mono', monospace; font-size: 10px; opacity: 0.7; }
+
+.main { padding: 1.5rem 2rem; min-width: 0; }
+.stats-accordion { border: 1px solid var(--border); border-radius: 3px; margin-bottom: 1.25rem; overflow: hidden; }
+.stats-bar { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); }
+.stat { background: var(--white); padding: 0.75rem 1rem; text-align: center; cursor: pointer; transition: background 0.15s; border: none; font-family: inherit; width: 100%; }
+.stat:hover { background: var(--tag-bg); }
+.stat.active { background: var(--tag-bg); }
+.stat-n { font-family: 'DM Mono', monospace; font-size: 1.3rem; font-weight: 500; color: var(--accent); display: block; }
+.stat-l { font-size: 0.8rem; color: var(--muted); }
+.stats-detail { max-height: 0; overflow: hidden; transition: max-height 0.25s ease; border-top: 0 solid var(--border); background: var(--white); }
+.stats-detail.open { max-height: 320px; overflow-y: auto; border-top-width: 1px; padding: 1.25rem 1.25rem 0.5rem; }
+.scatter-wrap { width: 100%; overflow-x: auto; }
+.scatter-svg { display: block; }
+.scatter-pt { fill: var(--accent); stroke: var(--white); stroke-width: 1.5; cursor: pointer; transition: r 0.15s, fill 0.15s; }
+.scatter-pt:hover { fill: var(--accent-light); }
+.scatter-guide { stroke: var(--border); stroke-width: 1; }
+.scatter-count { font-family: 'DM Mono', monospace; font-size: 9px; fill: var(--muted); text-anchor: middle; pointer-events: none; }
+.scatter-label { font-family: 'EB Garamond', serif; font-size: 10.5px; fill: var(--ink); }
+.scatter-g:hover .scatter-label { fill: var(--accent); }
+.scatter-g:hover .scatter-count { fill: var(--ink); }
+
+.entries { display: flex; flex-direction: column; }
+.entry {
+  border-bottom: 1px solid var(--border);
+  padding: 0.9rem 0.25rem;
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 0.75rem; align-items: start;
+  transition: background 0.15s;
+}
+.entry:hover { background: var(--white); padding-left: 0.5rem; padding-right: 0.5rem; margin: 0 -0.25rem; }
+.entry-name { font-size: 1.05rem; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+.entry-name a { color: inherit; text-decoration: none; }
+.entry-name a:hover { color: var(--accent); }
+.entry-roles { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); display: flex; gap: 6px; flex-wrap: wrap; }
+.role-tag { padding: 1px 6px; border-radius: 2px; background: var(--tag-bg); color: var(--tag-text); }
+.cat-badges { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 5px; }
+.cat-badge { font-family: 'DM Mono', monospace; font-size: 9px; padding: 1px 6px; border-radius: 2px; white-space: nowrap; }
+.entry-count { font-family: 'DM Mono', monospace; font-size: 1rem; color: var(--accent); text-align: right; flex-shrink: 0; }
+.entry-count .l { display: block; font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+
+.auth-link { font-size: 10px; text-decoration: none; opacity: 0.5; cursor: pointer; transition: opacity 0.15s; }
+.auth-link:hover { opacity: 1; }
+.auth-pocket { position: relative; display: inline-block; }
+.auth-pocket summary { list-style: none; }
+.auth-pocket summary::-webkit-details-marker { display: none; }
+.auth-pocket[open] summary.auth-link { opacity: 1; }
+.auth-pocket-body {
+  position: absolute; top: 100%; left: 0; margin-top: 4px; z-index: 50;
+  background: var(--white); border: 1px solid var(--border); border-radius: 4px;
+  padding: 8px 10px; font-family: 'DM Mono', monospace; font-size: 10px;
+  white-space: nowrap; box-shadow: 0 6px 16px rgba(0,0,0,0.15); line-height: 1.7;
+}
+.auth-pocket-row { display: flex; gap: 6px; }
+.auth-pocket-row + .auth-pocket-row { margin-top: 2px; }
+.auth-pocket-label { color: var(--muted); min-width: 52px; }
+.auth-pocket-row a { color: var(--accent); text-decoration: none; }
+.auth-pocket-row a:hover { text-decoration: underline; }
+.auth-pocket-desc {
+  font-family: 'EB Garamond', serif; font-size: 11px; color: var(--ink);
+  white-space: normal; max-width: 240px; margin-top: 6px; font-style: italic;
+}
+
+.pagination { display: flex; gap: 6px; justify-content: center; margin-top: 2rem; flex-wrap: wrap; }
+.page-btn {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  border: 1px solid var(--border); background: none; color: var(--muted);
+  padding: 4px 12px; cursor: pointer; border-radius: 2px;
+}
+.page-btn.active { background: var(--ink); color: var(--white); border-color: var(--ink); }
+.page-btn:hover:not(.active) { background: var(--tag-bg); }
+.no-results { text-align: center; padding: 4rem 1rem; color: var(--muted); font-style: italic; font-size: 1.1rem; }
+
+.viz-static-panel { background:var(--white); border-left:1px solid var(--border); padding:1.25rem 1rem; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; }
+.viz-section { margin-bottom: 2rem; }
+.viz-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:0.9rem; display:block; }
+.bar-row { display:flex; align-items:center; gap:6px; margin-bottom:5px; font-size:0.8rem; }
+.bar-row-label { flex:1; min-width:0; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--ink); font-family:'EB Garamond',serif; cursor:pointer; }
+.bar-row-label:hover { color:var(--accent); }
+.bar-row-label.active-bar { color:var(--accent); font-weight:500; }
+.bar-track { width:56px; flex-shrink:0; background:var(--tag-bg); border-radius:2px; height:7px; overflow:hidden; }
+.bar-fill { height:100%; background:var(--accent); border-radius:2px; transition:width 0.3s; }
+.bar-count { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); width:26px; flex-shrink:0; text-align:right; }
+
+@media(max-width:900px) { .layout { grid-template-columns:240px 1fr; } .viz-static-panel { display:none; } }
+@media (max-width: 700px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">OpenGadda</a>
+  <a href="opere.html">Opere</a>
+  <a href="archive.html">Archivi</a>
+  <a href="primary_bibliography.html">Bib. primaria</a>
+  <a href="secondary_bibliography.html">Bib. secondaria</a>
+  <a href="library.html">Biblioteca</a>
+  <a href="epistolario.html">Epistolario</a>
+  <a href="translations.html">Traduzioni</a>
+</nav>
+<header>
+  <div class="eyebrow">OpenGadda — prototipo, non ancora collegato al resto del sito</div>
+  <h1>Persone</h1>
+  <p id="header-sub">Caricamento…</p>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <span class="sidebar-label">Ricerca</span>
+      <input type="text" id="search" placeholder="Nome…" oninput="applyFilters()">
+    </div>
+    <div class="sidebar-section">
+      <span class="sidebar-label">Ordinamento</span>
+      <div class="filter-group">
+        <button class="filter-btn active" id="s-count" onclick="setSort('count')">Per numero di schede</button>
+        <button class="filter-btn" id="s-alpha" onclick="setSort('alpha')">Alfabetico</button>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <span class="sidebar-label">Ruolo</span>
+      <div class="filter-group" id="role-filters"></div>
+    </div>
+    <div class="sidebar-section">
+      <span class="sidebar-label">Sezione</span>
+      <div class="filter-group" id="cat-filters"></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="stats-accordion">
+      <div class="stats-bar" id="stats-bar">
+        <button class="stat" id="stat-total" onclick="setStatsPanel('total')"><span class="stat-n" id="sn-total">0</span><span class="stat-l">persone</span></button>
+        <button class="stat" id="stat-records" onclick="setStatsPanel('records')"><span class="stat-n" id="sn-records">0</span><span class="stat-l">schede collegate</span></button>
+        <button class="stat" id="stat-roles" onclick="setStatsPanel('roles')"><span class="stat-n" id="sn-roles">0</span><span class="stat-l">ruoli</span></button>
+        <button class="stat" id="stat-wd" onclick="setStatsPanel('wd')"><span class="stat-n" id="sn-wd">0</span><span class="stat-l">con Wikidata/VIAF</span></button>
+      </div>
+      <div class="stats-detail" id="stats-detail"></div>
+    </div>
+    <div id="entries" class="entries"><div style="padding:3rem 1rem;text-align:center;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted)">Caricamento…</div></div>
+    <div id="pagination" class="pagination"></div>
+  </main>
+
+  <aside class="viz-static-panel">
+    <div class="viz-section">
+      <span class="viz-label">Ruoli più frequenti</span>
+      <div id="viz-roles"></div>
+    </div>
+    <div class="viz-section">
+      <span class="viz-label">Sezioni più frequenti</span>
+      <div id="viz-cats"></div>
+    </div>
+  </aside>
+</div>
+
+<script>
+const PER_PAGE = 60;
+let ALL_DATA = [];
+let PEOPLE_AUTHORITY = {};
+let PEOPLE = []; // [{name, count, roles:Set, cats:Set}]
+let filtered = [];
+let currentPage = 1;
+let sortKey = 'count';
+let activeRole = null;
+let activeCat = null;
+
+const CAT_COLORS = {"library": "#7a3b1e", "secondary bibliography": "#1e4a7a", "primary bibliography": "#1a6a40", "archive": "#6a3a1a", "letter": "#5a1e7a", "translation": "#6a5a1a"};
+const CAT_LABELS = {"library": "Biblioteca", "secondary bibliography": "Bib. secondaria", "primary bibliography": "Bib. primaria", "archive": "Archivi", "letter": "Epistolario", "translation": "Traduzioni"};
+const ROLE_LABELS = {"autore": "Autore", "curatore": "Curatore", "traduttore": "Traduttore", "mittente": "Mittente", "destinatario": "Destinatario"};
+
+function escapeHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function authorityTitle(name) {
+  const a = PEOPLE_AUTHORITY[name];
+  if (!a) return '';
+  const titleParts = [a.wikidata_label || name, a.wikidata_description].filter(Boolean);
+  return titleParts.join(' — ').replace(/"/g, '&quot;');
+}
+function authorityIcon(name) {
+  const a = PEOPLE_AUTHORITY[name];
+  if (!a || (!a.wikidata_id && !a.viaf_id)) return '';
+  const rows = [];
+  if (a.wikidata_id) rows.push('<div class="auth-pocket-row"><span class="auth-pocket-label">Wikidata</span><a href="https://www.wikidata.org/wiki/' + a.wikidata_id + '" target="_blank" rel="noopener">' + a.wikidata_id + '</a></div>');
+  if (a.viaf_id) rows.push('<div class="auth-pocket-row"><span class="auth-pocket-label">VIAF</span><a href="https://viaf.org/viaf/' + a.viaf_id + '" target="_blank" rel="noopener">' + a.viaf_id + '</a></div>');
+  const desc = a.wikidata_description ? '<div class="auth-pocket-desc">' + escapeHtml(a.wikidata_description) + '</div>' : '';
+  return ' <details class="auth-pocket" onclick="event.stopPropagation()">' +
+    '<summary class="auth-link" aria-label="Wikidata/VIAF">ⓘ</summary>' +
+    '<div class="auth-pocket-body">' + rows.join('') + desc + '</div>' +
+  '</details>';
+}
+
+function alphaSortKey(name) {
+  let s = (name || '').trim();
+  let changed = true;
+  while (changed) {
+    changed = false;
+    const noQuote = s.replace(/^[\s"'“”‘’«»″]+/, '');
+    if (noQuote !== s) { s = noQuote; changed = true; }
+    const noParen = s.replace(/^\([^)]*\)\s*/, '');
+    if (noParen !== s) { s = noParen; changed = true; }
+  }
+  return s;
+}
+
+// Matches a person name regardless of word order/format, so a query typed as
+// "Name Surname" still finds a name stored as "Surname Name" (or "Surname, Name").
+function nameMatches(name, query) {
+  const n = (name || '').toLowerCase();
+  const tokens = (query || '').toLowerCase().split(/[,\s]+/).filter(Boolean);
+  return tokens.length > 0 && tokens.every(t => n.indexOf(t) !== -1);
+}
+
+function buildPeopleIndex(data) {
+  const byName = {};
+  data.forEach(d => {
+    (d.people || []).forEach(p => {
+      if (!p.name) return;
+      if (!byName[p.name]) byName[p.name] = { name: p.name, count: 0, roles: new Set(), cats: new Set() };
+      byName[p.name].count++;
+      if (p.role) byName[p.name].roles.add(p.role);
+      byName[p.name].cats.add(d.category);
+    });
+  });
+  return Object.values(byName);
+}
+
+function buildRoleFilters() {
+  const counts = {};
+  PEOPLE.forEach(p => p.roles.forEach(r => { counts[r] = (counts[r]||0) + 1; }));
+  const list = Object.keys(counts).sort((a,b) => counts[b]-counts[a]);
+  const container = document.getElementById('role-filters');
+  container.innerHTML = '';
+  list.forEach(r => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.dataset.role = r;
+    btn.innerHTML = '<span>' + (ROLE_LABELS[r]||r) + '</span><span class="count">' + counts[r] + '</span>';
+    btn.onclick = () => { activeRole = activeRole === r ? null : r; syncRoleButtons(); applyFilters(); };
+    container.appendChild(btn);
+  });
+}
+function syncRoleButtons() {
+  document.querySelectorAll('#role-filters .filter-btn').forEach(b => b.classList.toggle('active', b.dataset.role === activeRole));
+}
+
+function buildCatFilters() {
+  const counts = {};
+  PEOPLE.forEach(p => p.cats.forEach(c => { counts[c] = (counts[c]||0) + 1; }));
+  const list = Object.keys(counts).sort((a,b) => counts[b]-counts[a]);
+  const container = document.getElementById('cat-filters');
+  container.innerHTML = '';
+  list.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.dataset.cat = c;
+    btn.innerHTML = '<span>' + (CAT_LABELS[c]||c) + '</span><span class="count">' + counts[c] + '</span>';
+    btn.onclick = () => { activeCat = activeCat === c ? null : c; syncCatButtons(); applyFilters(); };
+    container.appendChild(btn);
+  });
+}
+function syncCatButtons() {
+  document.querySelectorAll('#cat-filters .filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === activeCat));
+}
+
+function setSort(key) {
+  sortKey = key;
+  ['count','alpha'].forEach(k => document.getElementById('s-'+k).classList.toggle('active', k === key));
+  applyFilters();
+}
+
+function applyFilters() {
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  filtered = PEOPLE.filter(p => {
+    if (q && !nameMatches(p.name, q)) return false;
+    if (activeRole && !p.roles.has(activeRole)) return false;
+    if (activeCat && !p.cats.has(activeCat)) return false;
+    return true;
+  });
+  filtered.sort((a,b) => sortKey === 'alpha'
+    ? alphaSortKey(a.name).localeCompare(alphaSortKey(b.name), 'it')
+    : b.count - a.count || alphaSortKey(a.name).localeCompare(alphaSortKey(b.name), 'it'));
+  currentPage = 1;
+  render();
+}
+
+function renderViz(containerId, entries, max) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  if (!entries.length) { el.innerHTML = '<div style="font-size:0.8rem;color:var(--muted);font-style:italic">—</div>'; return; }
+  entries.forEach(([label, count]) => {
+    const row = document.createElement('div'); row.className = 'bar-row';
+    const lbl = document.createElement('div'); lbl.className = 'bar-row-label';
+    lbl.title = label; lbl.textContent = label;
+    const track = document.createElement('div'); track.className = 'bar-track';
+    const fill = document.createElement('div'); fill.className = 'bar-fill';
+    fill.style.width = Math.round(count / max * 100) + '%';
+    track.appendChild(fill);
+    const cnt = document.createElement('div'); cnt.className = 'bar-count'; cnt.textContent = count;
+    row.appendChild(lbl); row.appendChild(track); row.appendChild(cnt);
+    el.appendChild(row);
+  });
+}
+
+function renderSidebarViz() {
+  const roleCounts = {};
+  filtered.forEach(p => p.roles.forEach(r => { roleCounts[r] = (roleCounts[r]||0) + 1; }));
+  const roleEntries = Object.entries(roleCounts).map(([r,n]) => [ROLE_LABELS[r]||r, n]).sort((a,b) => b[1]-a[1]).slice(0, 10);
+  renderViz('viz-roles', roleEntries, roleEntries.length ? roleEntries[0][1] : 1);
+
+  const catCounts = {};
+  filtered.forEach(p => p.cats.forEach(c => { catCounts[c] = (catCounts[c]||0) + 1; }));
+  const catEntries = Object.entries(catCounts).map(([c,n]) => [CAT_LABELS[c]||c, n]).sort((a,b) => b[1]-a[1]);
+  renderViz('viz-cats', catEntries, catEntries.length ? catEntries[0][1] : 1);
+}
+
+function entryHtml(p) {
+  const roleTags = Array.from(p.roles).sort().map(r => '<span class="role-tag">' + (ROLE_LABELS[r]||r) + '</span>').join('');
+  const catBadges = Array.from(p.cats).map(c => {
+    const col = CAT_COLORS[c] || '#888';
+    return '<span class="cat-badge" style="background:' + col + '18;color:' + col + ';border:1px solid ' + col + '40">' + (CAT_LABELS[c]||c) + '</span>';
+  }).join('');
+  // search.html only supports a free-text ?q= param (no dedicated
+  // ?person= filter) — but it does search across people[].name, so a
+  // quoted exact-name query lands on that person's records specifically.
+  const link = 'search.html?q=' + encodeURIComponent(p.name);
+  return '<div class="entry">' +
+    '<div>' +
+      '<div class="entry-name"><a href="' + link + '" title="' + authorityTitle(p.name) + '">' + p.name + '</a>' + authorityIcon(p.name) + '</div>' +
+      '<div class="entry-roles">' + roleTags + '</div>' +
+      '<div class="cat-badges">' + catBadges + '</div>' +
+    '</div>' +
+    '<div class="entry-count">' + p.count + '<span class="l">schede</span></div>' +
+  '</div>';
+}
+
+function render() {
+  document.getElementById('sn-total').textContent = filtered.length.toLocaleString('it');
+  document.getElementById('sn-records').textContent = filtered.reduce((s,p) => s + p.count, 0).toLocaleString('it');
+  document.getElementById('sn-roles').textContent = new Set(filtered.flatMap(p => Array.from(p.roles))).size;
+  document.getElementById('sn-wd').textContent = filtered.filter(p => {
+    const a = PEOPLE_AUTHORITY[p.name];
+    return a && (a.wikidata_id || a.viaf_id);
+  }).length.toLocaleString('it');
+  refreshStatsPanel();
+  renderSidebarViz();
+
+  if (!filtered.length) {
+    document.getElementById('entries').innerHTML = '<div class="no-results">Nessuna persona trovata.</div>';
+    document.getElementById('pagination').innerHTML = '';
+    return;
+  }
+
+  const start = (currentPage-1)*PER_PAGE;
+  const page = filtered.slice(start, start+PER_PAGE);
+  document.getElementById('entries').innerHTML = page.map(entryHtml).join('');
+
+  const totalPages = Math.ceil(filtered.length/PER_PAGE);
+  let pages = '';
+  const around = 7;
+  for (let i=1; i<=totalPages; i++) {
+    if (i===1 || i===totalPages || Math.abs(i-currentPage)<=around/2) {
+      pages += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+    } else if (Math.abs(i-currentPage)===Math.ceil(around/2)+1) {
+      pages += `<span style="padding:4px 4px;color:#999;font-size:11px">…</span>`;
+    }
+  }
+  document.getElementById('pagination').innerHTML = pages;
+}
+
+function goPage(n) { currentPage = n; render(); window.scrollTo(0,0); }
+
+function barListHtml(entries, max) {
+  if (!entries.length) return '<div style="font-size:0.85rem;color:var(--muted);font-style:italic">—</div>';
+  const n = entries.length;
+  const width = Math.max(560, n * 56);
+  const height = 220;
+  const padL = 28, padR = 28, padTop = 22, padBottom = 56;
+  const plotW = width - padL - padR;
+  const plotH = height - padTop - padBottom;
+  const points = entries.map(([label, count], i) => {
+    const x = padL + (n === 1 ? plotW/2 : (i/(n-1)) * plotW);
+    const y = padTop + plotH - (count/max) * plotH;
+    const safeLabel = String(label).replace(/"/g,'&quot;');
+    return `
+      <g class="scatter-g">
+        <line class="scatter-guide" x1="${x}" y1="${y}" x2="${x}" y2="${padTop+plotH}"></line>
+        <text class="scatter-count" x="${x}" y="${y-8}">${count}</text>
+        <circle class="scatter-pt" cx="${x}" cy="${y}" r="5"></circle>
+        <text class="scatter-label" x="0" y="0" transform="translate(${x},${padTop+plotH+14}) rotate(45)">${String(label).length > 22 ? String(label).slice(0,21)+'…' : label}<title>${safeLabel}</title></text>
+      </g>`;
+  }).join('');
+  return `<div class="scatter-wrap"><svg class="scatter-svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+    <line class="scatter-guide" x1="${padL}" y1="${padTop+plotH}" x2="${width-padR}" y2="${padTop+plotH}"></line>
+    ${points}
+  </svg></div>`;
+}
+
+function statsPanelContent(key) {
+  if (key === 'total') {
+    const decades = {};
+    // Not year-based data here — instead show the top people by record count.
+    const entries = filtered.slice().sort((a,b) => b.count - a.count).slice(0, 20).map(p => [p.name, p.count]);
+    return barListHtml(entries, entries.length ? entries[0][1] : 1);
+  }
+  if (key === 'records') {
+    const entries = filtered.slice().sort((a,b) => b.count - a.count).slice(0, 20).map(p => [p.name, p.count]);
+    return barListHtml(entries, entries.length ? entries[0][1] : 1);
+  }
+  if (key === 'roles') {
+    const counts = {};
+    filtered.forEach(p => p.roles.forEach(r => { counts[r] = (counts[r]||0) + 1; }));
+    const entries = Object.entries(counts).map(([r,n]) => [ROLE_LABELS[r]||r, n]).sort((a,b) => b[1]-a[1]);
+    return barListHtml(entries, entries.length ? entries[0][1] : 1);
+  }
+  if (key === 'wd') {
+    const counts = {};
+    filtered.forEach(p => {
+      const a = PEOPLE_AUTHORITY[p.name];
+      const has = a && (a.wikidata_id || a.viaf_id);
+      const label = has ? 'Con Wikidata/VIAF' : 'Senza';
+      counts[label] = (counts[label]||0) + 1;
+    });
+    const entries = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+    return barListHtml(entries, entries.length ? entries[0][1] : 1);
+  }
+  return '';
+}
+
+let activeStatsPanel = null;
+function setStatsPanel(key) {
+  const detail = document.getElementById('stats-detail');
+  const sameKey = activeStatsPanel === key;
+  document.querySelectorAll('.stat').forEach(b => b.classList.remove('active'));
+  if (sameKey) {
+    activeStatsPanel = null;
+    detail.classList.remove('open');
+    return;
+  }
+  activeStatsPanel = key;
+  document.getElementById('stat-' + key).classList.add('active');
+  detail.innerHTML = statsPanelContent(key);
+  detail.classList.add('open');
+}
+function refreshStatsPanel() {
+  if (activeStatsPanel) document.getElementById('stats-detail').innerHTML = statsPanelContent(activeStatsPanel);
+}
+
+Promise.all([
+  fetch('items.json').then(r => r.json()),
+  fetch('people_authority.json').then(r => r.json()).catch(() => ({}))
+]).then(([allData, peopleAuthority]) => {
+  ALL_DATA = allData;
+  PEOPLE_AUTHORITY = peopleAuthority;
+  PEOPLE = buildPeopleIndex(allData);
+  document.getElementById('header-sub').textContent =
+    `${PEOPLE.length.toLocaleString('it')} persone uniche censite nei dati (${allData.length.toLocaleString('it')} schede totali)`;
+  buildRoleFilters();
+  buildCatFilters();
+  applyFilters();
+}).catch(err => {
+  console.error('Errore caricamento dati:', err);
+  document.getElementById('entries').innerHTML = '<p style="padding:2rem;color:#c00;font-family:monospace">Errore: ' + err + '</p>';
+});
+</script>
+</body>
+</html>
