@@ -1,0 +1,629 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>reparto: archive (4)</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #222222;
+    --grid: #dddddd;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1e;
+      --ink: #e8e8e8;
+      --grid: #3a3a3a;
+    }
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: system-ui, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2.5rem 1rem;
+  }
+
+  h1 { font-size: 1.1rem; font-weight: 600; margin: 0 0 0.3rem; }
+  p.sub { font-size: 0.8rem; opacity: 0.6; margin: 0 0 1.5rem; max-width: 950px; text-align: center; }
+
+  .graph-wrap { display: flex; align-items: flex-start; gap: 1rem; max-width: 1050px; width: 100%; }
+  svg { width: 100%; max-width: 950px; height: auto; flex: 1 1 auto; min-width: 0; }
+  .count-panel {
+    flex: 0 0 auto; font-size: 0.75rem; line-height: 1.6; opacity: 0.75;
+    border-left: 1px solid var(--grid); padding-left: 0.75rem; white-space: nowrap;
+  }
+  .count-panel strong { font-size: 1.1rem; opacity: 1; }
+
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center; max-width: 950px; margin: 0 0 1.25rem; }
+  .filter-btn {
+    font: inherit; font-size: 0.75rem; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--grid); border-radius: 999px; padding: 0.3rem 0.8rem;
+    background: transparent; color: var(--ink); opacity: 0.6;
+  }
+  .filter-btn.active { opacity: 1; border-color: currentColor; }
+
+  .life-halo { stroke: var(--bg); stroke-linecap: round; fill: none; pointer-events: stroke; }
+  .life { stroke-linecap: round; fill: none; opacity: 0.55; pointer-events: stroke; }
+  .line-label { font-size: 11px; font-weight: 600; }
+  .time-baseline { stroke: var(--grid); stroke-width: 1; }
+  .time-label { font-size: 10px; fill: var(--ink); opacity: 0.6; font-family: system-ui, sans-serif; }
+  .contact-pt-gadda { fill: var(--bg); stroke-width: 2; }
+  .contact-envelope { fill: none; stroke-width: 1; opacity: 0.5; }
+  .compare-link { stroke-width: 2; }
+  .compare-label { font-size: 12px; font-weight: 700; }
+  .cutoff { font-size: 16px; font-weight: 700; }
+
+  .controls-bar {
+    display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start;
+    justify-content: center; max-width: 950px; margin: 0 0 1rem;
+  }
+  .search-box { position: relative; width: 220px; }
+  .search-box input {
+    font: inherit; font-size: 0.8rem; width: 100%; box-sizing: border-box;
+    padding: 0.35rem 0.6rem; border: 1px solid var(--grid); border-radius: 6px;
+    background: var(--bg); color: var(--ink);
+  }
+  .search-suggestions {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 10;
+    background: var(--bg); border: 1px solid var(--grid); border-top: none;
+    border-radius: 0 0 6px 6px; max-height: 180px; overflow-y: auto;
+  }
+  .search-suggestion {
+    font-size: 0.8rem; padding: 0.35rem 0.6rem; cursor: pointer;
+  }
+  .search-suggestion:hover { background: var(--grid); }
+  .pinned-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
+  .pinned-chip {
+    font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 999px;
+    background: var(--grid); cursor: pointer; white-space: nowrap;
+  }
+  .pinned-chip::after { content: " ×"; opacity: 0.6; }
+
+  .time-focus { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; }
+  .time-focus input {
+    font: inherit; font-size: 0.8rem; width: 4.5rem; box-sizing: border-box;
+    padding: 0.35rem 0.5rem; border: 1px solid var(--grid); border-radius: 6px;
+    background: var(--bg); color: var(--ink);
+  }
+
+  .tooltip {
+    position: fixed; z-index: 100; pointer-events: none;
+    background: var(--ink); color: var(--bg);
+    font-size: 0.75rem; line-height: 1.5; padding: 0.5rem 0.65rem;
+    border-radius: 6px; max-width: 280px; box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+  }
+  .tooltip strong { display: block; margin-bottom: 0.15rem; }
+
+  .cross-link {
+    max-width: 950px; text-align: center; font-size: 0.8rem;
+    margin: 0.5rem 0 0; padding: 0.5rem 0.9rem; border: 1px solid var(--grid);
+    border-radius: 8px; background: color-mix(in srgb, var(--grid) 35%, transparent);
+  }
+  .cross-link a { color: inherit; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<h1>Carlo Emilio Gadda — reparto: archive (4)</h1>
+<p class="sub">reparto "archive" — of the 1,583 physical archive items (notebooks, loose sheets, letters-as-objects, photographs…), almost none record a named person: only 69 are tagged as actual letters, and just 4 people could be reliably identified from free text (the "subtitle" field, or which named fond — Fondo Citati, Fondo Roscioni — holds the item). Years come from when each letter-object is dated, not from a structured field.</p>
+<div id="mode-filter" class="filter-bar"></div>
+<div class="controls-bar">
+  <div>
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Add a person by name…" autocomplete="off">
+      <div id="search-suggestions" class="search-suggestions"></div>
+    </div>
+    <div id="pinned-chips" class="pinned-chips"></div>
+  </div>
+  <div class="time-focus">
+    <span>Focus on years</span>
+    <input type="number" id="time-focus-start" placeholder="from">
+    <span>–</span>
+    <input type="number" id="time-focus-end" placeholder="to">
+    <button id="time-focus-apply" class="filter-btn">Apply</button>
+    <button id="time-focus-clear" class="filter-btn">Clear</button>
+  </div>
+</div>
+<div class="graph-wrap">
+  <svg viewBox="0 0 950 420"></svg>
+  <div id="count-panel" class="count-panel"></div>
+</div>
+<div id="cross-link" class="cross-link" hidden></div>
+<div id="tooltip" class="tooltip" hidden></div>
+
+<script>
+  const rawPeople = [
+    {"name": "Citati Pietro", "birth": 1930, "death": 2022, "interactions": [1958, 1959, 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969], "weight": 1.0, "letterLink": true},
+    {"name": "Roscioni Gian Carlo", "birth": 1927, "death": 2012, "interactions": [1963, 1964, 1965, 1966], "weight": 0.737, "secondaryBibLink": true},
+    {"name": "Guarnieri Silvio", "birth": 1910, "death": 1992, "interactions": [1968], "weight": 0.35, "libraryLink": true},
+    {"name": "Pozza Neri", "birth": 1912, "death": 1988, "interactions": [1952], "weight": 0.472},
+    {"name": "Gadda Carlo Emilio", "birth": 1893, "death": 1973, "interactions": null, "weight": null}
+  ];
+
+  // the actual archive-object record(s) dated to this person's interaction
+  // years, from items.json's "archive" category (tipo == "Lettera") — title,
+  // place, and which institution holds it. Extracted from free text (the
+  // "subtitle" field naming a recipient, or which fond holds the item), not
+  // a structured people field, since none of the 1,583 archive items have one.
+  const archiveRecords = {"Citati Pietro": [{"year": 1958, "title": "cartolina postale.", "luogo": "S.ta Margherita Ligure", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1958, "title": "1 lettera, 1 f. usato al recto e verso", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1958, "title": "1 lettera, 1 f. doppio usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1959, "title": "1 lettera, 1 f. doppio usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1959, "title": "1 lettera, 2 ff. (il secondo costituito dalla metà di un foglio intero), usati al recto e verso", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1959, "title": "1 lettera, 1 f. doppio usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1959, "title": "1 lettera, 2 ff. (il secondo costituito dalla metà di un foglio intero), usati al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1959, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1959, "title": "1 lettera, 1 f. usato al recto. Data: Roma, 25 settembre 1959.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1960, "title": "1 lettera, 2 ff. (il secondo costituito dalla metà di un foglio intero), usati al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1960, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1960, "title": "1 lettera, 1 f. usato al recto e verso. Data: Roma, 4 agosto 1960.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1960, "title": "1 lettera con 1 foglio allegato, 2 ff. (in totale), il primo usato al recto e verso, il secondo (allegato) al recto.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1960, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1960, "title": "1 f. intestato: Promemoria Gadda, giovedì", "luogo": "", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1961, "title": "1 lettera, 1 f. doppio usato al recto.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1961, "title": "1 lettera, 1 f. usato al recto e verso. Numerato su entrambe le facciate a penna rossa 1-2.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1961, "title": "1 lettera, 1 f. doppio usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1962, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1962, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Cortina d’Ampezzo", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1962, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Pocol", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1962, "title": "1 lettera, 2 ff. usati al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1963, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Bergamo", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1963, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Bergamo", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1964, "title": "1 lettera, 1 f. doppio usato sulle prime tre facciate (sulla quarta appunti di mano di Citati).", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1964, "title": "1 lettera, 1 f. usato al recto e verso", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1965, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1965, "title": "1 lettera, 1 f. doppio usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1965, "title": "1 lettera, 1 f. usato al recto e verso. Data:", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1965, "title": "1 lettera, 1 f. doppio usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1966, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1967, "title": "1 lettera, 2 ff. usati al recto; numerati per foglio 1-2.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1967, "title": "1 lettera, 1 f. usato al recto.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1967, "title": "1 lettera, 1 f. usato al recto.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1967, "title": "1 lettera, 1 f. usato al recto.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1967, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1967, "title": "1 lettera, 1 f. doppio usato al recto e numerato 1-2.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1968, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1968, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1969, "title": "1 lettera, 1 f. usato al recto.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}], "Roscioni Gian Carlo": [{"year": 1963, "title": "1 f. usato al recto e verso e un foglietto usato al recto; datato: Bergamo, dalla clinica, mercoledì 7 agosto 1963. Con busta.", "luogo": "Bergamo", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1963, "title": "1 f. doppio usato su tutte le facciate; datato: Bergamo, *25* luglio [corretto da Roscioni a matita in agosto] *1963*. Domenica. Conserva...", "luogo": "Bergamo", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1963, "title": "cartolina illustrata, “Bergamo, S. Maria Maggiore e Cappella Colleoni di G.A. Amadeo”; datata 25 agosto 1963. Conservata in un’unica bust...", "luogo": "Bergamo", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1963, "title": "1 f. doppio usato su tre facciate; datato: Bergamo, 30 agosto 1963.", "luogo": "Bergamo", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1964, "title": "lettera su due biglietti, il primo usato al recto e verso, il secondo al recto; datata: 24 settembre 1964, ore 15, Roma.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1964, "title": "1 biglietto usato al recto e verso; datato: 15 giugno 1964 ore 22.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1964, "title": "1 f. usato al recto e verso; datato: Roma, 12 agosto 1964, ore 14.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1965, "title": "1 f. doppio usato sulle prime due facciate.", "luogo": "", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1966, "title": "1 f. usato al recto; datato: Roma, mercoledì 14 settembre 1966.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}], "Pozza Neri": [{"year": 1952, "title": "Corrispondenza con Neri Pozza:", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1952, "title": "Una lettera di Neri Pozza datata 12 febbraio 1952, a cui era allegato l’elenco degli omaggi inviati (non presente in archivio).", "luogo": "", "archivio": "Archivio Biblioteca Trivulziana"}], "Guarnieri Silvio": [{"year": 1968, "title": "1/11 Gadda, Carlo Emilio [Corrispondenza] / Carlo Emilio Gadda [a] Silvio Guarnieri. – 26 luglio 1931-28 settembre 1968.", "luogo": "", "archivio": "Fondazione Maria Corti"}]};
+
+  const gadda = rawPeople.find(d => d.name === "Gadda Carlo Emilio");
+  const allCorrespondents = rawPeople.filter(d => d !== gadda);
+
+  const width = 950;
+  const margin = { top: 30, right: 40, bottom: 40, left: 170 };
+  const minHeight = 420;
+  const maxHeight = 780;
+  const targetRowStep = 85;
+  const svg = d3.select("svg");
+
+  const gapLimit = 5;
+  const reach = 3;
+
+  function clusterInteractions(years) {
+    const sorted = [...years].sort((a, b) => a - b);
+    const clusters = [[sorted[0]]];
+    for (let i = 1; i < sorted.length; i++) {
+      if (sorted[i] - sorted[i - 1] <= gapLimit) clusters[clusters.length - 1].push(sorted[i]);
+      else clusters.push([sorted[i]]);
+    }
+    return clusters;
+  }
+
+  const tierCount = 4;
+  const quantizeToTier = d3.scaleQuantize()
+    .domain([0, 1])
+    .range(d3.range(tierCount).map(i => (i + 1) / tierCount));
+
+  function render(shownCorrespondents, initialSelected = []) {
+    svg.selectAll("*").remove();
+
+    const rowCount = shownCorrespondents.length + 1;
+    const height = Math.min(maxHeight, Math.max(minHeight, margin.top + margin.bottom + targetRowStep * (rowCount - 1)));
+    svg.attr("viewBox", [0, 0, width, height]);
+
+    const yearMin = timeFocus ? timeFocus.start : Math.min(
+      gadda.birth,
+      ...shownCorrespondents.map(d => d.birth),
+      ...shownCorrespondents.flatMap(d => d.interactions ?? [])
+    );
+    const yearMax = timeFocus ? timeFocus.end : gadda.death;
+    const x = d3.scaleLinear().domain([yearMin, yearMax]).range([margin.left, width - margin.right]);
+
+    const rescaleWeight = shownCorrespondents.length
+      ? d3.scaleLinear().domain(d3.extent(shownCorrespondents, d => d.weight)).range([0, 1])
+      : () => 1;
+
+    shownCorrespondents.forEach(d => {
+      d.barycenter = d.interactions.reduce((sum, yr) => sum + yr, 0) / d.interactions.length;
+    });
+    const byBarycenter = [...shownCorrespondents].sort((a, b) => a.barycenter - b.barycenter);
+    const mid = Math.ceil(byBarycenter.length / 2);
+    const above = byBarycenter.slice(0, mid);
+    const below = byBarycenter.slice(mid);
+    const people = [...above].reverse().concat([gadda], below);
+
+    const yScale = d3.scalePoint()
+      .domain(people.map(d => d.name))
+      .range([margin.top, height - margin.bottom])
+      .padding(1);
+    const y = name => yScale(name);
+    const gaddaY = y("Gadda Carlo Emilio");
+    const rowStep = Math.abs(yScale.step()) || 30;
+    const maxGap = Math.min(rowStep * 0.4, rowStep / 2 - 2);
+
+    const correspondentNames = people.filter(d => d.name !== "Gadda Carlo Emilio").map(d => d.name);
+    const purplePalette = d3.quantize(
+      t => d3.interpolateHcl("#f5c6d2", "#63102e")(t),
+      Math.max(correspondentNames.length, 2)
+    );
+    const colorMap = new Map();
+    correspondentNames.forEach((name, i) => colorMap.set(name, purplePalette[i % purplePalette.length]));
+    const colorScale = name => colorMap.get(name);
+    const gaddaColor = "var(--ink)";
+    const colorFor = name => (name === "Gadda Carlo Emilio" ? gaddaColor : colorScale(name));
+
+    const minStrokeWidth = 2, maxStrokeWidth = 7;
+    const haloExtra = 3;
+    function strengthFor(d) {
+      return d.name === "Gadda Carlo Emilio" ? 1 : rescaleWeight(d.weight ?? 1);
+    }
+    const minL = 25, maxL = 75;
+    function shadeFor(d) {
+      if (d.name === "Gadda Carlo Emilio") return gaddaColor;
+      const hcl = d3.hcl(colorFor(d.name));
+      hcl.l = maxL - strengthFor(d) * (maxL - minL);
+      return hcl.formatHex();
+    }
+    function strokeWidthFor(d) {
+      return minStrokeWidth + (maxStrokeWidth - minStrokeWidth) * strengthFor(d);
+    }
+
+    svg.append("line")
+      .attr("class", "time-baseline")
+      .attr("x1", margin.left).attr("x2", width - margin.right)
+      .attr("y1", height - margin.bottom).attr("y2", height - margin.bottom);
+
+    svg.append("g")
+      .selectAll("text")
+      .data(x.ticks(10))
+      .join("text")
+        .attr("class", "time-label")
+        .attr("x", d => x(d))
+        .attr("y", height - margin.bottom + 16)
+        .attr("text-anchor", "middle")
+        .text(d3.format("d"));
+
+    function dipYFor(d) {
+      const rowY = y(d.name);
+      const direction = rowY < gaddaY ? 1 : -1;
+      const w = quantizeToTier(rescaleWeight(d.weight ?? 1));
+      return gaddaY - direction * maxGap * w;
+    }
+
+    people.forEach(d => {
+      d.frameBirth = d.birth;
+      d.frameDeath = Math.min(d.death, gadda.death);
+      d.diedBeforeGadda = d.death < gadda.death;
+    });
+
+    function lifePath(d) {
+      const rowY = y(d.name);
+      if (!d.interactions || d.interactions.length === 0) {
+        return d3.line()([[x(d.frameBirth), rowY], [x(d.frameDeath), rowY]]);
+      }
+      const dipY = dipYFor(d);
+      const clusters = clusterInteractions(d.interactions);
+      const lineStart = Math.min(d.frameBirth, d.interactions[0]);
+      const lineEnd = d.frameDeath;
+      const points = [[x(lineStart), rowY]];
+      clusters.forEach(cluster => {
+        const first = cluster[0];
+        const last = cluster[cluster.length - 1];
+        points.push([x(Math.max(lineStart, first - reach)), rowY]);
+        cluster.forEach(yr => points.push([x(yr), dipY]));
+        points.push([x(Math.min(lineEnd, last + reach)), rowY]);
+      });
+      points.push([x(lineEnd), rowY]);
+      return d3.line().curve(d3.curveMonotoneX)(points);
+    }
+
+    const rows = svg.selectAll(".row").data(people).join("g").attr("class", "row");
+
+    rows.append("path")
+      .attr("class", "life-halo")
+      .attr("stroke-width", d => strokeWidthFor(d) + haloExtra)
+      .attr("d", lifePath);
+    rows.append("path")
+      .attr("class", "life")
+      .attr("stroke", shadeFor)
+      .attr("stroke-width", strokeWidthFor)
+      .attr("d", lifePath);
+
+    rows.append("circle")
+      .attr("class", "pt")
+      .attr("fill", d => colorFor(d.name))
+      .attr("cx", d => x(d.frameBirth))
+      .attr("cy", d => y(d.name))
+      .attr("r", 4);
+
+    const lineLabels = rows.append("text")
+      .attr("class", "line-label")
+      .attr("fill", d => colorFor(d.name))
+      .attr("x", d => x(d.frameBirth) + 8)
+      .attr("y", d => y(d.name) - 6)
+      .style("cursor", "pointer")
+      .text(d => d.name);
+
+    svg.selectAll(".cutoff")
+      .data(people.filter(d => d.diedBeforeGadda))
+      .join("text")
+        .attr("class", "cutoff")
+        .attr("fill", d => colorFor(d.name))
+        .attr("x", d => x(d.frameDeath))
+        .attr("y", d => y(d.name))
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "central")
+        .text("×");
+
+    // one contact per CLUSTER of nearby years (same gapLimit=5 rule the line
+    // itself dips through) for a clean range-envelope shape, but individual
+    // year-marks (below) still carry the precise per-record tooltip.
+    const contacts = people.flatMap(d =>
+      d.interactions && d.interactions.length
+        ? clusterInteractions(d.interactions).map(cluster => ({
+            yearStart: cluster[0],
+            yearEnd: cluster[cluster.length - 1],
+            years: cluster,
+            dipY: dipYFor(d),
+            color: colorFor(d.name),
+            name: d.name,
+          }))
+        : []
+    );
+    const contactG = svg.selectAll(".contact")
+      .data(contacts)
+      .join("g")
+        .attr("class", "contact")
+        .style("cursor", "pointer");
+
+    const pillWidth = 8;
+    contactG.append("rect")
+      .attr("class", "contact-envelope")
+      .attr("stroke", d => d.color)
+      .attr("x", d => x(d.yearStart) - pillWidth / 2)
+      .attr("y", d => Math.min(d.dipY, gaddaY) - 4)
+      .attr("width", d => (x(d.yearEnd) - x(d.yearStart)) + pillWidth)
+      .attr("height", d => Math.abs(gaddaY - d.dipY) + 8)
+      .attr("rx", pillWidth / 2);
+
+    // one small marker PER ACTUAL YEAR inside each range-envelope — the
+    // envelope merges nearby years for a clean dip shape, but hovering
+    // should still land on one specific archive record, not the whole range.
+    const yearMarks = contacts.flatMap(c =>
+      c.years.map(year => ({ year, dipY: c.dipY, color: c.color, name: c.name, cluster: c }))
+    );
+    const yearMarkG = svg.selectAll(".year-mark")
+      .data(yearMarks)
+      .join("g")
+        .attr("class", "year-mark")
+        .style("cursor", "pointer");
+
+    yearMarkG.append("circle")
+      .attr("class", "contact-pt")
+      .attr("fill", d => d.color)
+      .attr("cx", d => x(d.year))
+      .attr("cy", d => d.dipY)
+      .attr("r", 3);
+
+    yearMarkG.append("rect")
+      .attr("class", "contact-pt contact-pt-gadda")
+      .attr("stroke", d => d.color)
+      .attr("x", d => x(d.year) - 3)
+      .attr("y", gaddaY - 3)
+      .attr("width", 6)
+      .attr("height", 6)
+      .attr("transform", d => `rotate(45 ${x(d.year)} ${gaddaY})`);
+
+    let selected = new Set(initialSelected);
+    let selectedContact = null;
+
+    function isRelevant(name) {
+      if (selectedContact) return name === "Gadda Carlo Emilio" || name === selectedContact.name;
+      return selected.size === 0 || name === "Gadda Carlo Emilio" || selected.has(name);
+    }
+
+    function applyHighlight() {
+      rows.selectAll(".life, .life-halo").style("opacity", d => (isRelevant(d.name) ? null : 0.08));
+      rows.selectAll(".pt").style("opacity", d => (isRelevant(d.name) ? 1 : 0.08));
+      svg.selectAll(".contact").each(function (d) {
+        const visible = selectedContact ? d === selectedContact : selected.has(d.name);
+        d3.select(this)
+          .style("opacity", visible ? 1 : 0)
+          .style("pointer-events", visible ? null : "none");
+      });
+      svg.selectAll(".year-mark").each(function (d) {
+        const visible = selectedContact ? d.cluster === selectedContact : selected.has(d.name);
+        d3.select(this)
+          .style("opacity", visible ? 1 : 0)
+          .style("pointer-events", visible ? null : "none");
+      });
+      lineLabels.style("font-weight", d => (selected.has(d.name) ? 800 : 600));
+
+      svg.select(".compare-link").remove();
+      svg.select(".compare-label").remove();
+      if (selectedContact) {
+        const cx = (x(selectedContact.yearStart) + x(selectedContact.yearEnd)) / 2;
+        svg.append("line")
+          .attr("class", "compare-link")
+          .attr("stroke", selectedContact.color)
+          .attr("x1", cx).attr("x2", cx)
+          .attr("y1", selectedContact.dipY).attr("y2", gaddaY);
+        const yearLabel = selectedContact.yearStart === selectedContact.yearEnd
+          ? `${selectedContact.yearStart}`
+          : `${selectedContact.yearStart}–${selectedContact.yearEnd}`;
+        svg.append("text")
+          .attr("class", "compare-label")
+          .attr("x", cx)
+          .attr("y", Math.min(selectedContact.dipY, gaddaY) - 8)
+          .attr("text-anchor", "middle")
+          .attr("fill", selectedContact.color)
+          .text(`${selectedContact.name} — ${yearLabel}`);
+      }
+
+      // cross-graph link: each of these 4 people also has a real presence
+      // in a different reparto's graph (Citati in letters, Roscioni in
+      // secondary bibliography, Guarnieri in library) — Pozza doesn't have
+      // one, since he only shows up as a book publisher elsewhere, never as
+      // a plotted person.
+      const targets = {
+        letterLink: { file: "gadda-reparto-letter-range.html", label: "the Letters graph" },
+        secondaryBibLink: { file: "gadda-reparto-secondary-bibliography.html", label: "the Secondary bibliography graph" },
+        libraryLink: { file: "gadda-reparto-library.html", label: "the Library graph" },
+      };
+      const crossLinkEl = d3.select("#cross-link");
+      const linked = [...selected]
+        .map(name => people.find(p => p.name === name))
+        .filter(Boolean)
+        .flatMap(p => Object.keys(targets).filter(k => p[k]).map(k => ({ p, ...targets[k] })));
+      if (linked.length) {
+        crossLinkEl
+          .attr("hidden", null)
+          .html(linked.map(l =>
+            `${l.p.name} also appears in ${l.label} — <a href="${l.file}?focus=${encodeURIComponent(l.p.name)}" target="_blank">view there →</a>`
+          ).join("<br>"));
+      } else {
+        crossLinkEl.attr("hidden", true);
+      }
+    }
+
+    function toggleSelection(name) {
+      selectedContact = null;
+      if (name === "Gadda Carlo Emilio" || (selected.size === 1 && selected.has(name))) {
+        selected = new Set();
+      } else {
+        selected = new Set([name]);
+      }
+      applyHighlight();
+    }
+    function toggleContact(contact) {
+      selected = new Set();
+      selectedContact = selectedContact === contact ? null : contact;
+      applyHighlight();
+    }
+
+    rows.style("cursor", "pointer").on("click", (event, d) => toggleSelection(d.name));
+    contactG.on("click", (event, d) => {
+      event.stopPropagation();
+      if (!selected.has(d.name) && d !== selectedContact) return;
+      toggleContact(d);
+    });
+
+    // hover tooltip: the one specific archive record for THIS exact year —
+    // attached to the individual year-marks, not the merged range-envelope.
+    const tooltip = d3.select("#tooltip");
+    function moveTooltip(event) {
+      tooltip.style("left", (event.clientX + 14) + "px").style("top", (event.clientY + 14) + "px");
+    }
+    yearMarkG
+      .on("mouseenter", (event, d) => {
+        const records = (archiveRecords[d.name] || []).filter(r => r.year === d.year);
+        const recordLines = records.map(r => {
+          const bits = [r.luogo, r.archivio].filter(Boolean).join(", ");
+          return `${r.title}${bits ? ` (${bits})` : ""}`;
+        });
+        tooltip.html(
+          `<strong>${d.name} — ${d.year}</strong>` +
+          (records.length
+            ? `<div style="margin-top:0.2rem;opacity:0.6;font-size:0.7rem;">ARCHIVE RECORD</div>` +
+              recordLines.map(r => `<div style="margin-top:0.15rem;opacity:0.9">${r}</div>`).join("")
+            : "no archive record for this year")
+        );
+        tooltip.attr("hidden", null);
+        moveTooltip(event);
+      })
+      .on("mousemove", moveTooltip)
+      .on("mouseleave", () => tooltip.attr("hidden", true));
+
+    applyHighlight();
+  }
+
+  // only 4 people total, so every filter here is about time and selection,
+  // not paging through a longer list.
+  let pinnedNames = new Set();
+  let timeFocus = null;
+  let searchSelected = new Set();
+  let customMode = false;
+
+  const CUSTOM_MODE = "__custom__";
+
+  function applyFilter() {
+    const isCustom = customMode;
+    const timeMatching = isCustom
+      ? []
+      : timeFocus
+      ? allCorrespondents.filter(d => (d.interactions || []).some(yr => yr >= timeFocus.start && yr <= timeFocus.end))
+      : allCorrespondents;
+    const baseNames = new Set(timeMatching.map(d => d.name));
+    const pinnedExtra = allCorrespondents.filter(d => pinnedNames.has(d.name) && !baseNames.has(d.name));
+    const shown = isCustom ? pinnedExtra : [...timeMatching];
+    render(shown, searchSelected);
+
+    d3.select("#count-panel").html(
+      isCustom
+        ? `<div>Your selection</div><strong>${pinnedExtra.length}</strong>` +
+          `<div style="margin-top:0.5rem;opacity:0.7;max-width:9rem;">search a name above to add them here</div>`
+        : `<div>Shown</div><strong>${shown.length}</strong>` +
+          `<div style="margin-top:0.5rem">${timeFocus ? `Active ${timeFocus.start}–${timeFocus.end}` : "Total"}</div><strong>${allCorrespondents.length}</strong>`
+    );
+
+    d3.select("#pinned-chips").selectAll(".pinned-chip")
+      .data([...pinnedNames])
+      .join("div")
+        .attr("class", "pinned-chip")
+        .text(d => d)
+        .on("click", (event, d) => { pinnedNames.delete(d); searchSelected.delete(d); applyFilter(); });
+  }
+
+  const searchInput = d3.select("#search-input");
+  const searchSuggestions = d3.select("#search-suggestions");
+  searchInput.on("input", function () {
+    const q = this.value.trim().toLowerCase();
+    searchSuggestions.html("");
+    if (!q) return;
+    const matches = allCorrespondents
+      .filter(d => d.name.toLowerCase().includes(q) && !pinnedNames.has(d.name))
+      .slice(0, 8);
+    searchSuggestions.selectAll(".search-suggestion")
+      .data(matches)
+      .join("div")
+        .attr("class", "search-suggestion")
+        .text(d => d.name)
+        .on("click", (event, d) => {
+          pinnedNames.add(d.name);
+          searchSelected.add(d.name);
+          searchInput.property("value", "");
+          searchSuggestions.html("");
+          applyFilter();
+        });
+  });
+  d3.select(document.body).on("click", (event) => {
+    if (!event.target.closest(".search-box")) searchSuggestions.html("");
+  });
+
+  d3.select("#time-focus-apply").on("click", () => {
+    const start = +d3.select("#time-focus-start").property("value");
+    const end = +d3.select("#time-focus-end").property("value");
+    if (!start || !end || start >= end) return;
+    timeFocus = { start, end };
+    searchSelected = new Set();
+    applyFilter();
+  });
+  d3.select("#time-focus-clear").on("click", () => {
+    timeFocus = null;
+    searchSelected = new Set();
+    d3.select("#time-focus-start").property("value", "");
+    d3.select("#time-focus-end").property("value", "");
+    applyFilter();
+  });
+
+  const modeFilterBar = d3.select("#mode-filter");
+  modeFilterBar.append("button")
+    .attr("class", "filter-btn active")
+    .attr("data-value", "__all__")
+    .text("All")
+    .on("click", function () {
+      customMode = false;
+      searchSelected = new Set();
+      d3.selectAll("#mode-filter .filter-btn").classed("active", false);
+      d3.select(this).classed("active", true);
+      applyFilter();
+    });
+  modeFilterBar.append("button")
+    .attr("class", "filter-btn")
+    .attr("data-value", CUSTOM_MODE)
+    .text("★ My selection")
+    .on("click", function () {
+      customMode = true;
+      searchSelected = new Set();
+      d3.selectAll("#mode-filter .filter-btn").classed("active", false);
+      d3.select(this).classed("active", true);
+      applyFilter();
+    });
+
+  const focusParam = new URLSearchParams(location.search).get("focus");
+  if (focusParam && allCorrespondents.some(d => d.name === focusParam)) {
+    pinnedNames.add(focusParam);
+    searchSelected = new Set([focusParam]);
+  }
+
+  applyFilter();
+</script>
+</body>
+</html>

@@ -1,0 +1,716 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>reparto: secondary bibliography (7)</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #222222;
+    --grid: #dddddd;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1e;
+      --ink: #e8e8e8;
+      --grid: #3a3a3a;
+    }
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: system-ui, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2.5rem 1rem;
+  }
+
+  h1 { font-size: 1.1rem; font-weight: 600; margin: 0 0 0.3rem; }
+  p.sub { font-size: 0.8rem; opacity: 0.6; margin: 0 0 1.5rem; max-width: 950px; text-align: center; }
+
+  .graph-wrap { display: flex; align-items: flex-start; gap: 1rem; max-width: 1050px; width: 100%; }
+  svg { width: 100%; max-width: 950px; height: auto; flex: 1 1 auto; min-width: 0; }
+  .count-panel {
+    flex: 0 0 auto; font-size: 0.75rem; line-height: 1.6; opacity: 0.75;
+    border-left: 1px solid var(--grid); padding-left: 0.75rem; white-space: nowrap;
+  }
+  .count-panel strong { font-size: 1.1rem; opacity: 1; }
+
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center; max-width: 950px; margin: 0 0 1.25rem; }
+  .filter-btn {
+    font: inherit; font-size: 0.75rem; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--grid); border-radius: 999px; padding: 0.3rem 0.8rem;
+    background: transparent; color: var(--ink); opacity: 0.6;
+  }
+  .filter-btn.active { opacity: 1; border-color: currentColor; }
+
+  .life-halo { stroke: var(--bg); stroke-linecap: round; fill: none; pointer-events: stroke; }
+  .life { stroke-linecap: round; fill: none; opacity: 0.55; pointer-events: stroke; }
+  .line-label { font-size: 11px; font-weight: 600; }
+  .time-baseline { stroke: var(--grid); stroke-width: 1; }
+  .time-label { font-size: 10px; fill: var(--ink); opacity: 0.6; font-family: system-ui, sans-serif; }
+  .contact-pt-gadda { fill: var(--bg); stroke-width: 2; }
+  .contact-envelope { fill: none; stroke-width: 1; opacity: 0.5; }
+  .compare-link { stroke-width: 2; }
+  .compare-label { font-size: 12px; font-weight: 700; }
+  .cutoff { font-size: 16px; font-weight: 700; }
+  .primary-work-pt { cursor: pointer; stroke: var(--bg); stroke-width: 0.75; fill: #d99a1f; }
+
+  .controls-bar {
+    display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start;
+    justify-content: center; max-width: 950px; margin: 0 0 1rem;
+  }
+  .search-box { position: relative; width: 220px; }
+  .search-box input {
+    font: inherit; font-size: 0.8rem; width: 100%; box-sizing: border-box;
+    padding: 0.35rem 0.6rem; border: 1px solid var(--grid); border-radius: 6px;
+    background: var(--bg); color: var(--ink);
+  }
+  .search-suggestions {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 10;
+    background: var(--bg); border: 1px solid var(--grid); border-top: none;
+    border-radius: 0 0 6px 6px; max-height: 180px; overflow-y: auto;
+  }
+  .search-suggestion {
+    font-size: 0.8rem; padding: 0.35rem 0.6rem; cursor: pointer;
+  }
+  .search-suggestion:hover { background: var(--grid); }
+  .pinned-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
+  .pinned-chip {
+    font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 999px;
+    background: var(--grid); cursor: pointer; white-space: nowrap;
+  }
+  .pinned-chip::after { content: " ×"; opacity: 0.6; }
+
+  .time-focus { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; }
+  .time-focus input {
+    font: inherit; font-size: 0.8rem; width: 4.5rem; box-sizing: border-box;
+    padding: 0.35rem 0.5rem; border: 1px solid var(--grid); border-radius: 6px;
+    background: var(--bg); color: var(--ink);
+  }
+
+  .tooltip {
+    position: fixed; z-index: 100; pointer-events: none;
+    background: var(--ink); color: var(--bg);
+    font-size: 0.75rem; line-height: 1.5; padding: 0.5rem 0.65rem;
+    border-radius: 6px; max-width: 260px; box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+  }
+  .tooltip strong { display: block; margin-bottom: 0.15rem; }
+</style>
+</head>
+<body>
+
+<h1>Carlo Emilio Gadda — reparto: secondary bibliography (7)</h1>
+<p class="sub">reparto "secondary bibliography" — 7 people whose record in the archive comes mostly from this section, each plotted at the year(s) they actually published something about Gadda during his own lifetime (≤ 1973). (An 8th, Lunetta Mario, is left out: both his pieces on Gadda are posthumous, so he has no lifetime year to plot.)</p>
+<p class="sub">The amber dots along Gadda's own line are separate: his own primary-bibliography works, placed at the year each one was first published — not tied to any of the 7 people above. Toggle them off with the "Gadda's own works" button below.</p>
+<div id="mode-filter" class="filter-bar"></div>
+<div class="controls-bar">
+  <div>
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Add a person by name…" autocomplete="off">
+      <div id="search-suggestions" class="search-suggestions"></div>
+    </div>
+    <div id="pinned-chips" class="pinned-chips"></div>
+  </div>
+  <div class="time-focus">
+    <span>Focus on years</span>
+    <input type="number" id="time-focus-start" placeholder="from">
+    <span>–</span>
+    <input type="number" id="time-focus-end" placeholder="to">
+    <button id="time-focus-apply" class="filter-btn">Apply</button>
+    <button id="time-focus-clear" class="filter-btn">Clear</button>
+  </div>
+</div>
+<div class="graph-wrap">
+  <svg viewBox="0 0 950 420"></svg>
+  <div id="count-panel" class="count-panel"></div>
+</div>
+<div id="tooltip" class="tooltip" hidden></div>
+
+<script>
+  // interaction years here are each person's own secondary-bibliography
+  // publication years (dated ≤1973, Gadda's lifetime) — not letter-correspondence
+  // years, since this reparto is about their critical writing on him, not their
+  // correspondence with him. Lunetta Mario is dropped: both his pieces on Gadda
+  // (1975, 1987) are posthumous, so he has nothing to plot under this rule.
+  const rawPeople = [{"name": "Binni Walter", "birth": 1913, "death": 1997, "interactions": [1943, 1946, 1951], "weight": 0.675}, {"name": "Bo Carlo", "birth": 1911, "death": 2001, "interactions": [1934, 1939, 1941, 1946, 1952, 1953, 1955, 1957], "weight": 0.965}, {"name": "Calvino Italo", "birth": 1923, "death": 1985, "interactions": [1958, 1960], "weight": 0.555}, {"name": "De Robertis Giuseppe", "birth": 1888, "death": 1963, "interactions": [1931, 1934, 1940, 1952, 1953, 1955, 1957, 1958, 1962], "weight": 1.0}, {"name": "Falqui Enrico", "birth": 1901, "death": 1974, "interactions": [1939, 1940, 1945, 1950, 1954, 1957, 1961], "weight": 0.926}, {"name": "Gorni Guglielmo", "birth": 1945, "death": 2010, "interactions": [1972, 1973], "weight": 0.555}, {"name": "Roscioni Gian Carlo", "birth": 1927, "death": 2012, "interactions": [1969], "weight": 0.35}, {"name": "Gadda Carlo Emilio", "birth": 1893, "death": 1973, "interactions": null, "weight": null}];
+
+  // the actual pieces of secondary-bibliography writing about Gadda authored
+  // by this person, from items.json's "secondary bibliography" category
+  // (title, year, publication type, journal) — not tied to any specific
+  // letter year, just their critical/scholarly output about him.
+  const secondaryWorks = {"Binni Walter": [{"title": "Linea dell'arte di Carlo Emilio Gadda", "year": 1943, "tipo": "Articoli/saggi su rivista", "rivista": "Primato"}, {"title": "Svolgimento della prosa di C.E. Gadda", "year": 1943, "tipo": "Articoli/saggi su rivista", "rivista": "La ruota"}, {"title": "L'Adalgisa di Gadda", "year": 1946, "tipo": "Recensioni", "rivista": "Il Mondo"}, {"title": "Svolgimento della prosa di C.E. Gadda", "year": 1951, "tipo": "Saggi in volume", "rivista": ""}, {"title": "Nota sull'Adalgisa", "year": 1951, "tipo": "Recensioni", "rivista": ""}], "Bo Carlo": [{"title": "Note su C.E. Gadda. Rec. Castello di Udine", "year": 1934, "tipo": "Recensioni", "rivista": "Frontespizio"}, {"title": "Le meraviglie d'Italia di C.E. Gadda", "year": 1939, "tipo": "Recensioni", "rivista": "Letteratura"}, {"title": "Nota su C. E. Gadda", "year": 1941, "tipo": "Recensioni", "rivista": "Letteratura"}, {"title": "Nota su C.E. Gadda", "year": 1946, "tipo": "Recensioni", "rivista": ""}, {"title": "Il primo libro delle Favole di Carlo Emilio Gadda", "year": 1952, "tipo": "Recensioni", "rivista": "La Fiera letteraria"}, {"title": "Novelle dal Ducato in fiamme di Carlo Emilio Gadda", "year": 1953, "tipo": "Recensioni", "rivista": "La Fiera letteraria"}, {"title": "Curioso il confronto tra C.E. Gadda e Malaparte", "year": 1955, "tipo": "Articoli/saggi su rivista", "rivista": ""}, {"title": "Romanzo e società nell'Italia degli ultimi dieci anni", "year": 1957, "tipo": "Articoli/saggi su rivista", "rivista": "Paragone. Letteratura"}, {"title": "La lente di Gadda", "year": 1957, "tipo": "Recensioni", "rivista": "La Stampa"}], "Calvino Italo": [{"title": "Natura e storia nel romanzo", "year": 1958, "tipo": "Saggi in volume", "rivista": ""}, {"title": "Natura e storia del romanzo", "year": 1958, "tipo": "Conferenze", "rivista": ""}, {"title": "Il mare dell'oggettività", "year": 1960, "tipo": "Articoli/saggi su rivista", "rivista": "Il menabò"}, {"title": "Tre correnti del romanzo italiano d'oggi", "year": 1960, "tipo": "Articoli/saggi su rivista", "rivista": "Italian Quarterly"}, {"title": "Saggi 1945-1985", "year": 1995, "tipo": "Saggi in volume", "rivista": ""}], "De Robertis Giuseppe": [{"title": "La Madonna dei Filosofi", "year": 1931, "tipo": "Recensioni", "rivista": "Pegaso"}, {"title": "Il castello di Udine", "year": 1934, "tipo": "Recensioni", "rivista": "Pan"}, {"title": "Il castello di Udine", "year": 1934, "tipo": "Recensioni", "rivista": "Pan"}, {"title": "La Madonna dei Filosofi", "year": 1940, "tipo": "Recensioni", "rivista": ""}, {"title": "Il castello di Udine", "year": 1940, "tipo": "Recensioni", "rivista": ""}, {"title": "Le Favole di Gadda. Rec. Il primo libro delle Favole", "year": 1952, "tipo": "Recensioni", "rivista": "Tempo"}, {"title": "Il grande Gadda", "year": 1953, "tipo": "Recensioni", "rivista": "[Tempo]"}, {"title": "Uno scrittore si confessa", "year": 1955, "tipo": "Recensioni", "rivista": "[Tempo]"}, {"title": "Il sorprendente diario di C.E. Gadda", "year": 1955, "tipo": "Recensioni", "rivista": ""}, {"title": "Il prodigioso Gadda (rec. Quer pasticciaccio brutto de via Merulana)", "year": 1957, "tipo": "Recensioni", "rivista": "Il Tempo"}, {"title": "Quer pasticciaccio...", "year": 1957, "tipo": "Recensioni", "rivista": "La Nazione Italiana"}, {"title": "C.E. Gadda, La Madonna dei filosofi", "year": 1958, "tipo": "Recensioni", "rivista": ""}, {"title": "C.E. Gadda, Il Castello di Udine", "year": 1958, "tipo": "Recensioni", "rivista": ""}, {"title": "Giornale di guerra e di prigionia", "year": 1962, "tipo": "Recensioni", "rivista": ""}], "Falqui Enrico": [{"title": "Devoto e la stilistica", "year": 1939, "tipo": "Saggi in volume", "rivista": ""}, {"title": "Devoto e la stilistica", "year": 1939, "tipo": "Saggi in volume", "rivista": ""}, {"title": "Un maccaronico del Novecento", "year": 1940, "tipo": "Recensioni", "rivista": "Gazzetta del popolo"}, {"title": "Le Meraviglie d'Italia", "year": 1940, "tipo": "Recensioni", "rivista": "Gazzetta del popolo"}, {"title": "L'Adalgisa", "year": 1945, "tipo": "Recensioni", "rivista": "Risorgimento liberale"}, {"title": "C.E. Gadda", "year": 1950, "tipo": "Saggi in volume", "rivista": ""}, {"title": "Carlo Emilio Gadda - Novelle dal Ducato in fiamme", "year": 1954, "tipo": "Saggi in volume", "rivista": ""}, {"title": "Bagatelle per un massacro", "year": 1957, "tipo": "Recensioni", "rivista": "Il Tempo"}, {"title": "Quer pasticciaccio brutto de via Merulana", "year": 1957, "tipo": "Recensioni", "rivista": "Il Tempo"}, {"title": "Il magnetofono mal temperato", "year": 1957, "tipo": "Articoli/saggi su rivista", "rivista": "Il Tempo"}, {"title": "Satira ed estetismo nella risata di Gadda", "year": 1957, "tipo": "Articoli/saggi su rivista", "rivista": "La Fiera letteraria"}, {"title": "Satira ed estremismo nella risata di Gadda", "year": 1957, "tipo": "Articoli/saggi su rivista", "rivista": "La Fiera letteraria"}, {"title": "Dal dialetto alla lingua; dalla lingua al dialetto; dal dialetto al gergo", "year": 1961, "tipo": "Saggi in volume", "rivista": ""}], "Gorni Guglielmo": [{"title": "Onomastica e altre fonti della «Cognizione»", "year": 1972, "tipo": "Articoli/saggi su rivista", "rivista": "Paragone. Letteratura"}, {"title": "Lettura di «Autunno» (dalla «Cognizione» di Carlo Emilio Gadda)", "year": 1973, "tipo": "Articoli/saggi su rivista", "rivista": "Strumenti critici"}, {"title": "Carlo Emilio Gadda", "year": 1984, "tipo": "Saggi in volume", "rivista": ""}, {"title": "Gadda, o il testamento del Capitano", "year": 1995, "tipo": "Contributo in atti di convegno", "rivista": ""}], "Lunetta Mario": [{"title": "Perché non possiamo non dirci «gaddiani»", "year": 1975, "tipo": "Saggi in volume", "rivista": ""}, {"title": "Gadda e il desiderio filosofico", "year": 1987, "tipo": "Saggi in volume", "rivista": ""}], "Roscioni Gian Carlo": [{"title": "La conclusione della «Cognizione del dolore»", "year": 1969, "tipo": "Articoli/saggi su rivista", "rivista": "Paragone. Letteratura"}, {"title": "La disarmonia prestabilita. Studio su Gadda", "year": 1969, "tipo": "Monografie", "rivista": ""}, {"title": "Introduzione", "year": 1974, "tipo": "Nota al testo", "rivista": ""}, {"title": "Gadda cerca casa", "year": 1993, "tipo": "Articoli/saggi su rivista", "rivista": "La Repubblica"}, {"title": "Gadda umorista", "year": 1993, "tipo": "Articoli/saggi su rivista", "rivista": "Strumenti critici"}, {"title": "La disarmonia prestabilita. Studi su Gadda", "year": 1995, "tipo": "Monografie", "rivista": ""}, {"title": "Terre emerse: il problema degli indici di Gadda", "year": 1995, "tipo": "Saggi in volume", "rivista": ""}, {"title": "Il duca di Sant’Aquila. Infanzia e giovinezza di Gadda", "year": 1997, "tipo": "Monografie", "rivista": ""}, {"title": "Protagonismo e precarietà nei personaggi di Gadda", "year": 2002, "tipo": "Saggi in volume", "rivista": ""}, {"title": "Il critico e i suoi lettori", "year": 2003, "tipo": "Articoli/saggi su rivista", "rivista": "Paragone"}, {"title": "Letterine di Natale in casa Gadda", "year": 2004, "tipo": "Articoli/saggi su rivista", "rivista": "Antologia Vieusseux"}]};
+
+  // Gadda's own canonical works — from sigle_gadda.json's official siglario
+  // (the codes used in the critical-edition indices: RR I-II, SGF I-II, SVP)
+  // — scattered directly along Gadda's own line, placed at the year of each
+  // work's first original edition. Only the works with a dated first
+  // edition in his own lifetime are shown; posthumous editions and
+  // letter-collections (published well after his 1973 death) are left out,
+  // same as every other line in this graph, which all stop at his death.
+  const primaryWorks = [{"year": 1931, "title": "La Madonna dei Filosofi", "sigla": "MdF", "edition": "Firenze, Edizioni di Solaria, 1931 (II ed. Einaudi 1955)", "raccolta": "RR I, pp. 3-107"}, {"year": 1934, "title": "Il castello di Udine", "sigla": "CdU", "edition": "Firenze, Edizioni di Solaria, 1934 (II ed. Einaudi 1955)", "raccolta": "RR I, pp. 119-281"}, {"year": 1939, "title": "Le meraviglie d'Italia", "sigla": "MdI", "edition": "Firenze, Parenti, 1939", "raccolta": "SGF I, pp. 11-199"}, {"year": 1943, "title": "Gli Anni", "sigla": "A", "edition": "Firenze, Parenti, 1943", "raccolta": "SGF I, pp. 201-272"}, {"year": 1944, "title": "L'Adalgisa", "sigla": "L'A", "edition": "Firenze, Le Monnier, 1944 (III ed. Einaudi 1955)", "raccolta": "RR I, pp. 283-564"}, {"year": 1952, "title": "Il primo libro delle Favole", "sigla": "PLF", "edition": "Venezia, Pozza, 1952", "raccolta": "SGF II, pp. 11-84"}, {"year": 1953, "title": "Novelle dal Ducato in Fiamme", "sigla": "NdF", "edition": "Firenze, Vallecchi, 1953", "raccolta": ""}, {"year": 1955, "title": "Giornale di guerra e di prigionia", "sigla": "GGP", "edition": "Firenze, Sansoni, 1955 (II ed. Einaudi 1965)", "raccolta": "SGF II, pp. 431-867"}, {"year": 1955, "title": "I sogni e la folgore", "sigla": "SF", "edition": "Torino, Einaudi, 1955", "raccolta": "RR I"}, {"year": 1957, "title": "Quer pasticciaccio brutto de via Merulana", "sigla": "QP", "edition": "Milano, Garzanti, 1957", "raccolta": "RR II, pp. 11-276"}, {"year": 1958, "title": "I viaggi la morte", "sigla": "VM", "edition": "Milano, Garzanti, 1958", "raccolta": "SGF I, pp. 419-667"}, {"year": 1961, "title": "Verso la Certosa", "sigla": "VlC", "edition": "Milano-Napoli, Ricciardi, 1961", "raccolta": "SGF I, pp. 273-418"}, {"year": 1963, "title": "Accoppiamenti giudiziosi (I Racconti – 1924-1958)", "sigla": "AG", "edition": "Milano, Garzanti, 1963", "raccolta": "RR II, pp. 591-920"}, {"year": 1963, "title": "La cognizione del dolore", "sigla": "CdD", "edition": "Torino, Einaudi, 1963 (IV ed. 1970)", "raccolta": "RR I, pp. 565-772"}, {"year": 1964, "title": "I Luigi di Francia", "sigla": "LdF", "edition": "Milano, Garzanti, 1964", "raccolta": "SGF II, pp. 85-211"}, {"year": 1967, "title": "Eros e Priapo (da furore a cenere)", "sigla": "EP67", "edition": "Milano, Garzanti, 1967", "raccolta": "SGF II, pp. 213-374"}, {"year": 1967, "title": "Il guerriero, l'amazzone, lo spirito della poesia nel verso immortale del Foscolo – Conversazione a tre voci", "sigla": "GASP", "edition": "Milano, Garzanti, 1967", "raccolta": "SGF II, pp. 375-429"}, {"year": 1970, "title": "La meccanica", "sigla": "M", "edition": "Milano, Garzanti, 1970", "raccolta": "RR II, pp. 461-589"}, {"year": 1971, "title": "Novella Seconda", "sigla": "NS", "edition": "Milano, Garzanti, 1971", "raccolta": "SGF II"}];
+
+  const gadda = rawPeople.find(d => d.name === "Gadda Carlo Emilio");
+  const allCorrespondents = rawPeople.filter(d => d !== gadda);
+
+  // fixed measurements, matching the other reparto graphs exactly —
+  // except height, which grows with the shown row count so a crowded filter
+  // keeps the same comfortable row spacing that a sparse category already
+  // gets for free within the reference's fixed 420px.
+  const width = 950;
+  const margin = { top: 30, right: 40, bottom: 40, left: 170 };
+  const minHeight = 420;
+  const maxHeight = 780; // beyond this, rows compress gradually instead of growing the page forever
+  const targetRowStep = 85;
+  const svg = d3.select("svg");
+
+  const gapLimit = 5;
+  const reach = 3;
+
+  function clusterInteractions(years) {
+    const sorted = [...years].sort((a, b) => a - b);
+    const clusters = [[sorted[0]]];
+    for (let i = 1; i < sorted.length; i++) {
+      if (sorted[i] - sorted[i - 1] <= gapLimit) clusters[clusters.length - 1].push(sorted[i]);
+      else clusters.push([sorted[i]]);
+    }
+    return clusters;
+  }
+
+  const tierCount = 4;
+  const quantizeToTier = d3.scaleQuantize()
+    .domain([0, 1])
+    .range(d3.range(tierCount).map(i => (i + 1) / tierCount));
+
+  function render(shownCorrespondents, initialSelected = []) {
+    svg.selectAll("*").remove();
+
+    const rowCount = shownCorrespondents.length + 1; // + Gadda
+    const height = Math.min(maxHeight, Math.max(minHeight, margin.top + margin.bottom + targetRowStep * (rowCount - 1)));
+    svg.attr("viewBox", [0, 0, width, height]);
+
+    // the x-axis extends both ways to fit everyone's real birth and death,
+    // AND their documented interaction years — some correspondence in this
+    // archive is dated outside a person's own lifespan, so the frame must
+    // never be narrower than the years we actually have on record.
+    // A time focus (set via the "Focus on years" control) overrides this
+    // entirely and just zooms the x-axis to that exact window instead —
+    // lines still draw their full real extent, they just get visually
+    // clipped at the SVG edge outside the focused range.
+    const yearMin = timeFocus ? timeFocus.start : Math.min(
+      gadda.birth,
+      ...shownCorrespondents.map(d => d.birth),
+      ...shownCorrespondents.flatMap(d => d.interactions ?? [])
+    );
+    // every line stops at Gadda's own death — none of them extend into a
+    // correspondent's own later life, since that's not part of his story.
+    const yearMax = timeFocus ? timeFocus.end : gadda.death;
+    const x = d3.scaleLinear().domain([yearMin, yearMax]).range([margin.left, width - margin.right]);
+
+    const rescaleWeight = shownCorrespondents.length
+      ? d3.scaleLinear().domain(d3.extent(shownCorrespondents, d => d.weight)).range([0, 1])
+      : () => 1;
+
+    shownCorrespondents.forEach(d => {
+      d.barycenter = d.interactions.reduce((sum, yr) => sum + yr, 0) / d.interactions.length;
+    });
+    const byBarycenter = [...shownCorrespondents].sort((a, b) => a.barycenter - b.barycenter);
+    const mid = Math.ceil(byBarycenter.length / 2);
+    const above = byBarycenter.slice(0, mid);
+    const below = byBarycenter.slice(mid);
+    const people = [...above].reverse().concat([gadda], below);
+
+    const yScale = d3.scalePoint()
+      .domain(people.map(d => d.name))
+      .range([margin.top, height - margin.bottom])
+      .padding(1);
+    const y = name => yScale(name);
+    const gaddaY = y("Gadda Carlo Emilio");
+    // dip depth ceiling, scaled to the actual row spacing — a fixed value
+    // only looks right at the one row spacing it was tuned for.
+    const rowStep = Math.abs(yScale.step()) || 30;
+    const maxGap = Math.min(rowStep * 0.4, rowStep / 2 - 2);
+
+    const correspondentNames = people.filter(d => d.name !== "Gadda Carlo Emilio").map(d => d.name);
+    // a spread of purples — Gadda's epistolary color — instead of a generic
+    // categorical palette.
+    const purplePalette = d3.quantize(
+      t => d3.interpolateHcl("#dcc6f5", "#3b0a63")(t),
+      Math.max(correspondentNames.length, 2)
+    );
+    const colorMap = new Map();
+    correspondentNames.forEach((name, i) => colorMap.set(name, purplePalette[i % purplePalette.length]));
+    const colorScale = name => colorMap.get(name);
+    const gaddaColor = "var(--ink)";
+    const colorFor = name => (name === "Gadda Carlo Emilio" ? gaddaColor : colorScale(name));
+
+    const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+    const minStrokeWidth = 2, maxStrokeWidth = 7;
+    const haloExtra = 3;
+    function strengthFor(d) {
+      return d.name === "Gadda Carlo Emilio" ? 1 : rescaleWeight(d.weight ?? 1);
+    }
+    const minL = 25, maxL = 75;
+    function shadeFor(d) {
+      if (d.name === "Gadda Carlo Emilio") return gaddaColor;
+      const hcl = d3.hcl(colorFor(d.name));
+      hcl.l = maxL - strengthFor(d) * (maxL - minL);
+      return hcl.formatHex();
+    }
+    function strokeWidthFor(d) {
+      return minStrokeWidth + (maxStrokeWidth - minStrokeWidth) * strengthFor(d);
+    }
+
+    svg.append("line")
+      .attr("class", "time-baseline")
+      .attr("x1", margin.left).attr("x2", width - margin.right)
+      .attr("y1", height - margin.bottom).attr("y2", height - margin.bottom);
+
+    svg.append("g")
+      .selectAll("text")
+      .data(x.ticks(10))
+      .join("text")
+        .attr("class", "time-label")
+        .attr("x", d => x(d))
+        .attr("y", height - margin.bottom + 16)
+        .attr("text-anchor", "middle")
+        .text(d3.format("d"));
+
+    function dipYFor(d) {
+      const rowY = y(d.name);
+      const direction = rowY < gaddaY ? 1 : -1;
+      const w = quantizeToTier(rescaleWeight(d.weight ?? 1));
+      return gaddaY - direction * maxGap * w;
+    }
+
+    people.forEach(d => {
+      d.frameBirth = d.birth;
+      d.frameDeath = Math.min(d.death, gadda.death);
+      d.diedBeforeGadda = d.death < gadda.death;
+    });
+
+    function lifePath(d) {
+      const rowY = y(d.name);
+      if (!d.interactions || d.interactions.length === 0) {
+        return d3.line()([[x(d.frameBirth), rowY], [x(d.frameDeath), rowY]]);
+      }
+      const dipY = dipYFor(d);
+      const clusters = clusterInteractions(d.interactions);
+      const lineStart = Math.min(d.frameBirth, d.interactions[0]);
+      const lineEnd = d.frameDeath;
+      const points = [[x(lineStart), rowY]];
+      clusters.forEach(cluster => {
+        const first = cluster[0];
+        const last = cluster[cluster.length - 1];
+        points.push([x(Math.max(lineStart, first - reach)), rowY]);
+        cluster.forEach(yr => points.push([x(yr), dipY]));
+        points.push([x(Math.min(lineEnd, last + reach)), rowY]);
+      });
+      points.push([x(lineEnd), rowY]);
+      return d3.line().curve(d3.curveMonotoneX)(points);
+    }
+
+    const rows = svg.selectAll(".row").data(people).join("g").attr("class", "row");
+
+    rows.append("path")
+      .attr("class", "life-halo")
+      .attr("stroke-width", d => strokeWidthFor(d) + haloExtra)
+      .attr("d", lifePath);
+    rows.append("path")
+      .attr("class", "life")
+      .attr("stroke", shadeFor)
+      .attr("stroke-width", strokeWidthFor)
+      .attr("d", lifePath);
+
+    rows.append("circle")
+      .attr("class", "pt")
+      .attr("fill", d => colorFor(d.name))
+      .attr("cx", d => x(d.frameBirth))
+      .attr("cy", d => y(d.name))
+      .attr("r", 4);
+
+    const lineLabels = rows.append("text")
+      .attr("class", "line-label")
+      .attr("fill", d => colorFor(d.name))
+      // clamped to the visible frame's left edge — when a time focus is
+      // active and this person's real birth falls before it, anchoring the
+      // label to the true (off-screen) birth year would push it past the
+      // canvas edge and make it vanish, even though their line still
+      // correctly draws and clips within the focused window.
+      .attr("x", d => Math.max(x(d.frameBirth), margin.left) + 8)
+      .attr("y", d => y(d.name) - 6)
+      .style("cursor", "pointer")
+      .text(d => d.name);
+
+    svg.selectAll(".cutoff")
+      .data(people.filter(d => d.diedBeforeGadda))
+      .join("text")
+        .attr("class", "cutoff")
+        .attr("fill", d => colorFor(d.name))
+        .attr("x", d => x(d.frameDeath))
+        .attr("y", d => y(d.name))
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "central")
+        .text("×");
+
+    const contacts = people.flatMap(d =>
+      d.interactions && d.interactions.length
+        ? d.interactions.map(year => ({ year, dipY: dipYFor(d), color: colorFor(d.name), name: d.name }))
+        : []
+    );
+    const contactG = svg.selectAll(".contact")
+      .data(contacts)
+      .join("g")
+        .attr("class", "contact")
+        .style("cursor", "pointer");
+
+    const pillWidth = 8;
+    contactG.append("rect")
+      .attr("class", "contact-envelope")
+      .attr("stroke", d => d.color)
+      .attr("x", d => x(d.year) - pillWidth / 2)
+      .attr("y", d => Math.min(d.dipY, gaddaY) - 4)
+      .attr("width", pillWidth)
+      .attr("height", d => Math.abs(gaddaY - d.dipY) + 8)
+      .attr("rx", pillWidth / 2);
+
+    contactG.append("circle")
+      .attr("class", "contact-pt")
+      .attr("fill", d => d.color)
+      .attr("cx", d => x(d.year))
+      .attr("cy", d => d.dipY)
+      .attr("r", 3);
+
+    contactG.append("rect")
+      .attr("class", "contact-pt contact-pt-gadda")
+      .attr("stroke", d => d.color)
+      .attr("x", d => x(d.year) - 3)
+      .attr("y", gaddaY - 3)
+      .attr("width", 6)
+      .attr("height", 6)
+      .attr("transform", d => `rotate(45 ${x(d.year)} ${gaddaY})`);
+
+    // Gadda's own primary-bibliography works, scattered directly along his
+    // own line — a beeswarm-style stack (alternating above/below, growing
+    // outward) keeps same-year items from sitting exactly on top of each
+    // other, bounded tightly around gaddaY so it never reaches into a
+    // neighboring correspondent row.
+    const primaryStep = 4;
+    const primaryMaxOffset = Math.min(rowStep / 2 - 6, 36);
+    const primaryShown = showPrimaryWorks
+      ? primaryWorks.filter(w => w.year >= yearMin && w.year <= yearMax)
+      : [];
+    const primaryByYear = d3.group(primaryShown, w => w.year);
+    primaryByYear.forEach(group => {
+      group.sort((a, b) => a.title.localeCompare(b.title));
+      group.forEach((w, i) => {
+        const sign = i % 2 === 0 ? -1 : 1;
+        const magnitude = Math.ceil((i + 1) / 2);
+        w.dotY = gaddaY + sign * Math.min(magnitude * primaryStep, primaryMaxOffset);
+      });
+    });
+    const primaryG = svg.selectAll(".primary-work-pt")
+      .data(primaryShown)
+      .join("circle")
+        .attr("class", "primary-work-pt")
+        .attr("cx", d => x(d.year))
+        .attr("cy", d => d.dotY)
+        .attr("r", 2.5);
+
+    primaryG
+      .on("mouseenter", (event, d) => {
+        tooltip.html(
+          `<strong>${d.title}</strong>` +
+          `<div style="opacity:0.85">${d.year} — ${d.edition}</div>` +
+          (d.raccolta ? `<div style="margin-top:0.15rem;opacity:0.7">${d.raccolta}</div>` : "") +
+          `<div style="margin-top:0.2rem;opacity:0.6;font-size:0.7rem;">GADDA'S OWN WORK (${d.sigla})</div>`
+        );
+        tooltip.attr("hidden", null);
+        moveTooltip(event);
+      })
+      .on("mousemove", moveTooltip)
+      .on("mouseleave", () => tooltip.attr("hidden", true));
+
+    // a set, not a single name — picking several people from search should
+    // highlight all of them together, not just whichever was picked last.
+    let selected = new Set(initialSelected);
+    let selectedContact = null;
+
+    function isRelevant(name) {
+      if (selectedContact) return name === "Gadda Carlo Emilio" || name === selectedContact.name;
+      return selected.size === 0 || name === "Gadda Carlo Emilio" || selected.has(name);
+    }
+
+    function applyHighlight() {
+      rows.selectAll(".life, .life-halo").style("opacity", d => (isRelevant(d.name) ? null : 0.08));
+      rows.selectAll(".pt").style("opacity", d => (isRelevant(d.name) ? 1 : 0.08));
+      svg.selectAll(".contact").each(function (d) {
+        const visible = selectedContact ? d === selectedContact : selected.has(d.name);
+        // opacity alone isn't enough — a hidden contact still intercepts
+        // hover/click by default, so pointer-events is disabled too.
+        d3.select(this)
+          .style("opacity", visible ? 1 : 0)
+          .style("pointer-events", visible ? null : "none");
+      });
+      lineLabels.style("font-weight", d => (selected.has(d.name) ? 800 : 600));
+
+      svg.select(".compare-link").remove();
+      svg.select(".compare-label").remove();
+      if (selectedContact) {
+        const cx = x(selectedContact.year);
+        svg.append("line")
+          .attr("class", "compare-link")
+          .attr("stroke", selectedContact.color)
+          .attr("x1", cx).attr("x2", cx)
+          .attr("y1", selectedContact.dipY).attr("y2", gaddaY);
+        svg.append("text")
+          .attr("class", "compare-label")
+          .attr("x", cx)
+          .attr("y", Math.min(selectedContact.dipY, gaddaY) - 8)
+          .attr("text-anchor", "middle")
+          .attr("fill", selectedContact.color)
+          .text(`${selectedContact.name} — ${selectedContact.year}`);
+      }
+    }
+
+    function toggleSelection(name) {
+      selectedContact = null;
+      if (name === "Gadda Carlo Emilio" || (selected.size === 1 && selected.has(name))) {
+        selected = new Set();
+      } else {
+        selected = new Set([name]);
+      }
+      applyHighlight();
+    }
+    function toggleContact(contact) {
+      selected = new Set();
+      selectedContact = selectedContact === contact ? null : contact;
+      applyHighlight();
+    }
+
+    rows.style("cursor", "pointer").on("click", (event, d) => toggleSelection(d.name));
+    contactG.on("click", (event, d) => {
+      event.stopPropagation();
+      if (!selected.has(d.name) && d !== selectedContact) return;
+      toggleContact(d);
+    });
+
+    // hover declutter: a broad filter can put dozens of lines on screen at
+    // once, which is fine to scan for shape but hard to read any ONE person
+    // out of. Rather than requiring a click (which commits to a selection),
+    // hovering any row previews the same isolation effect instantly, and
+    // reverts the moment the mouse leaves — as long as nothing is already
+    // click-selected, so this never fights an intentional selection.
+    function previewHighlight(name) {
+      const real = selected;
+      selected = new Set([name]);
+      applyHighlight();
+      selected = real; // restore the actual selection for the next call
+    }
+    rows
+      .on("mouseenter", (event, d) => {
+        if (d.name === "Gadda Carlo Emilio" || selected.size > 0) return;
+        previewHighlight(d.name);
+      })
+      .on("mouseleave", () => {
+        if (selected.size > 0) return;
+        applyHighlight();
+      });
+
+    // hover tooltip: this person's secondary-bibliography writing about
+    // Gadda — not tied to this specific point's year, just their full
+    // critical output, same as the library graph shows book holdings.
+    const tooltip = d3.select("#tooltip");
+    function moveTooltip(event) {
+      tooltip.style("left", (event.clientX + 14) + "px").style("top", (event.clientY + 14) + "px");
+    }
+    contactG
+      .on("mouseenter", (event, d) => {
+        // the contact point's year IS this person's secondary-bibliography
+        // publication year (see the rawPeople comment above), so only the
+        // work(s) they actually published that specific year belong here.
+        const works = (secondaryWorks[d.name] || []).filter(w => w.year === d.year);
+        const workLines = works.slice(0, 6).map(w => {
+          const bits = [w.tipo, w.rivista].filter(Boolean).join(", ");
+          return `${w.title}${bits ? ` (${bits})` : ""}`;
+        });
+        tooltip.html(
+          `<strong>${d.name} — ${d.year}</strong>` +
+          (works.length
+            ? `<div style="margin-top:0.2rem;opacity:0.6;font-size:0.7rem;">SECONDARY BIBLIOGRAPHY ON GADDA</div>` +
+              workLines.map(w => `<div style="margin-top:0.15rem;opacity:0.9">${w}</div>`).join("") +
+              (works.length > workLines.length ? `<div style="opacity:0.6">+${works.length - workLines.length} more title(s) this year</div>` : "")
+            : "no secondary-bibliography items on record for this year")
+        );
+        tooltip.attr("hidden", null);
+        moveTooltip(event);
+      })
+      .on("mousemove", moveTooltip)
+      .on("mouseleave", () => tooltip.attr("hidden", true));
+
+    applyHighlight();
+  }
+
+  const SHOWN_STEP = 10;
+  let shownLimit = SHOWN_STEP;
+  // people added by name through the search box — always shown on top of
+  // whatever Show more/less would otherwise display, regardless of weight.
+  let pinnedNames = new Set();
+  // a specific year window to zoom the timeline into, set via the "Focus on
+  // years" control — null means show the full natural range.
+  let timeFocus = null;
+  // the name picked from the search box — passed into render() so that
+  // person starts highlighted (everyone else dimmed), same as clicking
+  // their row directly, instead of just being added as one more plain line.
+  let searchSelected = new Set();
+  // custom mode starts empty (just Gadda's own line) so the user can search
+  // in exactly the names they want to compare.
+  let customMode = false;
+  // whether Gadda's own primary-bibliography works are scattered along his
+  // line — on by default, since that's the whole point of this overlay.
+  let showPrimaryWorks = true;
+
+  const CUSTOM_MODE = "__custom__";
+
+  function applyFilter() {
+    const isCustom = customMode;
+    const timeMatching = isCustom
+      ? []
+      : timeFocus
+      ? allCorrespondents.filter(d => (d.interactions || []).some(yr => yr >= timeFocus.start && yr <= timeFocus.end))
+      : allCorrespondents;
+    const matching = timeMatching;
+    const base = isCustom ? [] : matching.slice().sort((a, b) => b.weight - a.weight).slice(0, shownLimit);
+    const baseNames = new Set(base.map(d => d.name));
+    const pinnedExtra = allCorrespondents.filter(d => pinnedNames.has(d.name) && !baseNames.has(d.name));
+    const shown = [...base, ...pinnedExtra];
+    render(shown, searchSelected);
+
+    const remaining = matching.length - base.length;
+    const canShowLess = shownLimit > SHOWN_STEP;
+    d3.select("#count-panel").html(
+      isCustom
+        ? `<div>Your selection</div><strong>${pinnedExtra.length}</strong>` +
+          `<div style="margin-top:0.5rem;opacity:0.7;max-width:9rem;">search a name above to add them here</div>`
+        : `<div>Shown</div><strong>${shown.length}</strong>` +
+          `<div style="margin-top:0.5rem">${timeFocus ? `Active ${timeFocus.start}–${timeFocus.end}` : "Total"}</div><strong>${matching.length}</strong>` +
+          (remaining > 0 || canShowLess ? `<div style="margin-top:0.75rem; display:flex; flex-direction:column; gap:0.35rem;">` : "") +
+          (remaining > 0 ? `<button id="show-more-btn" class="filter-btn">+ Show ${Math.min(SHOWN_STEP, remaining)} more</button>` : "") +
+          (canShowLess ? `<button id="show-less-btn" class="filter-btn">− Show ${SHOWN_STEP} less</button>` : "") +
+          (remaining > 0 || canShowLess ? `</div>` : "")
+    );
+    if (!isCustom && remaining > 0) {
+      d3.select("#show-more-btn").on("click", () => { shownLimit += SHOWN_STEP; searchSelected = new Set(); applyFilter(); });
+    }
+    if (!isCustom && canShowLess) {
+      d3.select("#show-less-btn").on("click", () => { shownLimit = Math.max(SHOWN_STEP, shownLimit - SHOWN_STEP); searchSelected = new Set(); applyFilter(); });
+    }
+
+    d3.select("#pinned-chips").selectAll(".pinned-chip")
+      .data([...pinnedNames])
+      .join("div")
+        .attr("class", "pinned-chip")
+        .text(d => d)
+        .on("click", (event, d) => { pinnedNames.delete(d); searchSelected.delete(d); applyFilter(); });
+  }
+
+  // --- search box: type a name, click a suggestion to pin them into view ---
+  const searchInput = d3.select("#search-input");
+  const searchSuggestions = d3.select("#search-suggestions");
+  searchInput.on("input", function () {
+    const q = this.value.trim().toLowerCase();
+    searchSuggestions.html("");
+    if (!q) return;
+    const matches = allCorrespondents
+      .filter(d => d.name.toLowerCase().includes(q) && !pinnedNames.has(d.name))
+      .slice(0, 8);
+    searchSuggestions.selectAll(".search-suggestion")
+      .data(matches)
+      .join("div")
+        .attr("class", "search-suggestion")
+        .text(d => d.name)
+        .on("click", (event, d) => {
+          pinnedNames.add(d.name);
+          searchSelected.add(d.name);
+          searchInput.property("value", "");
+          searchSuggestions.html("");
+          applyFilter();
+        });
+  });
+  // clicking away closes the suggestion list
+  d3.select(document.body).on("click", (event) => {
+    if (!event.target.closest(".search-box")) searchSuggestions.html("");
+  });
+
+  // --- time focus: zoom the x-axis to a specific year window ---
+  d3.select("#time-focus-apply").on("click", () => {
+    const start = +d3.select("#time-focus-start").property("value");
+    const end = +d3.select("#time-focus-end").property("value");
+    if (!start || !end || start >= end) return;
+    timeFocus = { start, end };
+    shownLimit = SHOWN_STEP;
+    searchSelected = new Set();
+    applyFilter();
+  });
+  d3.select("#time-focus-clear").on("click", () => {
+    timeFocus = null;
+    shownLimit = SHOWN_STEP;
+    searchSelected = new Set();
+    d3.select("#time-focus-start").property("value", "");
+    d3.select("#time-focus-end").property("value", "");
+    applyFilter();
+  });
+
+  // --- mode filter bar: all correspondents, or a custom hand-picked set ---
+  const modeFilterBar = d3.select("#mode-filter");
+  modeFilterBar.append("button")
+    .attr("class", "filter-btn active")
+    .attr("data-value", "__all__")
+    .text("All")
+    .on("click", function () {
+      customMode = false;
+      shownLimit = SHOWN_STEP;
+      searchSelected = new Set();
+      d3.selectAll("#mode-filter .filter-btn").classed("active", false);
+      d3.select(this).classed("active", true);
+      applyFilter();
+    });
+  modeFilterBar.append("button")
+    .attr("class", "filter-btn")
+    .attr("data-value", CUSTOM_MODE)
+    .text("★ My selection")
+    .on("click", function () {
+      customMode = true;
+      searchSelected = new Set();
+      d3.selectAll("#mode-filter .filter-btn").classed("active", false);
+      d3.select(this).classed("active", true);
+      applyFilter();
+    });
+  // independent of the All / My selection choice above — toggles the amber
+  // dots for Gadda's own published works on and off.
+  modeFilterBar.append("button")
+    .attr("class", "filter-btn active")
+    .attr("data-value", "__primary__")
+    .text("● Gadda's own works")
+    .on("click", function () {
+      showPrimaryWorks = !showPrimaryWorks;
+      d3.select(this).classed("active", showPrimaryWorks);
+      applyFilter();
+    });
+
+  // arriving here via a cross-graph link (?focus=Name) pins and highlights
+  // that person immediately, same as picking them from the search box.
+  const focusParam = new URLSearchParams(location.search).get("focus");
+  if (focusParam && allCorrespondents.some(d => d.name === focusParam)) {
+    pinnedNames.add(focusParam);
+    searchSelected = new Set([focusParam]);
+  }
+
+  applyFilter();
+</script>
+</body>
+</html>

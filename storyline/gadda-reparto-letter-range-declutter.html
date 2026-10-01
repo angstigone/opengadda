@@ -1,0 +1,743 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>reparto: letter (true correspondence range)</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #222222;
+    --grid: #dddddd;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1e;
+      --ink: #e8e8e8;
+      --grid: #3a3a3a;
+    }
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: system-ui, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2.5rem 1rem;
+  }
+
+  h1 { font-size: 1.1rem; font-weight: 600; margin: 0 0 0.3rem; }
+  p.sub { font-size: 0.8rem; opacity: 0.6; margin: 0 0 1.5rem; max-width: 950px; text-align: center; }
+
+  .graph-wrap { display: flex; align-items: flex-start; gap: 1rem; max-width: 1050px; width: 100%; }
+  svg { width: 100%; max-width: 950px; height: auto; flex: 1 1 auto; min-width: 0; }
+  .count-panel {
+    flex: 0 0 auto; font-size: 0.75rem; line-height: 1.6; opacity: 0.75;
+    border-left: 1px solid var(--grid); padding-left: 0.75rem; white-space: nowrap;
+  }
+  .count-panel strong { font-size: 1.1rem; opacity: 1; }
+
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center; max-width: 950px; margin: 0 0 1.25rem; }
+  .filter-btn {
+    font: inherit; font-size: 0.75rem; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--grid); border-radius: 999px; padding: 0.3rem 0.8rem;
+    background: transparent; color: var(--ink); opacity: 0.6;
+  }
+  .filter-btn.active { opacity: 1; border-color: currentColor; }
+
+  .life-halo { stroke: var(--bg); stroke-linecap: round; fill: none; pointer-events: stroke; transition: opacity 0.25s ease; }
+  .life { stroke-linecap: round; fill: none; opacity: 0.55; pointer-events: stroke; transition: opacity 0.25s ease; }
+  .line-label { font-size: 11px; font-weight: 600; cursor: pointer; transition: opacity 0.25s ease; }
+  .time-baseline { stroke: var(--grid); stroke-width: 1; }
+  .time-label { font-size: 10px; fill: var(--ink); opacity: 0.6; font-family: system-ui, sans-serif; }
+  .cutoff { font-size: 16px; font-weight: 700; }
+  .collab-pt { stroke: var(--bg); stroke-width: 1; }
+  .collab-pt-gadda { fill: var(--bg); stroke-width: 2; }
+  .collab-envelope { fill: none; stroke-width: 1; opacity: 0.5; }
+  .compare-link { stroke-width: 2; }
+  .compare-label { font-size: 12px; font-weight: 700; }
+
+  .controls-bar {
+    display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start;
+    justify-content: center; max-width: 950px; margin: 0 0 1rem;
+  }
+  .search-box { position: relative; width: 220px; }
+  .search-box input {
+    font: inherit; font-size: 0.8rem; width: 100%; box-sizing: border-box;
+    padding: 0.35rem 0.6rem; border: 1px solid var(--grid); border-radius: 6px;
+    background: var(--bg); color: var(--ink);
+  }
+  .search-suggestions {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 10;
+    background: var(--bg); border: 1px solid var(--grid); border-top: none;
+    border-radius: 0 0 6px 6px; max-height: 180px; overflow-y: auto;
+  }
+  .search-suggestion {
+    font-size: 0.8rem; padding: 0.35rem 0.6rem; cursor: pointer;
+  }
+  .search-suggestion:hover { background: var(--grid); }
+  .pinned-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
+  .pinned-chip {
+    font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 999px;
+    background: var(--grid); cursor: pointer; white-space: nowrap;
+  }
+  .pinned-chip::after { content: " ×"; opacity: 0.6; }
+
+  .time-focus { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; }
+  .time-focus input {
+    font: inherit; font-size: 0.8rem; width: 4.5rem; box-sizing: border-box;
+    padding: 0.35rem 0.5rem; border: 1px solid var(--grid); border-radius: 6px;
+    background: var(--bg); color: var(--ink);
+  }
+
+  .tooltip {
+    position: fixed; z-index: 100; pointer-events: none;
+    background: var(--ink); color: var(--bg);
+    font-size: 0.75rem; line-height: 1.5; padding: 0.5rem 0.65rem;
+    border-radius: 6px; max-width: 260px; box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+  }
+  .tooltip strong { display: block; margin-bottom: 0.15rem; }
+
+  .cross-link {
+    max-width: 950px; text-align: center; font-size: 0.8rem;
+    margin: 0.5rem 0 0; padding: 0.5rem 0.9rem; border: 1px solid var(--grid);
+    border-radius: 8px; background: color-mix(in srgb, var(--grid) 35%, transparent);
+  }
+  .cross-link a { color: inherit; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<h1>Carlo Emilio Gadda — reparto: letter (true correspondence range)</h1>
+<p class="sub">reparto "letter" — positioned using mittenti.json's date_range (the true documented correspondence span) instead of individually dated letters. Same measurements and algorithms as gadda-storyline-aligned-tiers-10.html: fixed 950×420 canvas, barycenter row ordering, dip depth snapped to one of 4 shared tiers, names on the lines as the click target. Use the filter bar to show only one relationship category (categoria) at a time.</p>
+<div id="categoria-filter" class="filter-bar"></div>
+<div class="controls-bar">
+  <div>
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Add a person by name…" autocomplete="off">
+      <div id="search-suggestions" class="search-suggestions"></div>
+    </div>
+    <div id="pinned-chips" class="pinned-chips"></div>
+  </div>
+  <div class="time-focus">
+    <span>Focus on years</span>
+    <input type="number" id="time-focus-start" placeholder="from">
+    <span>–</span>
+    <input type="number" id="time-focus-end" placeholder="to">
+    <button id="time-focus-apply" class="filter-btn">Apply</button>
+    <button id="time-focus-clear" class="filter-btn">Clear</button>
+  </div>
+</div>
+<div class="graph-wrap">
+  <svg viewBox="0 0 950 420"></svg>
+  <div id="count-panel" class="count-panel"></div>
+</div>
+<div id="cross-link" class="cross-link" hidden></div>
+<div id="tooltip" class="tooltip" hidden></div>
+
+<script>
+  const rawPeople = [{"name": "Ambrosi Paolo", "birth": 1875, "death": 1950, "range_start": 1928, "range_end": 1944, "categoria": "Familiari", "weight": 0.35, "letterCount": 1}, {"name": "Amicucci Ermanno", "birth": 1890, "death": 1955, "range_start": 1934, "range_end": 1939, "categoria": "Contatti letterari", "weight": 0.427, "libraryLink": true, "letterCount": 2}, {"name": "Ardigò Fausto", "birth": 1911, "death": 1944, "range_start": 1936, "range_end": 1942, "categoria": "Contatti letterari", "weight": 0.35, "letterCount": 1}, {"name": "Ballo Ferdinando", "birth": 1906, "death": 1959, "range_start": 1944, "range_end": 1944, "categoria": "Editori, riviste e quotidiani", "weight": 0.549, "letterCount": 6}, {"name": "Bassani Giorgio", "birth": 1916, "death": 2000, "range_start": 1957, "range_end": 1957, "categoria": "Contatti letterari", "weight": 0.427, "libraryLink": true, "letterCount": 2}, {"name": "Beltrami Veneziani Giuliana", "birth": 1944, "death": 1996, "range_start": 1948, "range_end": 1948, "categoria": "Contatti letterari", "weight": 0.35, "letterCount": 1}, {"name": "Betocchi Carlo", "birth": 1899, "death": 1986, "range_start": 1969, "range_end": 1972, "categoria": "Contatti letterari", "weight": 0.427, "libraryLink": true, "letterCount": 2}, {"name": "Betti Ugo", "birth": 1892, "death": 1953, "range_start": 1919, "range_end": 1932, "categoria": "Compagni di guerra e di prigionia", "weight": 0.798, "libraryLink": true, "letterCount": 56}, {"name": "Bigongiari Piero", "birth": 1914, "death": 1997, "range_start": 1953, "range_end": 1965, "categoria": "Contatti letterari", "weight": 0.712, "libraryLink": true, "letterCount": 26}, {"name": "Boggio Marzet Albino", "birth": 1878, "death": 1969, "range_start": 1919, "range_end": 1919, "categoria": "Compagni di guerra e di prigionia", "weight": 0.35, "letterCount": 1}, {"name": "Bompiani Valentino", "birth": 1898, "death": 1992, "range_start": 1944, "range_end": 1944, "categoria": "Editori, riviste e quotidiani", "weight": 0.472, "letterCount": 3}, {"name": "Bonsanti Alessandro", "birth": 1904, "death": 1984, "range_start": 1930, "range_end": 1969, "categoria": "Contatti letterari", "weight": 1.0, "libraryLink": true, "letterCount": 346}, {"name": "Carocci Alberto", "birth": 1904, "death": 1972, "range_start": 1926, "range_end": 1936, "categoria": "Contatti letterari", "weight": 0.504, "letterCount": 4}, {"name": "Citati Pietro", "birth": 1930, "death": 2022, "range_start": 1957, "range_end": 1972, "categoria": "Contatti letterari", "weight": 0.771, "letterCount": 44}, {"name": "Contini Gianfranco", "birth": 1912, "death": 1990, "range_start": 1934, "range_end": 1967, "categoria": "Amici", "weight": 0.908, "libraryLink": true, "letterCount": 151}, {"name": "Dal Fabbro Beniamino", "birth": 1910, "death": 1989, "range_start": 1939, "range_end": 1939, "categoria": "Contatti letterari", "weight": 0.35, "letterCount": 1}, {"name": "De Grada Raffaele", "birth": 1916, "death": 2010, "range_start": 1940, "range_end": 1942, "categoria": "Contatti letterari", "weight": 0.427, "letterCount": 2}, {"name": "Dell'Arco Mario", "birth": 1905, "death": 1996, "range_start": 1957, "range_end": 1958, "categoria": "Contatti letterari", "weight": 0.427, "letterCount": 2}, {"name": "Einaudi Giulio", "birth": 1912, "death": 1999, "range_start": 1941, "range_end": 1968, "categoria": "Contatti letterari", "weight": 0.789, "letterCount": 52}, {"name": "Fiorentini Felice", "birth": 1894, "death": 1945, "range_start": 1934, "range_end": 1934, "categoria": "Ingegneria e divulgazione tecnica", "weight": 0.427, "letterCount": 2}, {"name": "Fornasini Emilio", "birth": 1893, "death": 1971, "range_start": 1904, "range_end": 1970, "categoria": "Familiari", "weight": 0.472, "letterCount": 3}, {"name": "Gadda Ambrosi Clara", "birth": 1895, "death": 1976, "range_start": 1905, "range_end": 1972, "categoria": "Familiari", "weight": 0.831, "letterCount": 76}, {"name": "Gadda Belloni Luisa", "birth": 1894, "death": 1971, "range_start": 1910, "range_end": 1910, "categoria": "Familiari", "weight": 0.35, "letterCount": 1}, {"name": "Gadda Conti Piero", "birth": 1902, "death": 1999, "range_start": 1920, "range_end": 1972, "categoria": "Familiari", "weight": 0.888, "libraryLink": true, "letterCount": 126}, {"name": "Gadda Enrico", "birth": 1896, "death": 1918, "range_start": 1906, "range_end": 1917, "categoria": "Familiari", "weight": 0.716, "letterCount": 27}, {"name": "Gadda Fornasini Emilia", "birth": 1867, "death": 1952, "range_start": 1906, "range_end": 1951, "categoria": "Familiari", "weight": 0.472, "letterCount": 3}, {"name": "Garzanti Livio", "birth": 1921, "death": 2015, "range_start": 1952, "range_end": 1963, "categoria": "Editori, riviste e quotidiani", "weight": 0.83, "letterCount": 75}, {"name": "Gobbi Ambrogio", "birth": 1895, "death": 1968, "range_start": 1913, "range_end": 1968, "categoria": "Amici", "weight": 0.699, "letterCount": 23}, {"name": "Guarnieri Silvio", "birth": 1910, "death": 1992, "range_start": 1931, "range_end": 1964, "categoria": "Contatti letterari", "weight": 0.617, "libraryLink": true, "letterCount": 11}, {"name": "Lehr Adele", "birth": 1861, "death": 1936, "range_start": 1905, "range_end": 1936, "categoria": "Familiari", "weight": 0.913, "libraryLink": true, "letterCount": 158}, {"name": "Lehr Carlo", "birth": 1865, "death": 1918, "range_start": 1905, "range_end": 1918, "categoria": "Familiari", "weight": 0.427, "letterCount": 2}, {"name": "Linati Carlo", "birth": 1878, "death": 1949, "range_start": 1931, "range_end": 1944, "categoria": "Contatti letterari", "weight": 0.665, "libraryLink": true, "letterCount": 17}, {"name": "Messina Francesco", "birth": 1900, "death": 1995, "range_start": 1939, "range_end": 1941, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Mondadori Alberto", "birth": 1914, "death": 1976, "range_start": 1940, "range_end": 1941, "categoria": "Editori, riviste e quotidiani", "weight": 0.427, "letterCount": 2}, {"name": "Natoli Glauco", "birth": 1908, "death": 1965, "range_start": 1931, "range_end": 1942, "categoria": "Contatti letterari", "weight": 0.35, "letterCount": 1}, {"name": "Notari Umberto", "birth": 1878, "death": 1950, "range_start": 1919, "range_end": 1923, "categoria": "Contatti letterari", "weight": 0.35, "letterCount": 1}, {"name": "Parise Goffredo", "birth": 1929, "death": 1986, "range_start": 1963, "range_end": 1965, "categoria": "Contatti letterari", "weight": 0.671, "libraryLink": true, "letterCount": 18}, {"name": "Pasquali Giorgio", "birth": 1885, "death": 1952, "range_start": 1933, "range_end": 1934, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Piccioni Leone", "birth": 1925, "death": 2018, "range_start": 1952, "range_end": 1971, "categoria": "Contatti letterari", "weight": 0.748, "libraryLink": true, "letterCount": 36}, {"name": "Rodocanachi Lucia", "birth": 1901, "death": 1978, "range_start": 1935, "range_end": 1960, "categoria": "Contatti letterari", "weight": 0.906, "letterCount": 149}, {"name": "Rossi Franco", "birth": 1919, "death": 2000, "range_start": 1926, "range_end": 1942, "categoria": "Ingegneria e divulgazione tecnica", "weight": 0.594, "letterCount": 9}, {"name": "Tecchi Bonaventura", "birth": 1896, "death": 1968, "range_start": 1919, "range_end": 1953, "categoria": "Compagni di guerra e di prigionia", "weight": 0.896, "libraryLink": true, "letterCount": 136}, {"name": "Traverso Leone", "birth": 1910, "death": 1968, "range_start": 1937, "range_end": 1966, "categoria": "Contatti letterari", "weight": 0.665, "letterCount": 17}, {"name": "Ulivi Ferruccio", "birth": 1912, "death": 2002, "range_start": 1939, "range_end": 1939, "categoria": "Contatti letterari", "weight": 0.35, "letterCount": 1}, {"name": "Valeri Manera Mario", "birth": 1921, "death": 2014, "range_start": 1971, "range_end": 1971, "categoria": "Contatti letterari", "weight": 0.427, "letterCount": 2}, {"name": "Veronesi Giulia", "birth": 1906, "death": 1970, "range_start": 1941, "range_end": 1944, "categoria": "Contatti letterari", "weight": 0.427, "letterCount": 2}, {"name": "Vigevani Alberto", "birth": 1918, "death": 1999, "range_start": 1942, "range_end": 1942, "categoria": "Contatti letterari", "weight": 0.427, "letterCount": 2}, {"name": "Vita Finzi Paolo", "birth": 1899, "death": 1986, "range_start": 1937, "range_end": 1937, "categoria": "Contatti letterari", "weight": 0.35, "letterCount": 1}, {"name": "Vittorini Elio", "birth": 1908, "death": 1966, "range_start": 1932, "range_end": 1963, "categoria": "Contatti letterari", "weight": 0.581, "libraryLink": true, "letterCount": 8}, {"name": "Angelini Cesare", "birth": 1886, "death": 1976, "range_start": 1936, "range_end": 1940, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Bacchelli Riccardo", "birth": 1891, "death": 1985, "range_start": 1931, "range_end": 1943, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Berenson Bernard", "birth": 1865, "death": 1959, "range_start": 1952, "range_end": 1952, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Bilenchi Romano", "birth": 1909, "death": 1989, "range_start": 1940, "range_end": 1940, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Caretti Lanfranco", "birth": 1915, "death": 1995, "range_start": 1953, "range_end": 1953, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Cecchi Emilio", "birth": 1884, "death": 1966, "range_start": 1948, "range_end": 1963, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Debenedetti Giacomo", "birth": 1901, "death": 1967, "range_start": 1957, "range_end": 1957, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Filippini Felice", "birth": 1917, "death": 1988, "range_start": 1951, "range_end": 1951, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Landolfi Tommaso", "birth": 1908, "death": 1979, "range_start": 1941, "range_end": 1941, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Longhi Roberto", "birth": 1890, "death": 1970, "range_start": 1952, "range_end": 1957, "categoria": "Contatti letterari", "weight": 0.427, "libraryLink": true, "letterCount": 2}, {"name": "Luzi Mario", "birth": 1914, "death": 2005, "range_start": 1957, "range_end": 1957, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Manzini Gianna", "birth": 1896, "death": 1974, "range_start": 1931, "range_end": 1940, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Martinetti Piero", "birth": 1872, "death": 1943, "range_start": 1925, "range_end": 1932, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Martini Quinto", "birth": 1908, "death": 1990, "range_start": 1953, "range_end": 1953, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Montale Eugenio", "birth": 1896, "death": 1981, "range_start": 1932, "range_end": 1969, "categoria": "Contatti letterari", "weight": 0.427, "libraryLink": true, "letterCount": 2}, {"name": "Parronchi Alessandro", "birth": 1914, "death": 2007, "range_start": 1953, "range_end": 1953, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Penna Sandro", "birth": 1906, "death": 1977, "range_start": 1932, "range_end": 1934, "categoria": "Amici", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Petrocchi Giorgio", "birth": 1921, "death": 1989, "range_start": 1948, "range_end": 1948, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Picchi Mario", "birth": 1930, "death": 2010, "range_start": 1957, "range_end": 1957, "categoria": "Varia", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Punzo Giorgio", "birth": 1911, "death": 2005, "range_start": 1962, "range_end": 1962, "categoria": "Varia", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Rigoni Stern Mario", "birth": 1921, "death": 2008, "range_start": 1968, "range_end": 1968, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Rosina Tito", "birth": 1899, "death": 1958, "range_start": 1957, "range_end": 1957, "categoria": "Varia", "weight": 0.427, "libraryLink": true, "letterCount": 2}, {"name": "Santi Piero", "birth": 1923, "death": 2007, "range_start": 1942, "range_end": 1942, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Semenza Carlo", "birth": 1893, "death": 1961, "range_start": 1932, "range_end": 1940, "categoria": "Amici", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Sereni Vittorio", "birth": 1913, "death": 1983, "range_start": 1959, "range_end": 1959, "categoria": null, "weight": 0.427, "libraryLink": true, "letterCount": 2}, {"name": "Siciliano Enzo", "birth": 1934, "death": 2006, "range_start": 1969, "range_end": 1969, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Valgimigli Manara", "birth": 1876, "death": 1965, "range_start": 1939, "range_end": 1940, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Vicari Giambattista", "birth": 1909, "death": 1978, "range_start": 1941, "range_end": 1970, "categoria": "Contatti letterari", "weight": 0.35, "libraryLink": true, "letterCount": 1}, {"name": "Gadda Carlo Emilio", "birth": 1893, "death": 1973, "range_start": null, "range_end": null, "weight": null, "categoria": null}];
+
+  // exact letter dates per correspondent, from lettere_finale_corrected.xlsx —
+  // used for the hover tooltip on each collaboration point.
+  const letterDates = {"Ambrosi Paolo": ["1930-10-12"], "Amicucci Ermanno": ["1923-10-02", "1934-09-27"], "Ardigò Fausto": ["1936-09-11"], "Ballo Ferdinando": ["1943-12-02", "1943-12-08", "1944-01-08", "1944-02-11", "1945-08-04", "1946-01-19"], "Bassani Giorgio": ["1943-02-17", "1957-09-08"], "Beltrami Veneziani Giuliana": ["1948-04-09"], "Betocchi Carlo": ["1969-10-14", "1972-12-12"], "Betti Ugo": ["1919-01-29", "1919-02-12", "1919-04-01", "1919-07-05", "1919-07-09", "1919-09-16", "1919-10-13", "1919-11-27", "1919-12-17", "1920-01-01", "1920-07-05", "1920-07-18", "1920-07-27", "1920-09-14", "1920-11-30", "1921-04-06", "1921-05-25", "1921-07-01", "1921-08-24", "1921-12-31", "1922-02-07", "1922-05-24", "1922-06-03", "1922-07-16", "1922-08-25", "1922-10-26", "1922-11-02", "1923-02-15", "1923-03-18", "1923-04-21", "1923-04-22", "1923-10-15", "1924-03-05", "1924-03-21", "1924-05-19", "1924-05-23", "1925-02-14", "1927-01-25", "1927-02-14", "1927-03-13", "1927-03-15", "1927-06-28", "1927-07-16", "1927-11-04", "1928-01-14", "1928-02-09", "1928-02-24", "1928-04-12", "1928-04-20", "1928-04-28", "1928-07-07", "1928-10-02", "1930-01-11", "1930-06-11", "1931-05-09", "1932-01-15"], "Bigongiari Piero": ["1921-07-08", "1946-11-18", "1949-08-10", "1949-08-24", "1950-01-07", "1950-05-31", "1950-07-19", "1950-07-26", "1950-08-24", "1950-08-25", "1951-01-28", "1951-02-05", "1951-02-12", "1951-03-21", "1951-05-10", "1951-05-31", "1952-05-16", "1953-05-27", "1953-06-04", "1958-03-27", "1958-04-06", "1958-07-12", "1958-10-24", "1959-11-05", "1959-12-22", "1963-05-20"], "Boggio Marzet Albino": ["1919-09-17"], "Bompiani Valentino": ["1942-01-02", "1942-10-28", "1943-02-27"], "Bonsanti Alessandro": ["1930-06-22", "1930-07-30", "1931-01-12", "1931-01-15", "1931-01-17", "1931-01-29", "1931-02-05", "1931-02-24", "1931-03-16", "1931-03-20", "1931-03-24", "1931-05-02", "1931-05-07", "1931-05-18", "1931-06-18", "1931-06-26", "1931-07-01", "1931-07-08", "1931-07-31", "1931-08-26", "1931-09-05", "1931-09-25", "1931-09-29", "1931-10-03", "1931-10-13", "1931-10-23", "1931-11-13", "1931-11-28", "1931-12-04", "1931-12-30", "1932-01-12", "1932-01-29", "1932-03-15", "1932-03-31", "1932-04-13", "1932-04-22", "1932-04-26", "1932-05-31", "1932-06-27", "1932-07-07", "1932-07-08", "1932-07-23", "1932-08-21", "1932-09-02", "1932-10-12", "1933-09-05", "1933-09-14", "1933-09-27", "1933-10-09", "1933-11-13", "1933-12-09", "1934-03-27", "1934-04-24", "1934-04-28", "1934-05-03", "1934-05-06", "1934-05-16", "1934-05-26", "1934-06-04", "1934-06-12", "1934-07-05", "1934-07-11", "1934-07-25", "1934-09-29", "1934-11-08", "1935-04-04", "1936-05-06", "1936-05-25", "1936-09-05", "1936-09-30", "1936-10-10", "1936-11-12", "1936-11-17", "1936-11-20", "1936-12-02", "1936-12-13", "1936-12-21", "1936-12-23", "1936-12-27", "1937-01-22", "1937-01-23", "1937-02-03", "1937-02-05", "1937-02-15", "1937-03-11", "1937-03-26", "1937-04-09", "1937-04-19", "1937-05-28", "1937-12-07", "1938-05-14", "1938-05-23", "1938-05-29", "1938-06-02", "1938-06-03", "1938-06-15", "1938-06-20", "1938-06-29", "1938-07-08", "1938-07-16", "1938-08-25", "1938-09-10", "1938-09-13", "1938-09-21", "1938-09-22", "1938-10-09", "1938-10-15", "1938-11-06", "1938-11-19", "1938-11-26", "1938-12-01", "1938-12-05", "1938-12-14", "1939-03-31", "1939-04-15", "1939-04-22", "1939-04-23", "1939-05-07", "1939-05-17", "1939-05-19", "1939-05-24", "1939-05-29", "1939-06-01", "1939-06-04", "1939-06-11", "1939-06-17", "1939-06-20", "1939-06-22", "1939-06-26", "1939-06-30", "1939-07-07", "1939-07-11", "1939-07-20", "1939-07-31", "1939-08-21", "1939-11-12", "1939-11-23", "1939-12-02", "1939-12-13", "1939-12-21", "1940-01-01", "1940-01-05", "1940-01-09", "1940-01-12", "1940-01-16", "1940-01-19", "1940-01-23", "1940-02-09", "1940-03-03", "1940-03-16", "1940-03-30", "1940-04-09", "1940-04-13", "1940-04-18", "1940-04-28", "1940-05-01", "1940-05-11", "1940-05-20", "1940-06-01", "1940-06-15", "1940-06-20", "1940-07-20", "1940-08-02", "1940-11-06", "1941-02-28", "1941-04-06", "1941-05-13", "1941-06-23", "1942-04-30", "1942-06-28", "1943-01-12", "1943-07-02", "1943-08-28", "1944-10-16", "1944-11-16", "1944-11-23", "1944-12-10", "1945-01-08", "1945-02-07", "1945-02-08", "1945-03-01", "1945-07-19", "1946-07-04", "1950-11-19", "1950-11-21", "1950-12-14", "1951-01-12", "1951-01-27", "1951-02-16", "1951-03-16", "1951-03-29", "1951-05-18", "1951-05-29", "1951-07-06", "1951-11-07", "1951-11-23", "1952-06-22", "1952-08-28", "1952-09-18", "1953-01-28", "1953-03-01", "1953-03-07", "1953-04-08", "1953-06-19", "1953-07-23", "1953-07-31", "1953-09-09", "1953-10-07", "1953-11-03", "1953-12-11", "1954-01-14", "1954-02-04", "1954-02-06", "1954-03-26", "1954-03-29", "1954-05-15", "1954-05-20", "1954-06-11", "1954-06-12", "1954-06-19", "1954-07-11", "1954-07-24", "1954-09-10", "1954-10-10", "1954-11-08", "1954-11-10", "1954-11-12", "1954-11-14", "1954-11-26", "1954-12-28", "1955-01-07", "1955-01-08", "1955-01-23", "1955-02-01", "1955-03-14", "1955-04-05", "1955-05-13", "1955-06-08", "1955-07-16", "1955-08-08", "1955-09-16", "1955-12-19", "1956-03-30", "1956-04-15", "1956-07-25", "1956-08-28", "1956-12-15", "1957-03-20", "1957-03-21", "1957-03-23", "1957-03-25", "1957-03-30", "1957-04-03", "1957-04-09", "1957-05-14", "1957-07-25", "1957-08-05", "1957-08-06", "1957-09-21", "1957-12-21", "1958-01-12", "1958-01-28", "1958-07-23", "1958-08-04", "1958-08-11", "1958-11-24", "1959-02-01", "1959-02-07", "1959-02-08", "1959-02-11", "1959-03-21", "1959-03-22", "1959-03-23", "1959-03-29", "1959-04-11", "1959-04-23", "1959-08-14", "1959-11-01", "1959-11-09", "1959-12-29", "1960-01-02", "1960-01-27", "1960-01-30", "1960-12-19", "1960-12-24", "1962-02-01", "1962-05-18", "1962-05-21", "1962-08-30", "1962-10-03", "1963-01-05", "1963-01-11", "1963-04-14", "1963-04-22", "1963-05-10", "1963-06-02", "1963-09-09", "1964-05-25", "1964-10-29", "1964-12-22", "1964-12-23", "1964-12-28", "1965-01-19", "1965-01-22", "1965-01-29", "1965-02-02", "1965-02-05", "1966-03-19", "1966-03-24", "1966-03-27", "1966-04-05", "1966-04-14", "1966-04-18", "1966-04-30", "1966-05-26", "1966-06-15", "1966-06-19", "1966-06-20", "1966-06-24", "1966-06-27", "1966-06-28", "1966-07-07", "1966-07-11", "1966-07-20", "1966-08-25", "1966-08-30", "1966-09-21", "1966-10-05", "1966-11-21", "1966-12-14", "1966-12-22", "1968-04-19", "1968-04-24", "1968-05-07", "1968-05-10", "1968-06-27", "1968-07-18", "1968-07-23", "1968-10-10", "1968-10-14", "1968-10-18", "1968-10-26", "1969-03-11", "1969-03-24", "1969-04-21", "1970-06-20"], "Carocci Alberto": ["1926-05-12", "1927-03-13", "1928-03-05", "1932-03-09"], "Citati Pietro": ["1957-08-14", "1957-08-26", "1957-09-01", "1957-10-03", "1958-06-24", "1958-07-29", "1958-07-30", "1959-07-23", "1959-08-02", "1959-08-06", "1959-08-16", "1959-08-24", "1959-09-25", "1960-07-23", "1960-07-29", "1960-08-04", "1960-08-12", "1960-09-08", "1960-09-22", "1961-08-22", "1961-08-28", "1961-09-06", "1962-07-19", "1962-08-04", "1962-08-05", "1962-08-18", "1963-08-19", "1963-08-22", "1964-07-07", "1964-07-22", "1965-06-14", "1965-07-08", "1965-07-24", "1966-10-27", "1966-12-14", "1967-06-25", "1967-07-04", "1967-07-10", "1967-07-12", "1967-08-23", "1967-09-04", "1968-08-31", "1968-09-10", "1969-08-27"], "Contini Gianfranco": ["1934-05-18", "1934-05-21", "1934-05-27", "1934-06-07", "1934-07-09", "1934-07-12", "1934-07-20", "1934-07-29", "1934-08-31", "1934-09-19", "1934-12-30", "1935-02-05", "1935-02-06", "1935-03-13", "1935-03-14", "1935-04-11", "1935-04-15", "1935-04-29", "1935-08-28", "1935-09-12", "1935-09-18", "1935-11-17", "1935-12-24", "1935-12-28", "1936-04-30", "1936-05-24", "1936-05-26", "1936-06-27", "1936-07-03", "1936-08-06", "1936-09-16", "1936-10-06", "1936-10-24", "1936-10-27", "1936-10-29", "1936-10-30", "1937-01-12", "1937-05-04", "1938-05-18", "1939-05-18", "1939-05-22", "1939-08-20", "1939-09-20", "1939-09-29", "1939-09-30", "1939-10-11", "1939-10-12", "1939-11-25", "1939-12-31", "1940-02-28", "1940-03-09", "1940-03-27", "1940-04-13", "1940-04-26", "1940-05-04", "1940-07-02", "1940-09-02", "1940-09-08", "1940-11-01", "1940-11-28", "1940-12-08", "1940-12-31", "1941-02-13", "1941-02-18", "1941-02-24", "1941-03-30", "1941-04-28", "1941-05-09", "1941-06-01", "1941-06-25", "1941-07-24", "1941-07-27", "1941-08-06", "1941-08-09", "1941-08-11", "1941-08-14", "1941-08-25", "1941-10-24", "1941-11-22", "1941-12-22", "1942-03-30", "1942-04-24", "1942-09-07", "1942-09-18", "1942-10-16", "1942-12-28", "1943-01-04", "1943-10-28", "1943-11-30", "1945-01-27", "1945-10-06", "1945-10-24", "1945-11-08", "1945-12-29", "1946-01-27", "1946-03-14", "1946-04-14", "1946-04-24", "1946-04-30", "1946-06-22", "1946-11-01", "1946-11-20", "1947-02-04", "1947-03-19", "1947-04-04", "1947-06-27", "1947-07-08", "1947-09-06", "1947-12-18", "1947-12-30", "1948-04-03", "1949-02-14", "1949-04-19", "1949-08-06", "1949-08-11", "1949-09-21", "1950-07-18", "1950-11-10", "1951-02-02", "1951-07-06", "1952-04-05", "1952-04-16", "1952-06-24", "1952-06-25", "1952-07-07", "1953-01-02", "1953-07-22", "1953-09-16", "1953-10-09", "1953-11-28", "1954-02-11", "1955-07-24", "1957-09-25", "1958-01-14", "1958-12-10", "1959-04-17", "1959-04-24", "1962-04-16", "1962-04-19", "1962-05-15", "1962-05-16", "1962-11-07", "1962-12-20", "1963-04-09", "1963-04-30", "1963-05-05", "1964-06-05", "1964-12-03", "1966-03-21", "1967-06-07", "1968-12-30"], "Dal Fabbro Beniamino": ["1939-07-08"], "De Grada Raffaele": ["1940-09-26", "1942-08-25"], "Dell'Arco Mario": ["1957-09-18", "1958-01-01"], "Einaudi Giulio": ["1939-07-03", "1942-02-07", "1942-05-30", "1942-06-05", "1942-06-20", "1942-07-10", "1942-07-23", "1942-08-08", "1942-08-29", "1942-11-26", "1945-01-13", "1953-03-07", "1953-03-14", "1953-05-14", "1953-06-04", "1954-01-14", "1954-02-07", "1954-12-14", "1955-01-07", "1955-01-19", "1955-04-08", "1955-04-28", "1955-05-13", "1955-05-28", "1955-06-04", "1955-06-07", "1955-06-08", "1955-06-16", "1955-12-22", "1957-12-10", "1959-02-14", "1959-03-04", "1959-03-09", "1959-03-14", "1960-03-18", "1961-06-19", "1961-07-11", "1962-03-04", "1962-06-12", "1962-12-21", "1962-12-31", "1963-04-07", "1963-06-11", "1963-06-25", "1963-07-16", "1963-11-19", "1963-12-31", "1964-02-14", "1965-09-15", "1966-01-11", "1966-10-19", "1967-01-14"], "Fiorentini Felice": ["1934-01-26", "1934-01-31"], "Fornasini Emilio": ["1909-08-22", "1916-11-30", "1955-05-25"], "Gadda Ambrosi Clara": ["1905-07-07", "1906-03-26", "1907-08-13", "1912-10-07", "1915-07-24", "1915-07-28", "1915-08-03", "1916-03-17", "1916-05-09", "1916-07-15", "1917-12-01", "1918-09-30", "1920-01-26", "1920-07-29", "1920-08-03", "1920-08-07", "1920-08-17", "1920-08-21", "1920-08-25", "1920-09-10", "1920-09-12", "1920-09-14", "1920-09-27", "1920-10-07", "1920-10-10", "1920-10-12", "1920-10-19", "1920-10-21", "1920-11-27", "1922-10-06", "1922-10-13", "1922-12-06", "1922-12-14", "1922-12-24", "1923-01-02", "1923-01-12", "1923-01-24", "1923-02-14", "1923-02-25", "1923-03-04", "1923-03-18", "1923-03-29", "1923-04-04", "1923-04-07", "1923-04-20", "1923-04-22", "1923-05-10", "1923-05-16", "1923-05-20", "1923-06-10", "1923-06-24", "1923-07-04", "1923-07-24", "1923-08-06", "1923-08-25", "1923-08-26", "1923-09-03", "1923-09-27", "1923-10-15", "1923-11-30", "1923-12-05", "1923-12-14", "1924-01-08", "1924-02-04", "1924-12-31", "1925-08-11", "1926-03-14", "1927-02-07", "1930-03-14", "1931-07-17", "1931-11-07", "1932-12-16", "1933-05-17", "1935-08-02", "1942-12-14", "1970-10-02"], "Gadda Belloni Luisa": ["1910-07-21"], "Gadda Conti Piero": ["1920-11-14", "1929-07-07", "1929-12-11", "1930-06-30", "1930-11-18", "1931-05-31", "1931-06-02", "1931-06-30", "1931-07-06", "1931-08-23", "1931-08-25", "1931-08-31", "1931-09-18", "1931-09-30", "1931-12-31", "1932-04-28", "1932-05-02", "1932-05-12", "1932-08-10", "1933-05-31", "1933-06-21", "1933-07-31", "1933-11-30", "1933-12-07", "1933-12-11", "1934-06-21", "1934-08-25", "1935-05-28", "1936-02-05", "1936-08-18", "1936-11-29", "1936-12-27", "1936-12-28", "1937-01-16", "1937-07-11", "1937-11-30", "1938-01-24", "1938-08-31", "1939-12-31", "1940-05-31", "1940-07-09", "1940-09-02", "1940-11-21", "1940-12-09", "1941-03-04", "1941-07-01", "1942-04-28", "1942-06-22", "1942-07-17", "1943-02-28", "1943-07-26", "1943-11-30", "1944-01-31", "1944-06-30", "1945-06-30", "1946-12-31", "1947-05-30", "1947-06-10", "1947-11-25", "1948-01-14", "1948-01-18", "1948-01-31", "1948-02-21", "1948-03-20", "1948-04-16", "1948-06-27", "1948-10-08", "1949-03-16", "1949-08-31", "1949-11-28", "1949-12-16", "1950-02-16", "1950-12-20", "1951-05-03", "1952-02-27", "1952-04-05", "1953-01-31", "1953-06-20", "1953-09-16", "1953-12-31", "1954-07-10", "1954-08-10", "1954-09-19", "1954-12-31", "1956-03-30", "1956-05-05", "1956-06-18", "1956-12-31", "1957-05-11", "1957-09-26", "1957-12-10", "1958-01-03", "1958-04-04", "1958-10-25", "1959-03-18", "1959-04-18", "1959-06-22", "1959-07-23", "1959-08-11", "1959-09-22", "1959-10-20", "1960-01-12", "1960-02-01", "1960-03-24", "1960-05-08", "1960-06-23", "1960-10-30", "1960-11-08", "1961-05-31", "1961-11-12", "1961-11-19", "1962-03-26", "1962-05-29", "1962-11-24", "1962-12-12", "1964-08-26", "1965-02-22", "1965-03-30", "1965-07-25", "1965-11-25", "1966-03-15", "1966-05-05", "1966-10-14", "1967-07-24", "1967-10-06", "1969-02-22"], "Gadda Enrico": ["1911-07-08", "1915-07-04", "1915-07-16", "1915-08-26", "1915-08-30", "1915-09-29", "1915-10-06", "1915-11-12", "1915-11-24", "1915-12-14", "1915-12-18", "1916-03-18", "1916-04-06", "1916-05-14", "1916-07-21", "1916-07-24", "1916-08-11", "1916-10-20", "1916-10-25", "1916-11-27", "1917-02-19", "1917-07-04", "1917-08-16", "1917-09-25", "1917-10-16", "1918-02-10", "1918-04-22"], "Gadda Fornasini Emilia": ["1915-06-15", "1918-04-30", "1940-09-30"], "Garzanti Livio": ["1953-08-04", "1953-08-05", "1953-10-20", "1953-12-10", "1954-02-18", "1954-11-14", "1955-03-14", "1955-04-23", "1955-07-05", "1956-02-27", "1956-03-08", "1956-03-15", "1956-03-17", "1956-03-27", "1956-04-08", "1956-04-14", "1956-07-06", "1956-09-02", "1956-11-29", "1956-11-30", "1956-12-06", "1956-12-18", "1957-01-28", "1957-02-06", "1957-03-06", "1957-03-15", "1957-03-29", "1957-04-05", "1957-04-07", "1957-04-19", "1957-04-26", "1957-05-14", "1957-06-03", "1957-06-09", "1957-06-14", "1957-07-18", "1957-07-27", "1957-08-01", "1957-08-14", "1957-09-06", "1957-09-20", "1957-09-22", "1957-09-25", "1957-09-30", "1957-10-05", "1957-10-08", "1957-11-30", "1957-12-28", "1958-02-02", "1958-02-11", "1958-07-18", "1958-10-22", "1958-11-16", "1959-03-16", "1959-04-06", "1959-04-27", "1959-06-20", "1959-06-29", "1959-12-29", "1960-01-19", "1960-01-27", "1960-03-31", "1960-06-18", "1960-07-14", "1960-09-14", "1961-01-02", "1962-10-27", "1962-12-12", "1963-07-16", "1963-12-28", "1964-03-25", "1965-05-06", "1966-01-10", "1968-02-20", "1969-02-23"], "Gobbi Ambrogio": ["1913-09-24", "1915-10-05", "1915-11-23", "1916-01-21", "1916-01-29", "1916-02-01", "1916-03-17", "1916-03-21", "1916-03-25", "1916-08-25", "1916-08-26", "1917-04-11", "1917-12-05", "1925-03-28", "1934-04-07", "1934-06-05", "1948-12-05", "1958-11-07", "1958-11-24", "1963-06-15", "1965-03-12", "1965-05-11", "1966-03-09"], "Guarnieri Silvio": ["1931-12-08", "1931-12-11", "1932-03-14", "1932-05-01", "1933-04-08", "1934-11-18", "1935-05-02", "1936-08-02", "1936-08-16", "1939-01-22", "1955-08-10"], "Lehr Adele": ["1909-12-16", "1915-05-13", "1915-06-14", "1915-06-20", "1915-06-23", "1915-06-24", "1915-07-18", "1915-07-22", "1915-07-31", "1915-08-06", "1915-08-19", "1915-08-25", "1915-09-11", "1915-09-15", "1915-10-18", "1915-10-26", "1915-10-28", "1915-10-31", "1915-11-16", "1915-11-19", "1915-11-22", "1915-11-27", "1915-12-07", "1915-12-18", "1915-12-30", "1916-01-01", "1916-02-08", "1916-02-19", "1916-03-19", "1916-04-12", "1916-04-24", "1916-04-30", "1916-05-03", "1916-05-27", "1916-06-10", "1916-06-14", "1916-06-30", "1916-07-05", "1916-07-07", "1916-07-28", "1916-08-09", "1916-08-21", "1916-08-31", "1916-09-07", "1916-09-26", "1916-09-30", "1916-10-26", "1916-11-01", "1916-11-04", "1916-11-09", "1916-11-14", "1916-11-19", "1916-11-27", "1916-12-05", "1916-12-20", "1917-01-07", "1917-02-08", "1917-02-25", "1917-03-18", "1917-03-29", "1917-04-21", "1917-05-09", "1917-05-10", "1917-06-16", "1917-07-03", "1917-08-03", "1917-08-05", "1917-08-09", "1917-08-31", "1917-09-22", "1917-10-03", "1917-10-16", "1917-11-03", "1917-11-18", "1917-11-30", "1917-12-01", "1917-12-16", "1917-12-20", "1918-01-24", "1918-03-12", "1918-05-03", "1918-06-10", "1918-06-24", "1918-06-27", "1918-08-19", "1918-09-14", "1918-11-05", "1918-12-24", "1918-12-27", "1919-01-12", "1919-01-16", "1919-01-21", "1919-02-07", "1919-02-17", "1919-02-28", "1919-03-06", "1919-03-13", "1919-03-25", "1919-03-29", "1919-04-01", "1919-04-09", "1919-05-12", "1919-05-22", "1919-05-31", "1919-06-14", "1919-06-23", "1919-06-27", "1919-10-10", "1919-10-11", "1919-10-21", "1919-11-03", "1919-12-09", "1919-12-16", "1920-01-12", "1920-01-27", "1920-02-02", "1920-05-27", "1920-06-10", "1920-06-23", "1920-07-16", "1920-09-23", "1920-10-18", "1920-10-19", "1920-10-30", "1920-11-14", "1920-11-25", "1920-11-27", "1920-12-07", "1921-01-13", "1921-01-24", "1921-01-26", "1921-01-31", "1921-06-22", "1921-08-23", "1922-03-17", "1922-08-02", "1922-08-12", "1922-09-15", "1922-09-19", "1922-10-18", "1922-12-19", "1922-12-24", "1923-01-17", "1923-10-15", "1923-11-30", "1923-12-05", "1924-01-08", "1929-10-25", "1930-09-24", "1932-08-22", "1932-10-10", "1933-12-11", "1934-03-01", "1934-10-29", "1935-07-15", "1935-08-23", "1935-10-17", "1936-02-15"], "Lehr Carlo": ["1905-09-12", "1919-11-12"], "Linati Carlo": ["1931-07-27", "1932-05-06", "1932-05-20", "1932-07-02", "1932-08-10", "1932-08-27", "1932-10-20", "1936-11-30", "1936-12-24", "1936-12-31", "1939-07-27", "1939-07-29", "1939-09-20", "1940-07-05", "1940-12-29", "1944-02-11", "1947-10-04"], "Messina Francesco": ["1939-05-18"], "Mondadori Alberto": ["1945-12-05", "1968-09-03"], "Natoli Glauco": ["1931-08-28"], "Notari Umberto": ["1923-03-26"], "Parise Goffredo": ["1962-10-29", "1962-11-09", "1962-11-15", "1962-11-20", "1962-11-29", "1962-11-30", "1962-12-12", "1962-12-21", "1963-01-27", "1963-03-11", "1963-03-15", "1963-03-18", "1963-03-30", "1963-05-25", "1963-05-31", "1963-07-18", "1963-08-24", "1963-11-19"], "Pasquali Giorgio": ["1934-06-16"], "Piccioni Leone": ["1950-05-10", "1950-07-21", "1951-07-02", "1951-07-24", "1952-09-28", "1952-10-01", "1952-12-24", "1953-07-07", "1953-09-05", "1953-11-13", "1954-05-12", "1955-12-31", "1956-07-18", "1957-08-01", "1957-08-05", "1957-08-18", "1957-08-30", "1957-08-31", "1959-11-21", "1960-06-21", "1960-08-22", "1960-12-28", "1960-12-29", "1962-01-01", "1963-05-07", "1963-05-12", "1963-07-27", "1966-06-08", "1966-07-19", "1966-07-29", "1966-07-31", "1966-08-06", "1968-11-27", "1969-07-21", "1969-09-30", "1971-10-13"], "Rodocanachi Lucia": ["1927-03-27", "1935-09-21", "1935-11-18", "1935-12-08", "1935-12-30", "1936-02-16", "1936-05-31", "1936-06-09", "1936-07-03", "1936-07-31", "1936-08-06", "1936-08-15", "1936-11-16", "1936-11-28", "1936-11-30", "1936-12-27", "1937-03-16", "1937-06-11", "1937-06-26", "1937-08-04", "1937-09-12", "1937-09-23", "1937-12-24", "1938-06-27", "1938-07-11", "1938-07-15", "1938-07-28", "1938-07-29", "1938-08-05", "1938-08-18", "1938-08-24", "1938-08-27", "1938-08-31", "1938-11-05", "1938-11-18", "1938-12-07", "1938-12-22", "1938-12-29", "1939-01-06", "1939-01-08", "1939-01-10", "1939-01-24", "1939-01-25", "1939-01-27", "1939-01-29", "1939-02-21", "1939-03-31", "1939-04-14", "1939-04-24", "1939-04-26", "1939-05-22", "1939-07-03", "1939-07-29", "1939-08-08", "1939-08-28", "1939-08-31", "1939-09-04", "1939-09-29", "1939-09-30", "1939-10-03", "1939-10-12", "1939-11-18", "1939-12-28", "1939-12-30", "1939-12-31", "1940-01-30", "1940-03-21", "1940-04-02", "1940-05-25", "1940-06-07", "1940-06-28", "1940-07-11", "1940-07-19", "1940-08-25", "1940-08-28", "1940-09-02", "1940-09-15", "1940-12-08", "1940-12-23", "1940-12-29", "1941-02-25", "1941-02-26", "1941-03-28", "1941-04-10", "1941-04-16", "1941-10-31", "1941-11-12", "1941-11-15", "1941-12-22", "1942-03-19", "1942-04-10", "1942-04-29", "1942-06-20", "1942-07-25", "1942-08-16", "1942-11-26", "1942-11-27", "1942-11-30", "1942-12-28", "1943-03-28", "1943-06-22", "1943-07-03", "1945-07-12", "1945-08-15", "1946-01-14", "1946-05-20", "1946-06-30", "1946-08-11", "1947-04-03", "1947-07-15", "1947-08-25", "1947-09-08", "1947-11-03", "1947-12-18", "1947-12-27", "1948-03-31", "1948-06-27", "1948-12-27", "1949-06-30", "1951-02-02", "1951-05-03", "1951-06-25", "1951-07-08", "1955-07-31", "1956-03-11", "1956-03-30", "1956-05-10", "1956-06-09", "1956-07-06", "1956-07-10", "1956-07-25", "1956-08-14", "1956-09-10", "1956-12-18", "1957-05-12", "1957-12-12", "1958-01-10", "1958-01-29", "1958-05-21", "1958-06-10", "1958-07-27", "1958-07-30", "1959-01-02", "1959-06-05", "1959-12-22", "1960-02-26", "1961-03-11", "1963-06-14", "1964-05-29"], "Rossi Franco": ["1928-03-31", "1929-03-17", "1934-12-19", "1935-03-08", "1936-01-02", "1936-01-14", "1941-02-18", "1941-03-22", "1963-01-14"], "Tecchi Bonaventura": ["1919-12-18", "1920-08-28", "1921-10-09", "1926-02-14", "1926-02-26", "1926-03-06", "1926-03-15", "1926-04-14", "1926-04-15", "1926-05-13", "1926-06-03", "1926-10-22", "1926-11-22", "1926-12-20", "1927-02-14", "1927-04-21", "1927-06-28", "1927-07-14", "1927-09-14", "1927-10-03", "1927-12-04", "1927-12-08", "1928-02-02", "1928-02-06", "1928-02-09", "1928-03-20", "1928-03-21", "1928-03-25", "1928-04-13", "1928-06-14", "1928-06-21", "1928-06-25", "1928-06-28", "1928-07-07", "1928-08-18", "1928-08-19", "1928-08-20", "1928-09-12", "1928-09-20", "1928-10-12", "1928-10-21", "1928-10-26", "1928-12-27", "1929-04-20", "1929-04-28", "1929-05-03", "1929-07-06", "1929-07-10", "1929-07-16", "1929-08-04", "1929-09-10", "1929-09-26", "1929-11-05", "1929-12-14", "1929-12-19", "1930-06-11", "1930-06-14", "1930-06-21", "1930-06-29", "1930-07-14", "1931-01-10", "1931-03-19", "1931-03-21", "1931-04-16", "1931-05-07", "1931-06-14", "1931-06-20", "1931-06-27", "1931-06-28", "1931-07-06", "1931-07-26", "1931-08-25", "1931-10-09", "1931-11-13", "1931-11-18", "1931-12-21", "1931-12-26", "1932-01-02", "1932-01-04", "1932-01-11", "1932-01-18", "1932-03-18", "1932-04-23", "1932-05-01", "1932-05-24", "1932-06-06", "1932-07-21", "1932-08-23", "1934-06-05", "1934-06-13", "1934-08-07", "1934-08-24", "1934-09-12", "1935-03-10", "1935-05-01", "1935-06-29", "1936-01-09", "1936-01-12", "1936-01-18", "1936-04-30", "1936-07-05", "1936-12-29", "1938-01-16", "1938-01-18", "1938-01-19", "1938-01-25", "1938-03-10", "1938-03-31", "1938-05-16", "1938-05-27", "1938-05-28", "1939-02-21", "1939-03-03", "1939-03-27", "1939-03-29", "1939-06-27", "1939-07-08", "1939-10-29", "1939-11-19", "1939-12-05", "1940-01-12", "1940-01-19", "1940-01-20", "1940-05-25", "1940-06-21", "1940-12-12", "1940-12-29", "1941-02-22", "1942-05-27", "1943-02-27", "1943-03-16", "1946-01-19", "1948-06-19", "1958-01-27", "1961-11-08", "1963-04-11"], "Traverso Leone": ["1939-09-20", "1939-11-14", "1939-11-19", "1940-02-20", "1940-05-03", "1940-06-21", "1940-06-28", "1941-02-27", "1941-04-04", "1941-05-26", "1941-09-23", "1950-06-30", "1950-11-30", "1951-06-22", "1952-09-29", "1953-05-04", "1953-12-11"], "Ulivi Ferruccio": ["1939-10-03"], "Valeri Manera Mario": ["1971-02-08", "1971-02-10"], "Veronesi Giulia": ["1943-05-01", "1943-05-25"], "Vita Finzi Paolo": ["1937-10-23"], "Vittorini Elio": ["1941-11-23", "1942-06-28", "1942-07-12", "1942-10-28", "1942-10-30", "1942-12-14", "1943-01-25", "1943-05-21"], "Vigevani Alberto": ["1943-03-14", "1943-05-29"], "Angelini Cesare": ["1940-04-29"], "Bacchelli Riccardo": ["1941-05-15"], "Berenson Bernard": ["1952-03-04"], "Bilenchi Romano": ["1940-04-10"], "Caretti Lanfranco": ["1953-02-03"], "Cecchi Emilio": ["1950-09-14"], "Debenedetti Giacomo": ["1957-11-15"], "Filippini Felice": ["1951-10-02"], "Landolfi Tommaso": ["1941-09-27"], "Longhi Roberto": ["1952-08-09", "1957-10-20"], "Luzi Mario": ["1957-12-22"], "Manzini Gianna": ["1932-10-13"], "Martinetti Piero": ["1926-02-24"], "Martini Quinto": ["1953-09-03"], "Montale Eugenio": ["1932-09-08", "1936-04-04"], "Parronchi Alessandro": ["1953-08-24"], "Penna Sandro": ["1932-12-31"], "Petrocchi Giorgio": ["1948-04-05"], "Picchi Mario": ["1957-12-16"], "Punzo Giorgio": ["1962-10-17"], "Rigoni Stern Mario": ["1968-06-04"], "Rosina Tito": ["1957-11-29", "1957-12-03"], "Santi Piero": ["1942-07-21"], "Semenza Carlo": ["1940-12-02"], "Sereni Vittorio": ["1959-02-02", "1959-02-15"], "Siciliano Enzo": ["1969-12-20"], "Valgimigli Manara": ["1939-11-21"], "Vicari Giambattista": ["1970-12-21"]};
+
+
+  const gadda = rawPeople.find(d => d.name === "Gadda Carlo Emilio");
+  const allCorrespondents = rawPeople.filter(d => d !== gadda);
+
+  // fixed measurements, matching gadda-storyline-aligned-tiers-10.html exactly —
+  // except height, which grows with the shown row count so a crowded filter
+  // (like "All" or "Contatti letterari" at the MAX_SHOWN cap) keeps the same
+  // comfortable row spacing that a sparse category already gets for free
+  // within the reference's fixed 420px.
+  const width = 950;
+  const margin = { top: 30, right: 40, bottom: 40, left: 170 };
+  const minHeight = 420;
+  const maxHeight = 780; // beyond this, rows compress gradually instead of growing the page forever
+  const targetRowStep = 85;
+  const svg = d3.select("svg");
+
+  const reach = 3; // years spent easing in/out of the dip
+
+  const tierCount = 4;
+  const quantizeToTier = d3.scaleQuantize()
+    .domain([0, 1])
+    .range(d3.range(tierCount).map(i => (i + 1) / tierCount));
+
+  function render(shownCorrespondents, initialSelected = []) {
+    svg.selectAll("*").remove();
+
+    const rowCount = shownCorrespondents.length + 1; // + Gadda
+    const height = Math.min(maxHeight, Math.max(minHeight, margin.top + margin.bottom + targetRowStep * (rowCount - 1)));
+    svg.attr("viewBox", [0, 0, width, height]);
+
+    // widen each person's range_start/range_end to actually cover every real
+    // letter on record (letterDates) — the aggregate range from mittenti.json
+    // can be narrower than some individual dated letters, which used to leave
+    // those years' collaboration points sitting on the flat part of the line
+    // outside the dip instead of inside it.
+    shownCorrespondents.forEach(d => {
+      const dates = letterDates[d.name];
+      if (!dates || !dates.length) return;
+      const years = dates.map(iso => +iso.slice(0, 4));
+      const minYear = Math.min(...years);
+      const maxYear = Math.max(...years);
+      if (d.range_start == null || minYear < d.range_start) d.range_start = minYear;
+      if (d.range_end == null || maxYear > d.range_end) d.range_end = maxYear;
+    });
+
+    // the x-axis extends both ways to fit everyone's real birth and death,
+    // AND their documented range_start/range_end — some correspondence in
+    // this archive is dated outside a person's own lifespan (letters
+    // catalogued under a family name, estate correspondence, etc.), so the
+    // frame must never be narrower than the years we actually have on record.
+    // A time focus (set via the "Focus on years" control) overrides this
+    // entirely and just zooms the x-axis to that exact window instead —
+    // lines still draw their full real extent, they just get visually
+    // clipped at the SVG edge outside the focused range.
+    const yearMin = timeFocus ? timeFocus.start : Math.min(
+      gadda.birth,
+      ...shownCorrespondents.map(d => d.birth),
+      ...shownCorrespondents.filter(d => d.range_start != null).map(d => d.range_start)
+    );
+    // every line stops at Gadda's own death — none of them extend into a
+    // correspondent's own later life, since that's not part of his story.
+    const yearMax = timeFocus ? timeFocus.end : gadda.death;
+    const x = d3.scaleLinear().domain([yearMin, yearMax]).range([margin.left, width - margin.right]);
+
+    const rescaleWeight = shownCorrespondents.length
+      ? d3.scaleLinear().domain(d3.extent(shownCorrespondents, d => d.weight)).range([0, 1])
+      : () => 1;
+
+    // barycenter = midpoint of the known correspondence range
+    shownCorrespondents.forEach(d => {
+      d.barycenter = (d.range_start + d.range_end) / 2;
+    });
+    const byBarycenter = [...shownCorrespondents].sort((a, b) => a.barycenter - b.barycenter);
+    const mid = Math.ceil(byBarycenter.length / 2);
+    const above = byBarycenter.slice(0, mid);
+    const below = byBarycenter.slice(mid);
+    const people = [...above].reverse().concat([gadda], below);
+
+    const yScale = d3.scalePoint()
+      .domain(people.map(d => d.name))
+      .range([margin.top, height - margin.bottom])
+      .padding(1);
+    const y = name => yScale(name);
+    const gaddaY = y("Gadda Carlo Emilio");
+    // dip depth ceiling, scaled to the actual row spacing — the reference's
+    // fixed maxGap=15 was tuned for its own compact 10-person/420px layout;
+    // since this version's height grows to give rows much more room, a
+    // fixed 15px band would waste that room and leave every correspondent's
+    // dip crammed into the same narrow strip near Gadda's line regardless of
+    // how far apart the rows actually are. Scaling it lets dips actually
+    // spread out to use the available space, capped so a dip can never reach
+    // far enough to cross into a neighboring row.
+    const rowStep = Math.abs(yScale.step()) || 30;
+    const maxGap = Math.min(rowStep * 0.4, rowStep / 2 - 2);
+
+    const correspondentNames = people.filter(d => d.name !== "Gadda Carlo Emilio").map(d => d.name);
+    // a spread of purples — Gadda's epistolary color — instead of a generic
+    // categorical palette. Each correspondent still gets their own distinct
+    // shade (so lines stay individually identifiable), just all drawn from
+    // the same purple family via HCL interpolation for even, distinguishable steps.
+    const purplePalette = d3.quantize(
+      t => d3.interpolateHcl("#dcc6f5", "#3b0a63")(t),
+      Math.max(correspondentNames.length, 2)
+    );
+    const colorMap = new Map();
+    correspondentNames.forEach((name, i) => colorMap.set(name, purplePalette[i % purplePalette.length]));
+    const colorScale = name => colorMap.get(name);
+    const gaddaColor = "var(--ink)";
+    const colorFor = name => (name === "Gadda Carlo Emilio" ? gaddaColor : colorScale(name));
+
+    // the life line's color and thickness both track interaction strength:
+    // each correspondent keeps their own distinct hue (so lines stay
+    // individually identifiable), but a stronger tie darkens/saturates that
+    // hue and draws a thicker line, while a weaker one lightens and thins it.
+    const minStrokeWidth = 2, maxStrokeWidth = 7;
+    const haloExtra = 3;
+    function strengthFor(d) {
+      return d.name === "Gadda Carlo Emilio" ? 1 : rescaleWeight(d.weight ?? 1);
+    }
+    // clamp lightness in HCL space rather than using .darker()/.brighter()
+    // directly — those have no floor/ceiling, so a weak tie's base shade
+    // could get lightened almost to white and vanish against the page
+    // background, leaving only the birth/death dots visible (which use the
+    // unshaded color) and making the line look like two disconnected points.
+    const minL = 25, maxL = 75;
+    function shadeFor(d) {
+      if (d.name === "Gadda Carlo Emilio") return gaddaColor;
+      const hcl = d3.hcl(colorFor(d.name));
+      hcl.l = maxL - strengthFor(d) * (maxL - minL);
+      return hcl.formatHex();
+    }
+    function strokeWidthFor(d) {
+      return minStrokeWidth + (maxStrokeWidth - minStrokeWidth) * strengthFor(d);
+    }
+
+    svg.append("line")
+      .attr("class", "time-baseline")
+      .attr("x1", margin.left).attr("x2", width - margin.right)
+      .attr("y1", height - margin.bottom).attr("y2", height - margin.bottom);
+
+    svg.append("g")
+      .selectAll("text")
+      .data(x.ticks(10))
+      .join("text")
+        .attr("class", "time-label")
+        .attr("x", d => x(d))
+        .attr("y", height - margin.bottom + 16)
+        .attr("text-anchor", "middle")
+        .text(d3.format("d"));
+
+    function dipYFor(d) {
+      const rowY = y(d.name);
+      // offset FROM Gadda's own line — every dip lands within maxGap*w
+      // pixels of gaddaY, so rows genuinely tip toward him and end up at
+      // visibly different depths depending on weight, taking advantage of
+      // the extra vertical room this version has over the fixed-height one.
+      const direction = rowY < gaddaY ? 1 : -1;
+      const w = quantizeToTier(rescaleWeight(d.weight ?? 1));
+      return gaddaY - direction * maxGap * w;
+    }
+
+    people.forEach(d => {
+      d.frameBirth = d.birth;
+      // capped at Gadda's own death — a correspondent who outlived him keeps
+      // their line ending there too, not stretching into their own later life.
+      d.frameDeath = Math.min(d.death, gadda.death);
+      // true only for someone who actually died before Gadda did — their line
+      // already ends at that earlier, distinctive point rather than the
+      // shared boundary everyone else's line now converges on.
+      d.diedBeforeGadda = d.death < gadda.death;
+    });
+
+    // one continuous dip spanning the whole known correspondence range
+    // (range_start..range_end), not discrete per-year dips — date_range only
+    // gives a start/end year, not individual exchange dates.
+    function lifePath(d) {
+      const rowY = y(d.name);
+      if (d.range_start == null || d.range_end == null) {
+        return d3.line()([[x(d.frameBirth), rowY], [x(d.frameDeath), rowY]]);
+      }
+      const dipY = dipYFor(d);
+      // the start is never clipped to birth — if the documented correspondence
+      // begins before it on record, the line extends to actually reach it. The
+      // end never goes past Gadda's own death though.
+      const lineStart = Math.min(d.frameBirth, d.range_start);
+      const lineEnd = d.frameDeath;
+      const points = [
+        [x(lineStart), rowY],
+        [x(Math.max(lineStart, d.range_start - reach)), rowY],
+        [x(d.range_start), dipY],
+        [x(d.range_end), dipY],
+        [x(Math.min(lineEnd, d.range_end + reach)), rowY],
+        [x(lineEnd), rowY],
+      ];
+      return d3.line().curve(d3.curveMonotoneX)(points);
+    }
+
+    const rows = svg.selectAll(".row").data(people).join("g").attr("class", "row");
+
+    rows.append("path")
+      .attr("class", "life-halo")
+      .attr("stroke-width", d => strokeWidthFor(d) + haloExtra)
+      .attr("d", lifePath);
+    rows.append("path")
+      .attr("class", "life")
+      .attr("stroke", shadeFor)
+      .attr("stroke-width", strokeWidthFor)
+      .attr("d", lifePath);
+
+    rows.append("circle")
+      .attr("class", "pt")
+      .attr("fill", d => colorFor(d.name))
+      .attr("cx", d => x(d.frameBirth))
+      .attr("cy", d => y(d.name))
+      .attr("r", 4);
+
+    const lineLabels = rows.append("text")
+      .attr("class", "line-label")
+      .attr("fill", d => colorFor(d.name))
+      // clamped to the visible frame's left edge — when a time focus is
+      // active and this person's real birth falls before it, anchoring the
+      // label to the true (off-screen) birth year would push it past the
+      // canvas edge and make it vanish, even though their line still
+      // correctly draws and clips within the focused window.
+      .attr("x", d => Math.max(x(d.frameBirth), margin.left) + 8)
+      .attr("y", d => y(d.name) - 6)
+      .text(d => d.name);
+
+    // an × marks anyone who died before Gadda — their line ends at that
+    // real, earlier point, not at the shared boundary, so it's worth calling
+    // out. Nobody else gets a right-end marker: their line stops at Gadda's
+    // own death only because the frame does, not because of anything
+    // specific to them, so a marker there would be redundant.
+    svg.selectAll(".cutoff")
+      .data(people.filter(d => d.diedBeforeGadda))
+      .join("text")
+        .attr("class", "cutoff")
+        .attr("fill", d => colorFor(d.name))
+        .attr("x", d => x(d.frameDeath))
+        .attr("y", d => y(d.name))
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "central")
+        .text("×");
+
+    // one marker per year that actually has a letter on record — using the
+    // real letter dates (letterDates), same granularity as the per-letter
+    // file's contact markers (one per year, however many letters landed in
+    // it that year — not merged across different years, and not one per
+    // individual letter either). Each gets the same permanent visual link
+    // to Gadda's line — a slim pill spanning between the person's dip and
+    // gaddaY, a dot at the dip, and a diamond sitting right on Gadda's own
+    // line at that x.
+    const collabPoints = people.flatMap(d => {
+      const dates = letterDates[d.name];
+      if (dates && dates.length) {
+        const years = [...new Set(dates.map(iso => +iso.slice(0, 4)))].sort((a, b) => a - b);
+        return years.map(year => ({ x: x(year), y: dipYFor(d), color: colorFor(d.name), name: d.name, year }));
+      }
+      // fallback for anyone without exact letter dates on record — use the
+      // start/end of their documented correspondence range instead
+      return d.range_start != null && d.range_end != null
+        ? [
+            { x: x(d.range_start), y: dipYFor(d), color: colorFor(d.name), name: d.name, year: d.range_start },
+            { x: x(d.range_end), y: dipYFor(d), color: colorFor(d.name), name: d.name, year: d.range_end },
+          ]
+        : [];
+    });
+    const collabG = svg.selectAll(".collab")
+      .data(collabPoints)
+      .join("g")
+        .attr("class", "collab")
+        .style("cursor", "pointer");
+
+    const collabPillWidth = 8;
+    collabG.append("rect")
+      .attr("class", "collab-envelope")
+      .attr("stroke", d => d.color)
+      .attr("x", d => d.x - collabPillWidth / 2)
+      .attr("y", d => Math.min(d.y, gaddaY) - 4)
+      .attr("width", collabPillWidth)
+      .attr("height", d => Math.abs(gaddaY - d.y) + 8)
+      .attr("rx", collabPillWidth / 2);
+
+    collabG.append("circle")
+      .attr("class", "collab-pt")
+      .attr("fill", d => d.color)
+      .attr("cx", d => d.x)
+      .attr("cy", d => d.y)
+      .attr("r", 3);
+
+    collabG.append("rect")
+      .attr("class", "collab-pt collab-pt-gadda")
+      .attr("stroke", d => d.color)
+      .attr("x", d => d.x - 3)
+      .attr("y", gaddaY - 3)
+      .attr("width", 6)
+      .attr("height", 6)
+      .attr("transform", d => `rotate(45 ${d.x} ${gaddaY})`);
+
+    // a set, not a single name — picking several people from search should
+    // highlight all of them together, not just whichever was picked last.
+    // Clicking a row directly still isolates to just that one person (see
+    // toggleSelection below), same as before.
+    let selected = new Set(initialSelected);
+    let selectedCollab = null;
+
+    function applyHighlight() {
+      const hasSelection = selected.size > 0;
+      // unselected lines fade almost all the way out; the selected ones get
+      // boosted past their own normal opacity/width so they read as clearly
+      // "in front" rather than merely "less dim than the rest."
+      rows.selectAll(".life")
+        .style("opacity", d => (!hasSelection ? null : selected.has(d.name) || d.name === "Gadda Carlo Emilio" ? 1 : 0.05))
+        .style("stroke-width", function (d) {
+          if (!hasSelection || d.name === "Gadda Carlo Emilio") return null;
+          return selected.has(d.name) ? +this.getAttribute("stroke-width") + 2 : null;
+        });
+      rows.selectAll(".life-halo")
+        .style("opacity", d => (!hasSelection || d.name === "Gadda Carlo Emilio" || selected.has(d.name) ? null : 0.05));
+      lineLabels
+        .style("font-weight", d => (selected.has(d.name) ? 800 : 600))
+        .style("font-size", d => (selected.has(d.name) ? "13px" : null))
+        .style("opacity", d => (!hasSelection || d.name === "Gadda Carlo Emilio" || selected.has(d.name) ? null : 0.15));
+      // the points stay hidden until you click that person's own timeline —
+      // once selected, their points appear; clicking one of those then
+      // highlights just that pair with a labeled connector line.
+      svg.selectAll(".collab").each(function (d) {
+        const visible = selectedCollab ? d === selectedCollab : selected.has(d.name);
+        // opacity alone isn't enough — a hidden point still intercepts
+        // hover/click by default, and if another person's point happens to
+        // land at the same pixel and sits later in the DOM, it silently
+        // steals the hover from the one that's actually visible underneath.
+        d3.select(this)
+          .style("opacity", visible ? 1 : 0)
+          .style("pointer-events", visible ? null : "none");
+      });
+
+      svg.select(".compare-link").remove();
+      svg.select(".compare-label").remove();
+      if (selectedCollab) {
+        svg.append("line")
+          .attr("class", "compare-link")
+          .attr("stroke", selectedCollab.color)
+          .attr("x1", selectedCollab.x).attr("x2", selectedCollab.x)
+          .attr("y1", selectedCollab.y).attr("y2", gaddaY);
+        svg.append("text")
+          .attr("class", "compare-label")
+          .attr("x", selectedCollab.x)
+          .attr("y", Math.min(selectedCollab.y, gaddaY) - 8)
+          .attr("text-anchor", "middle")
+          .attr("fill", selectedCollab.color)
+          .text(selectedCollab.name);
+      }
+
+      // cross-graph link: any selected person who also has books in Gadda's
+      // own library (from items.json) gets a way to jump to that graph
+      // focused on them — the two datasets were built independently
+      // (letters vs. library reparto), so this is the only way to see both
+      // sides. Lists one line per such person if more than one is selected.
+      const crossLinkEl = d3.select("#cross-link");
+      const linked = [...selected].map(name => people.find(p => p.name === name)).filter(p => p && p.libraryLink);
+      if (linked.length) {
+        crossLinkEl
+          .attr("hidden", null)
+          .html(linked.map(p =>
+            `${p.name} also has books in Gadda's library — <a href="gadda-reparto-library.html?focus=${encodeURIComponent(p.name)}" target="_blank">view in the Library graph →</a>`
+          ).join("<br>"));
+      } else {
+        crossLinkEl.attr("hidden", true);
+      }
+    }
+    function toggleSelection(name) {
+      selectedCollab = null;
+      if (name === "Gadda Carlo Emilio" || (selected.size === 1 && selected.has(name))) {
+        selected = new Set();
+      } else {
+        selected = new Set([name]);
+      }
+      applyHighlight();
+    }
+    rows.style("cursor", "pointer").on("click", (event, d) => toggleSelection(d.name));
+    collabG.on("click", (event, d) => {
+      event.stopPropagation();
+      if (!selected.has(d.name) && d !== selectedCollab) return;
+      selected = new Set();
+      selectedCollab = selectedCollab === d ? null : d;
+      applyHighlight();
+    });
+
+    // hover declutter: a broad filter can put dozens of lines on screen at
+    // once, which is fine to scan for shape but hard to read any ONE person
+    // out of. Rather than requiring a click (which commits to a selection
+    // and opens the collab points / cross-link panel), hovering any row
+    // previews the same isolation effect instantly, and reverts the moment
+    // the mouse leaves — as long as nothing is already click-selected, so
+    // this never fights an intentional selection.
+    function previewHighlight(name) {
+      const real = selected;
+      selected = new Set([name]);
+      applyHighlight();
+      selected = real; // restore the actual selection for the next call
+    }
+    rows
+      .on("mouseenter", (event, d) => {
+        if (d.name === "Gadda Carlo Emilio" || selected.size > 0) return;
+        previewHighlight(d.name);
+      })
+      .on("mouseleave", () => {
+        if (selected.size > 0) return;
+        applyHighlight();
+      });
+
+    // hover tooltip: the exact letter date(s) on record right around this
+    // point's year, plus how many letters exist for this person in total.
+    const tooltip = d3.select("#tooltip");
+    function formatDate(iso) {
+      const [y, m, dd] = iso.split("-");
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      return `${+dd} ${months[+m - 1]} ${y}`;
+    }
+    function moveTooltip(event) {
+      tooltip.style("left", (event.clientX + 14) + "px").style("top", (event.clientY + 14) + "px");
+    }
+    collabG
+      .on("mouseenter", (event, d) => {
+        const allDates = letterDates[d.name] || [];
+        // this point represents one specific year — show exactly the
+        // letter(s) on record for that year.
+        const inYear = allDates.filter(iso => +iso.slice(0, 4) === d.year);
+        const shown = inYear.slice(0, 8);
+        tooltip.html(
+          `<strong>${d.name} — ${d.year}</strong>` +
+          (shown.length ? shown.map(formatDate).join("<br>") : "no exact date on record") +
+          (shown.length < inYear.length ? `<br>…and ${inYear.length - shown.length} more that year` : "") +
+          (allDates.length ? `<div style="margin-top:0.3rem;opacity:0.75">${allDates.length} letter(s) documented in total</div>` : "")
+        );
+        tooltip.attr("hidden", null);
+        moveTooltip(event);
+      })
+      .on("mousemove", moveTooltip)
+      .on("mouseleave", () => tooltip.attr("hidden", true));
+
+    applyHighlight();
+  }
+
+  const categoriaValues = Array.from(new Set(allCorrespondents.map(d => d.categoria).filter(Boolean))).sort();
+  let activeCategoria = null;
+  const SHOWN_STEP = 10;
+  let shownLimit = SHOWN_STEP;
+  // people added by name through the search box — always shown on top of
+  // whatever the category filter + Show more/less would otherwise display,
+  // regardless of their weight or category.
+  let pinnedNames = new Set();
+  // a specific year window to zoom the timeline into, set via the "Focus on
+  // years" control — null means show the full natural range.
+  let timeFocus = null;
+  // the name picked from the search box — passed into render() so that
+  // person starts highlighted (everyone else dimmed), same as clicking
+  // their row directly, instead of just being added as one more plain line.
+  let searchSelected = new Set();
+
+  const CUSTOM_MODE = "__custom__";
+
+  function applyFilter() {
+    const isCustom = activeCategoria === CUSTOM_MODE;
+    // "custom" is its own mode, not a category — it starts with nobody
+    // picked by weight at all, just Gadda's own line, and stays that way
+    // until you search and pin people into it yourself.
+    const categoryMatching = isCustom
+      ? []
+      : allCorrespondents.filter(d => !activeCategoria || d.categoria === activeCategoria);
+    // when a time focus is active, only people whose documented
+    // correspondence actually overlaps that window are eligible — otherwise
+    // zooming in just shows whoever the strongest ties overall happen to be,
+    // most of them flat lines with nothing going on in the focused years.
+    const matching = timeFocus && !isCustom
+      ? categoryMatching.filter(d =>
+          d.range_start != null && d.range_end != null &&
+          d.range_end >= timeFocus.start && d.range_start <= timeFocus.end
+        )
+      : categoryMatching;
+    const base = isCustom ? [] : matching.slice().sort((a, b) => b.weight - a.weight).slice(0, shownLimit);
+    const baseNames = new Set(base.map(d => d.name));
+    const pinnedExtra = allCorrespondents.filter(d => pinnedNames.has(d.name) && !baseNames.has(d.name));
+    const shown = [...base, ...pinnedExtra];
+    render(shown, searchSelected);
+    d3.select("#categoria-filter").selectAll(".filter-btn")
+      .classed("active", function () { return d3.select(this).attr("data-value") === (activeCategoria ?? "__all__"); });
+
+    const remaining = matching.length - base.length;
+    const canShowLess = shownLimit > SHOWN_STEP;
+    d3.select("#count-panel").html(
+      isCustom
+        ? `<div>Your selection</div><strong>${pinnedExtra.length}</strong>` +
+          `<div style="margin-top:0.5rem;opacity:0.7;max-width:9rem;">search a name above to add them here</div>`
+        : `<div>Shown</div><strong>${shown.length}</strong>` +
+          `<div style="margin-top:0.5rem">${timeFocus ? `Active ${timeFocus.start}–${timeFocus.end}` : "In this filter"}</div><strong>${matching.length}</strong>` +
+          `<div style="margin-top:0.5rem">Total (all)</div><strong>${allCorrespondents.length}</strong>` +
+          (remaining > 0 || canShowLess ? `<div style="margin-top:0.75rem; display:flex; flex-direction:column; gap:0.35rem;">` : "") +
+          (remaining > 0 ? `<button id="show-more-btn" class="filter-btn">+ Show ${Math.min(SHOWN_STEP, remaining)} more</button>` : "") +
+          (canShowLess ? `<button id="show-less-btn" class="filter-btn">− Show ${SHOWN_STEP} less</button>` : "") +
+          (remaining > 0 || canShowLess ? `</div>` : "")
+    );
+    if (!isCustom && remaining > 0) {
+      d3.select("#show-more-btn").on("click", () => { shownLimit += SHOWN_STEP; searchSelected = new Set(); applyFilter(); });
+    }
+    if (!isCustom && canShowLess) {
+      d3.select("#show-less-btn").on("click", () => { shownLimit = Math.max(SHOWN_STEP, shownLimit - SHOWN_STEP); searchSelected = new Set(); applyFilter(); });
+    }
+
+    d3.select("#pinned-chips").selectAll(".pinned-chip")
+      .data([...pinnedNames])
+      .join("div")
+        .attr("class", "pinned-chip")
+        .text(d => d)
+        .on("click", (event, d) => { pinnedNames.delete(d); searchSelected.delete(d); applyFilter(); });
+  }
+
+  const filterBar = d3.select("#categoria-filter");
+  filterBar.append("button")
+    .attr("class", "filter-btn")
+    .attr("data-value", "__all__")
+    .text("All")
+    .on("click", () => { activeCategoria = null; shownLimit = SHOWN_STEP; searchSelected = new Set(); applyFilter(); });
+  categoriaValues.forEach(cat => {
+    filterBar.append("button")
+      .attr("class", "filter-btn")
+      .attr("data-value", cat)
+      .text(cat)
+      .on("click", () => { activeCategoria = cat; shownLimit = SHOWN_STEP; searchSelected = new Set(); applyFilter(); });
+  });
+  filterBar.append("button")
+    .attr("class", "filter-btn")
+    .attr("data-value", CUSTOM_MODE)
+    .text("★ My selection")
+    .on("click", () => { activeCategoria = CUSTOM_MODE; searchSelected = new Set(); applyFilter(); });
+
+  // --- search box: type a name, click a suggestion to pin them into view ---
+  const searchInput = d3.select("#search-input");
+  const searchSuggestions = d3.select("#search-suggestions");
+  searchInput.on("input", function () {
+    const q = this.value.trim().toLowerCase();
+    searchSuggestions.html("");
+    if (!q) return;
+    const matches = allCorrespondents
+      .filter(d => d.name.toLowerCase().includes(q) && !pinnedNames.has(d.name))
+      .slice(0, 8);
+    searchSuggestions.selectAll(".search-suggestion")
+      .data(matches)
+      .join("div")
+        .attr("class", "search-suggestion")
+        .text(d => d.name)
+        .on("click", (event, d) => {
+          pinnedNames.add(d.name);
+          searchSelected.add(d.name);
+          searchInput.property("value", "");
+          searchSuggestions.html("");
+          applyFilter();
+        });
+  });
+  // clicking away closes the suggestion list
+  d3.select(document.body).on("click", (event) => {
+    if (!event.target.closest(".search-box")) searchSuggestions.html("");
+  });
+
+  // --- time focus: zoom the x-axis to a specific year window ---
+  d3.select("#time-focus-apply").on("click", () => {
+    const start = +d3.select("#time-focus-start").property("value");
+    const end = +d3.select("#time-focus-end").property("value");
+    if (!start || !end || start >= end) return;
+    timeFocus = { start, end };
+    shownLimit = SHOWN_STEP;
+    searchSelected = new Set();
+    applyFilter();
+  });
+  d3.select("#time-focus-clear").on("click", () => {
+    timeFocus = null;
+    shownLimit = SHOWN_STEP;
+    searchSelected = new Set();
+    d3.select("#time-focus-start").property("value", "");
+    d3.select("#time-focus-end").property("value", "");
+    applyFilter();
+  });
+
+  // arriving here via a cross-graph link (?focus=Name) pins and highlights
+  // that person immediately, same as picking them from the search box.
+  const focusParam = new URLSearchParams(location.search).get("focus");
+  if (focusParam && allCorrespondents.some(d => d.name === focusParam)) {
+    pinnedNames.add(focusParam);
+    searchSelected = new Set([focusParam]);
+  }
+
+  applyFilter();
+</script>
+</body>
+</html>
