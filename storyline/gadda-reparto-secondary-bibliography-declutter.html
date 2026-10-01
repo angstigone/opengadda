@@ -239,7 +239,7 @@
     // a spread of purples — Gadda's epistolary color — instead of a generic
     // categorical palette.
     const purplePalette = d3.quantize(
-      t => d3.interpolateHcl("#dcc6f5", "#3b0a63")(t),
+      t => d3.interpolateHcl("#b1c6ff", "#003793")(t),
       Math.max(correspondentNames.length, 2)
     );
     const colorMap = new Map();
@@ -259,6 +259,9 @@
       if (d.name === "Gadda Carlo Emilio") return gaddaColor;
       const hcl = d3.hcl(colorFor(d.name));
       hcl.l = maxL - strengthFor(d) * (maxL - minL);
+      // keep a minimum colourfulness: the pale end of the palette would
+      // otherwise darken to near-grey and stop reading as this reparto's hue
+      hcl.c = Math.max(hcl.c, 50);
       return hcl.formatHex();
     }
     function strokeWidthFor(d) {

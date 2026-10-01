@@ -292,7 +292,7 @@
     // shade (so lines stay individually identifiable), just all drawn from
     // the same purple family via HCL interpolation for even, distinguishable steps.
     const purplePalette = d3.quantize(
-      t => d3.interpolateHcl("#dcc6f5", "#3b0a63")(t),
+      t => d3.interpolateHcl("#fcb590", "#812600")(t),
       Math.max(correspondentNames.length, 2)
     );
     const colorMap = new Map();
@@ -321,6 +321,9 @@
       if (d.name === "Gadda Carlo Emilio") return gaddaColor;
       const hcl = d3.hcl(colorFor(d.name));
       hcl.l = maxL - strengthFor(d) * (maxL - minL);
+      // keep a minimum colourfulness: the pale end of the palette would
+      // otherwise darken to near-grey and stop reading as this reparto's hue
+      hcl.c = Math.max(hcl.c, 50);
       return hcl.formatHex();
     }
     function strokeWidthFor(d) {
@@ -567,7 +570,7 @@
         crossLinkEl
           .attr("hidden", null)
           .html(linked.map(p =>
-            `${p.name} also has letter correspondence with Gadda — <a href="gadda-reparto-letter-range.html?focus=${encodeURIComponent(p.name)}" target="_blank">view in the Letters graph →</a>`
+            `${p.name} also has letter correspondence with Gadda — <a href="gadda-reparto-letter-range-declutter.html?focus=${encodeURIComponent(p.name)}" target="_blank">view in the Letters graph →</a>`
           ).join("<br>"));
       } else {
         crossLinkEl.attr("hidden", true);

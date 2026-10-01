@@ -510,7 +510,7 @@
         crossLinkEl
           .attr("hidden", null)
           .html(linked.map(p =>
-            `${p.name} also has books in Gadda's library — <a href="gadda-reparto-library.html?focus=${encodeURIComponent(p.name)}" target="_blank">view in the Library graph →</a>`
+            `${p.name} also has books in Gadda's library — <a href="gadda-reparto-library-declutter.html?focus=${encodeURIComponent(p.name)}" target="_blank">view in the Library graph →</a>`
           ).join("<br>"));
       } else {
         crossLinkEl.attr("hidden", true);
