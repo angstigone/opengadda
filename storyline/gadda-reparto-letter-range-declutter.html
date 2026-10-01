@@ -592,10 +592,8 @@
 
   const categoriaValues = Array.from(new Set(allCorrespondents.map(d => d.categoria).filter(Boolean))).sort();
   let activeCategoria = null;
-  const SHOWN_STEP = 10;
-  let shownLimit = SHOWN_STEP;
   // people added by name through the search box — always shown on top of
-  // whatever the category filter + Show more/less would otherwise display,
+  // whatever the category filter would otherwise display,
   // regardless of their weight or category.
   let pinnedNames = new Set();
   // a specific year window to zoom the timeline into, set via the "Focus on
@@ -626,7 +624,7 @@
           d.range_end >= timeFocus.start && d.range_start <= timeFocus.end
         )
       : categoryMatching;
-    const base = isCustom ? [] : matching.slice().sort((a, b) => b.weight - a.weight).slice(0, shownLimit);
+    const base = isCustom ? [] : matching.slice().sort((a, b) => b.weight - a.weight);
     const baseNames = new Set(base.map(d => d.name));
     const pinnedExtra = allCorrespondents.filter(d => pinnedNames.has(d.name) && !baseNames.has(d.name));
     const shown = [...base, ...pinnedExtra];
@@ -634,26 +632,14 @@
     d3.select("#categoria-filter").selectAll(".filter-btn")
       .classed("active", function () { return d3.select(this).attr("data-value") === (activeCategoria ?? "__all__"); });
 
-    const remaining = matching.length - base.length;
-    const canShowLess = shownLimit > SHOWN_STEP;
     d3.select("#count-panel").html(
       isCustom
         ? `<div>Your selection</div><strong>${pinnedExtra.length}</strong>` +
           `<div style="margin-top:0.5rem;opacity:0.7;max-width:9rem;">search a name above to add them here</div>`
         : `<div>Shown</div><strong>${shown.length}</strong>` +
           `<div style="margin-top:0.5rem">${timeFocus ? `Active ${timeFocus.start}–${timeFocus.end}` : "In this filter"}</div><strong>${matching.length}</strong>` +
-          `<div style="margin-top:0.5rem">Total (all)</div><strong>${allCorrespondents.length}</strong>` +
-          (remaining > 0 || canShowLess ? `<div style="margin-top:0.75rem; display:flex; flex-direction:column; gap:0.35rem;">` : "") +
-          (remaining > 0 ? `<button id="show-more-btn" class="filter-btn">+ Show ${Math.min(SHOWN_STEP, remaining)} more</button>` : "") +
-          (canShowLess ? `<button id="show-less-btn" class="filter-btn">− Show ${SHOWN_STEP} less</button>` : "") +
-          (remaining > 0 || canShowLess ? `</div>` : "")
+          `<div style="margin-top:0.5rem">Total (all)</div><strong>${allCorrespondents.length}</strong>`
     );
-    if (!isCustom && remaining > 0) {
-      d3.select("#show-more-btn").on("click", () => { shownLimit += SHOWN_STEP; searchSelected = new Set(); applyFilter(); });
-    }
-    if (!isCustom && canShowLess) {
-      d3.select("#show-less-btn").on("click", () => { shownLimit = Math.max(SHOWN_STEP, shownLimit - SHOWN_STEP); searchSelected = new Set(); applyFilter(); });
-    }
 
     d3.select("#pinned-chips").selectAll(".pinned-chip")
       .data([...pinnedNames])
@@ -668,13 +654,13 @@
     .attr("class", "filter-btn")
     .attr("data-value", "__all__")
     .text("All")
-    .on("click", () => { activeCategoria = null; shownLimit = SHOWN_STEP; searchSelected = new Set(); applyFilter(); });
+    .on("click", () => { activeCategoria = null; searchSelected = new Set(); applyFilter(); });
   categoriaValues.forEach(cat => {
     filterBar.append("button")
       .attr("class", "filter-btn")
       .attr("data-value", cat)
       .text(cat)
-      .on("click", () => { activeCategoria = cat; shownLimit = SHOWN_STEP; searchSelected = new Set(); applyFilter(); });
+      .on("click", () => { activeCategoria = cat; searchSelected = new Set(); applyFilter(); });
   });
   filterBar.append("button")
     .attr("class", "filter-btn")
@@ -716,13 +702,11 @@
     const end = +d3.select("#time-focus-end").property("value");
     if (!start || !end || start >= end) return;
     timeFocus = { start, end };
-    shownLimit = SHOWN_STEP;
     searchSelected = new Set();
     applyFilter();
   });
   d3.select("#time-focus-clear").on("click", () => {
     timeFocus = null;
-    shownLimit = SHOWN_STEP;
     searchSelected = new Set();
     d3.select("#time-focus-start").property("value", "");
     d3.select("#time-focus-end").property("value", "");
