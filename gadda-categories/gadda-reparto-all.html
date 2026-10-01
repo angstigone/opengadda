@@ -1,0 +1,738 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>reparto: all (88)</title>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #222222;
+    --grid: #dddddd;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1e;
+      --ink: #e8e8e8;
+      --grid: #3a3a3a;
+    }
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: system-ui, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2.5rem 1rem;
+  }
+
+  h1 { font-size: 1.1rem; font-weight: 600; margin: 0 0 0.3rem; }
+  p.sub { font-size: 0.8rem; opacity: 0.6; margin: 0 0 1.5rem; max-width: 950px; text-align: center; }
+
+  .graph-wrap { display: flex; align-items: flex-start; gap: 1rem; max-width: 1050px; width: 100%; }
+  svg { width: 100%; max-width: 950px; height: auto; flex: 1 1 auto; min-width: 0; }
+  .count-panel {
+    flex: 0 0 auto; font-size: 0.75rem; line-height: 1.6; opacity: 0.75;
+    border-left: 1px solid var(--grid); padding-left: 0.75rem; white-space: nowrap;
+  }
+  .count-panel strong { font-size: 1.1rem; opacity: 1; }
+
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center; max-width: 950px; margin: 0 0 1.25rem; }
+  .filter-btn {
+    font: inherit; font-size: 0.75rem; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--grid); border-radius: 999px; padding: 0.3rem 0.8rem;
+    background: transparent; color: var(--ink); opacity: 0.6;
+  }
+  .filter-btn.active { opacity: 1; border-color: currentColor; }
+
+  .life-halo { stroke: var(--bg); stroke-linecap: round; fill: none; pointer-events: stroke; }
+  .life { stroke-linecap: round; fill: none; opacity: 0.55; pointer-events: stroke; }
+  .line-label { font-size: 11px; font-weight: 600; }
+  .time-baseline { stroke: var(--grid); stroke-width: 1; }
+  .time-label { font-size: 10px; fill: var(--ink); opacity: 0.6; font-family: system-ui, sans-serif; }
+  .contact-pt-gadda { fill: var(--bg); stroke-width: 2; }
+  .contact-envelope { fill: none; stroke-width: 1; opacity: 0.5; }
+  .compare-link { stroke-width: 2; }
+  .compare-label { font-size: 12px; font-weight: 700; }
+  .cutoff { font-size: 16px; font-weight: 700; }
+
+  .controls-bar {
+    display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start;
+    justify-content: center; max-width: 950px; margin: 0 0 1rem;
+  }
+  .search-box { position: relative; width: 220px; }
+  .search-box input {
+    font: inherit; font-size: 0.8rem; width: 100%; box-sizing: border-box;
+    padding: 0.35rem 0.6rem; border: 1px solid var(--grid); border-radius: 6px;
+    background: var(--bg); color: var(--ink);
+  }
+  .search-suggestions {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 10;
+    background: var(--bg); border: 1px solid var(--grid); border-top: none;
+    border-radius: 0 0 6px 6px; max-height: 180px; overflow-y: auto;
+  }
+  .search-suggestion {
+    font-size: 0.8rem; padding: 0.35rem 0.6rem; cursor: pointer;
+  }
+  .search-suggestion:hover { background: var(--grid); }
+  .pinned-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
+  .pinned-chip {
+    font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 999px;
+    background: var(--grid); cursor: pointer; white-space: nowrap;
+  }
+  .pinned-chip::after { content: " ×"; opacity: 0.6; }
+
+  .time-focus { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; }
+  .time-focus input {
+    font: inherit; font-size: 0.8rem; width: 4.5rem; box-sizing: border-box;
+    padding: 0.35rem 0.5rem; border: 1px solid var(--grid); border-radius: 6px;
+    background: var(--bg); color: var(--ink);
+  }
+
+  .tooltip {
+    position: fixed; z-index: 100; pointer-events: none;
+    background: var(--ink); color: var(--bg);
+    font-size: 0.75rem; line-height: 1.5; padding: 0.5rem 0.65rem;
+    border-radius: 6px; max-width: 280px; box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+  }
+  .tooltip strong { display: block; margin-bottom: 0.15rem; }
+</style>
+</head>
+<body>
+
+<h1>Carlo Emilio Gadda — reparto: all (88)</h1>
+<p class="sub">every person from the letters, library, secondary-bibliography and archive graphs, merged into one line per person — 19 of the 88 appear in more than one reparto, and their dip years are the union of all of them. All matching people are always shown (no paging). Filter by reparto, then by that reparto's own typology (relationship category for letters, book genre for library) once it's selected.</p>
+<div id="reparto-filter" class="filter-bar"></div>
+<div id="categoria-filter" class="filter-bar" hidden></div>
+<div id="genre-filter" class="filter-bar" hidden></div>
+<div class="controls-bar">
+  <div>
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Add a person by name…" autocomplete="off">
+      <div id="search-suggestions" class="search-suggestions"></div>
+    </div>
+    <div id="pinned-chips" class="pinned-chips"></div>
+  </div>
+  <div class="time-focus">
+    <span>Focus on years</span>
+    <input type="number" id="time-focus-start" placeholder="from">
+    <span>–</span>
+    <input type="number" id="time-focus-end" placeholder="to">
+    <button id="time-focus-apply" class="filter-btn">Apply</button>
+    <button id="time-focus-clear" class="filter-btn">Clear</button>
+  </div>
+</div>
+<div class="graph-wrap">
+  <svg viewBox="0 0 950 420"></svg>
+  <div id="count-panel" class="count-panel"></div>
+</div>
+<div id="tooltip" class="tooltip" hidden></div>
+
+<script>
+  // one entry per person, merged across all four reparto graphs — interactions
+  // is the UNION of every year that person has on record in any of them.
+  // "sources" lists which reparto(s) they actually appear in, used by the
+  // reparto filter bar below.
+  const rawPeople = [{"name": "Ambrosi Paolo", "birth": 1875, "death": 1950, "interactions": [1930], "sources": ["letters"], "weight": 0.35, "categoria": "Familiari"}, {"name": "Amicucci Ermanno", "birth": 1890, "death": 1955, "interactions": [1923, 1934, 1939], "sources": ["letters", "library"], "weight": 0.542, "categoria": "Contatti letterari", "genre": "History"}, {"name": "Angelini Cesare", "birth": 1886, "death": 1976, "interactions": [1942], "sources": ["library"], "weight": 0.35, "genre": "Italian literature"}, {"name": "Ardigò Fausto", "birth": 1911, "death": 1944, "interactions": [1936], "sources": ["letters"], "weight": 0.35, "categoria": "Contatti letterari"}, {"name": "Bacchelli Riccardo", "birth": 1891, "death": 1985, "interactions": [1927, 1928, 1930, 1931, 1932, 1935, 1938, 1940, 1941, 1942, 1954, 1955, 1957, 1960], "sources": ["library"], "weight": 0.812, "genre": "Italian literature"}, {"name": "Ballo Ferdinando", "birth": 1906, "death": 1959, "interactions": [1943, 1944, 1945, 1946], "sources": ["letters"], "weight": 0.593, "categoria": "Editori, riviste e quotidiani"}, {"name": "Bassani Giorgio", "birth": 1916, "death": 2000, "interactions": [1943, 1951, 1957, 1958], "sources": ["letters", "library"], "weight": 0.593, "categoria": "Contatti letterari", "genre": "Italian literature"}, {"name": "Beltrami Veneziani Giuliana", "birth": 1944, "death": 1996, "interactions": [1948], "sources": ["letters"], "weight": 0.35, "categoria": "Contatti letterari"}, {"name": "Berenson Bernard", "birth": 1865, "death": 1959, "interactions": [1948, 1950, 1951], "sources": ["library"], "weight": 0.542, "genre": "Art history"}, {"name": "Betocchi Carlo", "birth": 1899, "death": 1986, "interactions": [1955, 1969, 1972], "sources": ["letters", "library"], "weight": 0.542, "categoria": "Contatti letterari", "genre": "Italian literature"}, {"name": "Betti Ugo", "birth": 1892, "death": 1953, "interactions": [1919, 1920, 1921, 1922, 1923, 1924, 1925, 1927, 1928, 1929, 1930, 1931, 1932, 1933], "sources": ["letters", "library"], "weight": 0.812, "categoria": "Compagni di guerra e di prigionia", "genre": "Italian literature"}, {"name": "Bigongiari Piero", "birth": 1914, "death": 1997, "interactions": [1921, 1946, 1948, 1949, 1950, 1951, 1952, 1953, 1958, 1959, 1963], "sources": ["letters", "library"], "weight": 0.77, "categoria": "Contatti letterari", "genre": "Varia"}, {"name": "Bilenchi Romano", "birth": 1909, "death": 1989, "interactions": [1938, 1940, 1941, 1942, 1943, 1958], "sources": ["library"], "weight": 0.664, "genre": "Italian literature"}, {"name": "Binni Walter", "birth": 1913, "death": 1997, "interactions": [1943, 1946, 1951], "sources": ["secondaryBib"], "weight": 0.542}, {"name": "Bo Carlo", "birth": 1911, "death": 2001, "interactions": [1934, 1939, 1941, 1946, 1952, 1953, 1955, 1957], "sources": ["secondaryBib"], "weight": 0.714}, {"name": "Boggio Marzet Albino", "birth": 1878, "death": 1969, "interactions": [1919], "sources": ["letters"], "weight": 0.35, "categoria": "Compagni di guerra e di prigionia"}, {"name": "Bollati Giulio", "birth": 1924, "death": 1996, "interactions": [1965], "sources": ["letters"], "weight": 0.35, "categoria": "Contatti letterari"}, {"name": "Bompiani Valentino", "birth": 1898, "death": 1992, "interactions": [1942, 1943], "sources": ["letters"], "weight": 0.471, "categoria": "Editori, riviste e quotidiani"}, {"name": "Bonsanti Alessandro", "birth": 1904, "death": 1984, "interactions": [1929, 1930, 1931, 1932, 1933, 1934, 1935, 1936, 1937, 1938, 1939, 1940, 1941, 1942, 1943, 1944, 1945, 1946, 1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959, 1960, 1962, 1963, 1964, 1965, 1966, 1968, 1969, 1970], "sources": ["letters", "library"], "weight": 0.982, "categoria": "Contatti letterari", "genre": "Italian literature"}, {"name": "Calvino Italo", "birth": 1923, "death": 1985, "interactions": [1958, 1960], "sources": ["secondaryBib"], "weight": 0.471}, {"name": "Caretti Lanfranco", "birth": 1915, "death": 1995, "interactions": [1954, 1960, 1961, 1969], "sources": ["library"], "weight": 0.593, "genre": "Italian literature"}, {"name": "Carocci Alberto", "birth": 1904, "death": 1972, "interactions": [1926, 1927, 1928, 1932], "sources": ["letters"], "weight": 0.593, "categoria": "Contatti letterari"}, {"name": "Cecchi Emilio", "birth": 1884, "death": 1966, "interactions": [1927, 1932, 1942, 1943, 1945, 1946, 1954, 1957], "sources": ["library"], "weight": 0.714, "genre": "Italian literature"}, {"name": "Citati Pietro", "birth": 1930, "death": 2022, "interactions": [1957, 1958, 1959, 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969], "sources": ["archive", "letters"], "weight": 0.799, "categoria": "Contatti letterari"}, {"name": "Contini Gianfranco", "birth": 1912, "death": 1990, "interactions": [1932, 1933, 1934, 1935, 1936, 1937, 1938, 1939, 1940, 1941, 1942, 1943, 1945, 1946, 1947, 1948, 1949, 1950, 1951, 1952, 1953, 1954, 1955, 1957, 1958, 1959, 1962, 1963, 1964, 1966, 1967, 1968, 1970], "sources": ["letters", "library"], "weight": 0.962, "categoria": "Amici", "genre": "Italian literature"}, {"name": "Dal Fabbro Beniamino", "birth": 1910, "death": 1989, "interactions": [1939], "sources": ["letters"], "weight": 0.35, "categoria": "Contatti letterari"}, {"name": "De Grada Raffaele", "birth": 1916, "death": 2010, "interactions": [1940, 1942], "sources": ["letters"], "weight": 0.471, "categoria": "Contatti letterari"}, {"name": "De Robertis Giuseppe", "birth": 1888, "death": 1963, "interactions": [1931, 1934, 1940, 1952, 1953, 1955, 1957, 1958, 1962], "sources": ["secondaryBib"], "weight": 0.735}, {"name": "Debenedetti Giacomo", "birth": 1901, "death": 1967, "interactions": [1929, 1952, 1955], "sources": ["library"], "weight": 0.542, "genre": "Italian literature"}, {"name": "Dell'Arco Mario", "birth": 1905, "death": 1996, "interactions": [1957, 1958], "sources": ["letters"], "weight": 0.471, "categoria": "Contatti letterari"}, {"name": "Einaudi Giulio", "birth": 1912, "death": 1999, "interactions": [1939, 1942, 1945, 1953, 1954, 1955, 1957, 1959, 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967], "sources": ["letters"], "weight": 0.835, "categoria": "Contatti letterari"}, {"name": "Falqui Enrico", "birth": 1901, "death": 1974, "interactions": [1939, 1940, 1945, 1950, 1954, 1957, 1961], "sources": ["secondaryBib"], "weight": 0.691}, {"name": "Filippini Felice", "birth": 1917, "death": 1988, "interactions": [1952, 1955], "sources": ["library"], "weight": 0.471, "genre": "Italian literature"}, {"name": "Fiorentini Felice", "birth": 1894, "death": 1945, "interactions": [1934], "sources": ["letters"], "weight": 0.35, "categoria": "Ingegneria e divulgazione tecnica"}, {"name": "Fornasini Emilio", "birth": 1893, "death": 1971, "interactions": [1909, 1916, 1955], "sources": ["letters"], "weight": 0.542, "categoria": "Familiari"}, {"name": "Fruttero Carlo", "birth": 1926, "death": 2012, "interactions": [1955], "sources": ["letters"], "weight": 0.35}, {"name": "Gadda Ambrosi Clara", "birth": 1895, "death": 1976, "interactions": [1905, 1906, 1907, 1912, 1915, 1916, 1917, 1918, 1920, 1922, 1923, 1924, 1925, 1926, 1927, 1930, 1931, 1932, 1933, 1935, 1942, 1970], "sources": ["letters"], "weight": 0.891, "categoria": "Familiari"}, {"name": "Gadda Belloni Luisa", "birth": 1894, "death": 1971, "interactions": [1910], "sources": ["letters"], "weight": 0.35, "categoria": "Familiari"}, {"name": "Gadda Conti Piero", "birth": 1902, "death": 1999, "interactions": [1920, 1929, 1930, 1931, 1932, 1933, 1934, 1935, 1936, 1937, 1938, 1939, 1940, 1941, 1942, 1943, 1944, 1945, 1946, 1947, 1948, 1949, 1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959, 1960, 1961, 1962, 1964, 1965, 1966, 1967, 1969, 1970], "sources": ["letters", "library"], "weight": 1.0, "categoria": "Familiari", "genre": "Italian literature"}, {"name": "Gadda Enrico", "birth": 1896, "death": 1918, "interactions": [1911, 1915, 1916, 1917, 1918], "sources": ["letters"], "weight": 0.632, "categoria": "Familiari"}, {"name": "Gadda Fornasini Emilia", "birth": 1867, "death": 1952, "interactions": [1915, 1918, 1940], "sources": ["letters"], "weight": 0.542, "categoria": "Familiari"}, {"name": "Garzanti Livio", "birth": 1921, "death": 2015, "interactions": [1953, 1954, 1955, 1956, 1957, 1958, 1959, 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1968, 1969], "sources": ["letters"], "weight": 0.835, "categoria": "Editori, riviste e quotidiani"}, {"name": "Gobbi Ambrogio", "birth": 1895, "death": 1968, "interactions": [1913, 1915, 1916, 1917, 1925, 1934, 1948, 1958, 1963, 1965, 1966], "sources": ["letters"], "weight": 0.77, "categoria": "Amici"}, {"name": "Gorni Guglielmo", "birth": 1945, "death": 2010, "interactions": [1972, 1973], "sources": ["secondaryBib"], "weight": 0.471}, {"name": "Guarnieri Silvio", "birth": 1910, "death": 1992, "interactions": [1931, 1932, 1933, 1934, 1935, 1936, 1937, 1939, 1955, 1968], "sources": ["archive", "letters", "library"], "weight": 0.753, "categoria": "Contatti letterari", "genre": "Italian literature"}, {"name": "Landolfi Tommaso", "birth": 1908, "death": 1979, "interactions": [1939, 1946], "sources": ["library"], "weight": 0.471, "genre": "Italian literature"}, {"name": "Lehr Adele", "birth": 1861, "death": 1936, "interactions": [1887, 1890, 1909, 1915, 1916, 1917, 1918, 1919, 1920, 1921, 1922, 1923, 1924, 1929, 1930, 1932, 1933, 1934, 1935, 1936], "sources": ["letters", "library"], "weight": 0.874, "categoria": "Familiari", "genre": "Italian literature"}, {"name": "Lehr Carlo", "birth": 1865, "death": 1918, "interactions": [1905, 1919], "sources": ["letters"], "weight": 0.471, "categoria": "Familiari"}, {"name": "Linati Carlo", "birth": 1878, "death": 1949, "interactions": [1929, 1931, 1932, 1936, 1939, 1940, 1944, 1947], "sources": ["letters", "library"], "weight": 0.714, "categoria": "Contatti letterari", "genre": "Italian literature"}, {"name": "Longhi Roberto", "birth": 1890, "death": 1970, "interactions": [1934, 1946], "sources": ["library"], "weight": 0.471, "genre": "Art history"}, {"name": "Luzi Mario", "birth": 1914, "death": 2005, "interactions": [1940, 1941, 1942, 1947, 1952, 1960], "sources": ["library"], "weight": 0.664, "genre": "Italian literature"}, {"name": "Manzini Gianna", "birth": 1896, "death": 1974, "interactions": [1932, 1936, 1940, 1941, 1943, 1947, 1950, 1965], "sources": ["library"], "weight": 0.714, "genre": "Italian literature"}, {"name": "Martinetti Piero", "birth": 1872, "death": 1943, "interactions": [1920, 1925, 1926, 1928, 1929, 1934, 1939, 1942], "sources": ["library"], "weight": 0.714, "genre": "Philosophy"}, {"name": "Martini Quinto", "birth": 1908, "death": 1990, "interactions": [1957, 1967], "sources": ["library"], "weight": 0.471, "genre": "Italian literature"}, {"name": "Mattioli Raffaele", "birth": 1895, "death": 1973, "interactions": [1957, 1958, 1959], "sources": ["letters"], "weight": 0.542}, {"name": "Messina Francesco", "birth": 1900, "death": 1995, "interactions": [1939, 1942], "sources": ["letters", "library"], "weight": 0.471, "categoria": "Contatti letterari", "genre": "Italian literature"}, {"name": "Mondadori Alberto", "birth": 1914, "death": 1976, "interactions": [1945, 1968], "sources": ["letters"], "weight": 0.471, "categoria": "Editori, riviste e quotidiani"}, {"name": "Montale Eugenio", "birth": 1896, "death": 1981, "interactions": [1928, 1931, 1939, 1942, 1945, 1946, 1956, 1960, 1966], "sources": ["library"], "weight": 0.735, "genre": "Italian literature"}, {"name": "Natoli Glauco", "birth": 1908, "death": 1965, "interactions": [1931], "sources": ["letters"], "weight": 0.35, "categoria": "Contatti letterari"}, {"name": "Notari Umberto", "birth": 1878, "death": 1950, "interactions": [1923], "sources": ["letters"], "weight": 0.35, "categoria": "Contatti letterari"}, {"name": "Parise Goffredo", "birth": 1929, "death": 1986, "interactions": [1953, 1962, 1963, 1965, 1967, 1972], "sources": ["letters", "library"], "weight": 0.664, "categoria": "Contatti letterari", "genre": "Italian literature"}, {"name": "Parronchi Alessandro", "birth": 1914, "death": 2007, "interactions": [1941, 1943, 1944, 1949, 1952, 1954], "sources": ["library"], "weight": 0.664, "genre": "Italian literature"}, {"name": "Pasquali Giorgio", "birth": 1885, "death": 1952, "interactions": [1934, 1951], "sources": ["letters", "library"], "weight": 0.471, "categoria": "Contatti letterari", "genre": "Italian literature"}, {"name": "Penna Sandro", "birth": 1906, "death": 1977, "interactions": [1939, 1956, 1957, 1970], "sources": ["library"], "weight": 0.593, "genre": "Italian literature"}, {"name": "Petrocchi Giorgio", "birth": 1921, "death": 1989, "interactions": [1948], "sources": ["library"], "weight": 0.35, "genre": "Italian literature"}, {"name": "Picchi Mario", "birth": 1930, "death": 2010, "interactions": [1960, 1964, 1968], "sources": ["library"], "weight": 0.542, "genre": "Italian literature"}, {"name": "Piccioni Leone", "birth": 1925, "death": 2018, "interactions": [1948, 1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1959, 1960, 1962, 1963, 1964, 1966, 1968, 1969, 1971], "sources": ["letters", "library"], "weight": 0.856, "categoria": "Contatti letterari", "genre": "Italian literature"}, {"name": "Pozza Neri", "birth": 1912, "death": 1988, "interactions": [1952], "sources": ["archive"], "weight": 0.35}, {"name": "Punzo Giorgio", "birth": 1911, "death": 2005, "interactions": [1961], "sources": ["library"], "weight": 0.35, "genre": "Italian literature"}, {"name": "Rigoni Stern Mario", "birth": 1921, "death": 2008, "interactions": [1964], "sources": ["library"], "weight": 0.35, "genre": "Italian literature"}, {"name": "Rodocanachi Lucia", "birth": 1901, "death": 1978, "interactions": [1927, 1935, 1936, 1937, 1938, 1939, 1940, 1941, 1942, 1943, 1945, 1946, 1947, 1948, 1949, 1951, 1955, 1956, 1957, 1958, 1959, 1960, 1961, 1963, 1964], "sources": ["letters"], "weight": 0.913, "categoria": "Contatti letterari"}, {"name": "Rodocanachi Paolo", "birth": 1891, "death": 1958, "interactions": [1940, 1951, 1956, 1957], "sources": ["letters"], "weight": 0.593}, {"name": "Roscioni Gian Carlo", "birth": 1927, "death": 2012, "interactions": [1963, 1964, 1965, 1966, 1969], "sources": ["archive", "secondaryBib"], "weight": 0.632}, {"name": "Rosina Tito", "birth": 1899, "death": 1958, "interactions": [1952, 1958], "sources": ["library"], "weight": 0.471, "genre": "Italian literature"}, {"name": "Rossi Franco", "birth": 1919, "death": 2000, "interactions": [1928, 1929, 1934, 1935, 1936, 1941, 1963], "sources": ["letters"], "weight": 0.691, "categoria": "Ingegneria e divulgazione tecnica"}, {"name": "Santi Piero", "birth": 1923, "death": 2007, "interactions": [1945, 1950, 1954, 1966, 1971], "sources": ["library"], "weight": 0.632, "genre": "Italian literature"}, {"name": "Semenza Carlo", "birth": 1893, "death": 1961, "interactions": [1940], "sources": ["library"], "weight": 0.35, "genre": "Technical & scientific"}, {"name": "Sereni Vittorio", "birth": 1913, "death": 1983, "interactions": [1942, 1947], "sources": ["library"], "weight": 0.471, "genre": "Italian literature"}, {"name": "Siciliano Enzo", "birth": 1934, "death": 2006, "interactions": [1966, 1970, 1971, 1973], "sources": ["library"], "weight": 0.593, "genre": "Italian literature"}, {"name": "Tecchi Bonaventura", "birth": 1896, "death": 1968, "interactions": [1919, 1920, 1921, 1924, 1926, 1927, 1928, 1929, 1930, 1931, 1932, 1934, 1935, 1936, 1938, 1939, 1940, 1941, 1942, 1943, 1945, 1946, 1948, 1949, 1950, 1955, 1958, 1961, 1963, 1966], "sources": ["letters", "library"], "weight": 0.945, "categoria": "Compagni di guerra e di prigionia", "genre": "Italian literature"}, {"name": "Traverso Leone", "birth": 1910, "death": 1968, "interactions": [1939, 1940, 1941, 1950, 1951, 1952, 1953], "sources": ["letters"], "weight": 0.691, "categoria": "Contatti letterari"}, {"name": "Ulivi Ferruccio", "birth": 1912, "death": 2002, "interactions": [1939], "sources": ["letters"], "weight": 0.35, "categoria": "Contatti letterari"}, {"name": "Valeri Manera Mario", "birth": 1921, "death": 2014, "interactions": [1971], "sources": ["letters"], "weight": 0.35, "categoria": "Contatti letterari"}, {"name": "Valgimigli Manara", "birth": 1876, "death": 1965, "interactions": [1934, 1940], "sources": ["library"], "weight": 0.471, "genre": "Italian literature"}, {"name": "Veronesi Giulia", "birth": 1906, "death": 1970, "interactions": [1943], "sources": ["letters"], "weight": 0.35, "categoria": "Contatti letterari"}, {"name": "Vicari Giambattista", "birth": 1909, "death": 1978, "interactions": [1968, 1969], "sources": ["library"], "weight": 0.471, "genre": "Italian literature"}, {"name": "Vita Finzi Paolo", "birth": 1899, "death": 1986, "interactions": [1937], "sources": ["letters"], "weight": 0.35, "categoria": "Contatti letterari"}, {"name": "Vittorini Elio", "birth": 1908, "death": 1966, "interactions": [1931, 1936, 1941, 1942, 1943, 1945, 1964, 1967], "sources": ["letters", "library"], "weight": 0.714, "categoria": "Contatti letterari", "genre": "Italian literature"}, {"name": "Gadda Carlo Emilio", "birth": 1893, "death": 1973, "interactions": null, "weight": null, "sources": []}];
+
+  // per-source year sets, kept separately from the merged interactions above
+  // so the hover tooltip can tell WHERE a specific year's record comes from.
+  const letterYears = {"Ambrosi Paolo": [1930], "Amicucci Ermanno": [1923, 1934], "Ardigò Fausto": [1936], "Ballo Ferdinando": [1943, 1944, 1945, 1946], "Bassani Giorgio": [1943, 1957], "Beltrami Veneziani Giuliana": [1948], "Betocchi Carlo": [1969, 1972], "Betti Ugo": [1919, 1920, 1921, 1922, 1923, 1924, 1925, 1927, 1928, 1930, 1931, 1932], "Bigongiari Piero": [1921, 1946, 1949, 1950, 1951, 1952, 1953, 1958, 1959, 1963], "Boggio Marzet Albino": [1919], "Bollati Giulio": [1965], "Bompiani Valentino": [1942, 1943], "Bonsanti Alessandro": [1930, 1931, 1932, 1933, 1934, 1935, 1936, 1937, 1938, 1939, 1940, 1941, 1942, 1943, 1944, 1945, 1946, 1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959, 1960, 1962, 1963, 1964, 1965, 1966, 1968, 1969, 1970], "Carocci Alberto": [1926, 1927, 1928, 1932], "Citati Pietro": [1957, 1958, 1959, 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969], "Contini Gianfranco": [1934, 1935, 1936, 1937, 1938, 1939, 1940, 1941, 1942, 1943, 1945, 1946, 1947, 1948, 1949, 1950, 1951, 1952, 1953, 1954, 1955, 1957, 1958, 1959, 1962, 1963, 1964, 1966, 1967, 1968], "Dal Fabbro Beniamino": [1939], "De Grada Raffaele": [1940, 1942], "Dell'Arco Mario": [1957, 1958], "Einaudi Giulio": [1939, 1942, 1945, 1953, 1954, 1955, 1957, 1959, 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967], "Fiorentini Felice": [1934], "Fornasini Emilio": [1909, 1916, 1955], "Fruttero Carlo": [1955], "Gadda Ambrosi Clara": [1905, 1906, 1907, 1912, 1915, 1916, 1917, 1918, 1920, 1922, 1923, 1924, 1925, 1926, 1927, 1930, 1931, 1932, 1933, 1935, 1942, 1970], "Gadda Belloni Luisa": [1910], "Gadda Conti Piero": [1920, 1929, 1930, 1931, 1932, 1933, 1934, 1935, 1936, 1937, 1938, 1939, 1940, 1941, 1942, 1943, 1944, 1945, 1946, 1947, 1948, 1949, 1950, 1951, 1952, 1953, 1954, 1956, 1957, 1958, 1959, 1960, 1961, 1962, 1964, 1965, 1966, 1967, 1969], "Gadda Enrico": [1911, 1915, 1916, 1917, 1918], "Gadda Fornasini Emilia": [1915, 1918, 1940], "Garzanti Livio": [1953, 1954, 1955, 1956, 1957, 1958, 1959, 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1968, 1969], "Gobbi Ambrogio": [1913, 1915, 1916, 1917, 1925, 1934, 1948, 1958, 1963, 1965, 1966], "Guarnieri Silvio": [1931, 1932, 1933, 1934, 1935, 1936, 1939, 1955], "Lehr Adele": [1909, 1915, 1916, 1917, 1918, 1919, 1920, 1921, 1922, 1923, 1924, 1929, 1930, 1932, 1933, 1934, 1935, 1936], "Lehr Carlo": [1905, 1919], "Linati Carlo": [1931, 1932, 1936, 1939, 1940, 1944, 1947], "Mattioli Raffaele": [1957, 1958, 1959], "Messina Francesco": [1939], "Mondadori Alberto": [1945, 1968], "Natoli Glauco": [1931], "Notari Umberto": [1923], "Parise Goffredo": [1962, 1963], "Pasquali Giorgio": [1934], "Piccioni Leone": [1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1959, 1960, 1962, 1963, 1966, 1968, 1969, 1971], "Rodocanachi Lucia": [1927, 1935, 1936, 1937, 1938, 1939, 1940, 1941, 1942, 1943, 1945, 1946, 1947, 1948, 1949, 1951, 1955, 1956, 1957, 1958, 1959, 1960, 1961, 1963, 1964], "Rodocanachi Paolo": [1940, 1951, 1956, 1957], "Rossi Franco": [1928, 1929, 1934, 1935, 1936, 1941, 1963], "Tecchi Bonaventura": [1919, 1920, 1921, 1926, 1927, 1928, 1929, 1930, 1931, 1932, 1934, 1935, 1936, 1938, 1939, 1940, 1941, 1942, 1943, 1946, 1948, 1958, 1961, 1963], "Traverso Leone": [1939, 1940, 1941, 1950, 1951, 1952, 1953], "Ulivi Ferruccio": [1939], "Valeri Manera Mario": [1971], "Veronesi Giulia": [1943], "Vita Finzi Paolo": [1937], "Vittorini Elio": [1941, 1942, 1943]};
+  const libraryBooks = {"Angelini Cesare": [{"title": "Manzoni", "year": 1942, "publisher": "UTET", "place": "Torino", "role": "autore", "genre": "IL"}, {"title": "Notizie di poeti", "year": 1942, "publisher": "LeMonnier", "place": "Firenze", "role": "autore", "genre": "IL"}], "Bacchelli Riccardo": [{"title": "Il diavolo a Pontelungo", "year": 1927, "publisher": "Ceschina", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "La ruota del tempo. Scritti d’occasione", "year": 1928, "publisher": "L’Italiano", "place": "Bologna", "role": "autore", "genre": "IL"}, {"title": "Acque dolci e peccati. Novelle,fiabe e racconti", "year": 1930, "publisher": "Ceschina", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Amore di poesia. Poemi lirici;Memorie; Riepilogo; Liriche", "year": 1930, "publisher": "Preda", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Una passione coniugale", "year": 1930, "publisher": "Ceschina", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "La congiura di Don Giuliod’Este", "year": 1931, "publisher": "Treves", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Confessioni letterarie", "year": 1932, "publisher": "La Cultura", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Oggi domani mai", "year": 1932, "publisher": "Treves-Treccani-Tumminelli", "place": "Milano-Roma", "role": "autore", "genre": "IL"}, {"title": "Mal d’Africa", "year": 1935, "publisher": "Treves", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Il mulino del Po. Romanzo storico", "year": 1938, "publisher": "Treves-Garzanti", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Il mulino del Po. Mondo vecchio sempre nuovo", "year": 1940, "publisher": "Garzanti", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "La città degli amanti", "year": 1941, "publisher": "Ceschina", "place": "Milano  Ce schina", "role": "autore", "genre": "IL"}, {"title": "Il brigante di Tacca del Lupo.Racconti disperati", "year": 1942, "publisher": "Garzanti", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "L’elmo di Tancredi ed altre novelle giocose", "year": 1942, "publisher": "Garzanti", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "La fine di Atlantide", "year": 1942, "publisher": "Garzanti", "place": "Milano  Garzanti", "role": "autore", "genre": "IL"}, {"title": "Il fiore della Mirabilis", "year": 1942, "publisher": "Garzanti", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Il mulino del Po", "year": 1954, "publisher": "Rizzoli", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Nel fiume della storia. Riflessioni,discorsi e saggi storici", "year": 1955, "publisher": "Rizzoli", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Il diavolo al Pontelungo", "year": 1957, "publisher": "Mondadori", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "La città degli amanti", "year": 1960, "publisher": "Mondadori", "place": "Milano", "role": "autore", "genre": "IL"}], "Berenson Bernard": [{"title": "Estetica etica e storia nelle belle arti della rappresentazione visiva", "year": 1948, "publisher": "Electa", "place": "Firenze", "role": "autore", "genre": "HA"}, {"title": "Un artista fuori del suo tempo", "year": 1950, "publisher": "Le Monnier", "place": "Firenze", "role": "autore", "genre": "HA"}, {"title": "Del Caravaggio, delle sue incon gruenze e della sua fama", "year": 1951, "publisher": "Electa", "place": "Firenze", "role": "autore", "genre": "HA"}], "Bilenchi Romano": [{"title": "Anna e Bruno e altri racconti", "year": 1938, "publisher": "Parenti", "place": "Fi renze", "role": "autore", "genre": "IL"}, {"title": "Conservatorio di Santa Teresa", "year": 1940, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "La siccità", "year": 1941, "publisher": "Rivoluzione", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Dino e altri racconti", "year": 1942, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Mio cugino Andrea", "year": 1943, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Racconti", "year": 1958, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "IL"}], "Caretti Lanfranco": [{"title": "Il diario del Pontormo", "year": 1954, "publisher": "Rassegna di Cultura e vita scolastica", "place": "Roma", "role": "autore", "genre": "IL"}, {"title": "Le carte alfieriane della raccoltaCora: catalogo e testi", "year": 1960, "publisher": "Istituto di letteratura italiana", "place": "Pavia", "role": "autore", "genre": "IL"}, {"title": "Ariosto e Tasso", "year": 1961, "publisher": "Einaudi", "place": "Torino", "role": "autore", "genre": "IL"}, {"title": "Manzoni e la critica", "year": 1969, "publisher": "Laterza", "place": "Bari", "role": "autore", "genre": "IL"}], "Cecchi Emilio": [{"title": "L’osteria del cattivo tempo", "year": 1927, "publisher": "Corbaccio", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Messico", "year": 1932, "publisher": "Treves", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Et in Arcadia ego", "year": 1942, "publisher": "Mondadori", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "L’osteria del cattivo tempo", "year": 1942, "publisher": "Dall’Oglio", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Pesci rossi", "year": 1943, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Di giorno in giorno: note di letteraturaitaliana contemporanea (1945- 1954)", "year": 1945, "publisher": "Garzanti", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "America amara", "year": 1946, "publisher": "Sansoni", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Appunti per un periplo dell’Africa", "year": 1954, "publisher": "Ricciardi", "place": "Milano-Napoli", "role": "autore", "genre": "IL"}, {"title": "Ritratti e profili", "year": 1957, "publisher": "Garzanti", "place": "Milano", "role": "autore", "genre": "IL"}], "Debenedetti Giacomo": [{"title": "Saggi critici", "year": 1929, "publisher": "Edizioni di Solaria", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Radiorecita su Proust", "year": 1952, "publisher": "Macchia", "place": "Roma", "role": "autore", "genre": "IL"}, {"title": "Saggi critici", "year": 1955, "publisher": "Mondadori", "place": "Milano", "role": "autore", "genre": "IL"}], "Filippini Felice": [{"title": "Figaro ovvero Il primo torto è quello di esser morto. Saggio sul celebre personaggio di Beaumarchais", "year": 1952, "publisher": "Cenobio", "place": "Lugano", "role": "autore", "genre": "IL"}, {"title": "Signore dei poveri morti", "year": 1955, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "IL"}], "Landolfi Tommaso": [{"title": "Il mar delle blatte", "year": 1939, "publisher": "Edizioni della Cometa", "place": "Roma", "role": "autore", "genre": "IL"}, {"title": "Le due zittelle", "year": 1946, "publisher": "Bompiani", "place": "Milano", "role": "autore", "genre": "IL"}], "Longhi Roberto": [{"title": "Officina ferrarese", "year": 1934, "publisher": "Le Edizioni d’Italia", "place": "Roma", "role": "autore", "genre": "HA"}, {"title": "Piero della Francesca", "year": 1946, "publisher": "Hoepli", "place": "Milano", "role": "autore", "genre": "HA"}, {"title": "Caravaggio.", "year": null, "publisher": "", "place": "", "role": "autore", "genre": "HA"}], "Luzi Mario": [{"title": "Avvento notturno", "year": 1940, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Un’illusione platonica e altri saggi", "year": 1941, "publisher": "Rivoluzione", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Biografia a Ebe", "year": 1942, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Quaderno gotico", "year": 1947, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Studio su Mallarmé", "year": 1952, "publisher": "Sansoni", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Il giusto della vita", "year": 1960, "publisher": "Garzanti", "place": "Milano", "role": "autore", "genre": "IL"}], "Manzini Gianna": [{"title": "Boscovivo", "year": 1932, "publisher": "Treves", "place": "Milano-Roma", "role": "autore", "genre": "IL"}, {"title": "Un filo di brezza", "year": 1936, "publisher": "Panorama", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Rive remote. Racconti", "year": 1940, "publisher": "Mondadori", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Venti racconti.", "year": 1941, "publisher": "Mondadori", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Tempo innamorato", "year": 1943, "publisher": "Mondadori", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Forte come un leone", "year": 1947, "publisher": "Mondadori", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Ho visto il tuo cuore", "year": 1950, "publisher": "Mondadori", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Allegro con disperazione", "year": 1965, "publisher": "Mondadori", "place": "Milano", "role": "autore", "genre": "IL"}], "Martinetti Piero": [{"title": "Il compito della filosofia nell’ora presente", "year": 1920, "publisher": "Bertieri e Vanzetti", "place": "Milano", "role": "autore", "genre": "P"}, {"title": "Antologia kantiana", "year": 1925, "publisher": "Paravia", "place": "Torino-Milano-Firenze-Roma-NapoliPalermo", "role": "autore", "genre": "P"}, {"title": "Discorso ufficiale pronunciato al 3° convegno tenuto in Castellamonte il 19 settembre 1926 nella Casa della Musica «F. Romana».", "year": 1926, "publisher": "", "place": "", "role": "autore", "genre": "P"}, {"title": "La libertà", "year": 1928, "publisher": "Libreria Editrice Lombarda", "place": "Milano", "role": "autore", "genre": "P"}, {"title": "Introduzione alla metafisica", "year": 1929, "publisher": "Libreria Editrice Lombarda", "place": "Milano", "role": "autore", "genre": "P"}, {"title": "Gesù Cristo e il cristianesimo", "year": 1934, "publisher": "Edizioni della «Rivista di Filosofia»", "place": "Milano", "role": "autore", "genre": "P"}, {"title": "Ragione e fede", "year": 1934, "publisher": "Edizioni della Rivista di Filosofia", "place": "Milano", "role": "autore", "genre": "P"}, {"title": "Antologia platonica", "year": 1939, "publisher": "Paravia", "place": "Torino-Milano-Firenze-Roma-NapoliPalermo", "role": "autore", "genre": "P"}, {"title": "Ragione e fede", "year": 1942, "publisher": "Einaudi", "place": "Torino", "role": "autore", "genre": "P"}], "Martini Quinto": [{"title": "I giorni sono lunghi.", "year": 1957, "publisher": "Avanti", "place": "Milano-Roma", "role": "autore", "genre": "IL"}, {"title": "La pioggia: bassorilievi e disegni di Quinto Martini.", "year": 1967, "publisher": "Badiali", "place": "Arezzo", "role": "autore", "genre": "IL"}], "Montale Eugenio": [{"title": "Ossi di seppia.", "year": 1928, "publisher": "F.lli Ribera", "place": "Torino", "role": "autore", "genre": "IL"}, {"title": "La casa dei doganieri e altri versi", "year": 1931, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Le occasioni", "year": 1939, "publisher": "Einaudi", "place": "Torino", "role": "autore", "genre": "IL"}, {"title": "Le occasioni", "year": 1942, "publisher": "Einaudi", "place": "Torino", "role": "autore", "genre": "IL"}, {"title": "Finisterre.", "year": 1945, "publisher": "Barbera", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Choix de poèmes. Avalle e S. Hotelier", "year": 1946, "publisher": "Continent", "place": "Genève", "role": "autore", "genre": "IL"}, {"title": "La bufera e altro", "year": 1956, "publisher": "Neri Pozza", "place": "Venezia", "role": "autore", "genre": "IL"}, {"title": "Farfalla di Dinard", "year": 1956, "publisher": "Neri Pozza", "place": "Venezia", "role": "autore", "genre": "IL"}, {"title": "Farfalla di Dinard.", "year": 1960, "publisher": "Mondadori", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Auto da fé", "year": 1966, "publisher": "il Saggiatore", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Xenia 1964-1968", "year": null, "publisher": "", "place": "", "role": "autore", "genre": "IL"}], "Parronchi Alessandro": [{"title": "I giorni sensibili", "year": 1941, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "I visi", "year": 1943, "publisher": "Rivoluzione", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Nomi della pittura italiana contemporanea", "year": 1944, "publisher": "Arnaud", "place": "Firenze", "role": "autore", "genre": "HA"}, {"title": "Un’attesa", "year": 1949, "publisher": "Guanda", "place": "Modena", "role": "autore", "genre": "IL"}, {"title": "L’incertezza amorosa", "year": 1952, "publisher": "Schwarz", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Per strade di boschi e città", "year": 1954, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "IL"}], "Penna Sandro": [{"title": "Poesie", "year": 1939, "publisher": "Parenti", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Una strana gioia di vivere", "year": 1956, "publisher": "All’insegna del pesce d’oro", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Poesie", "year": 1957, "publisher": "Garzanti", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Tutte le poesie", "year": 1970, "publisher": "Garzanti", "place": "Milano", "role": "autore", "genre": "IL"}], "Petrocchi Giorgio": [{"title": "Scrittori piemontesi del secondo Ottocento", "year": 1948, "publisher": "De Silva", "place": "Torino", "role": "autore", "genre": "IL"}], "Picchi Mario": [{"title": "Roma di giorno", "year": 1960, "publisher": "Lerici", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Il muro torto", "year": 1964, "publisher": "Einaudi", "place": "Torino", "role": "autore", "genre": "IL"}, {"title": "Storia di una notte", "year": 1968, "publisher": "Rizzoli", "place": "Milano", "role": "autore", "genre": "IL"}], "Punzo Giorgio": [{"title": "Prolegomeni erotologici", "year": 1961, "publisher": "Carlo Martello", "place": "Napoli", "role": "autore", "genre": "IL"}], "Rigoni Stern Mario": [{"title": "Il sergente nella neve", "year": 1964, "publisher": "Einaudi", "place": "Torino", "role": "autore", "genre": "IL"}], "Rosina Tito": [{"title": "Saggi dannunziani", "year": 1952, "publisher": "Del Mastro", "place": "Genova", "role": "autore", "genre": "IL"}, {"title": "Noterelle dannunziane", "year": 1958, "publisher": "Sigla  Effe", "place": "Genova", "role": "autore", "genre": "IL"}], "Santi Piero": [{"title": "Tre storie brevi.", "year": 1945, "publisher": "Il Fiore", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Diario (1943-1946)", "year": 1950, "publisher": "Neri Pozza", "place": "Venezia", "role": "autore", "genre": "IL"}, {"title": "Ombre rosse", "year": 1954, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Libertà condizionata", "year": 1966, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Due di loro", "year": 1971, "publisher": "Ca Bala", "place": "Firenze", "role": "autore", "genre": "IL"}], "Semenza Carlo": [{"title": "Un caso caratteristico nella costruzione di grandi dighe", "year": 1940, "publisher": "Società Editrice Riviste Industrie Elettriche", "place": "Milano", "role": "autore", "genre": "T"}], "Sereni Vittorio": [{"title": "Poesie", "year": 1942, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Diario d’Algeria", "year": 1947, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "IL"}], "Siciliano Enzo": [{"title": "La coppia", "year": 1966, "publisher": "Feltrinelli", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Autobiografia letteraria", "year": 1970, "publisher": "Garzanti", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Dietro di me", "year": 1971, "publisher": "Garzanti", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Rosa (pazza e disperata)", "year": 1973, "publisher": "Garzanti", "place": "Milano", "role": "autore", "genre": "IL"}], "Valgimigli Manara": [{"title": "Poesia e poetica di Giovanni Pascol", "year": 1934, "publisher": "Zanichelli", "place": "Bologna", "role": "autore", "genre": "IL"}, {"title": "Poeti e filosofi di Grecia.", "year": 1940, "publisher": "Laterza", "place": "Bari", "role": "autore", "genre": "CL"}], "Vicari Giambattista": [{"title": "La smorfia letteraria", "year": 1968, "publisher": "Maccari", "place": "Parma", "role": "autore", "genre": "IL"}, {"title": "Indice ragionato de «Il caffè».", "year": 1969, "publisher": "Il Caffè", "place": "", "role": "autore", "genre": "IL"}], "Tecchi Bonaventura": [{"title": "Azione della Brigata Arezzo nell’offensiva carsica dal 23 al 31 maggio 1917 e nella controffensiva austriaca 4-5 giugno 1917", "year": 1920, "publisher": "Scuola Tipografica", "place": "Bagnoregio", "role": "autore", "genre": "M"}, {"title": "Per una presunta lettera di Cola di  Rienzo.", "year": 1921, "publisher": "", "place": "", "role": "autore", "genre": "IL"}, {"title": "Il nome sulla sabbia", "year": 1924, "publisher": "Treves", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Gianni Stuparich granatiere triestino", "year": 1931, "publisher": "Nuova Antologia", "place": "Roma", "role": "autore", "genre": "IL"}, {"title": "Maestri e amici", "year": 1932, "publisher": "Tempo Nostro", "place": "Pescara", "role": "autore", "genre": "IL"}, {"title": "Idilli moravi", "year": 1939, "publisher": "Garzanti", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Scrittori tedeschi del Novecento", "year": 1941, "publisher": "Parenti", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "La vedova timida; Antica Terra", "year": 1942, "publisher": "Tumminelli", "place": "Roma", "role": "autore", "genre": "IL"}, {"title": "Un’estate in campagna", "year": 1945, "publisher": "Sansoni", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Sette liriche di Goethe", "year": 1949, "publisher": "Laterza", "place": "Bari", "role": "autore", "genre": "IL"}, {"title": "Clemes Brentano, interprete degli animali", "year": 1950, "publisher": "", "place": "Estratto da «Quaderni ACI»", "role": "autore", "genre": "IL"}, {"title": "La luna a ponente", "year": 1955, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Baracca 15 C", "year": 1961, "publisher": "Bompiani", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Goethe scrittore di fiabe", "year": 1966, "publisher": "Einaudi", "place": "Torino", "role": "autore", "genre": "IL"}], "Messina Francesco": [{"title": "Il Garofano", "year": 1942, "publisher": "All’insegna del  pesce d’oro", "place": "Milano", "role": "autore", "genre": "IL"}], "Gadda Conti Piero": [{"title": "Mozzo", "year": 1930, "publisher": "Ceschina", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Gagliarda", "year": 1932, "publisher": "Ceschina", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "I mesi e le stagioni", "year": 1937, "publisher": "Edizioni di via Letizia", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Ritorno in Italia", "year": 1938, "publisher": "", "place": "", "role": "autore", "genre": "IL"}, {"title": "Beati regni", "year": 1954, "publisher": "Ceschina", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Vita e melodie di Giacomo Puccini", "year": 1955, "publisher": "Ceschina", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Adamira", "year": 1956, "publisher": "Bompiani", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Vanterie adolescenti", "year": 1960, "publisher": "Rebellato", "place": "Padova", "role": "autore", "genre": "IL"}, {"title": "Carlo Linati nel suo tempo", "year": 1970, "publisher": "L’osservatore politico letterario", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "La paura", "year": 1970, "publisher": "Ceschina", "place": "Milano", "role": "autore", "genre": "IL"}], "Pasquali Giorgio": [{"title": "Stravaganze quarte e supreme", "year": 1951, "publisher": "Neri Pozza", "place": "Venezia", "role": "autore", "genre": "IL"}], "Guarnieri Silvio": [{"title": "Lo spettatore appassionato", "year": 1934, "publisher": "Solaria", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Saggio su D’Annunzio", "year": 1937, "publisher": "Parenti", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Cinquant’anni di narrativa in Italia", "year": 1955, "publisher": "Parenti", "place": "Firenze", "role": "autore", "genre": "IL"}], "Betocchi Carlo": [{"title": "Poesie 1930-1954: Realtà vince il sogno. Altre poesie. Notizie. Tetti toscani", "year": 1955, "publisher": "Valecchi", "place": "Firenze", "role": "autore", "genre": "IL"}], "Piccioni Leone": [{"title": "Due saggi sulla poesia di Ungaretti", "year": 1948, "publisher": "Novagrafia", "place": "Roma", "role": "autore", "genre": "IL"}, {"title": "Lettura leopardiana ed altri saggi", "year": 1952, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Sui contemporanei", "year": 1953, "publisher": "Fabbri", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Tradizione letteraria e idee correnti", "year": 1956, "publisher": "Fabbri", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "La narrativa italiana tra romanzo e racconti", "year": 1959, "publisher": "Mondadori", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Lavagna bianca. Diario 1963, conagosto in URSS", "year": 1964, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Maestri e amici", "year": 1969, "publisher": "Rizzoli", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Troppa morte, troppa vita. Viaggi e pensieri intorno agli USA", "year": 1969, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "IL"}], "Linati Carlo": [{"title": "Memorie a zigzag", "year": 1929, "publisher": "Buratti", "place": "Torino", "role": "autore", "genre": "IL"}, {"title": "Scrittori angloamericani d’oggi", "year": 1932, "publisher": "Corticelli", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Passeggiate lariane", "year": 1939, "publisher": "Garzanti", "place": "Milano", "role": "autore", "genre": "IL"}], "Contini Gianfranco": [{"title": "Ungaretti o dell’allegria", "year": 1932, "publisher": "Anonima poligrafica emiliana", "place": "Reggio Emilia", "role": "autore", "genre": "IL"}, {"title": "Scriptor rerum francigenarum", "year": 1933, "publisher": "Tipografica nazionale Magnani e Ganassi", "place": "Reggio Emilia", "role": "autore", "genre": "IL"}, {"title": "Scrittori Moderni", "year": 1933, "publisher": "Tipografia M.Corsi", "place": "Reggio Emilia", "role": "autore", "genre": "IL"}, {"title": "Tre composizioni o la metrica di Saba – Bonsanti, o dell’attività pura", "year": 1934, "publisher": "Treves-Treccani-Tumminelli", "place": "Reggio Emilia", "role": "autore", "genre": "IL"}, {"title": "Esercizi di lettura", "year": 1938, "publisher": "Parenti", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Il mulino del Po e la carriera letteraria di Riccardo Bacchelli", "year": 1940, "publisher": "Nuova Antologia", "place": "Roma", "role": "autore", "genre": "IL"}, {"title": "Un anno di letteratura", "year": 1942, "publisher": "Le Monnier", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Letteratura dell’Italia unita 1861- 1968", "year": 1968, "publisher": "Sansoni", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Varianti e altra linguistica: una raccolta di saggi (1938-1968)", "year": 1970, "publisher": "Einaudi", "place": "Torino", "role": "autore", "genre": "GR"}], "Bigongiari Piero": [{"title": "Studi", "year": 1946, "publisher": "Vallecchi", "place": "Firenze", "role": "autore", "genre": "V"}, {"title": "L’elaborazione della lirica leopardiana", "year": 1948, "publisher": "Marzocco", "place": "Firenze", "role": "autore", "genre": "V"}], "Parise Goffredo": [{"title": "La grande vacanza", "year": 1953, "publisher": "Neri Pozza", "place": "Venezia", "role": "autore", "genre": "IL"}, {"title": "Il padrone", "year": 1965, "publisher": "Feltrinelli", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Il ragazzo morto e le comete", "year": 1965, "publisher": "Feltrinelli", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "L’assoluto naturale", "year": 1967, "publisher": "Feltrinelli", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Sillabario N. 1", "year": 1972, "publisher": "Einaudi", "place": "Torino", "role": "autore", "genre": "IL"}], "Bonsanti Alessandro": [{"title": "La serva amorosa", "year": 1929, "publisher": "Edizioni di Solaria", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "I capricci dell’Adriana", "year": 1934, "publisher": "Solaria", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Racconto militare", "year": 1937, "publisher": "Parenti", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Dialoghi e altre prose", "year": 1940, "publisher": "Parenti", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Introduzione al gran viaggio. Racconto seguito da Fine dell’adolescenza", "year": 1944, "publisher": "Tumminelli", "place": "Roma", "role": "autore", "genre": "IL"}, {"title": "La vipera e il toro", "year": 1955, "publisher": "Sansoni", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "La nuova stazione di Firenze", "year": 1965, "publisher": "Mondadori", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Racconto militare", "year": 1968, "publisher": "Mondadori", "place": "Milano", "role": "autore", "genre": "IL"}], "Betti Ugo": [{"title": "Il re pensieroso", "year": 1922, "publisher": "Treves", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Versi", "year": 1924, "publisher": "Nuova Antologia", "place": "Roma", "role": "autore", "genre": "IL"}, {"title": "Il mercante di frottole", "year": 1927, "publisher": "Estratto da «La Nuova Antologia»", "place": "", "role": "autore", "genre": "IL"}, {"title": "La padrona", "year": 1929, "publisher": "Ribet", "place": "Torino", "role": "autore", "genre": "IL"}, {"title": "Canzonette. La morte", "year": 1932, "publisher": "Mondadori", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Le case", "year": 1933, "publisher": "Mondadori", "place": "Milano", "role": "autore", "genre": "IL"}], "Vittorini Elio": [{"title": "Piccola borghesia", "year": 1931, "publisher": "Solaria", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Nei Morlacchi, viaggio in Sardegna", "year": 1936, "publisher": "Parenti", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Nome e lagrime", "year": 1941, "publisher": "Parenti", "place": "Firenze", "role": "autore", "genre": "IL"}, {"title": "Uomini e no", "year": 1945, "publisher": "Bompiani", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Le donne di Messina", "year": 1964, "publisher": "Bompiani", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Le due tensioni. Appunti per una ideologia della letteratura.", "year": 1967, "publisher": "il Saggiatore", "place": "Milano", "role": "autore", "genre": "IL"}], "Bassani Giorgio": [{"title": "Un’altra libertà", "year": 1951, "publisher": "Mondadori", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Gli occhiali d’oro", "year": 1958, "publisher": "Einaudi", "place": "Torino", "role": "autore", "genre": "IL"}], "Amicucci Ermanno": [{"title": "Nizza e l’Italia. Con documenti autografi, stampe e fotografie", "year": 1939, "publisher": "Mondadori", "place": "Milano", "role": "autore", "genre": "H"}], "Lehr Adele": [{"title": "Giuseppe Parini poeta civile", "year": 1887, "publisher": "Stabilimento tipografico Agnelli", "place": "Milano", "role": "autore", "genre": "IL"}, {"title": "Contributo alla storia romana dalla morte di Giulio Cesare alla morte di Cicerone", "year": 1890, "publisher": "Tip. Dell’Ombrone", "place": "Grosseto", "role": "autore", "genre": "H"}]};
+  const secondaryWorks = {"Binni Walter": [{"title": "Linea dell'arte di Carlo Emilio Gadda", "year": 1943, "tipo": "Articoli/saggi su rivista", "rivista": "Primato"}, {"title": "Svolgimento della prosa di C.E. Gadda", "year": 1943, "tipo": "Articoli/saggi su rivista", "rivista": "La ruota"}, {"title": "L'Adalgisa di Gadda", "year": 1946, "tipo": "Recensioni", "rivista": "Il Mondo"}, {"title": "Svolgimento della prosa di C.E. Gadda", "year": 1951, "tipo": "Saggi in volume", "rivista": ""}, {"title": "Nota sull'Adalgisa", "year": 1951, "tipo": "Recensioni", "rivista": ""}], "Bo Carlo": [{"title": "Note su C.E. Gadda. Rec. Castello di Udine", "year": 1934, "tipo": "Recensioni", "rivista": "Frontespizio"}, {"title": "Le meraviglie d'Italia di C.E. Gadda", "year": 1939, "tipo": "Recensioni", "rivista": "Letteratura"}, {"title": "Nota su C. E. Gadda", "year": 1941, "tipo": "Recensioni", "rivista": "Letteratura"}, {"title": "Nota su C.E. Gadda", "year": 1946, "tipo": "Recensioni", "rivista": ""}, {"title": "Il primo libro delle Favole di Carlo Emilio Gadda", "year": 1952, "tipo": "Recensioni", "rivista": "La Fiera letteraria"}, {"title": "Novelle dal Ducato in fiamme di Carlo Emilio Gadda", "year": 1953, "tipo": "Recensioni", "rivista": "La Fiera letteraria"}, {"title": "Curioso il confronto tra C.E. Gadda e Malaparte", "year": 1955, "tipo": "Articoli/saggi su rivista", "rivista": ""}, {"title": "Romanzo e società nell'Italia degli ultimi dieci anni", "year": 1957, "tipo": "Articoli/saggi su rivista", "rivista": "Paragone. Letteratura"}, {"title": "La lente di Gadda", "year": 1957, "tipo": "Recensioni", "rivista": "La Stampa"}], "Calvino Italo": [{"title": "Natura e storia nel romanzo", "year": 1958, "tipo": "Saggi in volume", "rivista": ""}, {"title": "Natura e storia del romanzo", "year": 1958, "tipo": "Conferenze", "rivista": ""}, {"title": "Il mare dell'oggettività", "year": 1960, "tipo": "Articoli/saggi su rivista", "rivista": "Il menabò"}, {"title": "Tre correnti del romanzo italiano d'oggi", "year": 1960, "tipo": "Articoli/saggi su rivista", "rivista": "Italian Quarterly"}, {"title": "Saggi 1945-1985", "year": 1995, "tipo": "Saggi in volume", "rivista": ""}], "De Robertis Giuseppe": [{"title": "La Madonna dei Filosofi", "year": 1931, "tipo": "Recensioni", "rivista": "Pegaso"}, {"title": "Il castello di Udine", "year": 1934, "tipo": "Recensioni", "rivista": "Pan"}, {"title": "Il castello di Udine", "year": 1934, "tipo": "Recensioni", "rivista": "Pan"}, {"title": "La Madonna dei Filosofi", "year": 1940, "tipo": "Recensioni", "rivista": ""}, {"title": "Il castello di Udine", "year": 1940, "tipo": "Recensioni", "rivista": ""}, {"title": "Le Favole di Gadda. Rec. Il primo libro delle Favole", "year": 1952, "tipo": "Recensioni", "rivista": "Tempo"}, {"title": "Il grande Gadda", "year": 1953, "tipo": "Recensioni", "rivista": "[Tempo]"}, {"title": "Uno scrittore si confessa", "year": 1955, "tipo": "Recensioni", "rivista": "[Tempo]"}, {"title": "Il sorprendente diario di C.E. Gadda", "year": 1955, "tipo": "Recensioni", "rivista": ""}, {"title": "Il prodigioso Gadda (rec. Quer pasticciaccio brutto de via Merulana)", "year": 1957, "tipo": "Recensioni", "rivista": "Il Tempo"}, {"title": "Quer pasticciaccio...", "year": 1957, "tipo": "Recensioni", "rivista": "La Nazione Italiana"}, {"title": "C.E. Gadda, La Madonna dei filosofi", "year": 1958, "tipo": "Recensioni", "rivista": ""}, {"title": "C.E. Gadda, Il Castello di Udine", "year": 1958, "tipo": "Recensioni", "rivista": ""}, {"title": "Giornale di guerra e di prigionia", "year": 1962, "tipo": "Recensioni", "rivista": ""}], "Falqui Enrico": [{"title": "Devoto e la stilistica", "year": 1939, "tipo": "Saggi in volume", "rivista": ""}, {"title": "Devoto e la stilistica", "year": 1939, "tipo": "Saggi in volume", "rivista": ""}, {"title": "Un maccaronico del Novecento", "year": 1940, "tipo": "Recensioni", "rivista": "Gazzetta del popolo"}, {"title": "Le Meraviglie d'Italia", "year": 1940, "tipo": "Recensioni", "rivista": "Gazzetta del popolo"}, {"title": "L'Adalgisa", "year": 1945, "tipo": "Recensioni", "rivista": "Risorgimento liberale"}, {"title": "C.E. Gadda", "year": 1950, "tipo": "Saggi in volume", "rivista": ""}, {"title": "Carlo Emilio Gadda - Novelle dal Ducato in fiamme", "year": 1954, "tipo": "Saggi in volume", "rivista": ""}, {"title": "Bagatelle per un massacro", "year": 1957, "tipo": "Recensioni", "rivista": "Il Tempo"}, {"title": "Quer pasticciaccio brutto de via Merulana", "year": 1957, "tipo": "Recensioni", "rivista": "Il Tempo"}, {"title": "Il magnetofono mal temperato", "year": 1957, "tipo": "Articoli/saggi su rivista", "rivista": "Il Tempo"}, {"title": "Satira ed estetismo nella risata di Gadda", "year": 1957, "tipo": "Articoli/saggi su rivista", "rivista": "La Fiera letteraria"}, {"title": "Satira ed estremismo nella risata di Gadda", "year": 1957, "tipo": "Articoli/saggi su rivista", "rivista": "La Fiera letteraria"}, {"title": "Dal dialetto alla lingua; dalla lingua al dialetto; dal dialetto al gergo", "year": 1961, "tipo": "Saggi in volume", "rivista": ""}], "Gorni Guglielmo": [{"title": "Onomastica e altre fonti della «Cognizione»", "year": 1972, "tipo": "Articoli/saggi su rivista", "rivista": "Paragone. Letteratura"}, {"title": "Lettura di «Autunno» (dalla «Cognizione» di Carlo Emilio Gadda)", "year": 1973, "tipo": "Articoli/saggi su rivista", "rivista": "Strumenti critici"}, {"title": "Carlo Emilio Gadda", "year": 1984, "tipo": "Saggi in volume", "rivista": ""}, {"title": "Gadda, o il testamento del Capitano", "year": 1995, "tipo": "Contributo in atti di convegno", "rivista": ""}], "Lunetta Mario": [{"title": "Perché non possiamo non dirci «gaddiani»", "year": 1975, "tipo": "Saggi in volume", "rivista": ""}, {"title": "Gadda e il desiderio filosofico", "year": 1987, "tipo": "Saggi in volume", "rivista": ""}], "Roscioni Gian Carlo": [{"title": "La conclusione della «Cognizione del dolore»", "year": 1969, "tipo": "Articoli/saggi su rivista", "rivista": "Paragone. Letteratura"}, {"title": "La disarmonia prestabilita. Studio su Gadda", "year": 1969, "tipo": "Monografie", "rivista": ""}, {"title": "Introduzione", "year": 1974, "tipo": "Nota al testo", "rivista": ""}, {"title": "Gadda cerca casa", "year": 1993, "tipo": "Articoli/saggi su rivista", "rivista": "La Repubblica"}, {"title": "Gadda umorista", "year": 1993, "tipo": "Articoli/saggi su rivista", "rivista": "Strumenti critici"}, {"title": "La disarmonia prestabilita. Studi su Gadda", "year": 1995, "tipo": "Monografie", "rivista": ""}, {"title": "Terre emerse: il problema degli indici di Gadda", "year": 1995, "tipo": "Saggi in volume", "rivista": ""}, {"title": "Il duca di Sant’Aquila. Infanzia e giovinezza di Gadda", "year": 1997, "tipo": "Monografie", "rivista": ""}, {"title": "Protagonismo e precarietà nei personaggi di Gadda", "year": 2002, "tipo": "Saggi in volume", "rivista": ""}, {"title": "Il critico e i suoi lettori", "year": 2003, "tipo": "Articoli/saggi su rivista", "rivista": "Paragone"}, {"title": "Letterine di Natale in casa Gadda", "year": 2004, "tipo": "Articoli/saggi su rivista", "rivista": "Antologia Vieusseux"}]};
+  const archiveRecords = {"Citati Pietro": [{"year": 1958, "title": "cartolina postale.", "luogo": "S.ta Margherita Ligure", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1958, "title": "1 lettera, 1 f. usato al recto e verso", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1958, "title": "1 lettera, 1 f. doppio usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1959, "title": "1 lettera, 1 f. doppio usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1959, "title": "1 lettera, 2 ff. (il secondo costituito dalla metà di un foglio intero), usati al recto e verso", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1959, "title": "1 lettera, 1 f. doppio usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1959, "title": "1 lettera, 2 ff. (il secondo costituito dalla metà di un foglio intero), usati al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1959, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1959, "title": "1 lettera, 1 f. usato al recto. Data: Roma, 25 settembre 1959.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1960, "title": "1 lettera, 2 ff. (il secondo costituito dalla metà di un foglio intero), usati al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1960, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1960, "title": "1 lettera, 1 f. usato al recto e verso. Data: Roma, 4 agosto 1960.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1960, "title": "1 lettera con 1 foglio allegato, 2 ff. (in totale), il primo usato al recto e verso, il secondo (allegato) al recto.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1960, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1960, "title": "1 f. intestato: Promemoria Gadda, giovedì", "luogo": "", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1961, "title": "1 lettera, 1 f. doppio usato al recto.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1961, "title": "1 lettera, 1 f. usato al recto e verso. Numerato su entrambe le facciate a penna rossa 1-2.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1961, "title": "1 lettera, 1 f. doppio usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1962, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1962, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Cortina d’Ampezzo", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1962, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Pocol", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1962, "title": "1 lettera, 2 ff. usati al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1963, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Bergamo", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1963, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Bergamo", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1964, "title": "1 lettera, 1 f. doppio usato sulle prime tre facciate (sulla quarta appunti di mano di Citati).", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1964, "title": "1 lettera, 1 f. usato al recto e verso", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1965, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1965, "title": "1 lettera, 1 f. doppio usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1965, "title": "1 lettera, 1 f. usato al recto e verso. Data:", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1965, "title": "1 lettera, 1 f. doppio usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1966, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1967, "title": "1 lettera, 2 ff. usati al recto; numerati per foglio 1-2.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1967, "title": "1 lettera, 1 f. usato al recto.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1967, "title": "1 lettera, 1 f. usato al recto.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1967, "title": "1 lettera, 1 f. usato al recto.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1967, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1967, "title": "1 lettera, 1 f. doppio usato al recto e numerato 1-2.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1968, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1968, "title": "1 lettera, 1 f. usato al recto e verso.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1969, "title": "1 lettera, 1 f. usato al recto.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}], "Roscioni Gian Carlo": [{"year": 1963, "title": "1 f. usato al recto e verso e un foglietto usato al recto; datato: Bergamo, dalla clinica, mercoledì 7 agosto 1963. Con busta.", "luogo": "Bergamo", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1963, "title": "1 f. doppio usato su tutte le facciate; datato: Bergamo, *25* luglio [corretto da Roscioni a matita in agosto] *1963*. Domenica. Conserva...", "luogo": "Bergamo", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1963, "title": "cartolina illustrata, “Bergamo, S. Maria Maggiore e Cappella Colleoni di G.A. Amadeo”; datata 25 agosto 1963. Conservata in un’unica bust...", "luogo": "Bergamo", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1963, "title": "1 f. doppio usato su tre facciate; datato: Bergamo, 30 agosto 1963.", "luogo": "Bergamo", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1964, "title": "lettera su due biglietti, il primo usato al recto e verso, il secondo al recto; datata: 24 settembre 1964, ore 15, Roma.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1964, "title": "1 biglietto usato al recto e verso; datato: 15 giugno 1964 ore 22.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1964, "title": "1 f. usato al recto e verso; datato: Roma, 12 agosto 1964, ore 14.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1965, "title": "1 f. doppio usato sulle prime due facciate.", "luogo": "", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1966, "title": "1 f. usato al recto; datato: Roma, mercoledì 14 settembre 1966.", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}], "Pozza Neri": [{"year": 1952, "title": "Corrispondenza con Neri Pozza:", "luogo": "Roma", "archivio": "Archivio Biblioteca Trivulziana"}, {"year": 1952, "title": "Una lettera di Neri Pozza datata 12 febbraio 1952, a cui era allegato l’elenco degli omaggi inviati (non presente in archivio).", "luogo": "", "archivio": "Archivio Biblioteca Trivulziana"}], "Guarnieri Silvio": [{"year": 1968, "title": "1/11 Gadda, Carlo Emilio [Corrispondenza] / Carlo Emilio Gadda [a] Silvio Guarnieri. – 26 luglio 1931-28 settembre 1968.", "luogo": "", "archivio": "Fondazione Maria Corti"}]};
+
+  const gadda = rawPeople.find(d => d.name === "Gadda Carlo Emilio");
+  const allCorrespondents = rawPeople.filter(d => d !== gadda);
+
+  const width = 950;
+  const margin = { top: 30, right: 40, bottom: 40, left: 170 };
+  const minHeight = 420;
+  const maxHeight = 780;
+  const targetRowStep = 85;
+  const svg = d3.select("svg");
+
+  const gapLimit = 5;
+  const reach = 3;
+
+  function clusterInteractions(years) {
+    const sorted = [...years].sort((a, b) => a - b);
+    const clusters = [[sorted[0]]];
+    for (let i = 1; i < sorted.length; i++) {
+      if (sorted[i] - sorted[i - 1] <= gapLimit) clusters[clusters.length - 1].push(sorted[i]);
+      else clusters.push([sorted[i]]);
+    }
+    return clusters;
+  }
+
+  const tierCount = 4;
+  const quantizeToTier = d3.scaleQuantize()
+    .domain([0, 1])
+    .range(d3.range(tierCount).map(i => (i + 1) / tierCount));
+
+  function render(shownCorrespondents, initialSelected = []) {
+    svg.selectAll("*").remove();
+
+    const rowCount = shownCorrespondents.length + 1;
+    const height = Math.min(maxHeight, Math.max(minHeight, margin.top + margin.bottom + targetRowStep * (rowCount - 1)));
+    svg.attr("viewBox", [0, 0, width, height]);
+
+    const yearMin = timeFocus ? timeFocus.start : Math.min(
+      gadda.birth,
+      ...shownCorrespondents.map(d => d.birth),
+      ...shownCorrespondents.flatMap(d => d.interactions ?? [])
+    );
+    const yearMax = timeFocus ? timeFocus.end : gadda.death;
+    const x = d3.scaleLinear().domain([yearMin, yearMax]).range([margin.left, width - margin.right]);
+
+    const rescaleWeight = shownCorrespondents.length
+      ? d3.scaleLinear().domain(d3.extent(shownCorrespondents, d => d.weight)).range([0, 1])
+      : () => 1;
+
+    shownCorrespondents.forEach(d => {
+      d.barycenter = d.interactions.reduce((sum, yr) => sum + yr, 0) / d.interactions.length;
+    });
+
+    // crossing-reduction pass: mean barycenter alone breaks down once a
+    // person's own years are widely spread (merged multi-reparto people can
+    // span decades), so this refines the initial mean-barycenter sort by
+    // swapping adjacent people whenever that reduces the number of
+    // chronologically "inverted" year-pairs between their FULL year sets.
+    function yearInversions(from, to) {
+      let n = 0;
+      for (const ya of from.interactions) {
+        for (const yb of to.interactions) {
+          if (ya > yb) n++;
+        }
+      }
+      return n;
+    }
+    function refineOrdering(list) {
+      const arr = [...list];
+      let swapped = true;
+      let pass = 0;
+      while (swapped && pass < arr.length) {
+        swapped = false;
+        for (let i = 0; i < arr.length - 1; i++) {
+          const a = arr[i], b = arr[i + 1];
+          if (yearInversions(b, a) < yearInversions(a, b)) {
+            arr[i] = b;
+            arr[i + 1] = a;
+            swapped = true;
+          }
+        }
+        pass++;
+      }
+      return arr;
+    }
+    const byBarycenter = refineOrdering(
+      [...shownCorrespondents].sort((a, b) => a.barycenter - b.barycenter)
+    );
+    const mid = Math.ceil(byBarycenter.length / 2);
+    const above = byBarycenter.slice(0, mid);
+    const below = byBarycenter.slice(mid);
+    const people = [...above].reverse().concat([gadda], below);
+
+    const yScale = d3.scalePoint()
+      .domain(people.map(d => d.name))
+      .range([margin.top, height - margin.bottom])
+      .padding(1);
+    const y = name => yScale(name);
+    const gaddaY = y("Gadda Carlo Emilio");
+    const rowStep = Math.abs(yScale.step()) || 30;
+    const maxGap = Math.min(rowStep * 0.4, rowStep / 2 - 2);
+
+    const correspondentNames = people.filter(d => d.name !== "Gadda Carlo Emilio").map(d => d.name);
+    const purplePalette = d3.quantize(
+      t => d3.interpolateHcl("#dcc6f5", "#3b0a63")(t),
+      Math.max(correspondentNames.length, 2)
+    );
+    const colorMap = new Map();
+    correspondentNames.forEach((name, i) => colorMap.set(name, purplePalette[i % purplePalette.length]));
+    const colorScale = name => colorMap.get(name);
+    const gaddaColor = "var(--ink)";
+    const colorFor = name => (name === "Gadda Carlo Emilio" ? gaddaColor : colorScale(name));
+
+    const minStrokeWidth = 2, maxStrokeWidth = 7;
+    const haloExtra = 3;
+    function strengthFor(d) {
+      return d.name === "Gadda Carlo Emilio" ? 1 : rescaleWeight(d.weight ?? 1);
+    }
+    const minL = 25, maxL = 75;
+    function shadeFor(d) {
+      if (d.name === "Gadda Carlo Emilio") return gaddaColor;
+      const hcl = d3.hcl(colorFor(d.name));
+      hcl.l = maxL - strengthFor(d) * (maxL - minL);
+      return hcl.formatHex();
+    }
+    function strokeWidthFor(d) {
+      return minStrokeWidth + (maxStrokeWidth - minStrokeWidth) * strengthFor(d);
+    }
+
+    svg.append("line")
+      .attr("class", "time-baseline")
+      .attr("x1", margin.left).attr("x2", width - margin.right)
+      .attr("y1", height - margin.bottom).attr("y2", height - margin.bottom);
+
+    svg.append("g")
+      .selectAll("text")
+      .data(x.ticks(10))
+      .join("text")
+        .attr("class", "time-label")
+        .attr("x", d => x(d))
+        .attr("y", height - margin.bottom + 16)
+        .attr("text-anchor", "middle")
+        .text(d3.format("d"));
+
+    function dipYFor(d) {
+      const rowY = y(d.name);
+      const direction = rowY < gaddaY ? 1 : -1;
+      const w = quantizeToTier(rescaleWeight(d.weight ?? 1));
+      return gaddaY - direction * maxGap * w;
+    }
+
+    people.forEach(d => {
+      d.frameBirth = d.birth;
+      d.frameDeath = Math.min(d.death, gadda.death);
+      d.diedBeforeGadda = d.death < gadda.death;
+    });
+
+    function lifePath(d) {
+      const rowY = y(d.name);
+      if (!d.interactions || d.interactions.length === 0) {
+        return d3.line()([[x(d.frameBirth), rowY], [x(d.frameDeath), rowY]]);
+      }
+      const dipY = dipYFor(d);
+      const clusters = clusterInteractions(d.interactions);
+      const lineStart = Math.min(d.frameBirth, d.interactions[0]);
+      const lineEnd = d.frameDeath;
+      const points = [[x(lineStart), rowY]];
+      clusters.forEach(cluster => {
+        const first = cluster[0];
+        const last = cluster[cluster.length - 1];
+        points.push([x(Math.max(lineStart, first - reach)), rowY]);
+        cluster.forEach(yr => points.push([x(yr), dipY]));
+        points.push([x(Math.min(lineEnd, last + reach)), rowY]);
+      });
+      points.push([x(lineEnd), rowY]);
+      return d3.line().curve(d3.curveMonotoneX)(points);
+    }
+
+    const rows = svg.selectAll(".row").data(people).join("g").attr("class", "row");
+
+    rows.append("path")
+      .attr("class", "life-halo")
+      .attr("stroke-width", d => strokeWidthFor(d) + haloExtra)
+      .attr("d", lifePath);
+    rows.append("path")
+      .attr("class", "life")
+      .attr("stroke", shadeFor)
+      .attr("stroke-width", strokeWidthFor)
+      .attr("d", lifePath);
+
+    rows.append("circle")
+      .attr("class", "pt")
+      .attr("fill", d => colorFor(d.name))
+      .attr("cx", d => x(d.frameBirth))
+      .attr("cy", d => y(d.name))
+      .attr("r", 4);
+
+    const lineLabels = rows.append("text")
+      .attr("class", "line-label")
+      .attr("fill", d => colorFor(d.name))
+      .attr("x", d => x(d.frameBirth) + 8)
+      .attr("y", d => y(d.name) - 6)
+      .style("cursor", "pointer")
+      .text(d => d.name);
+
+    svg.selectAll(".cutoff")
+      .data(people.filter(d => d.diedBeforeGadda))
+      .join("text")
+        .attr("class", "cutoff")
+        .attr("fill", d => colorFor(d.name))
+        .attr("x", d => x(d.frameDeath))
+        .attr("y", d => y(d.name))
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "central")
+        .text("×");
+
+    // one contact per CLUSTER of nearby years for a clean range-envelope
+    // shape; individual year-marks (below) carry the precise per-record
+    // tooltip, aggregated across whichever of the four reparti has a record
+    // for that exact year.
+    const contacts = people.flatMap(d =>
+      d.interactions && d.interactions.length
+        ? clusterInteractions(d.interactions).map(cluster => ({
+            yearStart: cluster[0],
+            yearEnd: cluster[cluster.length - 1],
+            years: cluster,
+            dipY: dipYFor(d),
+            color: colorFor(d.name),
+            name: d.name,
+          }))
+        : []
+    );
+    const contactG = svg.selectAll(".contact")
+      .data(contacts)
+      .join("g")
+        .attr("class", "contact")
+        .style("cursor", "pointer");
+
+    const pillWidth = 8;
+    contactG.append("rect")
+      .attr("class", "contact-envelope")
+      .attr("stroke", d => d.color)
+      .attr("x", d => x(d.yearStart) - pillWidth / 2)
+      .attr("y", d => Math.min(d.dipY, gaddaY) - 4)
+      .attr("width", d => (x(d.yearEnd) - x(d.yearStart)) + pillWidth)
+      .attr("height", d => Math.abs(gaddaY - d.dipY) + 8)
+      .attr("rx", pillWidth / 2);
+
+    const yearMarks = contacts.flatMap(c =>
+      c.years.map(year => ({ year, dipY: c.dipY, color: c.color, name: c.name, cluster: c }))
+    );
+    const yearMarkG = svg.selectAll(".year-mark")
+      .data(yearMarks)
+      .join("g")
+        .attr("class", "year-mark")
+        .style("cursor", "pointer");
+
+    yearMarkG.append("circle")
+      .attr("class", "contact-pt")
+      .attr("fill", d => d.color)
+      .attr("cx", d => x(d.year))
+      .attr("cy", d => d.dipY)
+      .attr("r", 3);
+
+    yearMarkG.append("rect")
+      .attr("class", "contact-pt contact-pt-gadda")
+      .attr("stroke", d => d.color)
+      .attr("x", d => x(d.year) - 3)
+      .attr("y", gaddaY - 3)
+      .attr("width", 6)
+      .attr("height", 6)
+      .attr("transform", d => `rotate(45 ${x(d.year)} ${gaddaY})`);
+
+    let selected = new Set(initialSelected);
+    let selectedContact = null;
+
+    function isRelevant(name) {
+      if (selectedContact) return name === "Gadda Carlo Emilio" || name === selectedContact.name;
+      return selected.size === 0 || name === "Gadda Carlo Emilio" || selected.has(name);
+    }
+
+    function applyHighlight() {
+      rows.selectAll(".life, .life-halo").style("opacity", d => (isRelevant(d.name) ? null : 0.08));
+      rows.selectAll(".pt").style("opacity", d => (isRelevant(d.name) ? 1 : 0.08));
+      svg.selectAll(".contact").each(function (d) {
+        const visible = selectedContact ? d === selectedContact : selected.has(d.name);
+        d3.select(this)
+          .style("opacity", visible ? 1 : 0)
+          .style("pointer-events", visible ? null : "none");
+      });
+      svg.selectAll(".year-mark").each(function (d) {
+        const visible = selectedContact ? d.cluster === selectedContact : selected.has(d.name);
+        d3.select(this)
+          .style("opacity", visible ? 1 : 0)
+          .style("pointer-events", visible ? null : "none");
+      });
+      lineLabels.style("font-weight", d => (selected.has(d.name) ? 800 : 600));
+
+      svg.select(".compare-link").remove();
+      svg.select(".compare-label").remove();
+      if (selectedContact) {
+        const cx = (x(selectedContact.yearStart) + x(selectedContact.yearEnd)) / 2;
+        svg.append("line")
+          .attr("class", "compare-link")
+          .attr("stroke", selectedContact.color)
+          .attr("x1", cx).attr("x2", cx)
+          .attr("y1", selectedContact.dipY).attr("y2", gaddaY);
+        const yearLabel = selectedContact.yearStart === selectedContact.yearEnd
+          ? `${selectedContact.yearStart}`
+          : `${selectedContact.yearStart}–${selectedContact.yearEnd}`;
+        svg.append("text")
+          .attr("class", "compare-label")
+          .attr("x", cx)
+          .attr("y", Math.min(selectedContact.dipY, gaddaY) - 8)
+          .attr("text-anchor", "middle")
+          .attr("fill", selectedContact.color)
+          .text(`${selectedContact.name} — ${yearLabel}`);
+      }
+    }
+
+    function toggleSelection(name) {
+      selectedContact = null;
+      if (name === "Gadda Carlo Emilio" || (selected.size === 1 && selected.has(name))) {
+        selected = new Set();
+      } else {
+        selected = new Set([name]);
+      }
+      applyHighlight();
+    }
+    function toggleContact(contact) {
+      selected = new Set();
+      selectedContact = selectedContact === contact ? null : contact;
+      applyHighlight();
+    }
+
+    rows.style("cursor", "pointer").on("click", (event, d) => toggleSelection(d.name));
+    contactG.on("click", (event, d) => {
+      event.stopPropagation();
+      if (!selected.has(d.name) && d !== selectedContact) return;
+      toggleContact(d);
+    });
+
+    // hover tooltip: every record any of the four reparti has for this
+    // person in THIS exact year — a library book, a secondary-bibliography
+    // piece, an archive object, and/or plain letter correspondence (which
+    // has no title of its own, just the fact a letter is dated this year).
+    const tooltip = d3.select("#tooltip");
+    function moveTooltip(event) {
+      tooltip.style("left", (event.clientX + 14) + "px").style("top", (event.clientY + 14) + "px");
+    }
+    yearMarkG
+      .on("mouseenter", (event, d) => {
+        const sections = [];
+        const books = (libraryBooks[d.name] || []).filter(b => b.year === d.year);
+        if (books.length) {
+          sections.push({
+            label: "LIBRARY",
+            lines: books.map(b => `${b.title}${[b.publisher, b.place].filter(Boolean).join(", ") ? ` (${[b.publisher, b.place].filter(Boolean).join(", ")})` : ""}`),
+          });
+        }
+        const works = (secondaryWorks[d.name] || []).filter(w => w.year === d.year);
+        if (works.length) {
+          sections.push({
+            label: "SECONDARY BIBLIOGRAPHY",
+            lines: works.map(w => `${w.title}${[w.tipo, w.rivista].filter(Boolean).join(", ") ? ` (${[w.tipo, w.rivista].filter(Boolean).join(", ")})` : ""}`),
+          });
+        }
+        const records = (archiveRecords[d.name] || []).filter(r => r.year === d.year);
+        if (records.length) {
+          sections.push({
+            label: "ARCHIVE",
+            lines: records.map(r => `${r.title}${[r.luogo, r.archivio].filter(Boolean).join(", ") ? ` (${[r.luogo, r.archivio].filter(Boolean).join(", ")})` : ""}`),
+          });
+        }
+        if ((letterYears[d.name] || []).includes(d.year)) {
+          sections.push({ label: "LETTERS", lines: ["Letter correspondence with Gadda this year"] });
+        }
+        tooltip.html(
+          `<strong>${d.name} — ${d.year}</strong>` +
+          (sections.length
+            ? sections.map(s =>
+                `<div style="margin-top:0.3rem;opacity:0.6;font-size:0.7rem;">${s.label}</div>` +
+                s.lines.map(l => `<div style="margin-top:0.15rem;opacity:0.9">${l}</div>`).join("")
+              ).join("")
+            : "no record on file for this year")
+        );
+        tooltip.attr("hidden", null);
+        moveTooltip(event);
+      })
+      .on("mousemove", moveTooltip)
+      .on("mouseleave", () => tooltip.attr("hidden", true));
+
+    applyHighlight();
+  }
+
+  let pinnedNames = new Set();
+  let timeFocus = null;
+  let searchSelected = new Set();
+  // which reparto a person must belong to be eligible — null means any
+  // reparto counts. There's no "top N" cap: this graph always shows
+  // everyone who matches the current reparto/categoria/genre/time filter.
+  let activeReparto = null;
+  // typology filters, carried over from the individual reparto graphs: a
+  // letters-relationship category (Familiari, Amici, Contatti letterari…)
+  // and a library book genre (Italian literature, Art history…). Only
+  // people who actually have that reparto's record carry the matching
+  // field, so these naturally narrow to that reparto's people too. The two
+  // filter bars themselves only show up when the active reparto is one
+  // they actually apply to (see updateTypologyVisibility below).
+  let activeCategoria = null;
+  let activeGenre = null;
+
+  function updateTypologyVisibility() {
+    d3.select("#categoria-filter").attr("hidden", activeReparto === "letters" ? null : true);
+    d3.select("#genre-filter").attr("hidden", activeReparto === "library" ? null : true);
+  }
+
+  function applyFilter() {
+    let matching = activeReparto
+      ? allCorrespondents.filter(d => d.sources.includes(activeReparto))
+      : allCorrespondents;
+    if (activeCategoria) matching = matching.filter(d => d.categoria === activeCategoria);
+    if (activeGenre) matching = matching.filter(d => d.genre === activeGenre);
+    if (timeFocus) matching = matching.filter(d => (d.interactions || []).some(yr => yr >= timeFocus.start && yr <= timeFocus.end));
+    const matchingNames = new Set(matching.map(d => d.name));
+    const pinnedExtra = allCorrespondents.filter(d => pinnedNames.has(d.name) && !matchingNames.has(d.name));
+    const shown = [...matching, ...pinnedExtra];
+    render(shown, searchSelected);
+
+    d3.select("#count-panel").html(
+      `<div>Shown</div><strong>${shown.length}</strong>` +
+      `<div style="margin-top:0.5rem">${timeFocus ? `Active ${timeFocus.start}\u2013${timeFocus.end}` : "Total"}</div><strong>${allCorrespondents.length}</strong>`
+    );
+
+    d3.select("#pinned-chips").selectAll(".pinned-chip")
+      .data([...pinnedNames])
+      .join("div")
+        .attr("class", "pinned-chip")
+        .text(d => d)
+        .on("click", (event, d) => { pinnedNames.delete(d); searchSelected.delete(d); applyFilter(); });
+  }
+
+  const searchInput = d3.select("#search-input");
+  const searchSuggestions = d3.select("#search-suggestions");
+  searchInput.on("input", function () {
+    const q = this.value.trim().toLowerCase();
+    searchSuggestions.html("");
+    if (!q) return;
+    const matches = allCorrespondents
+      .filter(d => d.name.toLowerCase().includes(q) && !pinnedNames.has(d.name))
+      .slice(0, 8);
+    searchSuggestions.selectAll(".search-suggestion")
+      .data(matches)
+      .join("div")
+        .attr("class", "search-suggestion")
+        .text(d => d.name)
+        .on("click", (event, d) => {
+          pinnedNames.add(d.name);
+          searchSelected.add(d.name);
+          searchInput.property("value", "");
+          searchSuggestions.html("");
+          applyFilter();
+        });
+  });
+  d3.select(document.body).on("click", (event) => {
+    if (!event.target.closest(".search-box")) searchSuggestions.html("");
+  });
+
+  d3.select("#time-focus-apply").on("click", () => {
+    const start = +d3.select("#time-focus-start").property("value");
+    const end = +d3.select("#time-focus-end").property("value");
+    if (!start || !end || start >= end) return;
+    timeFocus = { start, end };
+    searchSelected = new Set();
+    applyFilter();
+  });
+  d3.select("#time-focus-clear").on("click", () => {
+    timeFocus = null;
+    searchSelected = new Set();
+    d3.select("#time-focus-start").property("value", "");
+    d3.select("#time-focus-end").property("value", "");
+    applyFilter();
+  });
+
+  const repartoLabels = { letters: "Letters", library: "Library", secondaryBib: "Secondary bibliography", archive: "Archive" };
+  const repartoFilterBar = d3.select("#reparto-filter");
+  repartoFilterBar.append("button")
+    .attr("class", "filter-btn active")
+    .attr("data-value", "__all__")
+    .text("All reparti")
+    .on("click", function () {
+      activeReparto = null;
+      activeCategoria = null;
+      activeGenre = null;
+      searchSelected = new Set();
+      d3.selectAll("#reparto-filter .filter-btn").classed("active", false);
+      d3.select(this).classed("active", true);
+      updateTypologyVisibility();
+      applyFilter();
+    });
+  Object.entries(repartoLabels).forEach(([key, label]) => {
+    repartoFilterBar.append("button")
+      .attr("class", "filter-btn")
+      .attr("data-value", key)
+      .text(label)
+      .on("click", function () {
+        activeReparto = key;
+        // switching reparto invalidates whichever typology filter doesn't
+        // apply to it, so it doesn't keep silently narrowing the results.
+        activeCategoria = null;
+        activeGenre = null;
+        d3.selectAll("#categoria-filter .filter-btn").classed("active", false);
+        d3.select("#categoria-filter .filter-btn[data-value='__all__']").classed("active", true);
+        d3.selectAll("#genre-filter .filter-btn").classed("active", false);
+        d3.select("#genre-filter .filter-btn[data-value='__all__']").classed("active", true);
+        searchSelected = new Set();
+        d3.selectAll("#reparto-filter .filter-btn").classed("active", false);
+        d3.select(this).classed("active", true);
+        updateTypologyVisibility();
+        applyFilter();
+      });
+  });
+
+  // --- categoria filter: the letters-relationship category (only shown
+  // while the "Letters" reparto is active \u2014 see updateTypologyVisibility) ---
+  const categoriaValues = Array.from(new Set(allCorrespondents.map(d => d.categoria).filter(Boolean))).sort();
+  const categoriaFilterBar = d3.select("#categoria-filter");
+  categoriaFilterBar.append("button")
+    .attr("class", "filter-btn active")
+    .attr("data-value", "__all__")
+    .text("All categories")
+    .on("click", function () {
+      activeCategoria = null;
+      searchSelected = new Set();
+      d3.selectAll("#categoria-filter .filter-btn").classed("active", false);
+      d3.select(this).classed("active", true);
+      applyFilter();
+    });
+  categoriaValues.forEach(cat => {
+    categoriaFilterBar.append("button")
+      .attr("class", "filter-btn")
+      .attr("data-value", cat)
+      .text(cat)
+      .on("click", function () {
+        activeCategoria = cat;
+        searchSelected = new Set();
+        d3.selectAll("#categoria-filter .filter-btn").classed("active", false);
+        d3.select(this).classed("active", true);
+        applyFilter();
+      });
+  });
+
+  // --- genre filter: the dominant book genre in Gadda's library (only
+  // shown while the "Library" reparto is active) ---
+  const genreValues = Array.from(new Set(allCorrespondents.map(d => d.genre).filter(Boolean))).sort();
+  const genreFilterBar = d3.select("#genre-filter");
+  genreFilterBar.append("button")
+    .attr("class", "filter-btn active")
+    .attr("data-value", "__all__")
+    .text("All genres")
+    .on("click", function () {
+      activeGenre = null;
+      searchSelected = new Set();
+      d3.selectAll("#genre-filter .filter-btn").classed("active", false);
+      d3.select(this).classed("active", true);
+      applyFilter();
+    });
+  genreValues.forEach(genre => {
+    genreFilterBar.append("button")
+      .attr("class", "filter-btn")
+      .attr("data-value", genre)
+      .text(genre)
+      .on("click", function () {
+        activeGenre = genre;
+        searchSelected = new Set();
+        d3.selectAll("#genre-filter .filter-btn").classed("active", false);
+        d3.select(this).classed("active", true);
+        applyFilter();
+      });
+  });
+
+  updateTypologyVisibility();
+
+  const focusParam = new URLSearchParams(location.search).get("focus");
+  if (focusParam && allCorrespondents.some(d => d.name === focusParam)) {
+    pinnedNames.add(focusParam);
+    searchSelected = new Set([focusParam]);
+  }
+
+  applyFilter();
+</script>
+</body>
+</html>
