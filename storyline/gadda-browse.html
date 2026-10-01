@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Carlo Emilio Gadda — reparti</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #222222;
+    --grid: #dddddd;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1e;
+      --ink: #e8e8e8;
+      --grid: #3a3a3a;
+    }
+  }
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: system-ui, sans-serif;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 0;
+    box-sizing: border-box;
+  }
+
+  h1 { font-size: 1.1rem; font-weight: 600; margin: 0 0 0.3rem; }
+  p.sub { font-size: 0.8rem; opacity: 0.6; margin: 0 0 1.25rem; max-width: 950px; text-align: center; }
+
+  .tab-bar {
+    display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;
+    max-width: 950px; margin: 0 0 1.25rem;
+  }
+  .tab-btn {
+    font: inherit; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--grid); border-radius: 999px; padding: 0.45rem 1.1rem;
+    background: transparent; color: var(--ink); opacity: 0.55;
+  }
+  .tab-btn.active {
+    opacity: 1; color: var(--accent); border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+  }
+
+  .frame-wrap {
+    width: 100%; max-width: 1050px; flex: 1 1 auto;
+    display: flex; flex-direction: column; min-height: 0; padding-bottom: 2rem;
+  }
+  iframe {
+    width: 100%; flex: 1 1 auto; min-height: 720px;
+    border: 1px solid color-mix(in srgb, var(--accent, var(--grid)) 45%, var(--grid));
+    border-radius: 10px; background: var(--bg);
+  }
+
+  .download-btn {
+    font: inherit; font-size: 0.8rem; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--grid); border-radius: 999px; padding: 0.4rem 1rem;
+    background: transparent; color: var(--ink); align-self: center; margin: 0.9rem 0 0;
+  }
+  .download-btn:disabled { opacity: 0.4; cursor: default; }
+</style>
+</head>
+<body>
+
+<h1>Carlo Emilio Gadda — browse by reparto</h1>
+<p class="sub">the four reparto graphs (letters, library, secondary bibliography, archive), each kept exactly as its own file — switch between them below.</p>
+<div class="tab-bar" id="tab-bar"></div>
+<div class="frame-wrap">
+  <iframe id="graph-frame" title="reparto graph"></iframe>
+  <button id="download-btn" class="download-btn" disabled>⬇ Download the current view as SVG</button>
+</div>
+
+<script>
+  // each reparto's accent matches the correspondent-line color used in its
+  // own graph file (letters stays the original purple; the other three were
+  // given distinct palettes so browsing between them reads as browsing
+  // between distinct collections, not just different pages).
+  const tabs = [
+    { key: "letters", label: "Letters", file: "gadda-reparto-letter-range.html", accent: "#6d2a9e" },
+    { key: "library", label: "Library", file: "gadda-reparto-library.html", accent: "#c05727" },
+    { key: "secondaryBib", label: "Secondary bibliography", file: "gadda-reparto-secondary-bibliography.html", accent: "#1d4e9e" },
+    { key: "archive", label: "Archive", file: "gadda-reparto-archive.html", accent: "#9e1d47" },
+  ];
+
+  const tabBar = document.getElementById("tab-bar");
+  const frame = document.getElementById("graph-frame");
+  const downloadBtn = document.getElementById("download-btn");
+
+  // setting iframe.src doesn't make contentDocument point at the new page
+  // right away — the old document (or a transient blank one) is still there
+  // until the browser actually finishes loading it. Downloading before that
+  // "load" event fires is exactly what produced "nothing to download" even
+  // though the graph was visibly on screen (the button worked off the OLD,
+  // emptied-out document for a moment). Disabling the button until the
+  // frame's own load event fires removes that race entirely.
+  let frameReady = false;
+  frame.addEventListener("load", () => { frameReady = true; downloadBtn.disabled = false; });
+
+  function activate(tab) {
+    frameReady = false;
+    downloadBtn.disabled = true;
+    frame.src = tab.file;
+    [...tabBar.children].forEach(btn => btn.classList.toggle("active", btn.dataset.key === tab.key));
+    document.documentElement.style.setProperty("--accent", tab.accent);
+    const url = new URL(location.href);
+    url.searchParams.set("tab", tab.key);
+    history.replaceState(null, "", url);
+  }
+
+  tabs.forEach(tab => {
+    const btn = document.createElement("button");
+    btn.className = "tab-btn";
+    btn.textContent = tab.label;
+    btn.dataset.key = tab.key;
+    btn.style.setProperty("--accent", tab.accent);
+    btn.addEventListener("click", () => activate(tab));
+    tabBar.appendChild(btn);
+  });
+
+  // ?tab=library (or similar) picks which graph opens initially; defaults
+  // to letters. A graph's own cross-links (?focus=Name) still work since
+  // they're passed straight through to the iframe's src by each tab's file.
+  const requestedKey = new URLSearchParams(location.search).get("tab");
+  const initial = tabs.find(t => t.key === requestedKey) || tabs[0];
+  activate(initial);
+
+  // --- download: export the SVG currently showing inside the iframe (the
+  // full graph, a filtered subset, or a "My selection" custom view — tab
+  // switching doesn't change this, it just reads whatever's live inside the
+  // iframe right now). Each graph defines its colors as CSS custom
+  // properties (--bg/--ink/--grid) on its own :root, which a saved file
+  // can't see on its own, so those get inlined into the exported copy.
+  downloadBtn.addEventListener("click", () => {
+    let frameDoc;
+    try {
+      frameDoc = frame.contentDocument;
+    } catch (e) {
+      alert("Can't reach the graph inside the frame (likely blocked by the browser for file:// pages). Serving this folder over a local server fixes it.");
+      return;
+    }
+    const original = frameDoc && frameDoc.querySelector("svg");
+    if (!original) {
+      alert("No graph loaded yet to download.");
+      return;
+    }
+    const clone = original.cloneNode(true);
+    const cs = frameDoc.defaultView.getComputedStyle(frameDoc.documentElement);
+    const bg = cs.getPropertyValue("--bg").trim();
+    const ink = cs.getPropertyValue("--ink").trim();
+    const grid = cs.getPropertyValue("--grid").trim();
+    const styleTag = document.createElementNS("http://www.w3.org/2000/svg", "style");
+    styleTag.textContent = `
+      :root { --bg: ${bg}; --ink: ${ink}; --grid: ${grid}; }
+      .life-halo { stroke: ${bg}; stroke-linecap: round; fill: none; }
+      .life { stroke-linecap: round; fill: none; opacity: 0.55; }
+      .line-label { font-size: 11px; font-weight: 600; }
+      .time-baseline { stroke: ${grid}; stroke-width: 1; }
+      .time-label { font-size: 10px; fill: ${ink}; opacity: 0.6; font-family: system-ui, sans-serif; }
+      .contact-pt-gadda { fill: ${bg}; stroke-width: 2; }
+      .contact-envelope { fill: none; stroke-width: 1; opacity: 0.5; }
+      .compare-link { stroke-width: 2; }
+      .compare-label { font-size: 12px; font-weight: 700; }
+      .cutoff { font-size: 16px; font-weight: 700; }
+    `;
+    clone.insertBefore(styleTag, clone.firstChild);
+    const bgRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    bgRect.setAttribute("x", "0");
+    bgRect.setAttribute("y", "0");
+    bgRect.setAttribute("width", "100%");
+    bgRect.setAttribute("height", "100%");
+    bgRect.setAttribute("fill", bg);
+    clone.insertBefore(bgRect, clone.firstChild);
+    const source = '<?xml version="1.0" standalone="no"?>\r\n' + new XMLSerializer().serializeToString(clone);
+    const blob = new Blob([source], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const activeTab = tabs.find(t => tabBar.querySelector(`.tab-btn[data-key="${t.key}"]`).classList.contains("active"));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `gadda-${activeTab ? activeTab.key : "graph"}-view.svg`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+</script>
+</body>
+</html>
