@@ -148,6 +148,20 @@
   const gadda = rawPeople.find(d => d.name === "Gadda Carlo Emilio");
   const allCorrespondents = rawPeople.filter(d => d !== gadda);
 
+  // ===== REPARTO COLOURS — edit these to change each reparto's colour =====
+  // Any CSS colour works: hex ("#2a7f62"), rgb(...), or a name ("teal").
+  // The order is also the priority: someone in more than one reparto takes
+  // the colour of the first one listed here that they belong to (unless a
+  // reparto filter is active, then everyone shown takes that reparto's colour).
+  // Line weight still shades each colour lighter/darker.
+  const repartoColors = {
+    letters:      "#6a3d9a",  // Letters
+    library:      "#1f78b4",  // Library
+    archive:      "#b15928",  // Archive
+    secondaryBib: "#33a02c",  // Secondary bibliography
+  };
+  // ========================================================================
+
   const width = 950;
   const margin = { top: 30, right: 40, bottom: 40, left: 170 };
   const minHeight = 420;
@@ -245,13 +259,11 @@
     const rowStep = Math.abs(yScale.step()) || 30;
     const maxGap = Math.min(rowStep * 0.4, rowStep / 2 - 2);
 
-    const correspondentNames = people.filter(d => d.name !== "Gadda Carlo Emilio").map(d => d.name);
-    const purplePalette = d3.quantize(
-      t => d3.interpolateHcl("#dcc6f5", "#3b0a63")(t),
-      Math.max(correspondentNames.length, 2)
-    );
     const colorMap = new Map();
-    correspondentNames.forEach((name, i) => colorMap.set(name, purplePalette[i % purplePalette.length]));
+    people.filter(d => d.name !== "Gadda Carlo Emilio").forEach(d => {
+      const reparto = activeReparto ?? Object.keys(repartoColors).find(key => d.sources.includes(key));
+      colorMap.set(d.name, repartoColors[reparto] ?? "#888888");
+    });
     const colorScale = name => colorMap.get(name);
     const gaddaColor = "var(--ink)";
     const colorFor = name => (name === "Gadda Carlo Emilio" ? gaddaColor : colorScale(name));
@@ -647,6 +659,7 @@
     repartoFilterBar.append("button")
       .attr("class", "filter-btn")
       .attr("data-value", key)
+      .style("color", repartoColors[key])
       .text(label)
       .on("click", function () {
         activeReparto = key;
