@@ -107,7 +107,9 @@
   function activate(tab) {
     frameReady = false;
     downloadBtn.disabled = true;
-    frame.src = tab.file;
+    // the timestamp makes the browser fetch the graph fresh every time instead
+    // of reusing a saved copy, so updates show up without a hard refresh
+    frame.src = `${tab.file}?v=${Date.now()}`;
     [...tabBar.children].forEach(btn => btn.classList.toggle("active", btn.dataset.key === tab.key));
     document.documentElement.style.setProperty("--accent", tab.accent);
     const url = new URL(location.href);
