@@ -223,15 +223,9 @@
   },
   "Aliberti, Francesco": {
     "viaf_id": null,
-    "wikidata_description": "casa editrice italiana",
-    "wikidata_id": "Q3611647",
-    "wikidata_label": "Aliberti editore"
-  },
-  "Alice": {
-    "viaf_id": null,
-    "wikidata_description": "prenome femminile",
-    "wikidata_id": "Q650689",
-    "wikidata_label": "Alice"
+    "wikidata_description": "researcher",
+    "wikidata_id": "Q130611550",
+    "wikidata_label": "Francesco Aliberti"
   },
   "Alighieri, Dante": {
     "viaf_id": "97105654",
@@ -407,29 +401,17 @@
     "wikidata_id": "Q62642571",
     "wikidata_label": "Bartolo Anglani"
   },
-  "Annamaria": {
-    "viaf_id": null,
-    "wikidata_description": "prenome femminile",
-    "wikidata_id": "Q18118006",
-    "wikidata_label": "Annamaria"
-  },
   "Anonimo (ma C.E. Gadda)": {
-    "viaf_id": "100627125",
-    "wikidata_description": "termine usato per descrivere l'autore ignoto di un'opera",
-    "wikidata_id": "Q4233718",
-    "wikidata_label": "anonimo"
+    "viaf_id": "56610080",
+    "wikidata_description": "scrittore italiano (1893-1973)",
+    "wikidata_id": "Q378645",
+    "wikidata_label": "Carlo Emilio Gadda"
   },
   "Anonimo romano": {
     "viaf_id": null,
     "wikidata_description": "scrittore italiano",
     "wikidata_id": "Q3635451",
     "wikidata_label": "Bartolomeo di Iacovo da Valmontone"
-  },
-  "Ansaldo": {
-    "viaf_id": "211013856",
-    "wikidata_description": "società metalmeccanica italiana (1853-1993)",
-    "wikidata_id": "Q290188",
-    "wikidata_label": "Ansaldo"
   },
   "Anselmi, Gian Mario": {
     "viaf_id": "110443860",
@@ -503,23 +485,11 @@
     "wikidata_id": "Q296272",
     "wikidata_label": "Pietro Aretino"
   },
-  "Aretusa": {
-    "viaf_id": "153206030",
-    "wikidata_description": "ninfa nereide della mitologia greca",
-    "wikidata_id": "Q643456",
-    "wikidata_label": "Aretusa"
-  },
   "Argan, Giulio Carlo": {
     "viaf_id": "56605075",
     "wikidata_description": "critico d'arte, politico e docente universitario italiano (1909-1992)",
     "wikidata_id": "Q778445",
     "wikidata_label": "Giulio Carlo Argan"
-  },
-  "Argomenti": {
-    "viaf_id": null,
-    "wikidata_description": "Academic journal published by Università degli Studi di Urbino Carlo Bo, covering the subjects: Social Sciences: Commerce: Business | Social Sciences: Economic theory. Demography: Economics as a science | Social Sciences: Social sciences",
-    "wikidata_id": "Q50814870",
-    "wikidata_label": "Argomenti"
   },
   "Ariosto, Ludovico": {
     "viaf_id": "71386455",
@@ -544,12 +514,6 @@
     "wikidata_description": null,
     "wikidata_id": "Q124352792",
     "wikidata_label": "Camillo Arpesani"
-  },
-  "Arte": {
-    "viaf_id": null,
-    "wikidata_description": "attività umana che porta a forme creative di espressione estetica",
-    "wikidata_id": "Q735",
-    "wikidata_label": "arte"
   },
   "Artini, Ettore": {
     "viaf_id": "73943694",
@@ -736,12 +700,6 @@
     "wikidata_description": "filosofo italiano (1950-)",
     "wikidata_id": "Q106806832",
     "wikidata_label": "Italo Francesco Baldo"
-  },
-  "Ballo": {
-    "viaf_id": null,
-    "wikidata_description": "festa danzante",
-    "wikidata_id": "Q478515",
-    "wikidata_label": "ballo"
   },
   "Bally, Charles": {
     "viaf_id": "73849538",
@@ -1138,12 +1096,6 @@
     "wikidata_description": "giornalista e critico letterario italiano (1921-2011)",
     "wikidata_id": "Q19886008",
     "wikidata_label": "Renato Bertacchini"
-  },
-  "Bertani": {
-    "viaf_id": null,
-    "wikidata_description": "cognome",
-    "wikidata_id": "Q21452542",
-    "wikidata_label": "Bertani"
   },
   "Bertarelli, Luigi Vittorio": {
     "viaf_id": "61669999",
@@ -1583,12 +1535,6 @@
     "wikidata_id": "Q3379392",
     "wikidata_label": "Philippe Bordas"
   },
-  "Borelli, Renato": {
-    "viaf_id": null,
-    "wikidata_description": "scuola infanzia di Monterotondo in provincia di Roma (Italia) [codice scuola: RMAA884022]",
-    "wikidata_id": "Q52788015",
-    "wikidata_label": "Renato Borelli"
-  },
   "Borgese, Giuseppe Antonio": {
     "viaf_id": "17234853",
     "wikidata_description": "scrittore, giornalista e critico letterario italiano (1882-1952)",
@@ -1954,12 +1900,6 @@
     "wikidata_description": "filologo francese",
     "wikidata_id": "Q380842",
     "wikidata_label": "Joseph Bédier"
-  },
-  "C.": {
-    "viaf_id": null,
-    "wikidata_description": "approssimatamente – da utilizzare con il qualificatore P1480 per indicare che il valore è stata indicato dalla fonte esplicitamente con valore approssimato (esempio \"nato attorno al 1709\")",
-    "wikidata_id": "Q5727902",
-    "wikidata_label": "circa"
   },
   "Cabau, Jacques": {
     "viaf_id": "61542956",
@@ -2482,18 +2422,6 @@
     "wikidata_description": "scrittore italiano (1930-2013)",
     "wikidata_id": "Q3659173",
     "wikidata_label": "Carlo Castellaneta"
-  },
-  "Castelli (impresa costruzioni edilizie)": {
-    "viaf_id": "131351422",
-    "wikidata_description": "comune italiano",
-    "wikidata_id": "Q51433",
-    "wikidata_label": "Castelli"
-  },
-  "Castelli (impresa di costruzioni)": {
-    "viaf_id": "131351422",
-    "wikidata_description": "comune italiano",
-    "wikidata_id": "Q51433",
-    "wikidata_label": "Castelli"
   },
   "Castelnuovo Tedesco, Ugo": {
     "viaf_id": "315950730",
@@ -3947,12 +3875,6 @@
     "wikidata_id": "Q56056916",
     "wikidata_label": "Francesco d'Ovidio"
   },
-  "E.R.": {
-    "viaf_id": "177100293",
-    "wikidata_description": "serie televisiva statunitense (1994-2009)",
-    "wikidata_id": "Q207375",
-    "wikidata_label": "E.R. - Medici in prima linea"
-  },
   "Eckermann, Johann Peter": {
     "viaf_id": "29550537",
     "wikidata_description": "poeta tedesco (1792-1854)",
@@ -4074,10 +3996,10 @@
     "wikidata_label": "Esopo"
   },
   "Esposito, Edoardo": {
-    "viaf_id": null,
-    "wikidata_description": "youtuber italiano",
-    "wikidata_id": "Q112133684",
-    "wikidata_label": "Sespo"
+    "viaf_id": "49252252",
+    "wikidata_description": "Esposito, Edoardo, 1947-",
+    "wikidata_id": "Q125531008",
+    "wikidata_label": "Edoardo Esposito"
   },
   "Euripide": {
     "viaf_id": "265326651",
@@ -4410,10 +4332,10 @@
     "wikidata_label": "Gustave Flaubert"
   },
   "Flora, Francesco": {
-    "viaf_id": "100955172",
-    "wikidata_description": "pittore fiammingo",
-    "wikidata_id": "Q543948",
-    "wikidata_label": "Frans Floris I"
+    "viaf_id": "12677354",
+    "wikidata_description": "critico letterario, scrittore e antifascista italiano (1891-1962)",
+    "wikidata_id": "Q3749992",
+    "wikidata_label": "Francesco Flora"
   },
   "Flores, Enrico": {
     "viaf_id": "90312120",
@@ -4714,12 +4636,6 @@
     "wikidata_description": "Dr.-Ing. E. H. Technische Universität Darmstadt 1919",
     "wikidata_id": "Q102221748",
     "wikidata_label": "Max Förster"
-  },
-  "G.L.": {
-    "viaf_id": null,
-    "wikidata_description": "visual artist",
-    "wikidata_id": "Q125913444",
-    "wikidata_label": "G.L."
   },
   "Gabici, Franco": {
     "viaf_id": "64261165",
@@ -6089,12 +6005,6 @@
     "wikidata_id": "Q122370",
     "wikidata_label": "Gottfried Keller"
   },
-  "Ketty": {
-    "viaf_id": null,
-    "wikidata_description": "prenome femminile",
-    "wikidata_id": "Q19968543",
-    "wikidata_label": "Ketty"
-  },
   "Kienlechner, Toni": {
     "viaf_id": "37368029",
     "wikidata_description": "giornalista, traduttrice, scrittrice tedesca (1919-2010)",
@@ -7074,10 +6984,10 @@
     "wikidata_label": "Matteo Marchesini"
   },
   "Marchetti, Giuseppe": {
-    "viaf_id": "27057351",
-    "wikidata_description": "scrittore italiano (1902-1966)",
-    "wikidata_id": "Q3397447",
-    "wikidata_label": "Josef Marchet"
+    "viaf_id": "51791282",
+    "wikidata_description": "critico letterario e giornalista italiano (1934-2021)",
+    "wikidata_id": "Q3770892",
+    "wikidata_label": "Giuseppe Marchetti"
   },
   "Marchi, Gian Paolo": {
     "viaf_id": "41882912",
@@ -7336,12 +7246,6 @@
     "wikidata_description": "scrittore e drammaturgo francese",
     "wikidata_id": "Q9327",
     "wikidata_label": "Guy de Maupassant"
-  },
-  "Mauri, C": {
-    "viaf_id": null,
-    "wikidata_description": "hotel in Quatre Cocos, Mauritius",
-    "wikidata_id": "Q111150810",
-    "wikidata_label": "C Mauritius"
   },
   "Mauri, Paolo": {
     "viaf_id": "262419713",
@@ -7740,10 +7644,10 @@
     "wikidata_label": "Michel de Montaigne"
   },
   "Montale Eugenio": {
-    "viaf_id": null,
-    "wikidata_description": "scuola primo grado di Roma in provincia di Roma (Italia) [codice scuola: RMMM82201T]",
-    "wikidata_id": "Q52896170",
-    "wikidata_label": "Montale Eugenio"
+    "viaf_id": "73857542",
+    "wikidata_description": "poeta, scrittore, traduttore, giornalista, critico musicale, critico letterario e pittore italiano (1896-1981)",
+    "wikidata_id": "Q83174",
+    "wikidata_label": "Eugenio Montale"
   },
   "Montale, Eugenio": {
     "viaf_id": "73857542",
@@ -7948,12 +7852,6 @@
     "wikidata_description": "pittore tedesco",
     "wikidata_id": "Q317041",
     "wikidata_label": "Otto Mueller"
-  },
-  "N.G.": {
-    "viaf_id": "18877199",
-    "wikidata_description": "botanico australiano",
-    "wikidata_id": "Q6041421",
-    "wikidata_label": "Neville Grant Walsh"
   },
   "Nabokov, Vladimir": {
     "viaf_id": "27069388",
@@ -8236,12 +8134,6 @@
     "wikidata_description": "latinista e filologo classico tedesco",
     "wikidata_id": "Q65072",
     "wikidata_label": "Walter Friedrich Otto"
-  },
-  "Ottorina": {
-    "viaf_id": null,
-    "wikidata_description": "prenome femminile",
-    "wikidata_id": "Q124352794",
-    "wikidata_label": "Ottorina"
   },
   "Ovenden, Michael William": {
     "viaf_id": null,
@@ -9539,12 +9431,6 @@
     "wikidata_id": "Q1479648",
     "wikidata_label": "Heinz Riedt"
   },
-  "Rigamonti": {
-    "viaf_id": null,
-    "wikidata_description": "cognome",
-    "wikidata_id": "Q56540466",
-    "wikidata_label": "Rigamonti"
-  },
   "Righi, Stefania": {
     "viaf_id": null,
     "wikidata_description": "researcher",
@@ -9748,12 +9634,6 @@
     "wikidata_description": "filologo e critico letterario italiano (1917-2001)",
     "wikidata_id": "Q3629826",
     "wikidata_label": "Aurelio Roncaglia"
-  },
-  "Ronchi, Mario": {
-    "viaf_id": null,
-    "wikidata_description": "ciclista su strada italiano",
-    "wikidata_id": "Q16751290",
-    "wikidata_label": "Manrico Ronchiato"
   },
   "Roncoroni, Federico": {
     "viaf_id": "46825659",
@@ -9994,12 +9874,6 @@
     "wikidata_description": "autore",
     "wikidata_id": "Q28740079",
     "wikidata_label": "Herbert Werner Rüssel"
-  },
-  "S.A.": {
-    "viaf_id": null,
-    "wikidata_description": "tipo di società di capitali presente in vari ordinamenti",
-    "wikidata_id": "Q166280",
-    "wikidata_label": "società anonima"
   },
   "Saba, Umberto": {
     "viaf_id": "22148345",
@@ -10392,9 +10266,9 @@
     "wikidata_label": "Nicola Scillacio"
   },
   "Scipione (Gino Bonichi)": {
-    "viaf_id": null,
-    "wikidata_description": "prenome maschile",
-    "wikidata_id": "Q19660801",
+    "viaf_id": "69722911",
+    "wikidata_description": "pittore e scrittore italiano (1904-1933)",
+    "wikidata_id": "Q661448",
     "wikidata_label": "Scipione"
   },
   "Scobel, Albert": {
@@ -10828,12 +10702,6 @@
     "wikidata_description": "scrittore statunitense (1902-1968)",
     "wikidata_id": "Q39212",
     "wikidata_label": "John Steinbeck"
-  },
-  "Stella": {
-    "viaf_id": null,
-    "wikidata_description": "corpo celeste che brilla di luce propria",
-    "wikidata_id": "Q523",
-    "wikidata_label": "stella"
   },
   "Stella, Angelo": {
     "viaf_id": null,
@@ -11429,12 +11297,6 @@
     "wikidata_id": "Q59533087",
     "wikidata_label": "Marco Valsecchi"
   },
-  "Valverde": {
-    "viaf_id": "316741679",
-    "wikidata_description": "comune spagnolo",
-    "wikidata_id": "Q1853429",
-    "wikidata_label": "Valverde"
-  },
   "Valverde, José Maria": {
     "viaf_id": "109522008",
     "wikidata_description": "poeta, linguista e traduttore spagnolo",
@@ -11488,12 +11350,6 @@
     "wikidata_description": "pittore, architetto e storico dell'arte italiano (1511-1574)",
     "wikidata_id": "Q128027",
     "wikidata_label": "Giorgio Vasari"
-  },
-  "Vaselli": {
-    "viaf_id": null,
-    "wikidata_description": "cognome",
-    "wikidata_id": "Q99982005",
-    "wikidata_label": "Vaselli"
   },
   "Vassalli, Sebastiano": {
     "viaf_id": "112059077",
@@ -11746,12 +11602,6 @@
     "wikidata_description": "archeologo e numismatico italiano (1757-1835)",
     "wikidata_id": "Q23405364",
     "wikidata_label": "Alessandro Visconti"
-  },
-  "Vitagliano (casa editrice)": {
-    "viaf_id": null,
-    "wikidata_description": "cognome",
-    "wikidata_id": "Q36861118",
-    "wikidata_label": "Vitagliano"
   },
   "Vitale, Vincenzo": {
     "viaf_id": "93843942",
@@ -12013,9 +11863,9 @@
   },
   "Yorick (Laurence Sterne)": {
     "viaf_id": null,
-    "wikidata_description": "personaggio dell'Amleto di William Shakespeare",
-    "wikidata_id": "Q1650633",
-    "wikidata_label": "Yorick"
+    "wikidata_description": "pulp fantasy and science fiction illustrator",
+    "wikidata_id": "Q51954886",
+    "wikidata_label": "Lawrence Sterne Stevens"
   },
   "Young, George Frederick": {
     "viaf_id": "6485933",
