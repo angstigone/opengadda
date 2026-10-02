@@ -261,14 +261,13 @@ function escapeHtml(s) {
   return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// Exact key first, then a case/spacing-insensitive match.
-function findAuthority(dict, q) {
+// Exact key first, then a case/spacing-insensitive match. Returns the matched key.
+function findAuthorityKey(dict, q) {
   if (!q) return null;
-  if (dict[q]) return dict[q];
+  if (dict[q]) return q;
   const norm = s => s.toLowerCase().replace(/\s+/g, ' ').trim();
   const nq = norm(q);
-  const key = Object.keys(dict).find(k => norm(k) === nq);
-  return key ? dict[key] : null;
+  return Object.keys(dict).find(k => norm(k) === nq) || null;
 }
 
 function authorityRowHtml(kind, a) {
@@ -285,11 +284,21 @@ function authorityRowHtml(kind, a) {
 }
 
 function renderAuthorityCard(q) {
-  const person = findAuthority(PEOPLE_AUTHORITY, q);
-  const venue = findAuthority(VENUE_AUTHORITY, q);
-  document.getElementById('auth-card').innerHTML =
-    authorityRowHtml('Persona', person) +
-    authorityRowHtml(venue ? (VENUE_KIND_LABELS[venue.kind] || 'Ente') : '', venue);
+  // people_authority.json also contains some newspapers/publishers (e.g.
+  // "L'Ambrosiano"), so only treat a match as a person if that name really
+  // occurs in some record's people[].
+  const pKey = findAuthorityKey(PEOPLE_AUTHORITY, q);
+  const isPerson = pKey && ALL_DATA.some(d => (d.people||[]).some(p => p.name === pKey));
+  const person = isPerson ? PEOPLE_AUTHORITY[pKey] : null;
+  const vKey = findAuthorityKey(VENUE_AUTHORITY, q);
+  const venue = vKey ? VENUE_AUTHORITY[vKey] : null;
+  const venueKind = venue ? (VENUE_KIND_LABELS[venue.kind] || 'Ente') : '';
+  const sameEntity = person && venue &&
+    ((person.wikidata_id && person.wikidata_id === venue.wikidata_id) ||
+     (person.viaf_id && person.viaf_id === venue.viaf_id));
+  document.getElementById('auth-card').innerHTML = sameEntity
+    ? authorityRowHtml('Persona / ' + venueKind, venue)
+    : authorityRowHtml('Persona', person) + authorityRowHtml(venueKind, venue);
 }
 
 function applyFilters() {
