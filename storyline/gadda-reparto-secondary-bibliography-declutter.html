@@ -58,7 +58,10 @@
   .compare-link { stroke-width: 2; }
   .compare-label { font-size: 12px; font-weight: 700; }
   .cutoff { font-size: 16px; font-weight: 700; }
-  .primary-work-pt { cursor: pointer; stroke: var(--bg); stroke-width: 0.75; fill: #d99a1f; }
+  .primary-work { cursor: pointer; }
+  .primary-work-pt { stroke: #d99a1f; stroke-linecap: round; opacity: 0.85; pointer-events: none; }
+  .primary-work-hit { stroke: transparent; }
+  .primary-work:hover .primary-work-pt { opacity: 1; stroke: #b87a00; }
 
   .controls-bar {
     display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start;
@@ -101,13 +104,109 @@
   }
   .tooltip strong { display: block; margin-bottom: 0.15rem; }
 
-  /* focus mode: menus, titles and the count panel are hidden for now (not
-     removed — the script still looks them up by id), and the graph fills the
-     whole viewport. Delete this block to bring everything back. */
-  body { padding: 0; height: 100vh; overflow: hidden; }
-  h1, p.sub, .filter-bar, .controls-bar, .count-panel, .cross-link { display: none !important; }
-  .graph-wrap { max-width: none; width: 100vw; height: 100vh; }
-  svg { max-width: none; width: 100vw; height: 100vh; }
+  /* focus mode: titles, the category menu and the count panel are hidden
+     for now (not removed — the script still looks them up by id). Search,
+     year focus and the legend live in a fixed sidebar on the left, and the
+     graph fills the rest of the window. */
+  :root { --side-w: 240px; }
+  body { padding: 0; height: 100vh; overflow: visible; align-items: flex-start; }
+  h1, p.sub, .filter-bar, .count-panel, .cross-link { display: none !important; }
+  /* only <html> scrolls — if body had its own overflow too, body would
+     become the scroller and window.scrollX (which pins the names) would
+     stay at 0. The graph's width follows the timeline (see pxPerYear). */
+  html { overflow-x: auto; overflow-y: hidden; }
+  .graph-wrap { max-width: none; width: max-content; height: 100vh; margin-left: var(--side-w); }
+  svg { max-width: none; height: 100vh; flex: 0 0 auto; }
+
+  .side-panel {
+    position: fixed; left: 0; top: 0; bottom: 0; width: var(--side-w); z-index: 60;
+    box-sizing: border-box; padding: 1rem 0.9rem; overflow-y: auto;
+    background: var(--bg); border-right: 1px solid var(--grid);
+    display: flex; flex-direction: column; gap: 1.25rem;
+  }
+  .side-panel h2 {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    opacity: 0.55; margin: 0 0 0.45rem;
+  }
+  .side-panel .controls-bar { display: contents; }
+  .side-panel .search-box { width: 100%; }
+  .side-panel .time-focus { flex-wrap: wrap; }
+  .side-panel .time-focus > span:first-child { display: none; } /* replaced by the section heading */
+  .side-panel .time-focus input { width: 4.5rem; }
+
+  /* names drawn on their lines (see "label-layer" in the script) */
+  .label-layer .line-label { font-size: var(--label-size, 11px); }
+  .label-bg { fill: var(--bg); }
+  .time-label { font-size: var(--axis-size, 10px); }
+
+  .time-focus-status { font-size: 0.72rem; opacity: 0.7; margin-top: 0.5rem; width: 100%; }
+
+  /* Everyone / My selection switch in the sidebar */
+  .view-toggle { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.6rem; }
+  .view-toggle .filter-btn { flex: 1 1 auto; padding: 0.3rem 0.55rem; }
+  .selection-hint { font-size: 0.72rem; opacity: 0.65; margin-top: 0.45rem; }
+
+
+  /* reparto switcher at the top of the sidebar */
+  .reparti-nav { display: flex; flex-direction: column; gap: 0.3rem; }
+  .reparto-btn { text-align: left; border-left: 3px solid var(--accent); border-radius: 6px; }
+  .reparto-btn.active {
+    opacity: 1; color: var(--accent); border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, transparent); cursor: default;
+  }
+
+  /* live readout of the years on screen */
+  .year-readout {
+    position: fixed; right: 16px; bottom: 16px; z-index: 55;
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    border: 1px solid var(--grid); border-radius: 8px;
+    padding: 0.5rem 0.75rem; font-size: 0.75rem; line-height: 1.6;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08); pointer-events: none;
+  }
+  .year-readout strong { font-size: 0.9rem; }
+  .year-readout .ro-years { font-weight: 700; opacity: 0.7; margin-bottom: 0.15rem; }
+  .year-readout .ro-sub { opacity: 0.6; }
+  .shown-count { font-size: 0.78rem; margin-bottom: 0.55rem; line-height: 1.45; }
+  .shown-count strong { font-size: 0.9rem; }
+
+  .download-selection { width: 100%; margin-top: 0.6rem; }
+  .download-selection:disabled { opacity: 0.4; cursor: default; }
+
+  /* connections between graphs */
+  .xref-dot { font-size: 0.85em; }
+  .cross-person { margin-bottom: 0.55rem; }
+  .cross-name { font-size: 0.78rem; font-weight: 600; margin-bottom: 0.25rem; }
+  .cross-btns { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .cross-btn { font-size: 0.7rem; padding: 0.2rem 0.6rem; color: var(--accent); border-color: var(--accent); opacity: 1; }
+  .xref-hint { font-size: 0.7rem; opacity: 0.65; margin-top: 0.5rem; line-height: 1.45; }
+  .xref-dot-sample { color: #c05727; }
+
+
+  /* zoom controls, top right */
+  .zoom-ctl {
+    position: fixed; top: 10px; right: 14px; z-index: 55; display: flex; align-items: center; gap: 0.15rem;
+    background: color-mix(in srgb, var(--bg) 92%, transparent); border: 1px solid var(--grid);
+    border-radius: 8px; padding: 0.15rem; box-shadow: 0 2px 10px rgba(0,0,0,0.08); font-size: 0.75rem;
+  }
+  .zoom-ctl button {
+    font: inherit; font-weight: 700; min-width: 1.7rem; height: 1.6rem; cursor: pointer;
+    border: none; border-radius: 6px; background: transparent; color: var(--ink);
+  }
+  .zoom-ctl button:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); }
+  .zoom-ctl .zoom-fit { font-weight: 600; padding: 0 0.5rem; }
+  .zoom-level { min-width: 3rem; text-align: center; opacity: 0.7; font-variant-numeric: tabular-nums; }
+
+  /* retractable sidebar */
+  body.side-collapsed { --side-w: 0px; }
+  body.side-collapsed .side-panel { display: none; }
+  .side-toggle {
+    position: fixed; top: 12px; left: calc(var(--side-w) - 1px); z-index: 70;
+    width: 1.35rem; height: 2.2rem; padding: 0; cursor: pointer;
+    font: inherit; font-size: 1rem; font-weight: 700; line-height: 1; color: var(--ink);
+    background: var(--bg); border: 1px solid var(--grid); border-left: none;
+    border-radius: 0 7px 7px 0; box-shadow: 2px 1px 6px rgba(0,0,0,0.08); opacity: 0.8;
+  }
+  .side-toggle:hover { opacity: 1; }
 </style>
 </head>
 <body>
@@ -116,14 +215,18 @@
 <p class="sub">reparto "secondary bibliography" — 7 people whose record in the archive comes mostly from this section, each plotted at the year(s) they actually published something about Gadda during his own lifetime (≤ 1973). (An 8th, Lunetta Mario, is left out: both his pieces on Gadda are posthumous, so he has no lifetime year to plot.)</p>
 <p class="sub">The amber dots along Gadda's own line are separate: his own primary-bibliography works, placed at the year each one was first published — not tied to any of the 7 people above. Toggle them off with the "Gadda's own works" button below.</p>
 <div id="mode-filter" class="filter-bar"></div>
+<aside id="side-panel" class="side-panel">
 <div class="controls-bar">
-  <div>
+  <section>
+    <h2>People shown</h2>
     <div class="search-box">
       <input type="text" id="search-input" placeholder="Add a person by name…" autocomplete="off">
       <div id="search-suggestions" class="search-suggestions"></div>
     </div>
     <div id="pinned-chips" class="pinned-chips"></div>
-  </div>
+  </section>
+  <section>
+    <h2>Focus on years</h2>
   <div class="time-focus">
     <span>Focus on years</span>
     <input type="number" id="time-focus-start" placeholder="from">
@@ -132,7 +235,9 @@
     <button id="time-focus-apply" class="filter-btn">Apply</button>
     <button id="time-focus-clear" class="filter-btn">Clear</button>
   </div>
+</section>
 </div>
+</aside>
 <div class="graph-wrap">
   <svg viewBox="0 0 950 420"></svg>
   <div id="count-panel" class="count-panel"></div>
@@ -160,7 +265,11 @@
   // edition in his own lifetime are shown; posthumous editions and
   // letter-collections (published well after his 1973 death) are left out,
   // same as every other line in this graph, which all stop at his death.
-  const primaryWorks = [{"year": 1931, "title": "La Madonna dei Filosofi", "sigla": "MdF", "edition": "Firenze, Edizioni di Solaria, 1931 (II ed. Einaudi 1955)", "raccolta": "RR I, pp. 3-107"}, {"year": 1934, "title": "Il castello di Udine", "sigla": "CdU", "edition": "Firenze, Edizioni di Solaria, 1934 (II ed. Einaudi 1955)", "raccolta": "RR I, pp. 119-281"}, {"year": 1939, "title": "Le meraviglie d'Italia", "sigla": "MdI", "edition": "Firenze, Parenti, 1939", "raccolta": "SGF I, pp. 11-199"}, {"year": 1943, "title": "Gli Anni", "sigla": "A", "edition": "Firenze, Parenti, 1943", "raccolta": "SGF I, pp. 201-272"}, {"year": 1944, "title": "L'Adalgisa", "sigla": "L'A", "edition": "Firenze, Le Monnier, 1944 (III ed. Einaudi 1955)", "raccolta": "RR I, pp. 283-564"}, {"year": 1952, "title": "Il primo libro delle Favole", "sigla": "PLF", "edition": "Venezia, Pozza, 1952", "raccolta": "SGF II, pp. 11-84"}, {"year": 1953, "title": "Novelle dal Ducato in Fiamme", "sigla": "NdF", "edition": "Firenze, Vallecchi, 1953", "raccolta": ""}, {"year": 1955, "title": "Giornale di guerra e di prigionia", "sigla": "GGP", "edition": "Firenze, Sansoni, 1955 (II ed. Einaudi 1965)", "raccolta": "SGF II, pp. 431-867"}, {"year": 1955, "title": "I sogni e la folgore", "sigla": "SF", "edition": "Torino, Einaudi, 1955", "raccolta": "RR I"}, {"year": 1957, "title": "Quer pasticciaccio brutto de via Merulana", "sigla": "QP", "edition": "Milano, Garzanti, 1957", "raccolta": "RR II, pp. 11-276"}, {"year": 1958, "title": "I viaggi la morte", "sigla": "VM", "edition": "Milano, Garzanti, 1958", "raccolta": "SGF I, pp. 419-667"}, {"year": 1961, "title": "Verso la Certosa", "sigla": "VlC", "edition": "Milano-Napoli, Ricciardi, 1961", "raccolta": "SGF I, pp. 273-418"}, {"year": 1963, "title": "Accoppiamenti giudiziosi (I Racconti – 1924-1958)", "sigla": "AG", "edition": "Milano, Garzanti, 1963", "raccolta": "RR II, pp. 591-920"}, {"year": 1963, "title": "La cognizione del dolore", "sigla": "CdD", "edition": "Torino, Einaudi, 1963 (IV ed. 1970)", "raccolta": "RR I, pp. 565-772"}, {"year": 1964, "title": "I Luigi di Francia", "sigla": "LdF", "edition": "Milano, Garzanti, 1964", "raccolta": "SGF II, pp. 85-211"}, {"year": 1967, "title": "Eros e Priapo (da furore a cenere)", "sigla": "EP67", "edition": "Milano, Garzanti, 1967", "raccolta": "SGF II, pp. 213-374"}, {"year": 1967, "title": "Il guerriero, l'amazzone, lo spirito della poesia nel verso immortale del Foscolo – Conversazione a tre voci", "sigla": "GASP", "edition": "Milano, Garzanti, 1967", "raccolta": "SGF II, pp. 375-429"}, {"year": 1970, "title": "La meccanica", "sigla": "M", "edition": "Milano, Garzanti, 1970", "raccolta": "RR II, pp. 461-589"}, {"year": 1971, "title": "Novella Seconda", "sigla": "NS", "edition": "Milano, Garzanti, 1971", "raccolta": "SGF II"}];
+  // Gadda's own publications during his lifetime: every primary bibliography
+  // entry from code_updated/items.json (books, prose and articles in
+  // magazines, letters in print…), each tagged with the sigla of the work it
+  // belongs to. Drawn as the amber dots on Gadda's line.
+  const primaryWorks = [{"id":"1921","year":1921,"date":"1921-12-20","title":"Caratteristiche del problema idroelettrico","type":"Articoli/saggi su rivista","themes":["DT"],"sigla":"DT","edition":"Articoli/saggi su rivista · La perseveranza","raccolta":"Pagine di divulgazione tecnica"},{"id":"1923","year":1923,"date":"1923-04-20","title":"Un libro di poesia: «Il re Pensieroso» di Ugo Betti","type":"Recensioni","themes":[],"sigla":"no sigla","edition":"Recensioni · La Patria degli italiani","raccolta":""},{"id":"1926","year":1926,"date":"1926-06-30","title":"Studi imperfetti: L’ortolano di Rapallo, Certezza, La morte di Puk, Sogno ligure","type":"Prosa in rivista","themes":["MdF"],"sigla":"MdF","edition":"Prosa in rivista · Solaria","raccolta":"La Madonna dei Filosofi"},{"id":"1927-1","year":1927,"date":"1927-01-31","title":"Apologia manzoniana","type":"Prosa in rivista","themes":["SD"],"sigla":"SD","edition":"Prosa in rivista · Solaria","raccolta":"Scritti dispersi"},{"id":"1927-2","year":1927,"date":"1927-04-30","title":"I viaggi, la morte","type":"Prosa in rivista","themes":["VM"],"sigla":"VM","edition":"Prosa in rivista · Solaria","raccolta":"I viaggi la morte"},{"id":"1927-3","year":1927,"date":"1927-06-30","title":"Teatro","type":"Prosa in rivista","themes":["MdF"],"sigla":"MdF","edition":"Prosa in rivista · Solaria","raccolta":"La Madonna dei Filosofi"},{"id":"1928-2","year":1928,"date":"1928-03-31","title":"Cinema","type":"Prosa in rivista","themes":["MdF"],"sigla":"MdF","edition":"Prosa in rivista · Solaria","raccolta":"La Madonna dei Filosofi"},{"id":"1928-3","year":1928,"date":"1928-09-23","title":"Manovre di artiglieria da campagna – Tiri di batteria da 75 e da 100: descrizione magnificata da due ipotiposi mitologiche e da diverse locuzioni dell’uso raro","type":"Prosa in rivista","themes":["MdF"],"sigla":"MdF","edition":"Prosa in rivista · La Fiera letteraria","raccolta":"La Madonna dei Filosofi"},{"id":"1928-1","year":1928,"date":"1928-12-31","title":"La Madonna dei Filosofi (Novella borghese)","type":"Prosa in rivista","themes":["MdF"],"sigla":"MdF","edition":"Prosa in rivista · Edizioni di Solaria","raccolta":"La Madonna dei Filosofi"},{"id":"1929-1","year":1929,"date":"1929-01-31","title":"Recensione di L. Tonelli, Manzoni (Corbaccio, 1928)","type":"Recensioni","themes":[],"sigla":"no sigla","edition":"Recensioni · Solaria","raccolta":""},{"id":"1929-2","year":1929,"date":"1929-03-10","title":"La «Scienza nuova», recensione dell'edizione di F. Nicolini, Scrittori d’Italia, serie di Laterza","type":"Recensioni","themes":[],"sigla":"no sigla","edition":"Recensioni · La Fiera Letteraria","raccolta":""},{"id":"1929-3","year":1929,"date":"1929-05-31","title":"Le belle lettere e i contributi espressivi delle tecniche","type":"Prosa in rivista","themes":["VM"],"sigla":"VM","edition":"Prosa in rivista · Solaria","raccolta":"I viaggi la morte"},{"id":"1930","year":1930,"date":"1930-07-01","title":"Un narratore – B. Tecchi","type":"Recensioni","themes":[],"sigla":"no sigla","edition":"Recensioni · Arena","raccolta":""},{"id":"1931-1","year":1931,"date":"1931-03-31","title":"La Madonna dei Filosofi","type":"Libri e raccolte d'autore","themes":["MdF"],"sigla":"MdF","edition":"Libri e raccolte d'autore · Edizioni di Solaria","raccolta":"La Madonna dei Filosofi"},{"id":"1931-2","year":1931,"date":"1931-06-30","title":"San Giorgio in casa Brocchi","type":"Prosa in rivista","themes":["AG"],"sigla":"AG","edition":"Prosa in rivista · Solaria","raccolta":"Accoppiamenti giudiziosi (I Racconti – 1924-1958)"},{"id":"1931-3","year":1931,"date":"1931-08-01","title":"Tirreno in crociera","type":"Prosa in rivista","themes":["CdU"],"sigla":"CdU","edition":"Prosa in rivista · L’Ambrosiano","raccolta":"Il castello di Udine"},{"id":"1931-4","year":1931,"date":"1931-08-06","title":"Dal Golfo all’Etna","type":"Prosa in rivista","themes":["CdU"],"sigla":"CdU","edition":"Prosa in rivista · L’Ambrosiano","raccolta":"Il castello di Udine"},{"id":"1931-5","year":1931,"date":"1931-08-13","title":"Tripolitania in torpedone","type":"Prosa in rivista","themes":["CdU"],"sigla":"CdU","edition":"Prosa in rivista · L’Ambrosiano","raccolta":"Il castello di Udine"},{"id":"1931-6","year":1931,"date":"1931-08-21","title":"Sabbia di Tripoli","type":"Prosa in rivista","themes":["CdU"],"sigla":"CdU","edition":"Prosa in rivista · L’Ambrosiano","raccolta":"Il castello di Udine"},{"id":"1931-7","year":1931,"date":"1931-08-24","title":"Approdo alle Zàttere","type":"Prosa in rivista","themes":["CdU"],"sigla":"CdU","edition":"Prosa in rivista · L’Ambrosiano","raccolta":"Il castello di Udine"},{"id":"1931-8","year":1931,"date":"1931-09-02","title":"I metalli leggeri","type":"Articoli/saggi su rivista","themes":["DT"],"sigla":"DT","edition":"Articoli/saggi su rivista · L’Ambrosiano","raccolta":"Pagine di divulgazione tecnica"},{"id":"1931-9","year":1931,"date":"1931-09-07","title":"I metalli leggeri: leghe di magnesio","type":"Articoli/saggi su rivista","themes":["DT"],"sigla":"DT","edition":"Articoli/saggi su rivista · L’Ambrosiano","raccolta":"Pagine di divulgazione tecnica"},{"id":"1931-10","year":1931,"date":"1931-09-11","title":"I metalli leggeri: produzione e consumo","type":"Articoli/saggi su rivista","themes":["DT"],"sigla":"DT","edition":"Articoli/saggi su rivista · L’Ambrosiano","raccolta":"Pagine di divulgazione tecnica"},{"id":"1931-11","year":1931,"date":"1931-09-15","title":"I metalli leggeri nel futuro prossimo","type":"Articoli/saggi su rivista","themes":["DT"],"sigla":"DT","edition":"Articoli/saggi su rivista · L’Ambrosiano","raccolta":"Pagine di divulgazione tecnica"},{"id":"1931-12","year":1931,"date":"1931-10-21","title":"Della musica milanese","type":"Prosa in rivista","themes":["CdU"],"sigla":"CdU","edition":"Prosa in rivista · L’Ambrosiano","raccolta":"Il castello di Udine"},{"id":"1931-13","year":1931,"date":"1931-11-24","title":"Libreria di Francia: Pierre Abraham, «Créatures chez Balzac»","type":"Traduzioni in rivista","themes":["TR"],"sigla":"TR","edition":"Traduzioni in rivista · L’Ambrosiano","raccolta":"Traduzioni"},{"id":"1931-14","year":1931,"date":"1931-11-27","title":"Elogio di alcuni valentuomini","type":"Prosa in rivista","themes":["CdU"],"sigla":"CdU","edition":"Prosa in rivista · L’Ambrosiano","raccolta":"Il castello di Udine"},{"id":"1931-16","year":1931,"date":"1931-12-07","title":"Impossibilità di un diario di guerra","type":"Prosa in rivista","themes":["CdU"],"sigla":"CdU","edition":"Prosa in rivista · L’Ambrosiano","raccolta":"Il castello di Udine"},{"id":"1931-17","year":1931,"date":"1931-12-18","title":"Dal Castello di Udine verso i monti","type":"Prosa in rivista","themes":["CdU"],"sigla":"CdU","edition":"Prosa in rivista · L’Ambrosiano","raccolta":"Il castello di Udine"},{"id":"1931-15","year":1931,"date":"1931-12-31","title":"Tendo al mio fine","type":"Prosa in rivista","themes":["CdU"],"sigla":"CdU","edition":"Prosa in rivista · Solaria","raccolta":"Il castello di Udine"},{"id":"1932-1","year":1932,"date":"1932-01-15","title":"Compagni di prigionia","type":"Prosa in rivista","themes":["CdU"],"sigla":"CdU","edition":"Prosa in rivista · L’Ambrosiano","raccolta":"Il castello di Udine"},{"id":"1932-2","year":1932,"date":"1932-02-05","title":"Tre storie d’amore","type":"Recensioni","themes":["SD"],"sigla":"SD","edition":"Recensioni · Il Tevere","raccolta":"Scritti dispersi"},{"id":"1932-3","year":1932,"date":"1932-02-12","title":"Imagine di Calvi","type":"Prosa in rivista","themes":["CdU"],"sigla":"CdU","edition":"Prosa in rivista · L’Ambrosiano","raccolta":"Il castello di Udine"},{"id":"1932-5","year":1932,"date":"1932-03-12","title":"Divulgazione tecnica: L’azoto","type":"Articoli/saggi su rivista","themes":["DT"],"sigla":"DT","edition":"Articoli/saggi su rivista · L’Ambrosiano","raccolta":"Pagine di divulgazione tecnica"},{"id":"1932-6","year":1932,"date":"1932-03-28","title":"Divulgazione tecnica: La calciocianamide","type":"Articoli/saggi su rivista","themes":["DT"],"sigla":"DT","edition":"Articoli/saggi su rivista · L’Ambrosiano","raccolta":"Pagine di divulgazione tecnica"},{"id":"1932-4","year":1932,"date":"1932-03-31","title":"Autunno [poem]","type":"Poesia in rivista","themes":["CdU"],"sigla":"CdU","edition":"Poesia in rivista · Solaria","raccolta":"Il castello di Udine"},{"id":"1932-7","year":1932,"date":"1932-04-12","title":"Divulgazione tecnica – Accessibilità di una Rivista [La Science et la Vie]","type":"Articoli/saggi su rivista","themes":["DT"],"sigla":"DT","edition":"Articoli/saggi su rivista · L’Ambrosiano","raccolta":"Pagine di divulgazione tecnica"},{"id":"1932-8","year":1932,"date":"1932-04-23","title":"A zonzo per la Fiera","type":"Prosa in rivista","themes":["DT"],"sigla":"DT","edition":"Prosa in rivista · L’Ambrosiano","raccolta":"Pagine di divulgazione tecnica"},{"id":"1932-9","year":1932,"date":"1932-04-27","title":"Ultimo giro alla fiera","type":"Prosa in rivista","themes":["DT"],"sigla":"DT","edition":"Prosa in rivista · L’Ambrosiano","raccolta":"Pagine di divulgazione tecnica"},{"id":"1932-10","year":1932,"date":"1932-04-29","title":"La fidanzata di Elio","type":"Prosa in rivista","themes":["CdU"],"sigla":"CdU","edition":"Prosa in rivista · L’Ambrosiano","raccolta":"Il castello di Udine"},{"id":"1932-11","year":1932,"date":"1932-05-10","title":"Gadda contro Gadda","type":"Recensioni","themes":["SD"],"sigla":"SD","edition":"Recensioni · L’Ambrosiano","raccolta":"Scritti dispersi"},{"id":"1932-13","year":1932,"date":"1932-07-12","title":"Il Faust tradotto da Manacorda","type":"Articoli/saggi su rivista","themes":["SD"],"sigla":"SD","edition":"Articoli/saggi su rivista · La Nazione","raccolta":"Scritti dispersi"},{"id":"1932-14","year":1932,"date":"1932-08-09","title":"Poesia di Montale","type":"Articoli/saggi su rivista","themes":["SD"],"sigla":"SD","edition":"Articoli/saggi su rivista · L’Ambrosiano","raccolta":"Scritti dispersi"},{"id":"1932-12","year":1932,"date":"1932-08-31","title":"La Meccanica: Le nuovissime armi – Papà e mamma – L’armata se ne va","type":"Articoli/saggi su rivista","themes":["M"],"sigla":"M","edition":"Articoli/saggi su rivista · Solaria","raccolta":"La meccanica"},{"id":"1932-15","year":1932,"date":"1932-10-10","title":"L’ultimo libro di Gianna Manzini","type":"Recensioni","themes":["SD"],"sigla":"SD","edition":"Recensioni · Il Tevere","raccolta":"Scritti dispersi"},{"id":"1932-16","year":1932,"date":"1932-10-16","title":"La festa dell’uva a Marino","type":"Prosa in rivista","themes":["CdU"],"sigla":"CdU","edition":"Prosa in rivista · L’Italia letteraria","raccolta":"Il castello di Udine"},{"id":"1933-2","year":1933,"date":"1933-08-13","title":"Polemiche e pace nel direttissimo (I)","type":"Prosa in rivista","themes":["CdU"],"sigla":"CdU","edition":"Prosa in rivista · L’Italia letteraria","raccolta":"Il castello di Udine"},{"id":"1933-3","year":1933,"date":"1933-08-13","title":"Polemiche e pace nel direttissimo (II)","type":"Prosa in rivista","themes":["CdU"],"sigla":"CdU","edition":"Prosa in rivista · L’Italia letteraria","raccolta":"Il castello di Udine"},{"id":"1933-4","year":1933,"date":"1933-08-20","title":"Polemiche e pace nel direttissimo (III)","type":"Prosa in rivista","themes":["CdU"],"sigla":"CdU","edition":"Prosa in rivista · L’Italia letteraria","raccolta":"Il castello di Udine"},{"id":"1933-1","year":1933,"date":"1933-12-31","title":"Gli impianti termoelettrici della Città del Vaticano","type":"Libri e raccolte d'autore","themes":["DT"],"sigla":"DT","edition":"Libri e raccolte d'autore · Stab. Arti Grafiche Alfieri e Lacroix","raccolta":"Pagine di divulgazione tecnica"},{"id":"1934-1","year":1934,"date":"1934-03-31","title":"La mostra d’arte sacra – Consensi e dissensi","type":"Prosa in rivista","themes":["MdI"],"sigla":"MdI","edition":"Prosa in rivista · Arte Sacra","raccolta":"Le meraviglie d'Italia"},{"id":"1934-2","year":1934,"date":"1934-04-30","title":"Il castello di Udine","type":"Libri e raccolte d'autore","themes":["CdU"],"sigla":"CdU","edition":"Libri e raccolte d'autore · Edizioni di Solaria","raccolta":"Il castello di Udine"},{"id":"1934-3","year":1934,"date":"1934-07-28","title":"I nuovi edifici nella città del Vaticano","type":"Articoli/saggi su rivista","themes":["DT"],"sigla":"DT","edition":"Articoli/saggi su rivista · L’Ambrosiano","raccolta":"Pagine di divulgazione tecnica"},{"id":"1934-4","year":1934,"date":"1934-08-28","title":"I grandiosi impianti tecnici in Vaticano","type":"Articoli/saggi su rivista","themes":["DT"],"sigla":"DT","edition":"Articoli/saggi su rivista · L'Ambrosiano","raccolta":"Pagine di divulgazione tecnica"},{"id":"1934-5","year":1934,"date":"1934-09-29","title":"Da Buenos Aires a Resistencia","type":"Prosa in rivista","themes":["MdI"],"sigla":"MdI","edition":"Prosa in rivista · Gazzetta del Popolo","raccolta":"Le meraviglie d'Italia"},{"id":"1934-6","year":1934,"date":"1934-10-02","title":"Un cantiere nelle solitudini","type":"Prosa in rivista","themes":["MdI"],"sigla":"MdI","edition":"Prosa in rivista · Gazzetta del Popolo","raccolta":"Le meraviglie d'Italia"},{"id":"1934-7","year":1934,"date":"1934-10-20","title":"Il pozzo numero quattordici","type":"Prosa in rivista","themes":["MdI"],"sigla":"MdI","edition":"Prosa in rivista · Gazzetta del Popolo","raccolta":"Le meraviglie d'Italia"},{"id":"1934-8","year":1934,"date":"1934-10-25","title":"Mattinata ai macelli d’una grande città","type":"Prosa in rivista","themes":["MdI"],"sigla":"MdI","edition":"Prosa in rivista · Gazzetta del Popolo","raccolta":"Le meraviglie d'Italia"},{"id":"1934-9","year":1934,"date":"1934-11-13","title":"La filovia del Gran Sasso d’Italia","type":"Prosa in rivista","themes":["MdI"],"sigla":"MdI","edition":"Prosa in rivista · Gazzetta del Popolo","raccolta":"Le meraviglie d'Italia"},{"id":"1934-10","year":1934,"date":"1934-11-22","title":"Apologo del Gran Sasso d’Italia","type":"Prosa in rivista","themes":["MdI"],"sigla":"MdI","edition":"Prosa in rivista · Gazzetta del Popolo","raccolta":"Le meraviglie d'Italia"},{"id":"1934-11","year":1934,"date":"1934-12-04","title":"Fatti e miti della Marsica nelle fortune de’ suoi antichi patroni","type":"Prosa in rivista","themes":["MdI"],"sigla":"MdI","edition":"Prosa in rivista · Gazzetta del Popolo","raccolta":"Le meraviglie d'Italia"},{"id":"1934-12","year":1934,"date":"1934-12-23","title":"Un romanzo giallo nella geologia","type":"Prosa in rivista","themes":["MdI"],"sigla":"MdI","edition":"Prosa in rivista · Gazzetta del Popolo","raccolta":"Le meraviglie d'Italia"},{"id":"1935-1","year":1935,"date":"1935-01-01","title":"Una mattinata alla Borsa – L’assurda cattedrale della religione capitalistica","type":"Prosa in rivista","themes":["MdI"],"sigla":"MdI","edition":"Prosa in rivista · Gazzetta del Popolo","raccolta":"Le meraviglie d'Italia"},{"id":"1935-2","year":1935,"date":"1935-02-19","title":"Genti e terre d’Abruzzo","type":"Prosa in rivista","themes":["MdI"],"sigla":"MdI","edition":"Prosa in rivista · Gazzetta del Popolo","raccolta":"Le meraviglie d'Italia"},{"id":"1935-3","year":1935,"date":"1935-03-28","title":"Antico vigore del popolo d’Abruzzo","type":"Prosa in rivista","themes":["MdI"],"sigla":"MdI","edition":"Prosa in rivista · Gazzetta del Popolo","raccolta":"Le meraviglie d'Italia"},{"id":"1935-4","year":1935,"date":"1935-10-25","title":"Le opere pubbliche di Milano","type":"Articoli/saggi su rivista","themes":["MdI"],"sigla":"MdI","edition":"Articoli/saggi su rivista · L’Ambrosiano","raccolta":"Le meraviglie d'Italia"},{"id":"1935-5","year":1935,"date":"1935-10-25","title":"Piazza Monte Grappa a Varese","type":"Articoli/saggi su rivista","themes":["MdI"],"sigla":"MdI","edition":"Articoli/saggi su rivista · L’Ambrosiano","raccolta":"Le meraviglie d'Italia"},{"id":"1935-6","year":1935,"date":"1935-10-30","title":"Ville verso l’Adda","type":"Prosa in rivista","themes":["MdI"],"sigla":"MdI","edition":"Prosa in rivista · L’Ambrosiano","raccolta":"Le meraviglie d'Italia"},{"id":"1935-7","year":1935,"date":"1935-11-01","title":"La guerra di Emilio De Bono","type":"Recensioni","themes":["MdI"],"sigla":"MdI","edition":"Recensioni · L’Ambrosiano","raccolta":"Le meraviglie d'Italia"},{"id":"1935-8","year":1935,"date":"1935-12-26","title":"Panorami di città: Mercato di frutta e verdura","type":"Prosa in rivista","themes":["MdI"],"sigla":"MdI","edition":"Prosa in rivista · L’Ambrosiano","raccolta":"Le meraviglie d'Italia"},{"id":"1936-1","year":1936,"date":"1936-01-07","title":"Pianta di Milano – Decoro dei palazzi","type":"Prosa in rivista","themes":["MdI"],"sigla":"MdI","edition":"Prosa in rivista · L’Ambrosiano","raccolta":"Le meraviglie d'Italia"},{"id":"1936-2","year":1936,"date":"1936-03-28","title":"Una tigre al Parco","type":"Prosa in rivista","themes":["MdI"],"sigla":"MdI","edition":"Prosa in rivista · L’Ambrosiano","raccolta":"Le meraviglie d'Italia"},{"id":"1936-3","year":1936,"date":"1936-06-13","title":"Le risorse minerarie del territorio etiopico","type":"Articoli/saggi su rivista","themes":["MdI"],"sigla":"MdI","edition":"Articoli/saggi su rivista · L’Ambrosiano","raccolta":"Le meraviglie d'Italia"},{"id":"1936-4","year":1936,"date":"1936-06-23","title":"L’assetto economico dell’Impero – I problemi idro-elettrici","type":"Articoli/saggi su rivista","themes":[],"sigla":"no sigla","edition":"Articoli/saggi su rivista · Stab. Arti Grafiche Alfieri e Lacroix","raccolta":""},{"id":"1937-1","year":1936,"date":"1936-10-31","title":"Gli impianti elettrici della Città del Vaticano","type":"Articoli/saggi su rivista","themes":["DT"],"sigla":"DT","edition":"Articoli/saggi su rivista · Ambrosiano","raccolta":"Pagine di divulgazione tecnica"},{"id":"1937-2","year":1937,"date":"1937-03-31","title":"Meditazione breve circa il dire e il fare","type":"Articoli/saggi su rivista","themes":["VM"],"sigla":"VM","edition":"Articoli/saggi su rivista · Letteratura","raccolta":"I viaggi la morte"},{"id":"1937-3","year":1937,"date":"1937-04-13","title":"Azoto atmosferico tramutato in pane","type":"Articoli/saggi su rivista","themes":["DT"],"sigla":"DT","edition":"Articoli/saggi su rivista · Gazzetta del Popolo","raccolta":"Pagine di divulgazione tecnica"},{"id":"1937-4","year":1937,"date":"1937-04-27","title":"Pane e chimica sintetica","type":"Articoli/saggi su rivista","themes":["DT"],"sigla":"DT","edition":"Articoli/saggi su rivista · Gazzetta del Popolo","raccolta":"Pagine di divulgazione tecnica"},{"id":"1937-5","year":1937,"date":"1937-05-12","title":"Automobili e automotrici azionate ad ammoniaca","type":"Articoli/saggi su rivista","themes":["DT"],"sigla":"DT","edition":"Articoli/saggi su rivista · Gazzetta del Popolo","raccolta":"Pagine di divulgazione tecnica"},{"id":"1937-6","year":1937,"date":"1937-05-30","title":"Postille a un’analisi stilistica","type":"Articoli/saggi su rivista","themes":["TO"],"sigla":"TO","edition":"Articoli/saggi su rivista · Letteratura","raccolta":"Il tempo e le opere"},{"id":"1937-7","year":1937,"date":"1937-07-27","title":"Combustibile italiano","type":"Prosa in rivista","themes":["MdI"],"sigla":"MdI","edition":"Prosa in rivista · Gazzetta del Popolo","raccolta":"Le meraviglie d'Italia"},{"id":"1938-1","year":1938,"date":"1938-09-30","title":"La cognizione del dolore (Primo tratto)","type":"Prosa in rivista","themes":["CdD"],"sigla":"CdD","edition":"Prosa in rivista · Letteratura","raccolta":"La cognizione del dolore"},{"id":"1938-2","year":1938,"date":"1938-09-30","title":"Opere e Studi - Quattro Artisti","type":"Libri e raccolte d'autore","themes":[],"sigla":"no sigla","edition":"Libri e raccolte d'autore · Edizioni della Colomba","raccolta":""},{"id":"1938-3","year":1938,"date":"1938-10-31","title":"La donna si prepara ai suoi compiti coloniali","type":"Articoli/saggi su rivista","themes":[],"sigla":"no sigla","edition":"Articoli/saggi su rivista · Le Vie d’Italia","raccolta":""},{"id":"1938-4","year":1938,"date":"1938-12-31","title":"La cognizione del dolore (Secondo tratto)","type":"Prosa in rivista","themes":["CdD"],"sigla":"CdD","edition":"Prosa in rivista · Letteratura","raccolta":"La cognizione del dolore"},{"id":"1938-5","year":1938,"date":"1938-12-31","title":"Le funivie Savona-San Giuseppe di Cairo e la loro funzione autarchica nell’economia nazionale","type":"Articoli/saggi su rivista","themes":["DT"],"sigla":"DT","edition":"Articoli/saggi su rivista · Le Vie d’Italia","raccolta":"Pagine di divulgazione tecnica"},{"id":"1939-1","year":1939,"date":"1939-01-31","title":"Favole","type":"Prosa in rivista","themes":["PLF"],"sigla":"PLF","edition":"Prosa in rivista · Campo di Marte","raccolta":"Il primo libro delle Favole"},{"id":"1939-2","year":1939,"date":"1939-03-31","title":"La cognizione del dolore (Terzo tratto)","type":"Prosa in rivista","themes":["CdD"],"sigla":"CdD","edition":"Prosa in rivista · Letteratura","raccolta":"La cognizione del dolore"},{"id":"1939-4","year":1939,"date":"1939-06-30","title":"La cognizione del dolore (Quarto tratto)","type":"Prosa in rivista","themes":["CdD"],"sigla":"CdD","edition":"Prosa in rivista · Letteratura","raccolta":"La cognizione del dolore"},{"id":"1939-5","year":1939,"date":"1939-07-31","title":"Le meraviglie d’Italia","type":"Libri e raccolte d'autore","themes":["MdI"],"sigla":"MdI","edition":"Libri e raccolte d'autore · Parenti","raccolta":"Le meraviglie d'Italia"},{"id":"1939-6","year":1939,"date":"1939-08-16","title":"La «Mostra leonardesca» di Milano","type":"Prosa in rivista","themes":["MdI"],"sigla":"MdI","edition":"Prosa in rivista · Nuova Antologia","raccolta":"Le meraviglie d'Italia"},{"id":"1939-7","year":1939,"date":"1939-09-29","title":"Le ligniti d’Appennino e la loro utilizzazione autarchica","type":"Articoli/saggi su rivista","themes":["DT"],"sigla":"DT","edition":"Articoli/saggi su rivista · Gazzetta del Popolo","raccolta":"Pagine di divulgazione tecnica"},{"id":"1939-8","year":1939,"date":"1939-10-10","title":"I problemi della lignite","type":"Articoli/saggi su rivista","themes":["DT"],"sigla":"DT","edition":"Articoli/saggi su rivista · Gazzetta del Popolo","raccolta":"Pagine di divulgazione tecnica"},{"id":"1939-10","year":1939,"date":"1939-11-30","title":"... e le loro forze militari terrestri","type":"Articoli/saggi su rivista","themes":[],"sigla":"no sigla","edition":"Articoli/saggi su rivista · Le Vie d’Italia","raccolta":""},{"id":"1939-9","year":1939,"date":"1939-11-30","title":"Le marine da guerra delle Nazioni belligeranti","type":"Articoli/saggi su rivista","themes":[],"sigla":"no sigla","edition":"Articoli/saggi su rivista · Le Vie d’Italia","raccolta":""},{"id":"1939-11","year":1939,"date":"1939-12-31","title":"La grande bonificazione ferrarese","type":"Articoli/saggi su rivista","themes":["DT"],"sigla":"DT","edition":"Articoli/saggi su rivista · Le Vie d’Italia","raccolta":"Pagine di divulgazione tecnica"},{"id":"1939-3","year":1939,"date":"1939-12-31","title":"Ronda al Castello","type":"Prosa in rivista","themes":["MdI"],"sigla":"MdI","edition":"Prosa in rivista · Il Tesoretto, Almanacco delle Lettere 1939 · Primi Piani","raccolta":"Le meraviglie d'Italia"},{"id":"1940-3","year":1940,"date":"1940-01-15","title":"Le bizze del capitano in congedo (I)","type":"Prosa in rivista","themes":["Biz"],"sigla":"Biz","edition":"Prosa in rivista · Corrente di Vita giovanile","raccolta":"Le bizze del capitano in congedo e altri racconti"},{"id":"1940-4","year":1940,"date":"1940-01-31","title":"Le bizze del capitano in congedo (II)","type":"Prosa in rivista","themes":["Biz"],"sigla":"Biz","edition":"Prosa in rivista · Corrente di Vita giovanile","raccolta":"Le bizze del capitano in congedo e altri racconti"},{"id":"1940-6","year":1940,"date":"1940-03-13","title":"Ablazione del duodeno per ulcera","type":"Articoli/saggi su rivista","themes":["A","VlC"],"sigla":"A, VlC","edition":"Articoli/saggi su rivista · L’Ambrosiano","raccolta":"Gli Anni / Verso la Certosa"},{"id":"1940-7","year":1940,"date":"1940-03-27","title":"Fiera a Milano","type":"Articoli/saggi su rivista","themes":["A","VlC"],"sigla":"A, VlC","edition":"Articoli/saggi su rivista · Panorama","raccolta":"Gli Anni / Verso la Certosa"},{"id":"1940-1","year":1940,"date":"1940-03-31","title":"La cognizione del dolore (Quinto tratto) – Parte seconda","type":"Prosa in rivista","themes":["CdD"],"sigla":"CdD","edition":"Prosa in rivista · Letteratura","raccolta":"La cognizione del dolore"},{"id":"1940-5","year":1940,"date":"1940-03-31","title":"Terreno, piogge, fiumi e impianti idroelettrici nell’Atlante fisico-economico della Consociazione Turistica Italiana. In Le Vie d’Italia 46, no. 3 (March), 269-71. Then in Gadda 1986a: 189-95. Now in SVP 171-77.\n\n– 1940g. La cognizione del dolore (Quinto tratto) – Parte seconda","type":"Articoli/saggi su rivista","themes":["DT"],"sigla":"DT","edition":"Articoli/saggi su rivista · Letteratura","raccolta":"Pagine di divulgazione tecnica"},{"id":"1940-9","year":1940,"date":"1940-04-12","title":"Terra lombarda","type":"Articoli/saggi su rivista","themes":["A","VlC"],"sigla":"A, VlC","edition":"Articoli/saggi su rivista · Panorama","raccolta":"Gli Anni / Verso la Certosa"},{"id":"1940-10","year":1940,"date":"1940-04-27","title":"L’uomo e la macchina","type":"Articoli/saggi su rivista","themes":["A","VlC"],"sigla":"A, VlC","edition":"Articoli/saggi su rivista · Panorama","raccolta":"Gli Anni / Verso la Certosa"},{"id":"1940-11","year":1940,"date":"1940-06-30","title":"Tecnica e poesia","type":"Articoli/saggi su rivista","themes":["VM","A"],"sigla":"VM, A","edition":"Articoli/saggi su rivista · Nuova Antologia","raccolta":"I viaggi la morte / Gli Anni"},{"id":"1940-8","year":1940,"date":"1940-06-30","title":"La cognizione del dolore (Sesto tratto)","type":"Prosa in rivista","themes":["CdD"],"sigla":"CdD","edition":"Prosa in rivista · Letteratura","raccolta":"La cognizione del dolore"},{"id":"1940-2","year":1940,"date":"1940-12-31","title":"Studio 128 per l’apertura del racconto inedito: L’incendio di via Keplero","type":"Prosa in rivista","themes":["AG"],"sigla":"AG","edition":"Prosa in rivista · Il Tesoretto, Almanacco delle Lettere e della Arti 1940 · Primi Piani","raccolta":"Accoppiamenti giudiziosi (I Racconti – 1924-1958)"},{"id":"1941-1","year":1941,"date":"1941-02-28","title":"I nuovi borghi della Sicilia rurale","type":"Articoli/saggi su rivista","themes":[],"sigla":"no sigla","edition":"Articoli/saggi su rivista · Nuova Antologia","raccolta":""},{"id":"1941-2","year":1941,"date":"1941-03-31","title":"La cognizione del dolore (Settimo tratto)","type":"Prosa in rivista","themes":["CdD"],"sigla":"CdD","edition":"Prosa in rivista · Letteratura","raccolta":"La cognizione del dolore"},{"id":"1941-7","year":1941,"date":"1941-03-31","title":"La colonizzazione del latifondo siciliano","type":"Articoli/saggi su rivista","themes":[],"sigla":"no sigla","edition":"Articoli/saggi su rivista · Le Vie d’Italia","raccolta":""},{"id":"1941-8","year":1941,"date":"1941-04-30","title":"I Littoriali del lavoro","type":"Articoli/saggi su rivista","themes":[],"sigla":"no sigla","edition":"Articoli/saggi su rivista · Nuova Antologia","raccolta":""},{"id":"1941-3","year":1941,"date":"1941-12-31","title":"L’Adalgisa (Disegno su tre fogli espunto dal romanzo inedito «Un fulmine sul 220»)","type":"Prosa in volume","themes":["L'A"],"sigla":"L'A","edition":"Prosa in volume · l Tesoretto, Almanacco dello Specchio 1941 · Mondadori","raccolta":"L'Adalgisa"},{"id":"1941-4","year":1941,"date":"1941-12-31","title":"Dalle specchiere dei laghi","type":"Saggio in volume","themes":["A","VlC"],"sigla":"A, VlC","edition":"Saggio in volume · Beltempo, Almanacco delle lettere e delle arti · Edizioni della Cometa","raccolta":"Gli Anni / Verso la Certosa"},{"id":"1941-5","year":1941,"date":"1941-12-31","title":"Il mondo com’è. Translation of El mundo por de dentro di Francisco de Quevedo","type":"Saggio in volume","themes":["TR"],"sigla":"TR","edition":"Saggio in volume · Narratori spagnoli – Raccolta di romanzi e racconti dalle Origini ai nostri giorni","raccolta":"Traduzioni"},{"id":"1941-6","year":1941,"date":"1941-12-31","title":"Tendo a una brutale deformazione dei temi…","type":"Saggio in volume","themes":[],"sigla":"no sigla","edition":"Saggio in volume · Almanacco letterario Bompiani 1942 · Bompiani","raccolta":""},{"id":"1941-9","year":1941,"date":"1941-12-31","title":"Il viaggio della saggezza","type":"Saggio in volume","themes":["TR"],"sigla":"TR","edition":"Saggio in volume · Narratori spagnoli – Raccolta di romanzi e racconti dalle Origini ai nostri giorni · Bompiani","raccolta":"Traduzioni"},{"id":"1942-1","year":1942,"date":"1942-04-30","title":"Lingua letteraria e lingua dell’uso","type":"Saggio in volume","themes":["VM"],"sigla":"VM","edition":"Saggio in volume · La Ruota","raccolta":"I viaggi la morte"},{"id":"1942-2","year":1942,"date":"1942-05-31","title":"La chirurgia dei quadri all’Istituto Centrale del Restauro","type":"Articoli/saggi su rivista","themes":["DT"],"sigla":"DT","edition":"Articoli/saggi su rivista · La lettura","raccolta":"Pagine di divulgazione tecnica"},{"id":"1942-4","year":1942,"date":"1942-06-15","title":"Notte di luna – Paese, a guisa d’introduzione","type":"Prosa in rivista","themes":["L'A"],"sigla":"L'A","edition":"Prosa in rivista · Primato – Lettere e Arti d’Italia","raccolta":"L'Adalgisa"},{"id":"1942-5","year":1942,"date":"1942-08-15","title":"L’Istituto di Studi romani","type":"Articoli/saggi su rivista","themes":["SD"],"sigla":"SD","edition":"Articoli/saggi su rivista · Primato – Lettere e Arti d’Italia","raccolta":"Scritti dispersi"},{"id":"1942-6","year":1942,"date":"1942-09-15","title":"L’Adalgisa (Racconto di C.E.G)","type":"Prosa in rivista","themes":["L'A"],"sigla":"L'A","edition":"Prosa in rivista · Primato – Lettere e Arti d’Italia","raccolta":"L'Adalgisa"},{"id":"1942-7","year":1942,"date":"1942-10-01","title":"L’Adalgisa (Continuazione del numero precedente e fine)","type":"Prosa in rivista","themes":["L'A"],"sigla":"L'A","edition":"Prosa in rivista · Primato – Lettere e Arti d’Italia","raccolta":"L'Adalgisa"},{"id":"1942-3","year":1942,"date":"1942-12-31","title":"Un «concerto» di 120 professori – Disegno su due fogli arancio pallido","type":"Prosa in rivista","themes":["L'A"],"sigla":"L'A","edition":"Prosa in rivista · Letteratura","raccolta":"L'Adalgisa"},{"id":"1943-1","year":1943,"date":"1943-02-01","title":"All’insegna dell’alta cultura","type":"Articoli/saggi su rivista","themes":["SD"],"sigla":"SD","edition":"Articoli/saggi su rivista · Primato – Lettere e Arti d’Italia","raccolta":"Scritti dispersi"},{"id":"1943-2","year":1943,"date":"1943-02-28","title":"Quando Girolamo ha smesso… (I)","type":"Prosa in rivista","themes":["L'A"],"sigla":"L'A","edition":"Prosa in rivista · La Ruota","raccolta":"L'Adalgisa"},{"id":"1943-3","year":1943,"date":"1943-03-04","title":"Montale, o l’uomo mùsico","type":"Articoli/saggi su rivista","themes":["TO"],"sigla":"TO","edition":"Articoli/saggi su rivista · Primato","raccolta":"Il tempo e le opere"},{"id":"1943-4","year":1943,"date":"1943-03-31","title":"Quando Girolamo ha smesso… (II)","type":"Prosa in rivista","themes":["L'A"],"sigla":"L'A","edition":"Prosa in rivista · La Ruota","raccolta":"L'Adalgisa"},{"id":"1943-5","year":1943,"date":"1943-05-30","title":"Gli anni","type":"Libri e raccolte d'autore","themes":["A"],"sigla":"A","edition":"Libri e raccolte d'autore · Parenti","raccolta":"Gli Anni"},{"id":"1943-6","year":1943,"date":"1943-07-15","title":"La benignità","type":"Prosa in rivista","themes":["L'A"],"sigla":"L'A","edition":"Prosa in rivista · Primato – Lettere e Arti d’Italia","raccolta":"L'Adalgisa"},{"id":"1944","year":1944,"date":"1944-12-31","title":"L’Adalgisa – Disegni milanesi","type":"Libri e raccolte d'autore","themes":["L'A"],"sigla":"L'A","edition":"Libri e raccolte d'autore · Le Monnier","raccolta":"L'Adalgisa"},{"id":"1945-2","year":1945,"date":"1945-04-21","title":"Rappresentare la «Celestina»?","type":"Prosa in rivista","themes":["VM"],"sigla":"VM","edition":"Prosa in rivista · Il Mondo","raccolta":"I viaggi la morte"},{"id":"1945-3","year":1945,"date":"1945-06-02","title":"Anime e schemi","type":"Prosa in rivista","themes":["VM"],"sigla":"VM","edition":"Prosa in rivista · Il Mondo","raccolta":"I viaggi la morte"},{"id":"1945-1","year":1945,"date":"1945-12-31","title":"Arte del Belli","type":"Prosa in rivista","themes":["VM"],"sigla":"VM","edition":"Prosa in rivista · Poesia, Quaderni internazioniali","raccolta":"I viaggi la morte"},{"id":"1946-1","year":1946,"date":"1946-02-28","title":"Quer pasticciaccio brutto de via Merulana (I)","type":"Prosa in rivista","themes":["QPL"],"sigla":"QPL","edition":"Prosa in rivista · Letteratura","raccolta":"Quer pasticciaccio brutto de via Merulana (versione di «Letteratura»)"},{"id":"1946-2","year":1946,"date":"1946-04-30","title":"Quer pasticciaccio brutto de via Merulana (II)","type":"Prosa in rivista","themes":["QPL"],"sigla":"QPL","edition":"Prosa in rivista · Letteratura","raccolta":"Quer pasticciaccio brutto de via Merulana (versione di «Letteratura»)"},{"id":"1946-4","year":1946,"date":"1946-06-15","title":"I tre imperi","type":"Recensioni","themes":["SD"],"sigla":"SD","edition":"Recensioni · Il Mondo","raccolta":"Scritti dispersi"},{"id":"1946-3","year":1946,"date":"1946-06-30","title":"Quer pasticciaccio brutto de via Merulana (III)","type":"Prosa in rivista","themes":["QPL"],"sigla":"QPL","edition":"Prosa in rivista · Letteratura","raccolta":"Quer pasticciaccio brutto de via Merulana (versione di «Letteratura»)"},{"id":"1946-5","year":1946,"date":"1946-08-31","title":"Quer pasticciaccio brutto de via Merulana (IV)","type":"Prosa in rivista","themes":["QPL"],"sigla":"QPL","edition":"Prosa in rivista · Letteratura","raccolta":"Quer pasticciaccio brutto de via Merulana (versione di «Letteratura»)"},{"id":"1946-6","year":1946,"date":"1946-12-31","title":"Quer pasticciaccio brutto de via Merulana (V)","type":"Prosa in rivista","themes":["QPL"],"sigla":"QPL","edition":"Prosa in rivista · Letteratura","raccolta":"Quer pasticciaccio brutto de via Merulana (versione di «Letteratura»)"},{"id":"1947","year":1947,"date":"1947-06-30","title":"Fatto personale… o quasi","type":"Prosa in rivista","themes":["VM"],"sigla":"VM","edition":"Prosa in rivista · Le carte parlanti, Attualità letteraria e artistica · Vallecchi","raccolta":"I viaggi la morte"},{"id":"1948-1","year":1948,"date":"1948-04-08","title":"Un invito al club del tre a cuori","type":"Prosa in rivista","themes":["CdD"],"sigla":"CdD","edition":"Prosa in rivista · Il risorgimento liberale","raccolta":"La cognizione del dolore"},{"id":"1948-2","year":1948,"date":"1948-11-15","title":"Un caro figliolo","type":"Prosa in rivista","themes":["AG"],"sigla":"AG","edition":"Prosa in rivista · Movimento Comunità","raccolta":"Accoppiamenti giudiziosi (I Racconti – 1924-1958)"},{"id":"1949","year":1949,"date":"1949-01-31","title":"Psicanalisi e letteratura","type":"Prosa in rivista","themes":["VM"],"sigla":"VM","edition":"Prosa in rivista · La Rassegna d’Italia","raccolta":"I viaggi la morte"},{"id":"1950-1","year":1950,"date":"1950-02-28","title":"Come lavoro","type":"Prosa in rivista","themes":["VM"],"sigla":"VM","edition":"Prosa in rivista · Paragone","raccolta":"I viaggi la morte"},{"id":"1950-2","year":1950,"date":"1950-04-30","title":"Una mostra di Ensor","type":"Prosa in rivista","themes":["VM"],"sigla":"VM","edition":"Prosa in rivista · Letteratura / Arte contemporanea","raccolta":"I viaggi la morte"},{"id":"1950-3","year":1950,"date":"1950-06-30","title":"Il faut d’abord être coupable (Jean Genet, «Journal du voleur»)","type":"Prosa in rivista","themes":["VM"],"sigla":"VM","edition":"Prosa in rivista · Paragone","raccolta":"I viaggi la morte"},{"id":"1950-6","year":1950,"date":"1950-07-15","title":"Film e sogno","type":"Articoli/saggi su rivista","themes":[],"sigla":"no sigla","edition":"Articoli/saggi su rivista · Cinema","raccolta":""},{"id":"1950-5","year":1950,"date":"1950-07-31","title":"Meditazione prima: sulla rosta o ruota del tacchino","type":"Prosa in rivista","themes":["VM"],"sigla":"VM","edition":"Prosa in rivista · Ca Balà","raccolta":"I viaggi la morte"},{"id":"1950-4","year":1950,"date":"1950-08-31","title":"Nun ne pozzo più…","type":"Lettere in rivista","themes":[],"sigla":"no sigla","edition":"Lettere in rivista · Letteratura / Arte contemporanea","raccolta":""},{"id":"1951-4","year":1951,"date":"1951-01-13","title":"Prima divisione nella notte","type":"Prosa in rivista","themes":["AG"],"sigla":"AG","edition":"Prosa in rivista · La Voce del Popolo","raccolta":"Accoppiamenti giudiziosi (I Racconti – 1924-1958)"},{"id":"1951-1","year":1951,"date":"1951-04-30","title":"Dal «Giornale di guerra per l’anno 1916»","type":"Prosa in volume","themes":["VM"],"sigla":"VM","edition":"Prosa in volume · Letteratura / Arte contemporanea","raccolta":"I viaggi la morte"},{"id":"1951-2","year":1951,"date":"1951-12-31","title":"Reply to Inchiesta sul Neorealismo","type":"Articoli/saggi su rivista","themes":["VM"],"sigla":"VM","edition":"Articoli/saggi su rivista · ERI","raccolta":"I viaggi la morte"},{"id":"1951-3","year":1951,"date":"1951-12-31","title":"Intervista al microfono. Confessioni di scrittori (Interviste con se stessi)","type":"Interviste in volume","themes":["VM"],"sigla":"VM","edition":"Interviste in volume · ERI","raccolta":"I viaggi la morte"},{"id":"1952-3","year":1952,"date":"1952-01-31","title":"Il primo libro delle Favole","type":"Libri e raccolte d'autore","themes":["PLF"],"sigla":"PLF","edition":"Libri e raccolte d'autore · Pozza","raccolta":"Il primo libro delle Favole"},{"id":"1952-4","year":1952,"date":"1952-02-02","title":"Parliamo della «mamma»: per tante canzoni che volano forse qualche pensierino che resta","type":"Articoli/saggi su rivista","themes":["SD"],"sigla":"SD","edition":"Articoli/saggi su rivista · Epoca","raccolta":"Scritti dispersi"},{"id":"1952-5","year":1952,"date":"1952-02-04","title":"Il trionfo di Amleto","type":"Prosa in rivista","themes":["VM"],"sigla":"VM","edition":"Prosa in rivista · Giovedì","raccolta":"I viaggi la morte"},{"id":"1952-6","year":1952,"date":"1952-03-08","title":"I numeri e le lettere che preferiscono: quasi una cabala","type":"Articoli/saggi su rivista","themes":["SD"],"sigla":"SD","edition":"Articoli/saggi su rivista · Epoca","raccolta":"Scritti dispersi"},{"id":"1952-7","year":1952,"date":"1952-03-29","title":"I quattro Luigi: Luigi XIII","type":"Prosa in rivista","themes":["LdF"],"sigla":"LdF","edition":"Prosa in rivista · Radiocorriere","raccolta":"I Luigi di Francia"},{"id":"1952-1","year":1952,"date":"1952-03-31","title":"Dicembre","type":"Prosa in rivista","themes":["TO"],"sigla":"TO","edition":"Prosa in rivista · L'Approdo","raccolta":"Il tempo e le opere"},{"id":"1952-2","year":1952,"date":"1952-03-31","title":"Le «stravaganze» di Pasquali","type":"Articoli/saggi su rivista","themes":[],"sigla":"no sigla","edition":"Articoli/saggi su rivista · L’Appprodo","raccolta":""},{"id":"1952-8","year":1952,"date":"1952-07-26","title":"I quattro Luigi: Luigi XIV","type":"Prosa in rivista","themes":["LdF"],"sigla":"LdF","edition":"Prosa in rivista · Radiocorriere","raccolta":"I Luigi di Francia"},{"id":"1952-9","year":1952,"date":"1952-12-13","title":"I quattro Luigi di Francia: Luigi XV","type":"Prosa in rivista","themes":["LdF"],"sigla":"LdF","edition":"Prosa in rivista · Radiocorriere","raccolta":"I Luigi di Francia"},{"id":"1953-2","year":1953,"date":"1953-03-31","title":"Lettera [a Leonardo Sinisgalli]","type":"Lettere in rivista","themes":["TO"],"sigla":"TO","edition":"Lettere in rivista · Civiltà delle macchine","raccolta":"Il tempo e le opere"},{"id":"1953-3","year":1953,"date":"1953-04-30","title":"Novelle dal Ducato in fiamme","type":"Libri e raccolte d'autore","themes":["NdF"],"sigla":"NdF","edition":"Libri e raccolte d'autore · Vallecchi","raccolta":"Novelle dal Ducato in Fiamme"},{"id":"1953-4","year":1953,"date":"1953-06-30","title":"Visita del Nunzio Apostolico al Campo di Celle (Dalle «Note autobiografiche redatte in Celle Lager»)","type":"Prosa in rivista","themes":["GGP"],"sigla":"GGP","edition":"Prosa in rivista · Letteratura","raccolta":"Giornale di guerra e di prigionia"},{"id":"1953-5","year":1953,"date":"1953-07-31","title":"Norme per la redazione di un testo radiofonico","type":"Libri e raccolte d'autore","themes":["SD"],"sigla":"SD","edition":"Libri e raccolte d'autore · Edizioni Radio Italiana","raccolta":"Scritti dispersi"},{"id":"1953-6","year":1953,"date":"1953-11-30","title":"Gonnella buffone. Theatre adaptation of the Novelle by Matteo Bandello","type":"Prosa in rivista","themes":["VM"],"sigla":"VM","edition":"Prosa in rivista · Teatro d’oggi","raccolta":"I viaggi la morte"},{"id":"1953-7","year":1953,"date":"1953-12-25","title":"Il terrore del dàttilo","type":"Prosa in rivista","themes":["VM"],"sigla":"VM","edition":"Prosa in rivista · L’Illustrazione italiana","raccolta":"I viaggi la morte"},{"id":"1953-1","year":1953,"date":"1953-12-31","title":"Il sogno del brigadiere","type":"Prosa in rivista","themes":["QP"],"sigla":"QP","edition":"Prosa in rivista · L’Apollo errante, Almanacco per il 1954 · Edizioni «Il Belli»","raccolta":"Quer pasticciaccio brutto de via Merulana"},{"id":"1954-1","year":1954,"date":"1954-01-31","title":"La Mandragola filtro di giovinezza","type":"Articoli/saggi su rivista","themes":["SD"],"sigla":"SD","edition":"Articoli/saggi su rivista · Teatro d’oggi","raccolta":"Scritti dispersi"},{"id":"1954-4","year":1954,"date":"1954-04-18","title":"La sposa di campagna","type":"Prosa in rivista","themes":["CdD"],"sigla":"CdD","edition":"Prosa in rivista · Il Giornale d’Italia","raccolta":"La cognizione del dolore"},{"id":"1954-5","year":1954,"date":"1954-09-12","title":"Parlano del loro primo scritto alcuni fra i più noti autori d’oggi","type":"Articoli/saggi su rivista","themes":["SD"],"sigla":"SD","edition":"Articoli/saggi su rivista · Epoca","raccolta":"Scritti dispersi"},{"id":"1954-6","year":1954,"date":"1954-10-24","title":"Come i nomi i titoli dei libri: dipende da chi li porta","type":"Articoli/saggi su rivista","themes":["SD"],"sigla":"SD","edition":"Articoli/saggi su rivista · Epoca","raccolta":"Scritti dispersi"},{"id":"1954-2","year":1954,"date":"1954-12-31","title":"Ingegnere e prosa","type":"Articoli/saggi su rivista","themes":[],"sigla":"no sigla","edition":"Articoli/saggi su rivista · Mak π 100 – Numero unico della Scuola ingegneri di Roma","raccolta":""},{"id":"1954-3","year":1954,"date":"1954-12-31","title":"L’egoista","type":"Prosa in rivista","themes":["VM"],"sigla":"VM","edition":"Prosa in rivista · Officina","raccolta":"I viaggi la morte"},{"id":"1955-2","year":1955,"date":"1955-05-31","title":"Il libro delle furie (I)","type":"Prosa in rivista","themes":["EP67"],"sigla":"EP67","edition":"Prosa in rivista · Officina","raccolta":"Eros e Priapo (da furore a cenere)"},{"id":"1955-3","year":1955,"date":"1955-07-31","title":"Il libro delle furie (II)","type":"Prosa in rivista","themes":["EP67"],"sigla":"EP67","edition":"Prosa in rivista · Officina","raccolta":"Eros e Priapo (da furore a cenere)"},{"id":"1955-4","year":1955,"date":"1955-07-31","title":"I sogni la folgore","type":"Libri e raccolte d'autore","themes":["SF"],"sigla":"SF","edition":"Libri e raccolte d'autore · Einaudi","raccolta":"I sogni e la folgore"},{"id":"1955-5","year":1955,"date":"1955-09-30","title":"Il libro delle furie (III)","type":"Prosa in rivista","themes":["EP67"],"sigla":"EP67","edition":"Prosa in rivista · Officina","raccolta":"Eros e Priapo (da furore a cenere)"},{"id":"1955-6","year":1955,"date":"1955-11-19","title":"Come stare a tavola","type":"Articoli/saggi su rivista","themes":[],"sigla":"no sigla","edition":"Articoli/saggi su rivista · Radiocorriere","raccolta":""},{"id":"1955-1","year":1955,"date":"1955-12-31","title":"Giornale di guerra e di prigionia","type":"Libri e raccolte d'autore","themes":["GGP"],"sigla":"GGP","edition":"Libri e raccolte d'autore · Sansoni","raccolta":"Giornale di guerra e di prigionia"},{"id":"1955-7","year":1955,"date":"1955-12-31","title":"Lettera","type":"Lettere in rivista","themes":[],"sigla":"no sigla","edition":"Lettere in rivista · Officina","raccolta":""},{"id":"1956-2","year":1956,"date":"1956-02-19","title":"Perché cinema radio e scrittori ci parlano in romanesco?","type":"Articoli/saggi su rivista","themes":["SD"],"sigla":"SD","edition":"Articoli/saggi su rivista · Officina","raccolta":"Scritti dispersi"},{"id":"1956-1","year":1956,"date":"1956-02-28","title":"Il libro delle furie (IV)","type":"Prosa in rivista","themes":["EP67"],"sigla":"EP67","edition":"Prosa in rivista · Officina","raccolta":"Eros e Priapo (da furore a cenere)"},{"id":"1957-1","year":1957,"date":"1957-03-31","title":"Accoppiamenti giudiziosi (I)","type":"Prosa in rivista","themes":["AG"],"sigla":"AG","edition":"Prosa in rivista · Palatina","raccolta":"Accoppiamenti giudiziosi (I Racconti – 1924-1958)"},{"id":"1957-6","year":1957,"date":"1957-06-22","title":"Quer pasticciaccio brutto de via Merulana","type":"Libri e raccolte d'autore","themes":["QP"],"sigla":"QP","edition":"Libri e raccolte d'autore · Garzanti","raccolta":"Quer pasticciaccio brutto de via Merulana"},{"id":"1957-5","year":1957,"date":"1957-06-30","title":"Accoppiamenti giudiziosi (II)","type":"Prosa in rivista","themes":["AG"],"sigla":"AG","edition":"Prosa in rivista · Palatina","raccolta":"Accoppiamenti giudiziosi (I Racconti – 1924-1958)"},{"id":"1957-7","year":1957,"date":"1957-09-30","title":"Accoppiamenti giudiziosi (III)","type":"Prosa in rivista","themes":["AG"],"sigla":"AG","edition":"Prosa in rivista · Palatina","raccolta":"Accoppiamenti giudiziosi (I Racconti – 1924-1958)"},{"id":"1957-2","year":1957,"date":"1957-12-31","title":"Io e il Pasticciaccio. Tre anni di lavoro nel corso di undici","type":"Articoli/saggi su rivista","themes":["VM"],"sigla":"VM","edition":"Articoli/saggi su rivista · Illustrazione italiana","raccolta":"I viaggi la morte"},{"id":"1957-3","year":1957,"date":"1957-12-31","title":"La verità sospetta. Translation of La verdad sospechosa by J. Ruiz de Alarcòn","type":"Traduzioni in rivista","themes":["TR"],"sigla":"TR","edition":"Traduzioni in rivista · Teatro spagnolo del secolo d'oro · ERI","raccolta":"Traduzioni"},{"id":"1957-4","year":1957,"date":"1957-12-31","title":"è nato a Milano","type":"Note biografiche su rivista","themes":["SA"],"sigla":"SA","edition":"Note biografiche su rivista","raccolta":"Schede autobiografiche"},{"id":"1958-1","year":1958,"date":"1958-04-30","title":"Accoppiamenti giudiziosi (IV)","type":"Prosa in rivista","themes":["AG"],"sigla":"AG","edition":"Prosa in rivista · Palatina","raccolta":"Accoppiamenti giudiziosi (I Racconti – 1924-1958)"},{"id":"1958-2","year":1958,"date":"1958-06-30","title":"Accoppiamenti giudiziosi (V)","type":"Prosa in rivista","themes":["AG"],"sigla":"AG","edition":"Prosa in rivista · Palatina","raccolta":"Accoppiamenti giudiziosi (I Racconti – 1924-1958)"},{"id":"1958-3","year":1958,"date":"1958-10-28","title":"I viaggi la morte","type":"Libri e raccolte d'autore","themes":["VM"],"sigla":"VM","edition":"Libri e raccolte d'autore · Garzanti","raccolta":"I viaggi la morte"},{"id":"1959-1","year":1959,"date":"1959-04-04","title":"La nostra casa si trasforma (e l’inquilino la deve subire)","type":"Prosa in rivista","themes":["VlC"],"sigla":"VlC","edition":"Prosa in rivista · Radiocorriere-TV","raccolta":"Verso la Certosa"},{"id":"1959-2","year":1959,"date":"1959-08-31","title":"Il guerriero, l’amazzone, lo spirito della poesia nel verso immortale del Foscolo – Conversazione a tre voci","type":"Prosa in rivista","themes":["GASP"],"sigla":"GASP","edition":"Prosa in rivista · Paragone","raccolta":"Il guerriero, l'amazzone, lo spirito della poesia nel verso immortale del Foscolo – Conversazione a tre voci"},{"id":"1959-3","year":1959,"date":"1959-10-31","title":"Risotto alla milanese","type":"Prosa in rivista","themes":["VlC"],"sigla":"VlC","edition":"Prosa in rivista · Il Gatto selvatico","raccolta":"Verso la Certosa"},{"id":"1959-4","year":1959,"date":"1959-11-30","title":"La battaglia dei topi e delle rane","type":"Prosa in rivista","themes":["TO"],"sigla":"TO","edition":"Prosa in rivista · L’Illustrazione italiana","raccolta":"Il tempo e le opere"},{"id":"1959-5","year":1959,"date":"1959-12-15","title":"Dal Carso alla sala di proiezione","type":"Articoli/saggi su rivista","themes":["AS"],"sigla":"AS","edition":"Articoli/saggi su rivista · Settimo Giorno. Settimanale d’attualità politica e varietà","raccolta":"Altri scritti"},{"id":"1960-1","year":1960,"date":"1960-07-26","title":"Manzoni diviso in tre dal bisturi di Moravia","type":"Articoli/saggi su rivista","themes":["TO"],"sigla":"TO","edition":"Articoli/saggi su rivista · Il Giorno","raccolta":"Il tempo e le opere"},{"id":"1961-2","year":1961,"date":"1961-10-24","title":"Il cetriolo del Crivelli","type":"Articoli/saggi su rivista","themes":["TO"],"sigla":"TO","edition":"Articoli/saggi su rivista · Il Giorno","raccolta":"Il tempo e le opere"},{"id":"1961-3","year":1961,"date":"1961-11-30","title":"Immagine di Luigi Russo","type":"Articoli/saggi su rivista","themes":["SD"],"sigla":"SD","edition":"Articoli/saggi su rivista · Belfagor","raccolta":"Scritti dispersi"},{"id":"1961-1","year":1961,"date":"1961-12-31","title":"Verso la Certosa","type":"Libri e raccolte d'autore","themes":["VlC"],"sigla":"VlC","edition":"Libri e raccolte d'autore · Ricciardi","raccolta":"Verso la Certosa"},{"id":"1962","year":1962,"date":"1962-09-07","title":"Processo alla lingua italiana","type":"Articoli/saggi su rivista","themes":["TO"],"sigla":"TO","edition":"Articoli/saggi su rivista · Paese sera","raccolta":"Il tempo e le opere"},{"id":"1963-1","year":1963,"date":"1963-02-28","title":"La passeggiata autunnale (Aug. 1918)","type":"Prosa in rivista","themes":["RD"],"sigla":"RD","edition":"Prosa in rivista · Letteratura","raccolta":"Racconti dispersi"},{"id":"1963-3","year":1963,"date":"1963-03-13","title":"Accoppiamenti giudiziosi (I Racconti 1924-1958)","type":"Libri e raccolte d'autore","themes":["AG"],"sigla":"AG","edition":"Libri e raccolte d'autore · Garzanti","raccolta":"Accoppiamenti giudiziosi (I Racconti – 1924-1958)"},{"id":"1963-4","year":1963,"date":"1963-03-15","title":"La cognizione del dolore","type":"Libri e raccolte d'autore","themes":["CdD"],"sigla":"CdD","edition":"Libri e raccolte d'autore · Einaudi","raccolta":"La cognizione del dolore"},{"id":"1963-6","year":1963,"date":"1963-09-30","title":"Una poesia [dated 1915]","type":"Poesia in rivista","themes":["Biz"],"sigla":"Biz","edition":"Poesia in rivista · Il Menabò","raccolta":"Le bizze del capitano in congedo e altri racconti"},{"id":"1963-7","year":1963,"date":"1963-09-30","title":"[Frammenti inediti di La cognizione del dolore] Citati, Piero. Il male invisibile","type":"Prosa in rivista","themes":["CdD"],"sigla":"CdD","edition":"Prosa in rivista · Il Menabò","raccolta":"La cognizione del dolore"},{"id":"1963-2","year":1963,"date":"1963-12-31","title":"Domingo del señorito en escasez","type":"Articoli/saggi su rivista","themes":["RD"],"sigla":"RD","edition":"Articoli/saggi su rivista · Nuova Accademia","raccolta":"Racconti dispersi"},{"id":"1964-1","year":1964,"date":"1964-04-30","title":"I Luigi di Francia","type":"Libri e raccolte d'autore","themes":["LdF"],"sigla":"LdF","edition":"Libri e raccolte d'autore · Garzanti","raccolta":"I Luigi di Francia"},{"id":"1964-2","year":1964,"date":"1964-06-30","title":"Le meraviglie d’Italia – Gli anni","type":"Libri e raccolte d'autore","themes":["MdI","A"],"sigla":"MdI, A","edition":"Libri e raccolte d'autore · Einaudi","raccolta":"Le meraviglie d'Italia / Gli Anni"},{"id":"1965-2","year":1965,"date":"1965-06-30","title":"Giornale di guerra e di prigionia","type":"Libri e raccolte d'autore","themes":["GGP"],"sigla":"GGP","edition":"Libri e raccolte d'autore · Einaudi","raccolta":"Giornale di guerra e di prigionia"},{"id":"1965-1","year":1965,"date":"1965-12-31","title":"Giuseppe Berto, «Il male oscuro»","type":"Recensioni","themes":["SD"],"sigla":"SD","edition":"Recensioni · Terzo Programma","raccolta":"Scritti dispersi"},{"id":"1966-1","year":1966,"date":"1966-01-13","title":"Il dolce riaversi della luce (Il tempo e le opere)","type":"Articoli/saggi su rivista","themes":["TO"],"sigla":"TO","edition":"Articoli/saggi su rivista · La Fiera Letteraria","raccolta":"Il tempo e le opere"},{"id":"1966-2","year":1966,"date":"1966-01-22","title":"Incantagione e paura","type":"Articoli/saggi su rivista","themes":[],"sigla":"no sigla","edition":"Articoli/saggi su rivista · Giornale d’Italia","raccolta":""},{"id":"1966-3","year":1966,"date":"1966-06-24","title":"L’ultima rimeditazione","type":"Articoli/saggi su rivista","themes":[],"sigla":"no sigla","edition":"Articoli/saggi su rivista · La Nazione","raccolta":""},{"id":"1967-1","year":1967,"date":"1967-04-30","title":"Il guerriero, l’amazzone, lo spirito della poesia nel verso immortale del Foscolo – Conversazione a tre voci","type":"Libri e raccolte d'autore","themes":["GASP"],"sigla":"GASP","edition":"Libri e raccolte d'autore · Garzanti","raccolta":"Il guerriero, l'amazzone, lo spirito della poesia nel verso immortale del Foscolo – Conversazione a tre voci"},{"id":"1967-2","year":1967,"date":"1967-06-30","title":"Eros e Priapo (da furore a cenere)","type":"Libri e raccolte d'autore","themes":["EP67"],"sigla":"EP67","edition":"Libri e raccolte d'autore · Garzanti","raccolta":"Eros e Priapo (da furore a cenere)"},{"id":"1967-3","year":1967,"date":"1967-06-30","title":"Piani di sole e liste [poem; dated 1919]","type":"Poesia in rivista","themes":[],"sigla":"no sigla","edition":"Poesia in rivista · Strumenti critici","raccolta":""},{"id":"1968","year":1968,"date":"1968-10-31","title":"Divagazioni e garbuglio","type":"Articoli/saggi su rivista","themes":["TO"],"sigla":"TO","edition":"Articoli/saggi su rivista · Paragone","raccolta":"Il tempo e le opere"},{"id":"1969","year":1969,"date":"1969-12-31","title":"[Materiali per La cognizione del dolore] Roscioni","type":"Prosa in rivista","themes":["CdD"],"sigla":"CdD","edition":"Prosa in rivista · Milano","raccolta":"La cognizione del dolore"},{"id":"1970-1","year":1970,"date":"1970-01-17","title":"La cognizione del dolore","type":"Libri e raccolte d'autore","themes":["CdD"],"sigla":"CdD","edition":"Libri e raccolte d'autore · Einaudi","raccolta":"La cognizione del dolore"},{"id":"1970-3","year":1970,"date":"1970-02-14","title":"La meccanica","type":"Libri e raccolte d'autore","themes":["M"],"sigla":"M","edition":"Libri e raccolte d'autore · Garzanti","raccolta":"La meccanica"},{"id":"1970-2","year":1970,"date":"1970-12-31","title":"Viaggi di Gulliver, cioè del Gaddus. Alcune battute per il progettato libro, 57-69. In Un augurio a Raffaele Mattioli","type":"Prosa in volume","themes":["Biz"],"sigla":"Biz","edition":"Prosa in volume · Sansoni","raccolta":"Le bizze del capitano in congedo e altri racconti"},{"id":"1971-2","year":1971,"date":"1971-02-28","title":"Il seccatore","type":"Prosa in rivista","themes":["Biz"],"sigla":"Biz","edition":"Prosa in rivista · Paragone","raccolta":"Le bizze del capitano in congedo e altri racconti"},{"id":"1971-3","year":1971,"date":"1971-02-28","title":"Novella seconda","type":"Libri e raccolte d'autore","themes":["NS"],"sigla":"NS","edition":"Libri e raccolte d'autore · Garzanti","raccolta":"Novella Seconda"},{"id":"1971-1","year":1971,"date":"1971-12-31","title":"Gli amici taciturni (ovvero «ritorno») [poem; dated 1919]","type":"Poesia in rivista","themes":["P"],"sigla":"P","edition":"Poesia in rivista · Studi urbinati di Storia","raccolta":"Poesie"}];
 
   const gadda = rawPeople.find(d => d.name === "Gadda Carlo Emilio");
   const allCorrespondents = rawPeople.filter(d => d !== gadda);
@@ -169,15 +278,82 @@
   // except height, which grows with the shown row count so a crowded filter
   // keeps the same comfortable row spacing that a sparse category already
   // gets for free within the reference's fixed 420px.
-  const width = 950;
-  const margin = { top: 30, right: 40, bottom: 40, left: 170 };
+  // focus mode: width is no longer fixed — render() picks it so that each
+  // year gets pxPerYear on-screen pixels at full window height.
+  const BASE_PX_PER_YEAR = 40;      // 100% zoom
+  const MAX_PX_PER_YEAR = 600;     // zoomed all the way in
+  let pxPerYear = BASE_PX_PER_YEAR; // changed by the zoom controls
+  let zoomState = null;             // the last drawn scale, for zooming around a year
+  // --- time focus recalibration: with a year window active, each person is
+  // re-measured on that window alone — only their interaction years inside
+  // it exist for row order, dips and contact marks, and their strength is
+  // the number of those interactions. render() re-normalises strength across
+  // whoever is shown, so the strongest line is the strongest tie OF THAT
+  // PERIOD.
+  function focusWindow(d) {
+    if (!timeFocus) return d;
+    const all = d.interactions || [];
+    const inside = all.filter(yr => yr >= timeFocus.start && yr <= timeFocus.end);
+    return {
+      ...d,
+      // only contacts inside the period exist for the drawing; someone
+      // pinned with no contact here gets a flat line
+      interactions: inside,
+      // strength = how much contact there actually was in the period
+      weight: inside.length,
+    };
+  }
+  // initial view: only the people most active with Gadda are drawn (by
+  // strength — within a focused period, by contact in that period). Anyone
+  // added with the search box is always drawn on top of these.
+  const TOP_N_DEFAULT = 15;
+  let topN = TOP_N_DEFAULT; // null = everyone
+  // --- live readout (bottom-right): for the years currently on screen, how
+  // many people were in contact with Gadda and how many records there are,
+  // counted over EVERYONE matching the current filters — not just the people
+  // drawn — so the reduced view never hides the real numbers.
+  let topNStats = { shown: 0, total: 0 };
+  let updateReadout = () => {};
+  const readout = d3.select("body").append("div").attr("class", "year-readout");
+  const contactKinds = [
+    { noun: "publications on Gadda", yearsOf: name => (secondaryWorks[name] || []).map(w => w.year).filter(Number.isFinite) },
+  ];
+  // what one person contributes to a year range: a record count per kind,
+  // and whether they were in contact at all (people with no dated records
+  // count as in contact when their known span or contact years overlap it)
+  function contactsIn(d, lo, hi) {
+    const counts = contactKinds.map(k => k.yearsOf(d.name).filter(yr => yr >= lo && yr <= hi).length);
+    let active = counts.some(n => n > 0);
+    if (!active && (d.interactions || []).some(yr => yr >= lo && yr <= hi)) active = true;
+    if (!active && !contactKinds.some(k => k.yearsOf(d.name).length) &&
+        d.range_start != null && d.range_end != null && d.range_end >= lo && d.range_start <= hi) active = true;
+    return { active, counts };
+  }
+  // --- connections between graphs: which reparti each person here also
+  // appears in (built from every reparto graph's own list of people). Shown
+  // as small coloured dots after each name, and as links in the sidebar
+  // when a person is selected.
+  const THIS_REPARTO = "secondaryBib";
+  const repartoAccents = { letters: "#6d2a9e", library: "#c05727", secondaryBib: "#1d4e9e", archive: "#9e1d47", undifferentiated: "#4a5059" };
+  const repartoLabels = { letters: "Letters", library: "Library", secondaryBib: "Secondary bibliography", archive: "Archive", undifferentiated: "Everyone (undifferentiated)" };
+  const repartoMembership = {"Binni Walter":["secondaryBib","undifferentiated"],"Bo Carlo":["secondaryBib","undifferentiated"],"Calvino Italo":["secondaryBib","undifferentiated"],"De Robertis Giuseppe":["secondaryBib","undifferentiated"],"Falqui Enrico":["secondaryBib","undifferentiated"],"Gorni Guglielmo":["secondaryBib","undifferentiated"],"Roscioni Gian Carlo":["secondaryBib","archive","undifferentiated"]};
+  // the reparti (other than this one) a person also appears in; the
+  // undifferentiated graph holds nearly everyone, so it isn't marked
+  const otherReparti = name => (repartoMembership[name] || []).filter(k => k !== THIS_REPARTO && k !== "undifferentiated");
+  let updateCrossLinks = () => {};
+  let lastSelectedNames = [];
+  let pinLabels = () => {};
+  let width = 950;
+  const margin = { top: 40, right: 40, bottom: 30, left: 170 }; // axis sits on top
   const minHeight = 420;
   const maxHeight = 780; // beyond this, rows compress gradually instead of growing the page forever
   const targetRowStep = 85;
   const svg = d3.select("svg");
 
-  const gapLimit = 5;
-  const reach = 3;
+  const baseGapLimit = 5;
+  let gapLimit = baseGapLimit;
+  const baseReach = 3;
+  let reach = baseReach;
 
   function clusterInteractions(years) {
     const sorted = [...years].sort((a, b) => a - b);
@@ -196,10 +372,23 @@
 
   function render(shownCorrespondents, initialSelected = []) {
     svg.selectAll("*").remove();
+    shownCorrespondents = shownCorrespondents.map(focusWindow);
+    const eligible = shownCorrespondents;
+    if (topN != null && eligible.length > topN) {
+      const ranked = [...eligible].sort((a, b) => (b.weight ?? 0) - (a.weight ?? 0));
+      const keep = new Set(ranked.slice(0, topN).map(d => d.name));
+      shownCorrespondents = eligible.filter(d => keep.has(d.name) || pinnedNames.has(d.name));
+    }
+    topNStats = { shown: shownCorrespondents.length, total: eligible.length };
+    // in a focused period, contacts a few years apart are separate events,
+    // not one long stretch: dips group only contacts within ~a tenth of the
+    // period of each other, and ease in/out over a proportionally short time
+    const focusSpan = timeFocus ? timeFocus.end - timeFocus.start : null;
+    reach = timeFocus ? Math.min(baseReach, Math.max(0.35, focusSpan / 25)) : baseReach;
+    gapLimit = timeFocus ? Math.min(baseGapLimit, Math.max(1, Math.round(focusSpan / 10))) : baseGapLimit;
 
     const rowCount = shownCorrespondents.length + 1; // + Gadda
     const height = Math.min(maxHeight, Math.max(minHeight, margin.top + margin.bottom + targetRowStep * (rowCount - 1)));
-    svg.attr("viewBox", [0, 0, width, height]);
 
     // the x-axis extends both ways to fit everyone's real birth and death,
     // AND their documented interaction years — some correspondence in this
@@ -209,22 +398,28 @@
     // entirely and just zooms the x-axis to that exact window instead —
     // lines still draw their full real extent, they just get visually
     // clipped at the SVG edge outside the focused range.
-    const yearMin = timeFocus ? timeFocus.start : Math.min(
-      gadda.birth,
-      ...shownCorrespondents.map(d => d.birth),
-      ...shownCorrespondents.flatMap(d => d.interactions ?? [])
-    );
+    const yearMin = timeFocus ? timeFocus.start : gadda.birth; // timeline starts at Gadda's birth
     // every line stops at Gadda's own death — none of them extend into a
     // correspondent's own later life, since that's not part of his story.
     const yearMax = timeFocus ? timeFocus.end : gadda.death;
+    const unitsPerPx = height / window.innerHeight;
+    margin.left = 16 * unitsPerPx; // names sit on the lines, so only a small gutter
+    width = Math.max(
+      (window.innerWidth - document.getElementById("side-panel").offsetWidth) * unitsPerPx,
+      margin.left + margin.right + (yearMax - yearMin) * pxPerYear * unitsPerPx
+    );
+    svg.attr("viewBox", [0, 0, width, height]).style("width", (width / unitsPerPx) + "px");
     const x = d3.scaleLinear().domain([yearMin, yearMax]).range([margin.left, width - margin.right]);
+    zoomState = { x, unitsPerPx, marginLR: margin.left + margin.right };
 
     const rescaleWeight = shownCorrespondents.length
       ? d3.scaleLinear().domain(d3.extent(shownCorrespondents, d => d.weight)).range([0, 1])
       : () => 1;
 
     shownCorrespondents.forEach(d => {
-      d.barycenter = d.interactions.reduce((sum, yr) => sum + yr, 0) / d.interactions.length;
+      d.barycenter = d.interactions.length
+        ? d.interactions.reduce((sum, yr) => sum + yr, 0) / d.interactions.length
+        : (yearMin + yearMax) / 2; // pinned, no contact in a focused period
     });
     const byBarycenter = [...shownCorrespondents].sort((a, b) => a.barycenter - b.barycenter);
     const mid = Math.ceil(byBarycenter.length / 2);
@@ -279,15 +474,16 @@
     svg.append("line")
       .attr("class", "time-baseline")
       .attr("x1", margin.left).attr("x2", width - margin.right)
-      .attr("y1", height - margin.bottom).attr("y2", height - margin.bottom);
+      .attr("y1", margin.top).attr("y2", margin.top);
 
     svg.append("g")
       .selectAll("text")
-      .data(x.ticks(10))
+      // about one year label per 110px on screen, so zooming in adds labels
+      .data(x.ticks(Math.max(10, Math.round(width / unitsPerPx / 110))))
       .join("text")
         .attr("class", "time-label")
         .attr("x", d => x(d))
-        .attr("y", height - margin.bottom + 16)
+        .attr("y", margin.top - 10)
         .attr("text-anchor", "middle")
         .text(d3.format("d"));
 
@@ -304,10 +500,26 @@
       d.diedBeforeGadda = d.death < gadda.death;
     });
 
+    // remembers each line's flat stretches (its own row, or the flat bottom
+    // of a dip), so the name can be placed ON the line — see pinLabels below
+    const lineShapes = new Map();
+    function shapePath(d, pts, curved) {
+      const segs = [];
+      for (let i = 0; i < pts.length - 1; i++) {
+        const [x0, y0] = pts[i], [x1, y1] = pts[i + 1];
+        if (Math.abs(y0 - y1) > 1e-6 || x1 <= x0) continue;
+        const last = segs[segs.length - 1];
+        if (last && Math.abs(last.x1 - x0) < 1e-6 && Math.abs(last.y - y0) < 1e-6) last.x1 = x1;
+        else segs.push({ x0, x1, y: y0 });
+      }
+      lineShapes.set(d.name, segs);
+      return curved ? d3.line().curve(d3.curveMonotoneX)(pts) : d3.line()(pts);
+    }
+
     function lifePath(d) {
       const rowY = y(d.name);
       if (!d.interactions || d.interactions.length === 0) {
-        return d3.line()([[x(d.frameBirth), rowY], [x(d.frameDeath), rowY]]);
+        return shapePath(d, [[x(d.frameBirth), rowY], [x(d.frameDeath), rowY]], false);
       }
       const dipY = dipYFor(d);
       const clusters = clusterInteractions(d.interactions);
@@ -322,7 +534,7 @@
         points.push([x(Math.min(lineEnd, last + reach)), rowY]);
       });
       points.push([x(lineEnd), rowY]);
-      return d3.line().curve(d3.curveMonotoneX)(points);
+      return shapePath(d, points, true);
     }
 
     const rows = svg.selectAll(".row").data(people).join("g").attr("class", "row");
@@ -356,6 +568,132 @@
       .attr("y", d => y(d.name) - 6)
       .style("cursor", "pointer")
       .text(d => d.name);
+
+    // focus mode: names sit ON their own line. While you scroll, each name
+    // stays at the window's left edge, on the first flat stretch of its line
+    // (its own row, or the flat bottom of a dip) that's long enough to hold
+    // it — so names don't pile up where lines curve into Gadda's. Once a
+    // line has ended, its name rests at the line's end. A background-coloured
+    // outline makes the line break around the text. Labels are drawn in one
+    // layer on top, so no other line crosses them.
+    const labelLayer = svg.append("g").attr("class", "label-layer");
+    // label size follows the row spacing so neighbouring names never touch
+    const labelPx = Math.max(8, Math.min(12, (Math.abs(yScale.step()) / unitsPerPx) * 0.8));
+    svg.style("--label-size", (labelPx * unitsPerPx) + "px");
+    // the year axis gets the same treatment: a constant on-screen size
+    svg.style("--axis-size", (11 * unitsPerPx) + "px");
+    lineLabels
+      .each(function () { labelLayer.node().appendChild(this); })
+      .attr("text-anchor", "start")
+      .attr("dominant-baseline", "middle")
+      .attr("paint-order", "stroke")
+      .attr("stroke", "var(--bg)")
+      .attr("stroke-width", 4 * unitsPerPx)
+      .attr("stroke-linejoin", "round")
+      // clicks on a row normally come from the row group, which the label
+      // has just left, so forward them to it
+      .on("click", (event, d) => rows.filter(r => r.name === d.name).dispatch("click"));
+    // very light line colours are darkened for the names, so every name
+    // stays readable against the background (Gadda's own ink is left as is)
+    lineLabels.attr("fill", function () {
+      const fill = this.getAttribute("fill");
+      const c = d3.hcl(fill);
+      if (isNaN(c.l)) return fill;
+      c.l = Math.min(c.l, 45);
+      return c.formatHex();
+    });
+    // a background box behind each name (an outline alone leaves the line
+    // showing through the spaces between words)
+    const labelBoxH = labelPx * 1.35 * unitsPerPx;
+    // connections to other graphs: one small dot per other reparto this
+    // person also appears in, in that reparto's colour
+    lineLabels.each(function (d) {
+      otherReparti(d.name).forEach((k, i) => {
+        d3.select(this).append("tspan")
+          .attr("class", "xref-dot")
+          .attr("fill", repartoAccents[k])
+          .attr("dx", (i ? 1 : 4) * unitsPerPx)
+          .text("●");
+      });
+    });
+    lineLabels.each(function (d) {
+      const also = otherReparti(d.name).map(k => repartoLabels[k]);
+      d3.select(this).append("title").text(d.name + (also.length ? `\nAlso in: ${also.join(", ")}` : ""));
+      this.__w = this.getComputedTextLength();
+      this.__box = labelLayer.insert("rect", () => this)
+        .attr("class", "label-bg")
+        .attr("width", this.__w + 6 * unitsPerPx)
+        .attr("height", labelBoxH)
+        .attr("rx", 2 * unitsPerPx)
+        .node();
+    });
+    pinLabels = () => {
+      const pad = 6 * unitsPerPx;
+      const startGap = 2 * pad; // clear of the birth dot at the line's start
+      const leftEdge = Math.max(margin.left, window.scrollX * unitsPerPx) + pad;
+      lineLabels.each(function (d) {
+        const segs = lineShapes.get(d.name) || [];
+        this.__spot = null;
+        if (!segs.length) return;
+        const need = this.__w + 2 * pad;
+        // names only ever sit on the person's own row — never on the bottom
+        // of a dip, which runs right next to Gadda's line where many lines
+        // (and names) would meet. If the line is dipping at the window's
+        // edge, the name waits just after the dip, where it comes back.
+        const rowY = y(d.name);
+        const rowSegs = segs.filter(s => Math.abs(s.y - rowY) < 1e-6);
+        const pool = rowSegs.length ? rowSegs : segs;
+        const seg = pool.find(s => s.x1 - Math.max(s.x0 + startGap, leftEdge) >= need);
+        let spot;
+        if (seg) spot = { x: Math.max(seg.x0 + startGap, leftEdge), y: seg.y };
+        else {
+          // the line has no room left ahead: the name rests where it ended
+          const last = pool[pool.length - 1];
+          spot = { x: Math.max(last.x0 + startGap, last.x1 - need), y: last.y };
+        }
+        this.setAttribute("x", spot.x);
+        this.setAttribute("y", spot.y);
+        this.__box.setAttribute("x", spot.x - 3 * unitsPerPx);
+        this.__box.setAttribute("y", spot.y - labelBoxH / 2);
+        this.__spot = spot;
+      });
+      // no two names may overlap: Gadda's always shows, then the stronger
+      // tie wins; a hidden name comes back as soon as it has room again
+      const priority = n => (n.__data__.name === "Gadda Carlo Emilio" ? Infinity : (n.__data__.weight ?? 0));
+      const kept = [];
+      lineLabels.nodes().slice().sort((a, b) => priority(b) - priority(a)).forEach(n => {
+        if (!n.__spot) return;
+        const box = {
+          x0: n.__spot.x - 3 * unitsPerPx, x1: n.__spot.x + n.__w + 3 * unitsPerPx,
+          y0: n.__spot.y - labelBoxH / 2, y1: n.__spot.y + labelBoxH / 2,
+        };
+        const clash = kept.some(k => box.x0 < k.x1 && box.x1 > k.x0 && box.y0 < k.y1 && box.y1 > k.y0);
+        n.setAttribute("visibility", clash ? "hidden" : "visible");
+        n.__box.setAttribute("visibility", clash ? "hidden" : "visible");
+        if (!clash) kept.push(box);
+      });
+    };
+    pinLabels();
+    const shownNames = new Set(shownCorrespondents.map(d => d.name));
+    updateReadout = () => {
+      const graphW = window.innerWidth - document.getElementById("side-panel").offsetWidth;
+      const lo = Math.round(Math.max(yearMin, x.invert(Math.max(margin.left, window.scrollX * unitsPerPx))));
+      const hi = Math.round(Math.min(yearMax, x.invert((window.scrollX + graphW) * unitsPerPx)));
+      let people = 0, drawn = 0;
+      const totals = contactKinds.map(() => 0);
+      eligible.forEach(d => {
+        const c = contactsIn(d, lo, hi);
+        if (c.active) { people++; if (shownNames.has(d.name)) drawn++; }
+        c.counts.forEach((n, i) => totals[i] += n);
+      });
+      readout.html(
+        `<div class="ro-years">${lo} – ${hi} on screen</div>` +
+        `<div><strong>${people}</strong> ${people === 1 ? "person" : "people"} in contact` +
+        (drawn < people ? ` <span class="ro-sub">(${drawn} drawn)</span>` : "") + `</div>` +
+        contactKinds.map((k, i) => `<div><strong>${totals[i]}</strong> ${k.noun}</div>`).join("")
+      );
+    };
+    updateReadout();
 
     svg.selectAll(".cutoff")
       .data(people.filter(d => d.diedBeforeGadda))
@@ -405,38 +743,48 @@
       .attr("height", 6)
       .attr("transform", d => `rotate(45 ${x(d.year)} ${gaddaY})`);
 
-    // Gadda's own primary-bibliography works, scattered directly along his
-    // own line — a beeswarm-style stack (alternating above/below, growing
-    // outward) keeps same-year items from sitting exactly on top of each
-    // other, bounded tightly around gaddaY so it never reaches into a
-    // neighboring correspondent row.
-    const primaryStep = 4;
-    const primaryMaxOffset = Math.min(rowStep / 2 - 6, 36);
+    // Gadda's own primary-bibliography entries, as thin amber ticks crossing
+    // his line at each entry's exact date — a "barcode" along his life
+    // instead of stacked dots. Books and author's collections get taller,
+    // thicker ticks than pieces in magazines; each tick has a wider invisible
+    // hit area so it's easy to hover.
+    const isBook = d => d.type === "Libri e raccolte d'autore";
+    const formatEntryDate = iso => {
+      const [yy, mm, dd] = iso.split("-").map(Number);
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      return `${dd} ${months[mm - 1]} ${yy}`;
+    };
+    const entryTime = d => {
+      const [yy, mm, dd] = String(d.date || "").split("-").map(Number);
+      return yy ? yy + ((mm || 1) - 1) / 12 + ((dd || 1) - 1) / 365 : d.year + 0.5;
+    };
     const primaryShown = showPrimaryWorks
       ? primaryWorks.filter(w => w.year >= yearMin && w.year <= yearMax)
       : [];
-    const primaryByYear = d3.group(primaryShown, w => w.year);
-    primaryByYear.forEach(group => {
-      group.sort((a, b) => a.title.localeCompare(b.title));
-      group.forEach((w, i) => {
-        const sign = i % 2 === 0 ? -1 : 1;
-        const magnitude = Math.ceil((i + 1) / 2);
-        w.dotY = gaddaY + sign * Math.min(magnitude * primaryStep, primaryMaxOffset);
-      });
-    });
-    const primaryG = svg.selectAll(".primary-work-pt")
+    const tickHalf = d => (isBook(d) ? 11 : 7) * unitsPerPx;
+    const primaryG = svg.selectAll(".primary-work")
       .data(primaryShown)
-      .join("circle")
-        .attr("class", "primary-work-pt")
-        .attr("cx", d => x(d.year))
-        .attr("cy", d => d.dotY)
-        .attr("r", 2.5);
+      .join("g")
+        .attr("class", "primary-work");
+    // positioned directly (no transform on the group): the timeline clip is
+    // applied in each element's own coordinates, so a translated group would
+    // be clipped away
+    primaryG.append("line")
+      .attr("class", "primary-work-hit")
+      .attr("x1", d => x(entryTime(d))).attr("x2", d => x(entryTime(d)))
+      .attr("y1", d => gaddaY - tickHalf(d) - 3 * unitsPerPx).attr("y2", d => gaddaY + tickHalf(d) + 3 * unitsPerPx)
+      .attr("stroke-width", 7 * unitsPerPx);
+    primaryG.append("line")
+      .attr("class", "primary-work-pt")
+      .attr("x1", d => x(entryTime(d))).attr("x2", d => x(entryTime(d)))
+      .attr("y1", d => gaddaY - tickHalf(d)).attr("y2", d => gaddaY + tickHalf(d))
+      .attr("stroke-width", d => (isBook(d) ? 2.4 : 1.3) * unitsPerPx);
 
     primaryG
       .on("mouseenter", (event, d) => {
         tooltip.html(
           `<strong>${d.title}</strong>` +
-          `<div style="opacity:0.85">${d.year} — ${d.edition}</div>` +
+          `<div style="opacity:0.85">${d.date && !d.date.endsWith("-01-01") ? formatEntryDate(d.date) : d.year} — ${d.edition}</div>` +
           (d.raccolta ? `<div style="margin-top:0.15rem;opacity:0.7">${d.raccolta}</div>` : "") +
           `<div style="margin-top:0.2rem;opacity:0.6;font-size:0.7rem;">GADDA'S OWN WORK (${d.sigla})</div>`
         );
@@ -456,7 +804,14 @@
       return selected.size === 0 || name === "Gadda Carlo Emilio" || selected.has(name);
     }
 
+    // true while a hover preview is drawn — previews only change the
+    // highlighting, never the real selection, the scroll or the sidebar
+    let previewing = false;
     function applyHighlight() {
+      if (!previewing) {
+        lastSelectedNames = [...selected];
+        updateCrossLinks(lastSelectedNames);
+      }
       rows.selectAll(".life, .life-halo").style("opacity", d => (isRelevant(d.name) ? null : 0.08));
       rows.selectAll(".pt").style("opacity", d => (isRelevant(d.name) ? 1 : 0.08));
       svg.selectAll(".contact").each(function (d) {
@@ -519,7 +874,9 @@
     function previewHighlight(name) {
       const real = selected;
       selected = new Set([name]);
+      previewing = true;
       applyHighlight();
+      previewing = false;
       selected = real; // restore the actual selection for the next call
     }
     rows
@@ -564,6 +921,22 @@
       .on("mouseleave", () => tooltip.attr("hidden", true));
 
     applyHighlight();
+
+    // focus mode: the timeline starts at Gadda's birth, so anything earlier
+    // (lives that began before 1893, a few pre-1893 books) is cut off at the
+    // left edge instead of running into the margin. The year axis (drawn
+    // first) stays unclipped; everything drawn after it is clipped.
+    svg.append("clipPath").attr("id", "timeline-clip")
+      .append("rect")
+        .attr("x", x(yearMin) - 6).attr("y", 0)
+        .attr("width", width).attr("height", height);
+    const svgKids = [...svg.node().children];
+    const axisIdx = svgKids.findIndex(n => n.querySelector && n.querySelector(".time-label"));
+    svgKids.slice(axisIdx + 1)
+      .filter(n => n.tagName !== "clipPath" && !n.classList.contains("label-layer"))
+      .forEach(n => n.setAttribute("clip-path", "url(#timeline-clip)"));
+    svg.selectAll(".primary-work").raise(); // the ticks cross Gadda's line, so they sit above it
+    svg.select(".label-layer").raise();
   }
 
   // people added by name through the search box — always shown on top of
@@ -613,6 +986,7 @@
         .attr("class", "pinned-chip")
         .text(d => d)
         .on("click", (event, d) => { pinnedNames.delete(d); searchSelected.delete(d); applyFilter(); });
+    if (selectionToggleReady) syncSelectionToggle(); // the switch is built after the first draw
   }
 
   // --- search box: type a name, click a suggestion to pin them into view ---
@@ -705,6 +1079,329 @@
   }
 
   applyFilter();
+
+  // --- reparti: switch to another reparto's graph from the bottom of the sidebar. Inside
+  // gadda-browse.html this presses the browse page's own tab (so its tab bar,
+  // URL and download button stay in sync); opened on its own, it just goes
+  // to the other file.
+  const reparti = [
+    { key: "letters", label: "Letters", file: "gadda-reparto-letter-range-declutter.html", accent: "#6d2a9e" },
+    { key: "library", label: "Library", file: "gadda-reparto-library-declutter.html", accent: "#c05727" },
+    { key: "secondaryBib", label: "Secondary bibliography", file: "gadda-reparto-secondary-bibliography-declutter.html", accent: "#1d4e9e" },
+    { key: "archive", label: "Archive", file: "gadda-reparto-archive.html", accent: "#9e1d47" },
+    { key: "undifferentiated", label: "Everyone (undifferentiated)", file: "gadda-reparto-undifferentiated.html", accent: "#4a5059" },
+  ];
+  const thisFile = location.pathname.split("/").pop();
+  const repartiSection = d3.select("#side-panel").append("section"); // last, below the browsing tools
+  repartiSection.append("h2").text("Reparti");
+  repartiSection.append("div").attr("class", "reparti-nav")
+    .selectAll("button").data(reparti).join("button")
+      .attr("class", "filter-btn reparto-btn")
+      .classed("active", r => r.file === thisFile)
+      .style("--accent", r => r.accent)
+      .text(r => r.label)
+      .on("click", (event, r) => {
+        if (r.file === thisFile) return;
+        let parentTab = null;
+        try {
+          if (window.parent !== window) {
+            parentTab = window.parent.document.querySelector(`.tab-btn[data-key="${r.key}"]`);
+          }
+        } catch (e) { /* parent not reachable (e.g. file://) — fall back to plain navigation */ }
+        if (parentTab) parentTab.click();
+        else location.href = r.file;
+      });
+
+  // --- "Also in other reparti": for each selected person who appears in
+  // other graphs, a button per graph that opens them there, already
+  // selected (via ?focus=). Inside gadda-browse.html the browse page does
+  // the switching, so its tabs stay in sync.
+  function openReparto(key, name) {
+    const r = reparti.find(r => r.key === key);
+    if (!r) return;
+    let parentOpen = null;
+    try {
+      if (window.parent !== window && typeof window.parent.openReparto === "function") parentOpen = window.parent.openReparto;
+    } catch (e) { /* parent not reachable (e.g. file://) */ }
+    if (parentOpen) parentOpen(key, name);
+    else location.href = `${r.file}?focus=${encodeURIComponent(name)}`;
+  }
+  const crossSection = d3.select("#side-panel").insert("section", () => repartiSection.node()).attr("class", "cross-links");
+  crossSection.append("h2").text("Also in other reparti");
+  const crossBody = crossSection.append("div");
+  updateCrossLinks = names => {
+    const linked = names
+      .filter(n => n !== "Gadda Carlo Emilio")
+      .map(n => ({ name: n, keys: otherReparti(n) })) // the undifferentiated graph holds everyone, so it's never listed
+      .filter(p => p.keys.length);
+    crossSection.style("display", linked.length ? null : "none");
+    crossBody.html("");
+    linked.forEach(p => {
+      const item = crossBody.append("div").attr("class", "cross-person");
+      item.append("div").attr("class", "cross-name").text(p.name);
+      const btns = item.append("div").attr("class", "cross-btns");
+      p.keys.forEach(k => btns.append("button")
+        .attr("class", "filter-btn cross-btn")
+        .style("--accent", repartoAccents[k])
+        .text(repartoLabels[k])
+        .on("click", () => openReparto(k, p.name)));
+    });
+  };
+  updateCrossLinks(lastSelectedNames);
+  repartiSection.append("div").attr("class", "xref-hint")
+    .html('<span class="xref-dot-sample">●</span> after a name: that person also appears in the reparto of that colour. Click a line to see the links.');
+
+  // --- "My selection": a switch in the sidebar between everyone and only
+  // the people you've added with the search box (plus Gadda). It drives the
+  // same mode the old hidden menu had; a category picked in the legend is
+  // dropped when you switch, since My selection ignores categories.
+  const selectionSection = d3.select("#search-input").node().closest("section");
+  const viewToggle = d3.select(selectionSection).insert("div", ".search-box").attr("class", "view-toggle");
+  const selectionHint = d3.select(selectionSection).append("div").attr("class", "selection-hint");
+  const shownCount = d3.select(selectionSection).insert("div", ".view-toggle").attr("class", "shown-count");
+  // this reparto has fewer people than the most-active limit, so everyone
+  // is always drawn: the only choice is everyone vs. your own picks
+  viewToggle.append("button").attr("class", "filter-btn").attr("data-mode", "top").text("Everyone")
+    .on("click", () => { topN = TOP_N_DEFAULT; setSelectionMode(false); });
+  viewToggle.append("button").attr("class", "filter-btn").attr("data-mode", "custom").text("★ My selection")
+    .on("click", () => setSelectionMode(true));
+  function setSelectionMode(on) {
+    if (on && typeof activeCats !== "undefined") activeCats.clear(); // My selection ignores categories
+    const btn = document.querySelector(`#mode-filter .filter-btn[data-value="${on ? "__custom__" : "__all__"}"]`);
+    if (btn) btn.click();
+    if (typeof syncLegend === "function") syncLegend();
+    syncSelectionToggle();
+  }
+  function syncSelectionToggle() {
+    const on = customMode;
+    const mode = on ? "custom" : topN == null ? "all" : "top";
+    downloadBtn
+      .style("display", on ? null : "none")
+      .property("disabled", on && !pinnedNames.size);
+    viewToggle.selectAll(".filter-btn").classed("active", function () { return this.dataset.mode === mode; });
+    selectionHint.text(on
+      ? (pinnedNames.size ? "Only the people you added are shown. Click a name chip to remove it." : "Your selection is empty: search a name above to add someone.")
+      : mode === "all"
+      ? "Everyone matching your categories and years is drawn."
+      : "Names you add with search are always shown, on top of these.");
+    // how many people are drawn, out of how many — the graph only draws the
+    // most active by default, so this keeps the reduced view honest
+    const { shown, total } = topNStats;
+    const everyone = allCorrespondents.length;
+    shownCount.html(on
+      ? `Your selection: <strong>${shown}</strong> of ${everyone} people`
+      : (shown >= total
+          ? `Showing ${total === 1 ? "the only" : "all"} <strong>${total}</strong> ${total === 1 ? "person" : "people"}`
+          : `Showing <strong>${shown}</strong> of ${total} people`) +
+        (total < everyone ? ` matching your filters (${everyone} in all)` : "") +
+        (shown < total ? ` — the most active; choose "Show all" to draw everyone` : ""));
+  }
+  // --- download "My selection" as a PNG or JPG image. Only offered in My
+  // selection mode. The page's colours, fonts and line widths come from CSS classes and
+  // variables a standalone file can't see, so each element's computed style
+  // is written onto the copy; names are laid out as at the start of the
+  // timeline, whatever the current scroll position.
+  const downloadBtn = d3.select(selectionSection).selectAll(null)
+    .data(["png", "jpg"])
+    .join("button")
+    .attr("class", "filter-btn download-selection")
+    .text(format => `⬇ Download my selection (${format.toUpperCase()})`)
+    .on("click", (event, format) => downloadSelection(format));
+  function downloadSelection(format) {
+    const scrollBack = window.scrollX;
+    window.scrollTo(0, window.scrollY);
+    pinLabels();
+    const original = document.querySelector("#graph-svg, .graph-wrap svg");
+    const clone = original.cloneNode(true);
+    const props = ["fill", "fill-opacity", "stroke", "stroke-width", "stroke-opacity", "stroke-dasharray",
+      "stroke-linecap", "stroke-linejoin", "opacity", "visibility", "display", "font-size", "font-weight",
+      "font-family", "paint-order", "dominant-baseline", "text-anchor"];
+    const src = original.querySelectorAll("*"), dst = clone.querySelectorAll("*");
+    src.forEach((el, i) => {
+      const cs = getComputedStyle(el);
+      dst[i].setAttribute("style", props.map(p => `${p}:${cs.getPropertyValue(p)}`).join(";"));
+    });
+    window.scrollTo(scrollBack, window.scrollY);
+    pinLabels();
+    const [, , w, h] = clone.getAttribute("viewBox").split(/[ ,]+/).map(Number);
+    clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    clone.setAttribute("width", w);
+    clone.setAttribute("height", h);
+    clone.removeAttribute("style");
+    const bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    bg.setAttribute("width", w);
+    bg.setAttribute("height", h);
+    bg.setAttribute("fill", getComputedStyle(document.body).backgroundColor);
+    clone.insertBefore(bg, clone.firstChild);
+    const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+    title.textContent = `Carlo Emilio Gadda — my selection: ${[...pinnedNames].join(", ")}`;
+    clone.insertBefore(title, clone.firstChild);
+    const source = new XMLSerializer().serializeToString(clone);
+    const svgUrl = URL.createObjectURL(new Blob([source], { type: "image/svg+xml;charset=utf-8" }));
+    const key = (reparti.find(r => r.file === thisFile) || { key: "graph" }).key;
+    // the styled copy is drawn onto a canvas and saved from there; it's
+    // rendered at twice its size so the image stays sharp, unless that
+    // would go past what browsers allow for one canvas
+    const scale = Math.min(2, 16000 / Math.max(w, h));
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(w * scale);
+      canvas.height = Math.round(h * scale);
+      const ctx = canvas.getContext("2d");
+      ctx.scale(scale, scale);
+      ctx.drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(svgUrl);
+      const mime = format === "jpg" ? "image/jpeg" : "image/png";
+      canvas.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `gadda-${key}-my-selection.${format}`;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }, mime, 0.92);
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(svgUrl);
+      alert("Couldn't turn the graph into an image in this browser.");
+    };
+    img.src = svgUrl;
+  }
+
+  var selectionToggleReady = true;
+  syncSelectionToggle();
+
+  // --- time focus, easier to use: Enter applies, a status line says what's
+  // active, and the view jumps back to the window's start whenever the
+  // focus changes.
+  const timeFocusBox = d3.select(".time-focus");
+  const focusStatus = timeFocusBox.append("div").attr("class", "time-focus-status");
+  function updateFocusStatus() {
+    focusStatus.text(timeFocus
+      ? `Showing ${timeFocus.start}–${timeFocus.end}: strength and order recalculated for these years only.`
+      : "Showing Gadda's whole life.");
+  }
+  d3.selectAll("#time-focus-start, #time-focus-end").on("keydown", event => {
+    if (event.key === "Enter") document.getElementById("time-focus-apply").click();
+  });
+  ["time-focus-apply", "time-focus-clear"].forEach(id =>
+    document.getElementById(id).addEventListener("click", () => {
+      window.scrollTo(0, 0);
+      pinLabels();
+      updateFocusStatus();
+    }));
+  updateFocusStatus();
+
+  // --- zoom: stretch or squeeze the timeline (how many pixels each year
+  // gets), keeping the year under the pointer — or the middle of the view —
+  // where it is. Pinch on a trackpad or Ctrl/⌘ + wheel over the graph, or the
+  // − / + / Fit buttons at the top right. The graph is redrawn at the new
+  // scale (nothing is stretched), and the current selection is kept.
+  const sidebarW = () => document.getElementById("side-panel").offsetWidth;
+  // the narrowest the timeline can be: the whole span fits the window
+  function fitPxPerYear() {
+    const { x, unitsPerPx, marginLR } = zoomState;
+    const [y0, y1] = x.domain();
+    return Math.max(1, (window.innerWidth - sidebarW() - marginLR / unitsPerPx) / (y1 - y0));
+  }
+  function rerenderKeepingSelection() {
+    searchSelected = new Set(lastSelectedNames);
+    applyFilter();
+  }
+  let pendingZoom = null;
+  function zoomBy(factor, clientX) {
+    const anchor = clientX ?? sidebarW() + (window.innerWidth - sidebarW()) / 2;
+    // wheel ticks arriving close together are combined into one redraw
+    const first = !pendingZoom;
+    pendingZoom = { factor: (pendingZoom ? pendingZoom.factor : 1) * factor, anchor };
+    if (first) setTimeout(applyZoom, 30);
+  }
+  function applyZoom() {
+    if (!pendingZoom || !zoomState) return;
+    const { factor, anchor } = pendingZoom;
+    pendingZoom = null;
+    const anchorYear = zoomState.x.invert((window.scrollX + anchor - sidebarW()) * zoomState.unitsPerPx);
+    const fit = fitPxPerYear();
+    const next = Math.min(MAX_PX_PER_YEAR, Math.max(fit, Math.max(pxPerYear, fit) * factor));
+    if (Math.abs(next - Math.max(pxPerYear, fit)) < 0.01) return;
+    pxPerYear = next;
+    rerenderKeepingSelection();
+    const left = zoomState.x(anchorYear) / zoomState.unitsPerPx - (anchor - sidebarW());
+    window.scrollTo(Math.max(0, left), window.scrollY);
+    pinLabels();
+    updateReadout();
+    updateZoomLabel();
+  }
+  function fitZoom() {
+    pxPerYear = 1; // anything below the fit width draws the whole span in the window
+    rerenderKeepingSelection();
+    window.scrollTo(0, window.scrollY);
+    pinLabels();
+    updateReadout();
+    updateZoomLabel();
+  }
+  const zoomCtl = d3.select("body").append("div").attr("class", "zoom-ctl")
+    .attr("title", "Pinch, or Ctrl/⌘ + scroll over the graph, to zoom");
+  zoomCtl.append("button").text("−").attr("aria-label", "Zoom out").on("click", () => zoomBy(1 / 1.5));
+  const zoomLabel = zoomCtl.append("span").attr("class", "zoom-level");
+  zoomCtl.append("button").text("+").attr("aria-label", "Zoom in").on("click", () => zoomBy(1.5));
+  zoomCtl.append("button").attr("class", "zoom-fit").text("Fit").on("click", fitZoom);
+  function updateZoomLabel() {
+    if (!zoomState) return;
+    const effective = Math.max(pxPerYear, fitPxPerYear());
+    zoomLabel.text(`${Math.round(effective / BASE_PX_PER_YEAR * 100)}%`);
+  }
+  updateZoomLabel();
+
+  // --- retractable sidebar: the tab on its edge hides or shows it. Hidden,
+  // the graph takes the whole window width; it's redrawn for the new width,
+  // keeping the year at the left edge and the current selection. The choice
+  // is remembered for next time (when the browser allows it).
+  const SIDEBAR_KEY = "gadda-sidebar-collapsed";
+  const sideToggle = d3.select("body").append("button")
+    .attr("class", "side-toggle")
+    .on("click", () => setSidebar(!document.body.classList.contains("side-collapsed")));
+  function setSidebar(collapsed, redraw = true) {
+    const leftYear = zoomState
+      ? zoomState.x.invert(Math.max(zoomState.marginLR / 2, window.scrollX * zoomState.unitsPerPx))
+      : null;
+    document.body.classList.toggle("side-collapsed", collapsed);
+    sideToggle
+      .text(collapsed ? "›" : "‹")
+      .attr("title", collapsed ? "Show the menu" : "Hide the menu")
+      .attr("aria-label", collapsed ? "Show the menu" : "Hide the menu");
+    try { localStorage.setItem(SIDEBAR_KEY, collapsed ? "1" : "0"); } catch (e) { /* storage unavailable */ }
+    if (!redraw) return;
+    rerenderKeepingSelection();
+    if (leftYear != null) window.scrollTo(Math.max(0, zoomState.x(leftYear) / zoomState.unitsPerPx - 12), window.scrollY);
+    pinLabels();
+    updateReadout();
+    updateZoomLabel();
+  }
+  let startCollapsed = false;
+  try { startCollapsed = localStorage.getItem(SIDEBAR_KEY) === "1"; } catch (e) { /* storage unavailable */ }
+  setSidebar(startCollapsed, startCollapsed);
+
+  // focus mode: a plain vertical wheel/trackpad scroll moves along the
+  // timeline, since there's nothing to scroll vertically anymore.
+  window.addEventListener("wheel", event => {
+    if (event.target.closest && event.target.closest(".side-panel")) return; // let the sidebar scroll normally
+    if (event.ctrlKey || event.metaKey) {
+      // pinch on a trackpad (reported as ctrl + wheel) or Ctrl/⌘ + wheel: zoom
+      event.preventDefault();
+      // a mouse-wheel notch (~100) is capped to about ×1.4; a pinch sends many
+      // small deltas, so it zooms smoothly
+      const delta = Math.max(-60, Math.min(60, event.deltaY));
+      zoomBy(Math.exp(-delta * 0.006), event.clientX);
+      return;
+    }
+    if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
+      window.scrollBy(event.deltaY, 0);
+      event.preventDefault();
+    }
+  }, { passive: false });
+  window.addEventListener("scroll", () => { pinLabels(); updateReadout(); }, { passive: true });
 </script>
 </body>
 </html>

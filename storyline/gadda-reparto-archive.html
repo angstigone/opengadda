@@ -107,13 +107,108 @@
   }
   .cross-link a { color: inherit; font-weight: 600; }
 
-  /* focus mode: menus, titles and the count panel are hidden for now (not
-     removed — the script still looks them up by id), and the graph fills the
-     whole viewport. Delete this block to bring everything back. */
-  body { padding: 0; height: 100vh; overflow: hidden; }
-  h1, p.sub, .filter-bar, .controls-bar, .count-panel, .cross-link { display: none !important; }
-  .graph-wrap { max-width: none; width: 100vw; height: 100vh; }
-  svg { max-width: none; width: 100vw; height: 100vh; }
+  /* focus mode: titles, the category menu and the count panel are hidden
+     for now (not removed — the script still looks them up by id). Search,
+     year focus and the legend live in a fixed sidebar on the left, and the
+     graph fills the rest of the window. */
+  :root { --side-w: 240px; }
+  body { padding: 0; height: 100vh; overflow: visible; align-items: flex-start; }
+  h1, p.sub, .filter-bar, .count-panel, .cross-link { display: none !important; }
+  /* only <html> scrolls — if body had its own overflow too, body would
+     become the scroller and window.scrollX (which pins the names) would
+     stay at 0. The graph's width follows the timeline (see pxPerYear). */
+  html { overflow-x: auto; overflow-y: hidden; }
+  .graph-wrap { max-width: none; width: max-content; height: 100vh; margin-left: var(--side-w); }
+  svg { max-width: none; height: 100vh; flex: 0 0 auto; }
+
+  .side-panel {
+    position: fixed; left: 0; top: 0; bottom: 0; width: var(--side-w); z-index: 60;
+    box-sizing: border-box; padding: 1rem 0.9rem; overflow-y: auto;
+    background: var(--bg); border-right: 1px solid var(--grid);
+    display: flex; flex-direction: column; gap: 1.25rem;
+  }
+  .side-panel h2 {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    opacity: 0.55; margin: 0 0 0.45rem;
+  }
+  .side-panel .controls-bar { display: contents; }
+  .side-panel .search-box { width: 100%; }
+  .side-panel .time-focus { flex-wrap: wrap; }
+  .side-panel .time-focus > span:first-child { display: none; } /* replaced by the section heading */
+  .side-panel .time-focus input { width: 4.5rem; }
+
+  /* names drawn on their lines (see "label-layer" in the script) */
+  .label-layer .line-label { font-size: var(--label-size, 11px); }
+  .label-bg { fill: var(--bg); }
+  .time-label { font-size: var(--axis-size, 10px); }
+
+  .time-focus-status { font-size: 0.72rem; opacity: 0.7; margin-top: 0.5rem; width: 100%; }
+
+  /* Everyone / My selection switch in the sidebar */
+  .view-toggle { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.6rem; }
+  .view-toggle .filter-btn { flex: 1 1 auto; padding: 0.3rem 0.55rem; }
+  .selection-hint { font-size: 0.72rem; opacity: 0.65; margin-top: 0.45rem; }
+
+
+  /* reparto switcher at the top of the sidebar */
+  .reparti-nav { display: flex; flex-direction: column; gap: 0.3rem; }
+  .reparto-btn { text-align: left; border-left: 3px solid var(--accent); border-radius: 6px; }
+  .reparto-btn.active {
+    opacity: 1; color: var(--accent); border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, transparent); cursor: default;
+  }
+
+  /* live readout of the years on screen */
+  .year-readout {
+    position: fixed; right: 16px; bottom: 16px; z-index: 55;
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    border: 1px solid var(--grid); border-radius: 8px;
+    padding: 0.5rem 0.75rem; font-size: 0.75rem; line-height: 1.6;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08); pointer-events: none;
+  }
+  .year-readout strong { font-size: 0.9rem; }
+  .year-readout .ro-years { font-weight: 700; opacity: 0.7; margin-bottom: 0.15rem; }
+  .year-readout .ro-sub { opacity: 0.6; }
+  .shown-count { font-size: 0.78rem; margin-bottom: 0.55rem; line-height: 1.45; }
+  .shown-count strong { font-size: 0.9rem; }
+
+  .download-selection { width: 100%; margin-top: 0.6rem; }
+  .download-selection:disabled { opacity: 0.4; cursor: default; }
+
+  /* connections between graphs */
+  .xref-dot { font-size: 0.85em; }
+  .cross-person { margin-bottom: 0.55rem; }
+  .cross-name { font-size: 0.78rem; font-weight: 600; margin-bottom: 0.25rem; }
+  .cross-btns { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .cross-btn { font-size: 0.7rem; padding: 0.2rem 0.6rem; color: var(--accent); border-color: var(--accent); opacity: 1; }
+  .xref-hint { font-size: 0.7rem; opacity: 0.65; margin-top: 0.5rem; line-height: 1.45; }
+  .xref-dot-sample { color: #c05727; }
+
+  /* zoom controls, top right */
+  .zoom-ctl {
+    position: fixed; top: 10px; right: 14px; z-index: 55; display: flex; align-items: center; gap: 0.15rem;
+    background: color-mix(in srgb, var(--bg) 92%, transparent); border: 1px solid var(--grid);
+    border-radius: 8px; padding: 0.15rem; box-shadow: 0 2px 10px rgba(0,0,0,0.08); font-size: 0.75rem;
+  }
+  .zoom-ctl button {
+    font: inherit; font-weight: 700; min-width: 1.7rem; height: 1.6rem; cursor: pointer;
+    border: none; border-radius: 6px; background: transparent; color: var(--ink);
+  }
+  .zoom-ctl button:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); }
+  .zoom-ctl .zoom-fit { font-weight: 600; padding: 0 0.5rem; }
+  .zoom-level { min-width: 3rem; text-align: center; opacity: 0.7; font-variant-numeric: tabular-nums; }
+
+  /* retractable sidebar */
+  body.side-collapsed { --side-w: 0px; }
+  body.side-collapsed .side-panel { display: none; }
+  .side-toggle {
+    position: fixed; top: 12px; left: calc(var(--side-w) - 1px); z-index: 70;
+    width: 1.35rem; height: 2.2rem; padding: 0; cursor: pointer;
+    font: inherit; font-size: 1rem; font-weight: 700; line-height: 1; color: var(--ink);
+    background: var(--bg); border: 1px solid var(--grid); border-left: none;
+    border-radius: 0 7px 7px 0; box-shadow: 2px 1px 6px rgba(0,0,0,0.08); opacity: 0.8;
+  }
+  .side-toggle:hover { opacity: 1; }
 </style>
 </head>
 <body>
@@ -121,14 +216,18 @@
 <h1>Carlo Emilio Gadda — reparto: archive (4)</h1>
 <p class="sub">reparto "archive" — of the 1,583 physical archive items (notebooks, loose sheets, letters-as-objects, photographs…), almost none record a named person: only 69 are tagged as actual letters, and just 4 people could be reliably identified from free text (the "subtitle" field, or which named fond — Fondo Citati, Fondo Roscioni — holds the item). Years come from when each letter-object is dated, not from a structured field.</p>
 <div id="mode-filter" class="filter-bar"></div>
+<aside id="side-panel" class="side-panel">
 <div class="controls-bar">
-  <div>
+  <section>
+    <h2>People shown</h2>
     <div class="search-box">
       <input type="text" id="search-input" placeholder="Add a person by name…" autocomplete="off">
       <div id="search-suggestions" class="search-suggestions"></div>
     </div>
     <div id="pinned-chips" class="pinned-chips"></div>
-  </div>
+  </section>
+  <section>
+    <h2>Focus on years</h2>
   <div class="time-focus">
     <span>Focus on years</span>
     <input type="number" id="time-focus-start" placeholder="from">
@@ -137,7 +236,9 @@
     <button id="time-focus-apply" class="filter-btn">Apply</button>
     <button id="time-focus-clear" class="filter-btn">Clear</button>
   </div>
+</section>
 </div>
+</aside>
 <div class="graph-wrap">
   <svg viewBox="0 0 950 420"></svg>
   <div id="count-panel" class="count-panel"></div>
@@ -164,15 +265,82 @@
   const gadda = rawPeople.find(d => d.name === "Gadda Carlo Emilio");
   const allCorrespondents = rawPeople.filter(d => d !== gadda);
 
-  const width = 950;
-  const margin = { top: 30, right: 40, bottom: 40, left: 170 };
+  // focus mode: width is no longer fixed — render() picks it so that each
+  // year gets pxPerYear on-screen pixels at full window height.
+  const BASE_PX_PER_YEAR = 40;      // 100% zoom
+  const MAX_PX_PER_YEAR = 600;     // zoomed all the way in
+  let pxPerYear = BASE_PX_PER_YEAR; // changed by the zoom controls
+  let zoomState = null;             // the last drawn scale, for zooming around a year
+  // --- time focus recalibration: with a year window active, each person is
+  // re-measured on that window alone — only their interaction years inside
+  // it exist for row order, dips and contact marks, and their strength is
+  // the number of those interactions. render() re-normalises strength across
+  // whoever is shown, so the strongest line is the strongest tie OF THAT
+  // PERIOD.
+  function focusWindow(d) {
+    if (!timeFocus) return d;
+    const all = d.interactions || [];
+    const inside = all.filter(yr => yr >= timeFocus.start && yr <= timeFocus.end);
+    return {
+      ...d,
+      // only contacts inside the period exist for the drawing; someone
+      // pinned with no contact here gets a flat line
+      interactions: inside,
+      // strength = how much contact there actually was in the period
+      weight: inside.length,
+    };
+  }
+  // initial view: only the people most active with Gadda are drawn (by
+  // strength — within a focused period, by contact in that period). Anyone
+  // added with the search box is always drawn on top of these.
+  const TOP_N_DEFAULT = 15;
+  let topN = TOP_N_DEFAULT; // null = everyone
+  // --- live readout (bottom-right): for the years currently on screen, how
+  // many people were in contact with Gadda and how many records there are,
+  // counted over EVERYONE matching the current filters — not just the people
+  // drawn — so the reduced view never hides the real numbers.
+  let topNStats = { shown: 0, total: 0 };
+  let updateReadout = () => {};
+  const readout = d3.select("body").append("div").attr("class", "year-readout");
+  const contactKinds = [
+    { noun: "archive items", yearsOf: name => (archiveRecords[name] || []).map(r => r.year).filter(Number.isFinite) },
+  ];
+  // what one person contributes to a year range: a record count per kind,
+  // and whether they were in contact at all (people with no dated records
+  // count as in contact when their known span or contact years overlap it)
+  function contactsIn(d, lo, hi) {
+    const counts = contactKinds.map(k => k.yearsOf(d.name).filter(yr => yr >= lo && yr <= hi).length);
+    let active = counts.some(n => n > 0);
+    if (!active && (d.interactions || []).some(yr => yr >= lo && yr <= hi)) active = true;
+    if (!active && !contactKinds.some(k => k.yearsOf(d.name).length) &&
+        d.range_start != null && d.range_end != null && d.range_end >= lo && d.range_start <= hi) active = true;
+    return { active, counts };
+  }
+  // --- connections between graphs: which reparti each person here also
+  // appears in (built from every reparto graph's own list of people). Shown
+  // as small coloured dots after each name, and as links in the sidebar
+  // when a person is selected.
+  const THIS_REPARTO = "archive";
+  const repartoAccents = { letters: "#6d2a9e", library: "#c05727", secondaryBib: "#1d4e9e", archive: "#9e1d47", undifferentiated: "#4a5059" };
+  const repartoLabels = { letters: "Letters", library: "Library", secondaryBib: "Secondary bibliography", archive: "Archive", undifferentiated: "Everyone (undifferentiated)" };
+  const repartoMembership = {"Citati Pietro":["letters","archive","undifferentiated"],"Guarnieri Silvio":["letters","library","archive","undifferentiated"],"Roscioni Gian Carlo":["secondaryBib","archive","undifferentiated"]};
+  // the reparti (other than this one) a person also appears in; the
+  // undifferentiated graph holds nearly everyone, so it isn't marked
+  const otherReparti = name => (repartoMembership[name] || []).filter(k => k !== THIS_REPARTO && k !== "undifferentiated");
+  let updateCrossLinks = () => {};
+  let lastSelectedNames = [];
+  let pinLabels = () => {};
+  let width = 950;
+  const margin = { top: 40, right: 40, bottom: 30, left: 170 }; // axis sits on top
   const minHeight = 420;
   const maxHeight = 780;
   const targetRowStep = 85;
   const svg = d3.select("svg");
 
-  const gapLimit = 5;
-  const reach = 3;
+  const baseGapLimit = 5;
+  let gapLimit = baseGapLimit;
+  const baseReach = 3;
+  let reach = baseReach;
 
   function clusterInteractions(years) {
     const sorted = [...years].sort((a, b) => a - b);
@@ -191,25 +359,44 @@
 
   function render(shownCorrespondents, initialSelected = []) {
     svg.selectAll("*").remove();
+    shownCorrespondents = shownCorrespondents.map(focusWindow);
+    const eligible = shownCorrespondents;
+    if (topN != null && eligible.length > topN) {
+      const ranked = [...eligible].sort((a, b) => (b.weight ?? 0) - (a.weight ?? 0));
+      const keep = new Set(ranked.slice(0, topN).map(d => d.name));
+      shownCorrespondents = eligible.filter(d => keep.has(d.name) || pinnedNames.has(d.name));
+    }
+    topNStats = { shown: shownCorrespondents.length, total: eligible.length };
+    // in a focused period, contacts a few years apart are separate events,
+    // not one long stretch: dips group only contacts within ~a tenth of the
+    // period of each other, and ease in/out over a proportionally short time
+    const focusSpan = timeFocus ? timeFocus.end - timeFocus.start : null;
+    reach = timeFocus ? Math.min(baseReach, Math.max(0.35, focusSpan / 25)) : baseReach;
+    gapLimit = timeFocus ? Math.min(baseGapLimit, Math.max(1, Math.round(focusSpan / 10))) : baseGapLimit;
 
     const rowCount = shownCorrespondents.length + 1;
     const height = Math.min(maxHeight, Math.max(minHeight, margin.top + margin.bottom + targetRowStep * (rowCount - 1)));
-    svg.attr("viewBox", [0, 0, width, height]);
 
-    const yearMin = timeFocus ? timeFocus.start : Math.min(
-      gadda.birth,
-      ...shownCorrespondents.map(d => d.birth),
-      ...shownCorrespondents.flatMap(d => d.interactions ?? [])
-    );
+    const yearMin = timeFocus ? timeFocus.start : gadda.birth; // timeline starts at Gadda's birth
     const yearMax = timeFocus ? timeFocus.end : gadda.death;
+    const unitsPerPx = height / window.innerHeight;
+    margin.left = 16 * unitsPerPx; // names sit on the lines, so only a small gutter
+    width = Math.max(
+      (window.innerWidth - document.getElementById("side-panel").offsetWidth) * unitsPerPx,
+      margin.left + margin.right + (yearMax - yearMin) * pxPerYear * unitsPerPx
+    );
+    svg.attr("viewBox", [0, 0, width, height]).style("width", (width / unitsPerPx) + "px");
     const x = d3.scaleLinear().domain([yearMin, yearMax]).range([margin.left, width - margin.right]);
+    zoomState = { x, unitsPerPx, marginLR: margin.left + margin.right };
 
     const rescaleWeight = shownCorrespondents.length
       ? d3.scaleLinear().domain(d3.extent(shownCorrespondents, d => d.weight)).range([0, 1])
       : () => 1;
 
     shownCorrespondents.forEach(d => {
-      d.barycenter = d.interactions.reduce((sum, yr) => sum + yr, 0) / d.interactions.length;
+      d.barycenter = d.interactions.length
+        ? d.interactions.reduce((sum, yr) => sum + yr, 0) / d.interactions.length
+        : (yearMin + yearMax) / 2; // pinned, no contact in a focused period
     });
     const byBarycenter = [...shownCorrespondents].sort((a, b) => a.barycenter - b.barycenter);
     const mid = Math.ceil(byBarycenter.length / 2);
@@ -256,15 +443,16 @@
     svg.append("line")
       .attr("class", "time-baseline")
       .attr("x1", margin.left).attr("x2", width - margin.right)
-      .attr("y1", height - margin.bottom).attr("y2", height - margin.bottom);
+      .attr("y1", margin.top).attr("y2", margin.top);
 
     svg.append("g")
       .selectAll("text")
-      .data(x.ticks(10))
+      // about one year label per 110px on screen, so zooming in adds labels
+      .data(x.ticks(Math.max(10, Math.round(width / unitsPerPx / 110))))
       .join("text")
         .attr("class", "time-label")
         .attr("x", d => x(d))
-        .attr("y", height - margin.bottom + 16)
+        .attr("y", margin.top - 10)
         .attr("text-anchor", "middle")
         .text(d3.format("d"));
 
@@ -281,10 +469,26 @@
       d.diedBeforeGadda = d.death < gadda.death;
     });
 
+    // remembers each line's flat stretches (its own row, or the flat bottom
+    // of a dip), so the name can be placed ON the line — see pinLabels below
+    const lineShapes = new Map();
+    function shapePath(d, pts, curved) {
+      const segs = [];
+      for (let i = 0; i < pts.length - 1; i++) {
+        const [x0, y0] = pts[i], [x1, y1] = pts[i + 1];
+        if (Math.abs(y0 - y1) > 1e-6 || x1 <= x0) continue;
+        const last = segs[segs.length - 1];
+        if (last && Math.abs(last.x1 - x0) < 1e-6 && Math.abs(last.y - y0) < 1e-6) last.x1 = x1;
+        else segs.push({ x0, x1, y: y0 });
+      }
+      lineShapes.set(d.name, segs);
+      return curved ? d3.line().curve(d3.curveMonotoneX)(pts) : d3.line()(pts);
+    }
+
     function lifePath(d) {
       const rowY = y(d.name);
       if (!d.interactions || d.interactions.length === 0) {
-        return d3.line()([[x(d.frameBirth), rowY], [x(d.frameDeath), rowY]]);
+        return shapePath(d, [[x(d.frameBirth), rowY], [x(d.frameDeath), rowY]], false);
       }
       const dipY = dipYFor(d);
       const clusters = clusterInteractions(d.interactions);
@@ -299,7 +503,7 @@
         points.push([x(Math.min(lineEnd, last + reach)), rowY]);
       });
       points.push([x(lineEnd), rowY]);
-      return d3.line().curve(d3.curveMonotoneX)(points);
+      return shapePath(d, points, true);
     }
 
     const rows = svg.selectAll(".row").data(people).join("g").attr("class", "row");
@@ -328,6 +532,132 @@
       .attr("y", d => y(d.name) - 6)
       .style("cursor", "pointer")
       .text(d => d.name);
+
+    // focus mode: names sit ON their own line. While you scroll, each name
+    // stays at the window's left edge, on the first flat stretch of its line
+    // (its own row, or the flat bottom of a dip) that's long enough to hold
+    // it — so names don't pile up where lines curve into Gadda's. Once a
+    // line has ended, its name rests at the line's end. A background-coloured
+    // outline makes the line break around the text. Labels are drawn in one
+    // layer on top, so no other line crosses them.
+    const labelLayer = svg.append("g").attr("class", "label-layer");
+    // label size follows the row spacing so neighbouring names never touch
+    const labelPx = Math.max(8, Math.min(12, (Math.abs(yScale.step()) / unitsPerPx) * 0.8));
+    svg.style("--label-size", (labelPx * unitsPerPx) + "px");
+    // the year axis gets the same treatment: a constant on-screen size
+    svg.style("--axis-size", (11 * unitsPerPx) + "px");
+    lineLabels
+      .each(function () { labelLayer.node().appendChild(this); })
+      .attr("text-anchor", "start")
+      .attr("dominant-baseline", "middle")
+      .attr("paint-order", "stroke")
+      .attr("stroke", "var(--bg)")
+      .attr("stroke-width", 4 * unitsPerPx)
+      .attr("stroke-linejoin", "round")
+      // clicks on a row normally come from the row group, which the label
+      // has just left, so forward them to it
+      .on("click", (event, d) => rows.filter(r => r.name === d.name).dispatch("click"));
+    // very light line colours are darkened for the names, so every name
+    // stays readable against the background (Gadda's own ink is left as is)
+    lineLabels.attr("fill", function () {
+      const fill = this.getAttribute("fill");
+      const c = d3.hcl(fill);
+      if (isNaN(c.l)) return fill;
+      c.l = Math.min(c.l, 45);
+      return c.formatHex();
+    });
+    // a background box behind each name (an outline alone leaves the line
+    // showing through the spaces between words)
+    const labelBoxH = labelPx * 1.35 * unitsPerPx;
+    // connections to other graphs: one small dot per other reparto this
+    // person also appears in, in that reparto's colour
+    lineLabels.each(function (d) {
+      otherReparti(d.name).forEach((k, i) => {
+        d3.select(this).append("tspan")
+          .attr("class", "xref-dot")
+          .attr("fill", repartoAccents[k])
+          .attr("dx", (i ? 1 : 4) * unitsPerPx)
+          .text("●");
+      });
+    });
+    lineLabels.each(function (d) {
+      const also = otherReparti(d.name).map(k => repartoLabels[k]);
+      d3.select(this).append("title").text(d.name + (also.length ? `\nAlso in: ${also.join(", ")}` : ""));
+      this.__w = this.getComputedTextLength();
+      this.__box = labelLayer.insert("rect", () => this)
+        .attr("class", "label-bg")
+        .attr("width", this.__w + 6 * unitsPerPx)
+        .attr("height", labelBoxH)
+        .attr("rx", 2 * unitsPerPx)
+        .node();
+    });
+    pinLabels = () => {
+      const pad = 6 * unitsPerPx;
+      const startGap = 2 * pad; // clear of the birth dot at the line's start
+      const leftEdge = Math.max(margin.left, window.scrollX * unitsPerPx) + pad;
+      lineLabels.each(function (d) {
+        const segs = lineShapes.get(d.name) || [];
+        this.__spot = null;
+        if (!segs.length) return;
+        const need = this.__w + 2 * pad;
+        // names only ever sit on the person's own row — never on the bottom
+        // of a dip, which runs right next to Gadda's line where many lines
+        // (and names) would meet. If the line is dipping at the window's
+        // edge, the name waits just after the dip, where it comes back.
+        const rowY = y(d.name);
+        const rowSegs = segs.filter(s => Math.abs(s.y - rowY) < 1e-6);
+        const pool = rowSegs.length ? rowSegs : segs;
+        const seg = pool.find(s => s.x1 - Math.max(s.x0 + startGap, leftEdge) >= need);
+        let spot;
+        if (seg) spot = { x: Math.max(seg.x0 + startGap, leftEdge), y: seg.y };
+        else {
+          // the line has no room left ahead: the name rests where it ended
+          const last = pool[pool.length - 1];
+          spot = { x: Math.max(last.x0 + startGap, last.x1 - need), y: last.y };
+        }
+        this.setAttribute("x", spot.x);
+        this.setAttribute("y", spot.y);
+        this.__box.setAttribute("x", spot.x - 3 * unitsPerPx);
+        this.__box.setAttribute("y", spot.y - labelBoxH / 2);
+        this.__spot = spot;
+      });
+      // no two names may overlap: Gadda's always shows, then the stronger
+      // tie wins; a hidden name comes back as soon as it has room again
+      const priority = n => (n.__data__.name === "Gadda Carlo Emilio" ? Infinity : (n.__data__.weight ?? 0));
+      const kept = [];
+      lineLabels.nodes().slice().sort((a, b) => priority(b) - priority(a)).forEach(n => {
+        if (!n.__spot) return;
+        const box = {
+          x0: n.__spot.x - 3 * unitsPerPx, x1: n.__spot.x + n.__w + 3 * unitsPerPx,
+          y0: n.__spot.y - labelBoxH / 2, y1: n.__spot.y + labelBoxH / 2,
+        };
+        const clash = kept.some(k => box.x0 < k.x1 && box.x1 > k.x0 && box.y0 < k.y1 && box.y1 > k.y0);
+        n.setAttribute("visibility", clash ? "hidden" : "visible");
+        n.__box.setAttribute("visibility", clash ? "hidden" : "visible");
+        if (!clash) kept.push(box);
+      });
+    };
+    pinLabels();
+    const shownNames = new Set(shownCorrespondents.map(d => d.name));
+    updateReadout = () => {
+      const graphW = window.innerWidth - document.getElementById("side-panel").offsetWidth;
+      const lo = Math.round(Math.max(yearMin, x.invert(Math.max(margin.left, window.scrollX * unitsPerPx))));
+      const hi = Math.round(Math.min(yearMax, x.invert((window.scrollX + graphW) * unitsPerPx)));
+      let people = 0, drawn = 0;
+      const totals = contactKinds.map(() => 0);
+      eligible.forEach(d => {
+        const c = contactsIn(d, lo, hi);
+        if (c.active) { people++; if (shownNames.has(d.name)) drawn++; }
+        c.counts.forEach((n, i) => totals[i] += n);
+      });
+      readout.html(
+        `<div class="ro-years">${lo} – ${hi} on screen</div>` +
+        `<div><strong>${people}</strong> ${people === 1 ? "person" : "people"} in contact` +
+        (drawn < people ? ` <span class="ro-sub">(${drawn} drawn)</span>` : "") + `</div>` +
+        contactKinds.map((k, i) => `<div><strong>${totals[i]}</strong> ${k.noun}</div>`).join("")
+      );
+    };
+    updateReadout();
 
     svg.selectAll(".cutoff")
       .data(people.filter(d => d.diedBeforeGadda))
@@ -408,6 +738,8 @@
     }
 
     function applyHighlight() {
+      lastSelectedNames = [...selected];
+      updateCrossLinks(lastSelectedNames);
       rows.selectAll(".life, .life-halo").style("opacity", d => (isRelevant(d.name) ? null : 0.08));
       rows.selectAll(".pt").style("opacity", d => (isRelevant(d.name) ? 1 : 0.08));
       svg.selectAll(".contact").each(function (d) {
@@ -520,6 +852,21 @@
       .on("mouseleave", () => tooltip.attr("hidden", true));
 
     applyHighlight();
+
+    // focus mode: the timeline starts at Gadda's birth, so anything earlier
+    // (lives that began before 1893, a few pre-1893 books) is cut off at the
+    // left edge instead of running into the margin. The year axis (drawn
+    // first) stays unclipped; everything drawn after it is clipped.
+    svg.append("clipPath").attr("id", "timeline-clip")
+      .append("rect")
+        .attr("x", x(yearMin) - 6).attr("y", 0)
+        .attr("width", width).attr("height", height);
+    const svgKids = [...svg.node().children];
+    const axisIdx = svgKids.findIndex(n => n.querySelector && n.querySelector(".time-label"));
+    svgKids.slice(axisIdx + 1)
+      .filter(n => n.tagName !== "clipPath" && !n.classList.contains("label-layer"))
+      .forEach(n => n.setAttribute("clip-path", "url(#timeline-clip)"));
+    svg.select(".label-layer").raise();
   }
 
   // only 4 people total, so every filter here is about time and selection,
@@ -557,6 +904,7 @@
         .attr("class", "pinned-chip")
         .text(d => d)
         .on("click", (event, d) => { pinnedNames.delete(d); searchSelected.delete(d); applyFilter(); });
+    if (selectionToggleReady) syncSelectionToggle(); // the switch is built after the first draw
   }
 
   const searchInput = d3.select("#search-input");
@@ -632,6 +980,329 @@
   }
 
   applyFilter();
+
+  // --- reparti: switch to another reparto's graph from the bottom of the sidebar. Inside
+  // gadda-browse.html this presses the browse page's own tab (so its tab bar,
+  // URL and download button stay in sync); opened on its own, it just goes
+  // to the other file.
+  const reparti = [
+    { key: "letters", label: "Letters", file: "gadda-reparto-letter-range-declutter.html", accent: "#6d2a9e" },
+    { key: "library", label: "Library", file: "gadda-reparto-library-declutter.html", accent: "#c05727" },
+    { key: "secondaryBib", label: "Secondary bibliography", file: "gadda-reparto-secondary-bibliography-declutter.html", accent: "#1d4e9e" },
+    { key: "archive", label: "Archive", file: "gadda-reparto-archive.html", accent: "#9e1d47" },
+    { key: "undifferentiated", label: "Everyone (undifferentiated)", file: "gadda-reparto-undifferentiated.html", accent: "#4a5059" },
+  ];
+  const thisFile = location.pathname.split("/").pop();
+  const repartiSection = d3.select("#side-panel").append("section"); // last, below the browsing tools
+  repartiSection.append("h2").text("Reparti");
+  repartiSection.append("div").attr("class", "reparti-nav")
+    .selectAll("button").data(reparti).join("button")
+      .attr("class", "filter-btn reparto-btn")
+      .classed("active", r => r.file === thisFile)
+      .style("--accent", r => r.accent)
+      .text(r => r.label)
+      .on("click", (event, r) => {
+        if (r.file === thisFile) return;
+        let parentTab = null;
+        try {
+          if (window.parent !== window) {
+            parentTab = window.parent.document.querySelector(`.tab-btn[data-key="${r.key}"]`);
+          }
+        } catch (e) { /* parent not reachable (e.g. file://) — fall back to plain navigation */ }
+        if (parentTab) parentTab.click();
+        else location.href = r.file;
+      });
+
+  // --- "Also in other reparti": for each selected person who appears in
+  // other graphs, a button per graph that opens them there, already
+  // selected (via ?focus=). Inside gadda-browse.html the browse page does
+  // the switching, so its tabs stay in sync.
+  function openReparto(key, name) {
+    const r = reparti.find(r => r.key === key);
+    if (!r) return;
+    let parentOpen = null;
+    try {
+      if (window.parent !== window && typeof window.parent.openReparto === "function") parentOpen = window.parent.openReparto;
+    } catch (e) { /* parent not reachable (e.g. file://) */ }
+    if (parentOpen) parentOpen(key, name);
+    else location.href = `${r.file}?focus=${encodeURIComponent(name)}`;
+  }
+  const crossSection = d3.select("#side-panel").insert("section", () => repartiSection.node()).attr("class", "cross-links");
+  crossSection.append("h2").text("Also in other reparti");
+  const crossBody = crossSection.append("div");
+  updateCrossLinks = names => {
+    const linked = names
+      .filter(n => n !== "Gadda Carlo Emilio")
+      .map(n => ({ name: n, keys: otherReparti(n) })) // the undifferentiated graph holds everyone, so it's never listed
+      .filter(p => p.keys.length);
+    crossSection.style("display", linked.length ? null : "none");
+    crossBody.html("");
+    linked.forEach(p => {
+      const item = crossBody.append("div").attr("class", "cross-person");
+      item.append("div").attr("class", "cross-name").text(p.name);
+      const btns = item.append("div").attr("class", "cross-btns");
+      p.keys.forEach(k => btns.append("button")
+        .attr("class", "filter-btn cross-btn")
+        .style("--accent", repartoAccents[k])
+        .text(repartoLabels[k])
+        .on("click", () => openReparto(k, p.name)));
+    });
+  };
+  updateCrossLinks(lastSelectedNames);
+  repartiSection.append("div").attr("class", "xref-hint")
+    .html('<span class="xref-dot-sample">●</span> after a name: that person also appears in the reparto of that colour. Click a line to see the links.');
+
+  // --- "My selection": a switch in the sidebar between everyone and only
+  // the people you've added with the search box (plus Gadda). It drives the
+  // same mode the old hidden menu had; a category picked in the legend is
+  // dropped when you switch, since My selection ignores categories.
+  const selectionSection = d3.select("#search-input").node().closest("section");
+  const viewToggle = d3.select(selectionSection).insert("div", ".search-box").attr("class", "view-toggle");
+  const selectionHint = d3.select(selectionSection).append("div").attr("class", "selection-hint");
+  const shownCount = d3.select(selectionSection).insert("div", ".view-toggle").attr("class", "shown-count");
+  // this reparto has fewer people than the most-active limit, so everyone
+  // is always drawn: the only choice is everyone vs. your own picks
+  viewToggle.append("button").attr("class", "filter-btn").attr("data-mode", "top").text("Everyone")
+    .on("click", () => { topN = TOP_N_DEFAULT; setSelectionMode(false); });
+  viewToggle.append("button").attr("class", "filter-btn").attr("data-mode", "custom").text("★ My selection")
+    .on("click", () => setSelectionMode(true));
+  function setSelectionMode(on) {
+    if (on && typeof activeCats !== "undefined") activeCats.clear(); // My selection ignores categories
+    const btn = document.querySelector(`#mode-filter .filter-btn[data-value="${on ? "__custom__" : "__all__"}"]`);
+    if (btn) btn.click();
+    if (typeof syncLegend === "function") syncLegend();
+    syncSelectionToggle();
+  }
+  function syncSelectionToggle() {
+    const on = customMode;
+    const mode = on ? "custom" : topN == null ? "all" : "top";
+    downloadBtn
+      .style("display", on ? null : "none")
+      .property("disabled", on && !pinnedNames.size);
+    viewToggle.selectAll(".filter-btn").classed("active", function () { return this.dataset.mode === mode; });
+    selectionHint.text(on
+      ? (pinnedNames.size ? "Only the people you added are shown. Click a name chip to remove it." : "Your selection is empty: search a name above to add someone.")
+      : mode === "all"
+      ? "Everyone matching your categories and years is drawn."
+      : "Names you add with search are always shown, on top of these.");
+    // how many people are drawn, out of how many — the graph only draws the
+    // most active by default, so this keeps the reduced view honest
+    const { shown, total } = topNStats;
+    const everyone = allCorrespondents.length;
+    shownCount.html(on
+      ? `Your selection: <strong>${shown}</strong> of ${everyone} people`
+      : (shown >= total
+          ? `Showing ${total === 1 ? "the only" : "all"} <strong>${total}</strong> ${total === 1 ? "person" : "people"}`
+          : `Showing <strong>${shown}</strong> of ${total} people`) +
+        (total < everyone ? ` matching your filters (${everyone} in all)` : "") +
+        (shown < total ? ` — the most active; choose "Show all" to draw everyone` : ""));
+  }
+  // --- download "My selection" as a PNG or JPG image. Only offered in My
+  // selection mode. The page's colours, fonts and line widths come from CSS classes and
+  // variables a standalone file can't see, so each element's computed style
+  // is written onto the copy; names are laid out as at the start of the
+  // timeline, whatever the current scroll position.
+  const downloadBtn = d3.select(selectionSection).selectAll(null)
+    .data(["png", "jpg"])
+    .join("button")
+    .attr("class", "filter-btn download-selection")
+    .text(format => `⬇ Download my selection (${format.toUpperCase()})`)
+    .on("click", (event, format) => downloadSelection(format));
+  function downloadSelection(format) {
+    const scrollBack = window.scrollX;
+    window.scrollTo(0, window.scrollY);
+    pinLabels();
+    const original = document.querySelector("#graph-svg, .graph-wrap svg");
+    const clone = original.cloneNode(true);
+    const props = ["fill", "fill-opacity", "stroke", "stroke-width", "stroke-opacity", "stroke-dasharray",
+      "stroke-linecap", "stroke-linejoin", "opacity", "visibility", "display", "font-size", "font-weight",
+      "font-family", "paint-order", "dominant-baseline", "text-anchor"];
+    const src = original.querySelectorAll("*"), dst = clone.querySelectorAll("*");
+    src.forEach((el, i) => {
+      const cs = getComputedStyle(el);
+      dst[i].setAttribute("style", props.map(p => `${p}:${cs.getPropertyValue(p)}`).join(";"));
+    });
+    window.scrollTo(scrollBack, window.scrollY);
+    pinLabels();
+    const [, , w, h] = clone.getAttribute("viewBox").split(/[ ,]+/).map(Number);
+    clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    clone.setAttribute("width", w);
+    clone.setAttribute("height", h);
+    clone.removeAttribute("style");
+    const bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    bg.setAttribute("width", w);
+    bg.setAttribute("height", h);
+    bg.setAttribute("fill", getComputedStyle(document.body).backgroundColor);
+    clone.insertBefore(bg, clone.firstChild);
+    const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+    title.textContent = `Carlo Emilio Gadda — my selection: ${[...pinnedNames].join(", ")}`;
+    clone.insertBefore(title, clone.firstChild);
+    const source = new XMLSerializer().serializeToString(clone);
+    const svgUrl = URL.createObjectURL(new Blob([source], { type: "image/svg+xml;charset=utf-8" }));
+    const key = (reparti.find(r => r.file === thisFile) || { key: "graph" }).key;
+    // the styled copy is drawn onto a canvas and saved from there; it's
+    // rendered at twice its size so the image stays sharp, unless that
+    // would go past what browsers allow for one canvas
+    const scale = Math.min(2, 16000 / Math.max(w, h));
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(w * scale);
+      canvas.height = Math.round(h * scale);
+      const ctx = canvas.getContext("2d");
+      ctx.scale(scale, scale);
+      ctx.drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(svgUrl);
+      const mime = format === "jpg" ? "image/jpeg" : "image/png";
+      canvas.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `gadda-${key}-my-selection.${format}`;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }, mime, 0.92);
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(svgUrl);
+      alert("Couldn't turn the graph into an image in this browser.");
+    };
+    img.src = svgUrl;
+  }
+
+  var selectionToggleReady = true;
+  syncSelectionToggle();
+
+  // --- time focus, easier to use: Enter applies, a status line says what's
+  // active, and the view jumps back to the window's start whenever the
+  // focus changes.
+  const timeFocusBox = d3.select(".time-focus");
+  const focusStatus = timeFocusBox.append("div").attr("class", "time-focus-status");
+  function updateFocusStatus() {
+    focusStatus.text(timeFocus
+      ? `Showing ${timeFocus.start}–${timeFocus.end}: strength and order recalculated for these years only.`
+      : "Showing Gadda's whole life.");
+  }
+  d3.selectAll("#time-focus-start, #time-focus-end").on("keydown", event => {
+    if (event.key === "Enter") document.getElementById("time-focus-apply").click();
+  });
+  ["time-focus-apply", "time-focus-clear"].forEach(id =>
+    document.getElementById(id).addEventListener("click", () => {
+      window.scrollTo(0, 0);
+      pinLabels();
+      updateFocusStatus();
+    }));
+  updateFocusStatus();
+
+  // --- zoom: stretch or squeeze the timeline (how many pixels each year
+  // gets), keeping the year under the pointer — or the middle of the view —
+  // where it is. Pinch on a trackpad or Ctrl/⌘ + wheel over the graph, or the
+  // − / + / Fit buttons at the top right. The graph is redrawn at the new
+  // scale (nothing is stretched), and the current selection is kept.
+  const sidebarW = () => document.getElementById("side-panel").offsetWidth;
+  // the narrowest the timeline can be: the whole span fits the window
+  function fitPxPerYear() {
+    const { x, unitsPerPx, marginLR } = zoomState;
+    const [y0, y1] = x.domain();
+    return Math.max(1, (window.innerWidth - sidebarW() - marginLR / unitsPerPx) / (y1 - y0));
+  }
+  function rerenderKeepingSelection() {
+    searchSelected = new Set(lastSelectedNames);
+    applyFilter();
+  }
+  let pendingZoom = null;
+  function zoomBy(factor, clientX) {
+    const anchor = clientX ?? sidebarW() + (window.innerWidth - sidebarW()) / 2;
+    // wheel ticks arriving close together are combined into one redraw
+    const first = !pendingZoom;
+    pendingZoom = { factor: (pendingZoom ? pendingZoom.factor : 1) * factor, anchor };
+    if (first) setTimeout(applyZoom, 30);
+  }
+  function applyZoom() {
+    if (!pendingZoom || !zoomState) return;
+    const { factor, anchor } = pendingZoom;
+    pendingZoom = null;
+    const anchorYear = zoomState.x.invert((window.scrollX + anchor - sidebarW()) * zoomState.unitsPerPx);
+    const fit = fitPxPerYear();
+    const next = Math.min(MAX_PX_PER_YEAR, Math.max(fit, Math.max(pxPerYear, fit) * factor));
+    if (Math.abs(next - Math.max(pxPerYear, fit)) < 0.01) return;
+    pxPerYear = next;
+    rerenderKeepingSelection();
+    const left = zoomState.x(anchorYear) / zoomState.unitsPerPx - (anchor - sidebarW());
+    window.scrollTo(Math.max(0, left), window.scrollY);
+    pinLabels();
+    updateReadout();
+    updateZoomLabel();
+  }
+  function fitZoom() {
+    pxPerYear = 1; // anything below the fit width draws the whole span in the window
+    rerenderKeepingSelection();
+    window.scrollTo(0, window.scrollY);
+    pinLabels();
+    updateReadout();
+    updateZoomLabel();
+  }
+  const zoomCtl = d3.select("body").append("div").attr("class", "zoom-ctl")
+    .attr("title", "Pinch, or Ctrl/⌘ + scroll over the graph, to zoom");
+  zoomCtl.append("button").text("−").attr("aria-label", "Zoom out").on("click", () => zoomBy(1 / 1.5));
+  const zoomLabel = zoomCtl.append("span").attr("class", "zoom-level");
+  zoomCtl.append("button").text("+").attr("aria-label", "Zoom in").on("click", () => zoomBy(1.5));
+  zoomCtl.append("button").attr("class", "zoom-fit").text("Fit").on("click", fitZoom);
+  function updateZoomLabel() {
+    if (!zoomState) return;
+    const effective = Math.max(pxPerYear, fitPxPerYear());
+    zoomLabel.text(`${Math.round(effective / BASE_PX_PER_YEAR * 100)}%`);
+  }
+  updateZoomLabel();
+
+  // --- retractable sidebar: the tab on its edge hides or shows it. Hidden,
+  // the graph takes the whole window width; it's redrawn for the new width,
+  // keeping the year at the left edge and the current selection. The choice
+  // is remembered for next time (when the browser allows it).
+  const SIDEBAR_KEY = "gadda-sidebar-collapsed";
+  const sideToggle = d3.select("body").append("button")
+    .attr("class", "side-toggle")
+    .on("click", () => setSidebar(!document.body.classList.contains("side-collapsed")));
+  function setSidebar(collapsed, redraw = true) {
+    const leftYear = zoomState
+      ? zoomState.x.invert(Math.max(zoomState.marginLR / 2, window.scrollX * zoomState.unitsPerPx))
+      : null;
+    document.body.classList.toggle("side-collapsed", collapsed);
+    sideToggle
+      .text(collapsed ? "›" : "‹")
+      .attr("title", collapsed ? "Show the menu" : "Hide the menu")
+      .attr("aria-label", collapsed ? "Show the menu" : "Hide the menu");
+    try { localStorage.setItem(SIDEBAR_KEY, collapsed ? "1" : "0"); } catch (e) { /* storage unavailable */ }
+    if (!redraw) return;
+    rerenderKeepingSelection();
+    if (leftYear != null) window.scrollTo(Math.max(0, zoomState.x(leftYear) / zoomState.unitsPerPx - 12), window.scrollY);
+    pinLabels();
+    updateReadout();
+    updateZoomLabel();
+  }
+  let startCollapsed = false;
+  try { startCollapsed = localStorage.getItem(SIDEBAR_KEY) === "1"; } catch (e) { /* storage unavailable */ }
+  setSidebar(startCollapsed, startCollapsed);
+
+  // focus mode: a plain vertical wheel/trackpad scroll moves along the
+  // timeline, since there's nothing to scroll vertically anymore.
+  window.addEventListener("wheel", event => {
+    if (event.target.closest && event.target.closest(".side-panel")) return; // let the sidebar scroll normally
+    if (event.ctrlKey || event.metaKey) {
+      // pinch on a trackpad (reported as ctrl + wheel) or Ctrl/⌘ + wheel: zoom
+      event.preventDefault();
+      // a mouse-wheel notch (~100) is capped to about ×1.4; a pinch sends many
+      // small deltas, so it zooms smoothly
+      const delta = Math.max(-60, Math.min(60, event.deltaY));
+      zoomBy(Math.exp(-delta * 0.006), event.clientX);
+      return;
+    }
+    if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
+      window.scrollBy(event.deltaY, 0);
+      event.preventDefault();
+    }
+  }, { passive: false });
+  window.addEventListener("scroll", () => { pinLabels(); updateReadout(); }, { passive: true });
 </script>
 </body>
 </html>

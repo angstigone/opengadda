@@ -115,12 +115,13 @@
   let frameReady = false;
   frame.addEventListener("load", () => { frameReady = true; downloadBtn.disabled = false; });
 
-  function activate(tab) {
+  function activate(tab, focus) {
     frameReady = false;
     downloadBtn.disabled = true;
     // the timestamp makes the browser fetch the graph fresh every time instead
-    // of reusing a saved copy, so updates show up without a hard refresh
-    frame.src = `${tab.file}?v=${Date.now()}`;
+    // of reusing a saved copy, so updates show up without a hard refresh;
+    // focus (a person's name) opens the graph with that person selected
+    frame.src = `${tab.file}?v=${Date.now()}` + (focus ? `&focus=${encodeURIComponent(focus)}` : "");
     [...tabBar.children].forEach(btn => btn.classList.toggle("active", btn.dataset.key === tab.key));
     document.documentElement.style.setProperty("--accent", tab.accent);
     const url = new URL(location.href);
@@ -141,6 +142,13 @@
   // ?tab=library (or similar) picks which graph opens initially; defaults
   // to letters. A graph's own cross-links (?focus=Name) still work since
   // they're passed straight through to the iframe's src by each tab's file.
+  // graphs inside the frame call this to jump to another reparto with a
+  // person already selected ("Also in other reparti" in their sidebar)
+  window.openReparto = (key, focus) => {
+    const tab = tabs.find(t => t.key === key);
+    if (tab) activate(tab, focus);
+  };
+
   const requestedKey = new URLSearchParams(location.search).get("tab");
   const initial = tabs.find(t => t.key === requestedKey) || tabs[0];
   activate(initial);
