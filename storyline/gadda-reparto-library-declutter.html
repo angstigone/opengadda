@@ -106,6 +106,14 @@
     border-radius: 8px; background: color-mix(in srgb, var(--grid) 35%, transparent);
   }
   .cross-link a { color: inherit; font-weight: 600; }
+
+  /* focus mode: menus, titles and the count panel are hidden for now (not
+     removed — the script still looks them up by id), and the graph fills the
+     whole viewport. Delete this block to bring everything back. */
+  body { padding: 0; height: 100vh; overflow: hidden; }
+  h1, p.sub, .filter-bar, .controls-bar, .count-panel, .cross-link { display: none !important; }
+  .graph-wrap { max-width: none; width: 100vw; height: 100vh; }
+  svg { max-width: none; width: 100vw; height: 100vh; }
 </style>
 </head>
 <body>
