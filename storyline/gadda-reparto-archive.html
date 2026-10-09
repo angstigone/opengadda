@@ -209,6 +209,12 @@
     border-radius: 0 7px 7px 0; box-shadow: 2px 1px 6px rgba(0,0,0,0.08); opacity: 0.8;
   }
   .side-toggle:hover { opacity: 1; }
+  /* graph switcher at the top of the sidebar */
+  .graph-select {
+    font: inherit; font-size: 0.85rem; font-weight: 600; width: 100%; box-sizing: border-box;
+    padding: 0.35rem 0.5rem; border: 1px solid var(--grid); border-radius: 6px;
+    background: var(--bg); color: var(--ink); cursor: pointer;
+  }
 </style>
 </head>
 <body>
@@ -323,12 +329,22 @@
   const THIS_REPARTO = "archive";
   const repartoAccents = { letters: "#6d2a9e", library: "#c05727", secondaryBib: "#1d4e9e", archive: "#9e1d47", undifferentiated: "#4a5059" };
   const repartoLabels = { letters: "Letters", library: "Library", secondaryBib: "Secondary bibliography", archive: "Archive", undifferentiated: "Everyone (undifferentiated)" };
-  const repartoMembership = {"Citati Pietro":["letters","archive","undifferentiated"],"Guarnieri Silvio":["letters","library","archive","undifferentiated"],"Roscioni Gian Carlo":["secondaryBib","archive","undifferentiated"]};
+  const repartoMembership = {"Accrocca Elio Filippo":["secondaryBib","undifferentiated"],"Ambrosi Paolo":["letters","undifferentiated"],"Amicucci Ermanno":["letters","undifferentiated"],"Anceschi Luciano":["secondaryBib","undifferentiated"],"Angelini Cesare":["letters","undifferentiated"],"Angioletti Giovanni Battista":["letters","library","undifferentiated"],"Antonielli Sergio":["secondaryBib","undifferentiated"],"Antonini Giacomo":["secondaryBib","undifferentiated"],"Arbasino Alberto":["secondaryBib","undifferentiated"],"Ardigò Fausto":["letters","undifferentiated"],"Asor Rosa Alberto":["secondaryBib","undifferentiated"],"Bacchelli Riccardo":["letters","library","undifferentiated"],"Baldacci Luigi":["secondaryBib","undifferentiated"],"Baldini Antonio":["letters","undifferentiated"],"Ballo Ferdinando":["letters","undifferentiated"],"Banti Anna":["library","undifferentiated"],"Bartolucci Giuseppe":["secondaryBib","undifferentiated"],"Bassani Giorgio":["letters","library","undifferentiated"],"Bellonci Goffredo":["library","secondaryBib","undifferentiated"],"Beltrami Veneziani Giuliana":["letters","undifferentiated"],"Benedetti Arrigo":["secondaryBib","undifferentiated"],"Berenson Bernard":["letters","undifferentiated"],"Beretta Alberto":["secondaryBib","undifferentiated"],"Bertacchini Renato":["secondaryBib","undifferentiated"],"Berto Giuseppe":["library","undifferentiated"],"Bertolucci Attilio":["library","secondaryBib","undifferentiated"],"Betocchi Carlo":["letters","library","undifferentiated"],"Betti Ugo":["letters","undifferentiated"],"Bezzola Guido":["secondaryBib","undifferentiated"],"Bianconi Piero":["secondaryBib","undifferentiated"],"Bigongiari Piero":["letters","library","secondaryBib","undifferentiated"],"Bilenchi Romano":["letters","library","undifferentiated"],"Binni Walter":["letters","secondaryBib","undifferentiated"],"Bo Carlo":["letters","library","secondaryBib","undifferentiated"],"Bocelli Arnaldo":["secondaryBib","undifferentiated"],"Bodei Remo":["secondaryBib","undifferentiated"],"Boggio Marzet Albino":["letters","undifferentiated"],"Bollati Giulio":["letters","undifferentiated"],"Bompiani Valentino":["letters","undifferentiated"],"Bonalumi Louis":["letters","undifferentiated"],"Boneschi Francesco":["library","undifferentiated"],"Bongiovanni Giannetto":["library","undifferentiated"],"Bonsanti Alessandro":["letters","library","secondaryBib","undifferentiated"],"Brignetti Raffaello":["library","undifferentiated"],"Butor Michel":["secondaryBib","undifferentiated"],"Bàrberi Squarotti Giorgio":["secondaryBib","undifferentiated"],"Caccia Dominioni Paolo":["library","undifferentiated"],"Cajumi Arrigo":["secondaryBib","undifferentiated"],"Calvino Italo":["letters","secondaryBib","undifferentiated"],"Camerino Aldo":["secondaryBib","undifferentiated"],"Camilucci Marcello":["secondaryBib","undifferentiated"],"Caretti Lanfranco":["letters","library","undifferentiated"],"Carocci Alberto":["letters","undifferentiated"],"Cases Cesare":["secondaryBib","undifferentiated"],"Castellaneta Carlo":["library","undifferentiated"],"Cattaneo Giulio":["library","secondaryBib","undifferentiated"],"Cavallari Alberto":["secondaryBib","undifferentiated"],"Cecchi Emilio":["letters","library","secondaryBib","undifferentiated"],"Cecchi Pieraccini Leonetta":["letters","undifferentiated"],"Chiara Piero":["library","undifferentiated"],"Chiarini Paolo":["secondaryBib","undifferentiated"],"Chiesura Giorgio":["library","undifferentiated"],"Chilanti Felice":["library","undifferentiated"],"Cialente Fausta":["library","undifferentiated"],"Cibotto Gian Antonio":["secondaryBib","undifferentiated"],"Cione Edmondo":["secondaryBib","undifferentiated"],"Citati Pietro":["letters","secondaryBib","archive","undifferentiated"],"Colombi Guidotti Mario":["secondaryBib","undifferentiated"],"Compagnone Luigi":["secondaryBib","undifferentiated"],"Conti Gian Carlo":["library","undifferentiated"],"Contini Gianfranco":["letters","secondaryBib","undifferentiated"],"Crovi Raffaele":["secondaryBib","undifferentiated"],"Curi Fausto":["secondaryBib","undifferentiated"],"Cusatelli Giorgio":["secondaryBib","undifferentiated"],"Dal Fabbro Beniamino":["letters","secondaryBib","undifferentiated"],"Dallamano Piero":["secondaryBib","undifferentiated"],"David Michel":["secondaryBib","undifferentiated"],"De Feo Sandro":["library","secondaryBib","undifferentiated"],"De Giorgi Elsa":["library","undifferentiated"],"De Grada Raffaele":["letters","undifferentiated"],"De Robertis Giuseppe":["letters","library","secondaryBib","undifferentiated"],"Debenedetti Giacomo":["letters","undifferentiated"],"Dell'Arco Mario":["letters","undifferentiated"],"Dell’Arco Mario":["library","undifferentiated"],"Devoto Giacomo":["secondaryBib","undifferentiated"],"Di Pino Guido":["secondaryBib","undifferentiated"],"Doniselli Casimiro":["library","undifferentiated"],"Dossena Giampaolo":["secondaryBib","undifferentiated"],"Einaudi Giulio":["letters","library","undifferentiated"],"Enzensberger Hans Magnus":["secondaryBib","undifferentiated"],"Falqui Enrico":["letters","library","secondaryBib","undifferentiated"],"Ferrero Ernesto":["secondaryBib","undifferentiated"],"Filippini Felice":["letters","undifferentiated"],"Fiore Elio":["library","undifferentiated"],"Fiorentini Felice":["letters","undifferentiated"],"Flores Enrico":["secondaryBib","undifferentiated"],"Fornasini Emilio":["letters","undifferentiated"],"Franchi Raffaello":["library","secondaryBib","undifferentiated"],"Franciosa Massimo":["secondaryBib","undifferentiated"],"Frassineti Augusto":["library","undifferentiated"],"Fratelli Armando":["letters","undifferentiated"],"Frattarolo Renzo":["secondaryBib","undifferentiated"],"Fruttero Carlo":["letters","undifferentiated"],"Frénaud André":["library","undifferentiated"],"Fusco Mario":["secondaryBib","undifferentiated"],"Gadda Ambrosi Clara":["letters","library","undifferentiated"],"Gadda Belloni Luisa":["letters","undifferentiated"],"Gadda Conti Piero":["letters","library","secondaryBib","undifferentiated"],"Gadda Enrico":["letters","library","undifferentiated"],"Gadda Fornasini Emilia":["letters","undifferentiated"],"Gallo Niccolò":["secondaryBib","undifferentiated"],"Garboli Cesare":["secondaryBib","undifferentiated"],"Gargiulo Alfredo":["library","secondaryBib","undifferentiated"],"Garzanti Livio":["letters","undifferentiated"],"Gelli Piero":["secondaryBib","undifferentiated"],"Gessi Leone":["library","undifferentiated"],"Ghirotti Gigi":["secondaryBib","undifferentiated"],"Gigli Lorenzo":["secondaryBib","undifferentiated"],"Giusso Lorenzo":["secondaryBib","undifferentiated"],"Gobbi Ambrogio":["letters","undifferentiated"],"Gorni Guglielmo":["letters","secondaryBib","undifferentiated"],"Govoni Corrado":["library","undifferentiated"],"Gramigna Giuliano":["secondaryBib","undifferentiated"],"Guarnieri Silvio":["letters","secondaryBib","archive","undifferentiated"],"Guglielmi Angelo":["secondaryBib","undifferentiated"],"Guglielmi Guido":["secondaryBib","undifferentiated"],"Innamorati Giuliano":["secondaryBib","undifferentiated"],"Landolfi Tommaso":["letters","library","undifferentiated"],"Lasky Melvin J.":["secondaryBib","undifferentiated"],"Lehr Adele":["letters","library","undifferentiated"],"Lehr Carlo":["letters","undifferentiated"],"Lehr luigia":["letters","undifferentiated"],"Limentani Ludovico":["library","undifferentiated"],"Linati Carlo":["letters","library","secondaryBib","undifferentiated"],"Longhi Roberto":["letters","undifferentiated"],"Loria Arturo":["library","undifferentiated"],"Lucia Rodocanachi":["letters","undifferentiated"],"Luisi Luciano":["library","undifferentiated"],"Lunetta Mario":["letters","undifferentiated"],"Luzi Mario":["letters","library","secondaryBib","undifferentiated"],"Magnani Luigi":["library","undifferentiated"],"Maier Bruno":["library","undifferentiated"],"Malipiero Gian Francesco":["library","undifferentiated"],"Manzini Gianna":["letters","library","secondaryBib","undifferentiated"],"Marabini Claudio":["secondaryBib","undifferentiated"],"Martinetti Piero":["letters","library","undifferentiated"],"Martini Quinto":["letters","undifferentiated"],"Masciotta Michelangelo":["secondaryBib","undifferentiated"],"Mattioli Raffaele":["letters","undifferentiated"],"Mauro Walter":["secondaryBib","undifferentiated"],"Mele Antonio":["secondaryBib","undifferentiated"],"Messina Francesco":["letters","undifferentiated"],"Micheli Silvio":["secondaryBib","undifferentiated"],"Milani Milena":["library","undifferentiated"],"Milano Paolo":["library","secondaryBib","undifferentiated"],"Miller Henry":["library","undifferentiated"],"Mondadori Alberto":["letters","undifferentiated"],"Montale Eugenio":["letters","library","secondaryBib","undifferentiated"],"Moravia Alberto":["secondaryBib","undifferentiated"],"Natoli Glauco":["letters","undifferentiated"],"Nava Giuseppe":["secondaryBib","undifferentiated"],"Negro Silvio":["library","undifferentiated"],"Notari Umberto":["letters","undifferentiated"],"Pampaloni Geno":["secondaryBib","undifferentiated"],"Pancrazi Pietro":["secondaryBib","undifferentiated"],"Paoli Ugo Enrico":["library","undifferentiated"],"Parise Goffredo":["letters","undifferentiated"],"Parronchi Alessandro":["letters","library","undifferentiated"],"Pasolini Pier Paolo":["library","secondaryBib","undifferentiated"],"Pasquali Giorgio":["letters","undifferentiated"],"Pea Enrico":["library","undifferentiated"],"Pedullà Walter":["secondaryBib","undifferentiated"],"Pellegrini Silvio":["secondaryBib","undifferentiated"],"Pellizzi Camillo":["secondaryBib","undifferentiated"],"Penna Sandro":["letters","library","undifferentiated"],"Pestelli Leo":["library","undifferentiated"],"Petrocchi Giorgio":["letters","undifferentiated"],"Piazzolla Marino":["library","undifferentiated"],"Picchi Mario":["letters","secondaryBib","undifferentiated"],"Piccioni Leone":["letters","library","secondaryBib","undifferentiated"],"Piovene Guido":["secondaryBib","undifferentiated"],"Piroué Georges":["secondaryBib","undifferentiated"],"Pomilio Mario":["secondaryBib","undifferentiated"],"Pozza Neri":["library","archive","undifferentiated"],"Pozzi Gianni":["library","undifferentiated"],"Pratolini Vasco":["library","undifferentiated"],"Punzo Giorgio":["letters","undifferentiated"],"Quasimodo Salvatore":["library","undifferentiated"],"Raboni Giovanni":["secondaryBib","undifferentiated"],"Radice Raul":["secondaryBib","undifferentiated"],"Rago Michele":["secondaryBib","undifferentiated"],"Ramat Raffaello":["library","undifferentiated"],"Ramat Silvio":["library","undifferentiated"],"Ravegnani Giuseppe":["secondaryBib","undifferentiated"],"Raya Gino":["secondaryBib","undifferentiated"],"Rigoni Stern Mario":["letters","undifferentiated"],"Rodocanachi Lucia":["letters","undifferentiated"],"Rodocanachi Paolo":["letters","undifferentiated"],"Romanò Angelo":["secondaryBib","undifferentiated"],"Roscioni Gian Carlo":["letters","secondaryBib","archive","undifferentiated"],"Rosina Tito":["letters","undifferentiated"],"Rossi Franco":["letters","undifferentiated"],"Rougemont Denis de":["library","undifferentiated"],"Russo Luigi":["secondaryBib","undifferentiated"],"Salinari Carlo":["secondaryBib","undifferentiated"],"Santi Piero":["letters","library","undifferentiated"],"Scalia Gianni":["secondaryBib","undifferentiated"],"Sciascia Leonardo":["library","undifferentiated"],"Scrivano Riccardo":["secondaryBib","undifferentiated"],"Semenza Carlo":["letters","undifferentiated"],"Sereni Vittorio":["letters","library","undifferentiated"],"Sermonti Vittorio":["library","undifferentiated"],"Seroni Adriano":["secondaryBib","undifferentiated"],"Siciliano Enzo":["letters","library","secondaryBib","undifferentiated"],"Soavi Giorgio":["library","undifferentiated"],"Sobrero Ornella":["secondaryBib","undifferentiated"],"Soldati Mario":["library","undifferentiated"],"Solmi Sergio":["library","undifferentiated"],"Spagnoletti Giacinto":["secondaryBib","undifferentiated"],"Squarcia Francesco":["secondaryBib","undifferentiated"],"Tecchi Bonaventura":["letters","library","secondaryBib","undifferentiated"],"Titta Rosa Giovanni":["secondaryBib","undifferentiated"],"Tobino Mario":["library","undifferentiated"],"Traverso Leone":["letters","library","secondaryBib","undifferentiated"],"Trombatore Gaetano":["secondaryBib","undifferentiated"],"Ulivi Ferruccio":["letters","secondaryBib","undifferentiated"],"Ungaretti Giuseppe":["library","secondaryBib","undifferentiated"],"Valeri Diego":["library","undifferentiated"],"Valeri Manera Mario":["letters","undifferentiated"],"Valgimigli Manara":["letters","undifferentiated"],"Varese Claudio":["secondaryBib","undifferentiated"],"Veronesi Giulia":["letters","undifferentiated"],"Vicari Giambattista":["letters","secondaryBib","undifferentiated"],"Vigevani Alberto":["letters","undifferentiated"],"Vigolo Giorgio":["library","undifferentiated"],"Vigorelli Giancarlo":["secondaryBib","undifferentiated"],"Vita Finzi Paolo":["letters","undifferentiated"],"Vittorini Elio":["letters","library","secondaryBib","undifferentiated"],"Volpini Valerio":["secondaryBib","undifferentiated"],"Wahl François":["secondaryBib","undifferentiated"],"Weaver William":["letters","undifferentiated"],"Zampa Giorgio":["secondaryBib","undifferentiated"],"Zolla Elémire":["secondaryBib","undifferentiated"],"Zorzi Ludovico":["secondaryBib","undifferentiated"]};
   // the reparti (other than this one) a person also appears in; the
   // undifferentiated graph holds nearly everyone, so it isn't marked
   const otherReparti = name => (repartoMembership[name] || []).filter(k => k !== THIS_REPARTO && k !== "undifferentiated");
   let updateCrossLinks = () => {};
   let lastSelectedNames = [];
+  // row order, picked in the sidebar (see layoutRows): "balanced" (default)
+  // = year order on both sides, people dipping at the same time on opposite
+  // sides; "year" = the original layout; "crossings" = rearranged to cross
+  // less. Remembered across graphs.
+  let rowOrder = "balanced";
+  try { rowOrder = localStorage.getItem("gadda-row-order") || "balanced"; } catch (e) {}
+  // when the page last scrolled — hover previews wait until scrolling stops
+  let lastScrollAt = 0;
+  window.addEventListener("wheel", () => { lastScrollAt = Date.now(); }, { passive: true });
+  window.addEventListener("scroll", () => { lastScrollAt = Date.now(); }, { passive: true });
   let pinLabels = () => {};
   let width = 950;
   const margin = { top: 40, right: 40, bottom: 30, left: 170 }; // axis sits on top
@@ -339,7 +355,7 @@
 
   const baseGapLimit = 5;
   let gapLimit = baseGapLimit;
-  const baseReach = 3;
+  const baseReach = 1.25; // years a line takes to ease into / out of a dip (was 3): steeper, shorter transitions make crossings short and clean
   let reach = baseReach;
 
   function clusterInteractions(years) {
@@ -399,10 +415,134 @@
         : (yearMin + yearMax) / 2; // pinned, no contact in a focused period
     });
     const byBarycenter = [...shownCorrespondents].sort((a, b) => a.barycenter - b.barycenter);
-    const mid = Math.ceil(byBarycenter.length / 2);
-    const above = byBarycenter.slice(0, mid);
-    const below = byBarycenter.slice(mid);
-    const people = [...above].reverse().concat([gadda], below);
+    // --- row layout. 1) optional: rows of the same category kept together
+    // (categoryOf; currently not used — null); 2) the list, sorted by year,
+    // is split above / below Gadda at the middle; 3) crossing reduction:
+    // neighbouring rows, and neighbouring groups, are swapped whenever that
+    // lowers the estimated number of line crossings, until nothing improves.
+    // Only rows on the same side can cross: an outer line crosses an inner
+    // one each time it dips toward (or leaves) Gadda's line at a moment the
+    // inner line isn't dipped itself. window.__rowCrossings keeps the count
+    // before (plain sort and split) and after, for checking.
+    function layoutRows(list, categoryOf, dipsOf) {
+      const dips = new Map(list.map(d => [d, dipsOf(d) || []]));
+      const inDip = (d, t) => dips.get(d).some(([a, b]) => t >= a && t <= b);
+      const cross = (outer, inner) => {
+        let n = 0;
+        dips.get(outer).forEach(([a, b]) => { if (!inDip(inner, a)) n++; if (!inDip(inner, b)) n++; });
+        return n;
+      };
+      const sideCrossings = side => {   // side: rows from Gadda outward
+        let n = 0;
+        for (let j = 1; j < side.length; j++) for (let i = 0; i < j; i++) n += cross(side[j], side[i]);
+        return n;
+      };
+      const half = Math.ceil(list.length / 2);
+      const before = sideCrossings(list.slice(0, half)) + sideCrossings(list.slice(half));
+
+      // neighbouring rows whose years are tied — at most TIE_YEARS apart —
+      // swap when that makes their lines cross less; chronology is untouched
+      const TIE_YEARS = 1;
+      const tieSwap = side => {   // side: rows from Gadda outward
+        for (let pass = 0, changed = true; changed && pass < 40; pass++) {
+          changed = false;
+          for (let i = 0; i < side.length - 1; i++) {
+            const p = side[i], q = side[i + 1];   // p nearer Gadda, q outside it
+            if (Math.abs(p.barycenter - q.barycenter) <= TIE_YEARS && cross(p, q) < cross(q, p)) {
+              side[i] = q; side[i + 1] = p; changed = true;
+            }
+          }
+        }
+        return side;
+      };
+
+      if (rowOrder === "year") {
+        // by year: sorted by year, first half above Gadda, second half below
+        // (the original layout), plus the tie swaps above
+        const a = tieSwap(list.slice(0, half)), b = tieSwap(list.slice(half));
+        window.__rowCrossings = { mode: "year", before, after: sideCrossings(a) + sideCrossings(b), rows: list.length };
+        return [...a].reverse().concat([gadda], b);
+      }
+
+      if (rowOrder === "balanced") {
+        // by year, balanced sides: on each side rows stay in chronological
+        // order (further from Gadda = later), but each person goes above or
+        // below so that lines dipping at the same time end up on opposite
+        // sides — lines on opposite sides can never cross. The two sides are
+        // kept close in size (at most MAX_DIFF rows apart).
+        const idx = new Map(list.map((d, i) => [d, i]));
+        const MAX_DIFF = Math.max(2, Math.ceil(list.length * 0.2));
+        const sideOf = new Map(), size = [0, 0];
+        const costOn = (d, s) => {   // crossings d would have with everyone on side s
+          let n = 0;
+          sideOf.forEach((sd, e) => {
+            if (sd !== s || e === d) return;
+            n += idx.get(e) < idx.get(d) ? cross(d, e) : cross(e, d);
+          });
+          return n;
+        };
+        const allowed = (from, to) => Math.abs((size[to] + 1) - (size[from] - (from === to ? 0 : 1))) <= MAX_DIFF;
+        list.forEach(d => {   // greedy, in year order
+          const c0 = costOn(d, 0), c1 = costOn(d, 1);
+          let s = c0 < c1 ? 0 : c1 < c0 ? 1 : (size[0] <= size[1] ? 0 : 1);
+          if (Math.abs((size[s] + 1) - size[1 - s]) > MAX_DIFF) s = 1 - s;
+          sideOf.set(d, s); size[s]++;
+        });
+        for (let pass = 0, changed = true; changed && pass < 10; pass++) {   // move people across where it helps
+          changed = false;
+          list.forEach(d => {
+            const s = sideOf.get(d), o = 1 - s;
+            if (Math.abs((size[o] + 1) - (size[s] - 1)) > MAX_DIFF) return;
+            if (costOn(d, o) < costOn(d, s)) { sideOf.set(d, o); size[s]--; size[o]++; changed = true; }
+          });
+        }
+        const a = tieSwap(list.filter(d => sideOf.get(d) === 0));
+        const b = tieSwap(list.filter(d => sideOf.get(d) === 1));
+        window.__rowCrossings = { mode: "balanced", before, after: sideCrossings(a) + sideCrossings(b), rows: list.length };
+        return [...a].reverse().concat([gadda], b);
+      }
+
+      // 1. groups
+      let groups;
+      if (categoryOf) {
+        groups = [...d3.group(list, d => categoryOf(d) ?? "").values()];
+        groups.sort((g1, g2) => d3.mean(g1, d => d.barycenter) - d3.mean(g2, d => d.barycenter));
+      } else groups = [[...list]];
+      // 2. split at the group boundary nearest the middle; if that would
+      // leave the two sides too uneven, the middle group is cut in two
+      let split = 0, best = Infinity, acc = 0;
+      groups.forEach((g, i) => { acc += g.length; if (Math.abs(acc - half) < best) { best = Math.abs(acc - half); split = i + 1; } });
+      let aboveGroups = groups.slice(0, split), belowGroups = groups.slice(split);
+      if (best > list.length / 4) {
+        let count = 0, gi = 0;
+        while (gi < groups.length && count + groups[gi].length < half) count += groups[gi++].length;
+        const g = groups[gi], cut = half - count;
+        aboveGroups = [...groups.slice(0, gi), g.slice(0, cut)].filter(x => x.length);
+        belowGroups = [g.slice(cut), ...groups.slice(gi + 1)].filter(x => x.length);
+      }
+      // 3. crossing reduction on each side (groups listed from Gadda outward)
+      function reduce(sideGroups) {
+        for (let pass = 0, changed = true; changed && pass < 40; pass++) {
+          changed = false;
+          sideGroups.forEach(g => {
+            for (let i = 0; i < g.length - 1; i++) {
+              if (cross(g[i], g[i + 1]) < cross(g[i + 1], g[i])) { [g[i], g[i + 1]] = [g[i + 1], g[i]]; changed = true; }
+            }
+          });
+          for (let k = 0; k < sideGroups.length - 1; k++) {
+            const inner = sideGroups[k], outer = sideGroups[k + 1];
+            let now = 0, swapped = 0;
+            outer.forEach(o => inner.forEach(i => { now += cross(o, i); swapped += cross(i, o); }));
+            if (swapped < now) { sideGroups[k] = outer; sideGroups[k + 1] = inner; changed = true; }
+          }
+        }
+        return sideGroups.flat();
+      }
+      const above = reduce(aboveGroups), below = reduce(belowGroups);
+      window.__rowCrossings = { mode: "crossings", before, after: sideCrossings(above) + sideCrossings(below), rows: list.length };
+      return [...above].reverse().concat([gadda], below);
+    }
+    const people = layoutRows(byBarycenter, null, d => (d.interactions && d.interactions.length ? clusterInteractions(d.interactions).map(c => [c[0], c[c.length - 1]]) : []));
 
     const yScale = d3.scalePoint()
       .domain(people.map(d => d.name))
@@ -460,7 +600,13 @@
       const rowY = y(d.name);
       const direction = rowY < gaddaY ? 1 : -1;
       const w = quantizeToTier(rescaleWeight(d.weight ?? 1));
-      return gaddaY - direction * maxGap * w;
+      // never on top of Gadda's own line: every dip keeps a clearance of
+      // half his line's width + half this line's width and halo + GADDA_GAP
+      // of empty space; the depth tiers (maxGap * w) come on top of that, and
+      // a dip never goes past its own row
+      const GADDA_GAP = 8;
+      const clearance = strokeWidthFor(gadda) / 2 + (strokeWidthFor(d) + haloExtra) / 2 + GADDA_GAP;
+      return gaddaY - direction * Math.min(clearance + maxGap * w, Math.abs(rowY - gaddaY));
     }
 
     people.forEach(d => {
@@ -737,7 +883,30 @@
       return selected.size === 0 || name === "Gadda Carlo Emilio" || selected.has(name);
     }
 
+    // the earliest year of contact with Gadda for a person, within the
+    // years drawn (same behaviour as the letters graph): their first dated
+    // record here, or the start of their known span when there is none
+    function firstContactYear(name) {
+      const p = people.find(q => q.name === name);
+      if (!p) return null;
+      const years = [...contactKinds.flatMap(k => k.yearsOf(name)), ...(p.interactions || [])]
+        .filter(yr => Number.isFinite(yr) && yr >= yearMin && yr <= yearMax);
+      if (years.length) return Math.min(...years);
+      return p.range_start != null ? Math.min(yearMax, Math.max(yearMin, p.range_start)) : null;
+    }
+    function scrollToFirstContact(names) {
+      const years = names.map(firstContactYear).filter(yr => yr != null);
+      if (!years.length) return;
+      // leave a little room before the first contact so the approach shows
+      const left = x(Math.min(...years)) / unitsPerPx - 140;
+      window.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
+    }
+
     function applyHighlight() {
+      // a newly selected person (clicked, searched, or arriving from
+      // another graph) brings the view to their first contact with Gadda
+      const newlySelected = [...selected].filter(n => !lastSelectedNames.includes(n) && n !== "Gadda Carlo Emilio");
+      if (newlySelected.length) scrollToFirstContact(newlySelected);
       lastSelectedNames = [...selected];
       updateCrossLinks(lastSelectedNames);
       rows.selectAll(".life, .life-halo").style("opacity", d => (isRelevant(d.name) ? null : 0.08));
@@ -981,10 +1150,8 @@
 
   applyFilter();
 
-  // --- reparti: switch to another reparto's graph from the bottom of the sidebar. Inside
-  // gadda-browse.html this presses the browse page's own tab (so its tab bar,
-  // URL and download button stay in sync); opened on its own, it just goes
-  // to the other file.
+  // --- reparti: the graphs this one links to (cross-links, download name).
+  // Switching between them is done from gadda-browse.html's top tab bar.
   const reparti = [
     { key: "letters", label: "Letters", file: "gadda-reparto-letter-range-declutter.html", accent: "#6d2a9e" },
     { key: "library", label: "Library", file: "gadda-reparto-library-declutter.html", accent: "#c05727" },
@@ -993,25 +1160,30 @@
     { key: "undifferentiated", label: "Everyone (undifferentiated)", file: "gadda-reparto-undifferentiated.html", accent: "#4a5059" },
   ];
   const thisFile = location.pathname.split("/").pop();
-  const repartiSection = d3.select("#side-panel").append("section"); // last, below the browsing tools
-  repartiSection.append("h2").text("Reparti");
-  repartiSection.append("div").attr("class", "reparti-nav")
-    .selectAll("button").data(reparti).join("button")
-      .attr("class", "filter-btn reparto-btn")
-      .classed("active", r => r.file === thisFile)
-      .style("--accent", r => r.accent)
-      .text(r => r.label)
-      .on("click", (event, r) => {
-        if (r.file === thisFile) return;
-        let parentTab = null;
-        try {
-          if (window.parent !== window) {
-            parentTab = window.parent.document.querySelector(`.tab-btn[data-key="${r.key}"]`);
-          }
-        } catch (e) { /* parent not reachable (e.g. file://) — fall back to plain navigation */ }
-        if (parentTab) parentTab.click();
-        else location.href = r.file;
-      });
+  // --- which graph: the switcher that used to be the browse page's top
+  // bar, now a drop-down at the top of this sidebar so the graph gets the
+  // whole window. Inside gadda-browse.html it asks the browse page to switch
+  // (keeping its URL in sync); opened on its own, it goes to the other file.
+  const graphSection = d3.select("#side-panel").insert("section", ":first-child").attr("class", "graph-switch");
+  graphSection.append("h2").text("Graph");
+  const graphSelect = graphSection.append("select").attr("class", "graph-select")
+    .on("change", function () {
+      const r = reparti.find(r => r.key === this.value);
+      if (!r || r.file === thisFile) return;
+      let parentOpen = null;
+      try {
+        if (window.parent !== window && typeof window.parent.openReparto === "function") parentOpen = window.parent.openReparto;
+      } catch (e) { /* parent not reachable (e.g. file://) */ }
+      if (parentOpen) parentOpen(r.key);
+      else location.href = r.file;
+    });
+  graphSelect.selectAll("option").data(reparti).join("option")
+    .attr("value", r => r.key)
+    .property("selected", r => r.file === thisFile)
+    .text(r => r.label);
+  // switching between reparti happens from the browse page's top tab bar;
+  // this section only holds the colour-dot hint, below the browsing tools
+  const repartiSection = d3.select("#side-panel").append("section");
 
   // --- "Also in other reparti": for each selected person who appears in
   // other graphs, a button per graph that opens them there, already
@@ -1062,10 +1234,33 @@
   const shownCount = d3.select(selectionSection).insert("div", ".view-toggle").attr("class", "shown-count");
   // this reparto has fewer people than the most-active limit, so everyone
   // is always drawn: the only choice is everyone vs. your own picks
-  viewToggle.append("button").attr("class", "filter-btn").attr("data-mode", "top").text("Everyone")
+  viewToggle.append("button").attr("class", "filter-btn").attr("data-mode", "top").text("Most active")
     .on("click", () => { topN = TOP_N_DEFAULT; setSelectionMode(false); });
+  viewToggle.append("button").attr("class", "filter-btn").attr("data-mode", "all").text("Show all")
+    .on("click", () => { topN = null; setSelectionMode(false); });
   viewToggle.append("button").attr("class", "filter-btn").attr("data-mode", "custom").text("★ My selection")
     .on("click", () => setSelectionMode(true));
+  const orderToggle = d3.select(selectionSection).insert("div", ".search-box").attr("class", "view-toggle order-toggle");
+  const orderTitles = {
+    year: "Rows sorted by year, half above Gadda and half below; people with (nearly) the same year are ordered to cross less",
+    balanced: "Rows in year order on both sides of Gadda; people whose lines dip at the same time are put on opposite sides, where they can't cross",
+    crossings: "Sorted by year, then neighbouring rows swapped wherever that makes lines cross less (order only roughly chronological)",
+  };
+  [["year", "By year"], ["balanced", "Balanced sides"], ["crossings", "Fewest crossings"]].forEach(([key, label]) => {
+    orderToggle.append("button").attr("class", "filter-btn").attr("data-order", key).text(label)
+      .attr("title", orderTitles[key])
+      .on("click", () => {
+        if (rowOrder === key) return;
+        rowOrder = key;
+        try { localStorage.setItem("gadda-row-order", key); } catch (e) {}
+        syncOrderToggle();
+        applyFilter();
+      });
+  });
+  function syncOrderToggle() {
+    orderToggle.selectAll(".filter-btn").classed("active", function () { return this.dataset.order === rowOrder; });
+  }
+  syncOrderToggle();
   function setSelectionMode(on) {
     if (on && typeof activeCats !== "undefined") activeCats.clear(); // My selection ignores categories
     const btn = document.querySelector(`#mode-filter .filter-btn[data-value="${on ? "__custom__" : "__all__"}"]`);

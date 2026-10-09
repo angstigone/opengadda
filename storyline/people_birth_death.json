@@ -1,0 +1,6860 @@
+{
+  "_readme": "Date di nascita e morte verificate per i corrispondenti di Gadda. Formato per ogni voce: \"Nome Cognome\": {\"nascita\": 1904, \"morte\": 1984}. Il nome DEVE corrispondere esattamente a come appare nella visualizzazione (cercalo nel pannello 'Corrispondenti' se non sei sicuro). Tre casi per \"morte\": un anno (morte nota) — \"morte\": null con la chiave presente (persona in vita, confermata) — oppure la chiave \"morte\" del tutto assente (nascita nota ma morte non ancora verificata: mostrato come 'data non verificata' finché qualcuno non la ricerca a mano). Campo opzionale \"citazioni_bibliografiche\": [...] per collegare citazioni. Campo opzionale \"categoria\": la categoria di relazione (Familiari, Amici, Contatti letterari, ecc.) presa da dati_mittenti_Gadda.xlsx (\"Tipologia\") tramite dataset/sync_genere_from_mittenti.py — presente SOLO per le persone che sono effettivamente corrispondenti di Gadda (registrate in quel file); gli autori di bibliografia secondaria e altre persone che non gli hanno mai scritto non hanno questo campo, perché non hanno una categoria di relazione da assegnare. Dopo aver modificato questo file, riesegui il notebook build_gadda_timeline.ipynb (Restart & Run All). Campo opzionale \"reparto\": la sezione del sito da cui proviene prevalentemente il record di questa persona (\"letter\", \"primary bibliography\", \"secondary bibliography\", \"library\", \"translation\" — stessi valori del campo \"category\" in items.json), calcolato come la categoria più frequente tra tutti gli item di code_updated/items.json in cui questa persona compare nell'array \"people\"; assente se la persona non compare in nessun item lì. Dopo aver modificato questo file, riesegui il notebook build_gadda_timeline.ipynb (Restart & Run All).",
+  "Abetti Giorgio": {
+    "nascita": 1882,
+    "morte": 1982,
+    "reparto": "library"
+  },
+  "Abraham Pierre": {
+    "nascita": 1892,
+    "morte": 1974,
+    "reparto": "library"
+  },
+  "Accetti Carlo E.": {
+    "nascita": 1882,
+    "morte": 1996,
+    "categoria": "Contatti letterari"
+  },
+  "Accrocca Elio Filippo": {
+    "nascita": 1923,
+    "morte": 1996,
+    "reparto": "secondary bibliography"
+  },
+  "Acri Francesco": {
+    "nascita": 1834,
+    "morte": 1913,
+    "reparto": "library"
+  },
+  "Acton Harold": {
+    "nascita": 1904,
+    "morte": 1994,
+    "reparto": "library"
+  },
+  "Adam Antoine": {
+    "nascita": 1899,
+    "morte": 1980,
+    "reparto": "library"
+  },
+  "Adams Robert": {
+    "nascita": 1917,
+    "morte": 1984,
+    "reparto": "secondary bibliography"
+  },
+  "Aegerter Emmanuel": {
+    "nascita": 1883,
+    "morte": 1945,
+    "reparto": "library"
+  },
+  "Agnetti Vincenzo": {
+    "nascita": 1926,
+    "morte": 1981,
+    "reparto": "library"
+  },
+  "Agosti Stefano": {
+    "nascita": 1930,
+    "morte": 2019,
+    "reparto": "secondary bibliography"
+  },
+  "Airoldi Aldo": {
+    "nascita": 1899,
+    "morte": 1963,
+    "categoria": "Contatti letterari"
+  },
+  "Alagna Mirko": {
+    "nascita": 1985,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Albert-Sorel Jean": {
+    "nascita": 1902,
+    "morte": 1981,
+    "reparto": "library"
+  },
+  "Albonico Simone": {
+    "nascita": 1961,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Alessandrini Garibaldo": {
+    "nascita": 1886,
+    "morte": 1964,
+    "reparto": "library"
+  },
+  "Alfano Giancarlo": {
+    "nascita": 1968,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Alfano Giovanni Battista": {
+    "nascita": 1878,
+    "morte": 1955,
+    "reparto": "library"
+  },
+  "Alfassio Grimaldi Ugoberto": {
+    "nascita": 1915,
+    "morte": 1986,
+    "reparto": "library"
+  },
+  "Alfieri Vittorio Enzo": {
+    "nascita": 1906,
+    "morte": 1997,
+    "reparto": "library"
+  },
+  "Alfonzetti Beatrice": {
+    "nascita": 1953,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Allem Maurice": {
+    "nascita": 1872,
+    "morte": 1959,
+    "reparto": "library"
+  },
+  "Alvino Gualberto": {
+    "nascita": 1953,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Amati Amato": {
+    "nascita": 1875,
+    "morte": 1949,
+    "reparto": "library"
+  },
+  "Ambrosi Paolo": {
+    "nascita": 1875,
+    "morte": 1950,
+    "categoria": "Familiari",
+    "reparto": "letter"
+  },
+  "Amedeo Giovanni": {
+    "nascita": 1933,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Amicucci Ermanno": {
+    "nascita": 1890,
+    "morte": 1955,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Amigoni Ferdinando": {
+    "nascita": 1963,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Amoruso Vito": {
+    "nascita": 1936,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Anceschi Giuseppe": {
+    "nascita": 1936,
+    "morte": 2014,
+    "reparto": "secondary bibliography"
+  },
+  "Anceschi Luciano": {
+    "nascita": 1911,
+    "morte": 1995,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Andreini Alba": {
+    "nascita": 1949,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Andreini Galli Nori": {
+    "nascita": 1927,
+    "morte": 2014,
+    "reparto": "library"
+  },
+  "André Louis": {
+    "nascita": 1838,
+    "morte": 1913,
+    "reparto": "library"
+  },
+  "Angeli Diego": {
+    "nascita": 1869,
+    "morte": 1937,
+    "reparto": "library"
+  },
+  "Angeli Siro": {
+    "nascita": 1913,
+    "morte": 1991,
+    "reparto": "library"
+  },
+  "Angelini Alceste": {
+    "nascita": 1920,
+    "morte": 1994,
+    "reparto": "library"
+  },
+  "Angelini Arnaldo Maria": {
+    "nascita": 1909,
+    "morte": 2002,
+    "reparto": "library"
+  },
+  "Angelini Cesare": {
+    "nascita": 1886,
+    "morte": 1976,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Angioletti Giovanni Battista": {
+    "nascita": 1896,
+    "morte": 1961,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Anglani Bartolo": {
+    "nascita": 1943,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Anselmi Gian Mario": {
+    "nascita": 1947,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Anti Carlo": {
+    "nascita": 1889,
+    "morte": 1961,
+    "reparto": "library"
+  },
+  "Antonelli Roberto": {
+    "nascita": 1953,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Antonello Pierpaolo": {
+    "nascita": 1965,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Antongini Tom": {
+    "nascita": 1877,
+    "morte": 1967,
+    "reparto": "library"
+  },
+  "Antonielli Sergio": {
+    "nascita": 1920,
+    "morte": 1982,
+    "reparto": "secondary bibliography"
+  },
+  "Antonini Giacomo": {
+    "nascita": 1901,
+    "morte": 1983,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Antonini Gianni": {
+    "nascita": 1926,
+    "morte": null,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Apollinaire Guillaume": {
+    "nascita": 1880,
+    "morte": 1918,
+    "reparto": "library"
+  },
+  "Apollonio Umbro": {
+    "nascita": 1911,
+    "morte": 1981,
+    "categoria": "Contatti letterari"
+  },
+  "Aragona Raffaele": {
+    "nascita": 1942,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Arbasino Alberto": {
+    "nascita": 1930,
+    "morte": 2020,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Ardigò Fausto": {
+    "nascita": 1911,
+    "morte": 1944,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Argan Giulio Carlo": {
+    "nascita": 1909,
+    "morte": 1992,
+    "reparto": "library"
+  },
+  "Arland Marcel": {
+    "nascita": 1899,
+    "morte": 1986,
+    "reparto": "library"
+  },
+  "Arpesani Camillo": {
+    "nascita": 1862,
+    "morte": 1931,
+    "reparto": "library"
+  },
+  "Artini Ettore": {
+    "nascita": 1866,
+    "morte": 1928,
+    "reparto": "library"
+  },
+  "Artoni Giancarlo": {
+    "nascita": 1923,
+    "morte": 2017,
+    "categoria": "Contatti letterari"
+  },
+  "Ascoli Graziadio Isaia": {
+    "nascita": 1829,
+    "morte": 1907,
+    "reparto": "library"
+  },
+  "Ascoli Guido": {
+    "nascita": 1887,
+    "morte": 1957,
+    "reparto": "library"
+  },
+  "Asor Rosa Alberto": {
+    "nascita": 1933,
+    "morte": 2022,
+    "reparto": "secondary bibliography"
+  },
+  "Aubry Octave": {
+    "nascita": 1881,
+    "morte": 1946,
+    "reparto": "library"
+  },
+  "Auerbach Erich": {
+    "nascita": 1892,
+    "morte": 1961,
+    "reparto": "library"
+  },
+  "Augias Corrado": {
+    "nascita": 1935,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Avellini Luisa": {
+    "nascita": 1946,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Aymé Marcel": {
+    "nascita": 1902,
+    "morte": 1967,
+    "reparto": "library"
+  },
+  "Babinger Franz": {
+    "nascita": 1891,
+    "morte": 1967,
+    "reparto": "library"
+  },
+  "Baccelli Monique": {
+    "nascita": 1930,
+    "morte": null,
+    "reparto": "translation"
+  },
+  "Bacchelli Riccardo": {
+    "nascita": 1891,
+    "morte": 1985,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Bacon Francis": {
+    "nascita": 1909,
+    "morte": 1992,
+    "reparto": "library"
+  },
+  "Badoni Piera": {
+    "nascita": 1912,
+    "morte": 1989,
+    "reparto": "library"
+  },
+  "Bailly Auguste": {
+    "nascita": 1878,
+    "morte": 1967,
+    "reparto": "library"
+  },
+  "Bainville Jacques": {
+    "nascita": 1879,
+    "morte": 1936,
+    "reparto": "library"
+  },
+  "Bajoni Maria Grazia": {
+    "nascita": 1954,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Baker Margaret": {
+    "nascita": 1901,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Baldacci Luigi": {
+    "nascita": 1930,
+    "morte": 2002,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Baldi Guido": {
+    "nascita": 1942,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Baldini Antonio": {
+    "nascita": 1889,
+    "morte": 1962,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Baldini Gabriele": {
+    "nascita": 1919,
+    "morte": 1969,
+    "reparto": "library"
+  },
+  "Baldo Italo Francesco": {
+    "nascita": 1950,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Ballo Ferdinando": {
+    "nascita": 1906,
+    "morte": 1959,
+    "categoria": "Editori, riviste e quotidiani",
+    "reparto": "letter"
+  },
+  "Bally Charles": {
+    "nascita": 1865,
+    "morte": 1947,
+    "reparto": "library"
+  },
+  "Balzen Bobi": {
+    "nascita": 1902,
+    "morte": 1965
+  },
+  "Balzola Andrea": {
+    "nascita": 1961,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Bandini Franco": {
+    "nascita": 1921,
+    "morte": 2004,
+    "reparto": "library"
+  },
+  "Banti Anna": {
+    "nascita": 1895,
+    "morte": 1985,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Barbagallo Corrado": {
+    "nascita": 1877,
+    "morte": 1952,
+    "reparto": "library"
+  },
+  "Barbet Pierre": {
+    "nascita": 1925,
+    "morte": 1995,
+    "reparto": "library"
+  },
+  "Barbiera Raffaello": {
+    "nascita": 1851,
+    "morte": 1934,
+    "reparto": "library"
+  },
+  "Barbolini Roberto": {
+    "nascita": 1951,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Barenghi Mario": {
+    "nascita": 1879,
+    "morte": 1937,
+    "reparto": "secondary bibliography"
+  },
+  "Bargellini Piero": {
+    "nascita": 1897,
+    "morte": 1980,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Barilli Renato": {
+    "nascita": 1935,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Barolini Antonio": {
+    "nascita": 1910,
+    "morte": 1971,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Bartezzaghi Stefano": {
+    "nascita": 1962,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Bartolucci Giuseppe": {
+    "nascita": 1923,
+    "morte": 1996,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Bassani Giorgio": {
+    "nascita": 1916,
+    "morte": 2000,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Bassi Domenico": {
+    "nascita": 1875,
+    "morte": 1940,
+    "reparto": "library"
+  },
+  "Battaglia Achille": {
+    "nascita": 1893,
+    "morte": 1960,
+    "reparto": "library"
+  },
+  "Battaglia Felice": {
+    "nascita": 1902,
+    "morte": 1977,
+    "reparto": "library"
+  },
+  "Battaglia Roberto": {
+    "nascita": 1913,
+    "morte": 1963,
+    "reparto": "library"
+  },
+  "Battistini Andrea": {
+    "nascita": 1947,
+    "morte": 2020,
+    "reparto": "secondary bibliography"
+  },
+  "Baudino Mario": {
+    "nascita": 1952,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Bavagnoli Carlo": {
+    "nascita": 1932,
+    "morte": 2024,
+    "reparto": "library"
+  },
+  "Baxter James Phinney": {
+    "nascita": 1831,
+    "morte": 1921,
+    "reparto": "library"
+  },
+  "Beckett Samuel": {
+    "nascita": 1906,
+    "morte": 1989,
+    "reparto": "library"
+  },
+  "Bellezza Dario": {
+    "nascita": 1944,
+    "morte": 1996,
+    "reparto": "library"
+  },
+  "Bellonci Goffredo": {
+    "nascita": 1882,
+    "morte": 1964,
+    "reparto": "library"
+  },
+  "Belpoliti Marco": {
+    "nascita": 1954,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Beltrami Veneziani Giuliana": {
+    "nascita": 1944,
+    "morte": 1996,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Benco Silvio": {
+    "nascita": 1874,
+    "morte": 1949,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Bendinelli Goffredo": {
+    "nascita": 1888,
+    "morte": 1969,
+    "reparto": "library"
+  },
+  "Benedetti Arrigo": {
+    "nascita": 1910,
+    "morte": 1976,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Benedetti Carla": {
+    "nascita": 1952,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Benjamin René": {
+    "nascita": 1885,
+    "morte": 1948,
+    "reparto": "library"
+  },
+  "Benn Gottfried": {
+    "nascita": 1886,
+    "morte": 1956,
+    "reparto": "library"
+  },
+  "Bentivoglio Leonetta": {
+    "nascita": 1952,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Benussi Cristina": {
+    "nascita": 1948,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Berardinelli Alfonso": {
+    "nascita": 1943,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Berenson Bernard": {
+    "nascita": 1865,
+    "morte": 1959,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Beretta Alberto": {
+    "nascita": 1916,
+    "morte": 2001,
+    "reparto": "secondary bibliography"
+  },
+  "Bergson Henri": {
+    "nascita": 1859,
+    "morte": 1941,
+    "reparto": "library"
+  },
+  "Bernardi Guardi Mario": {
+    "nascita": 1944,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Bernardi Marziano": {
+    "nascita": 1897,
+    "morte": 1977,
+    "reparto": "library"
+  },
+  "Bernardini Napoletano Francesca": {
+    "nascita": 1947,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Bernini Ferdinando": {
+    "nascita": 1891,
+    "morte": 1954,
+    "reparto": "library"
+  },
+  "Bersani Mauro": {
+    "nascita": 1956,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Bertacchini Renato": {
+    "nascita": 1921,
+    "morte": 2011,
+    "reparto": "secondary bibliography"
+  },
+  "Bertarelli Luigi Vittorio": {
+    "nascita": 1859,
+    "morte": 1926,
+    "reparto": "library"
+  },
+  "Berti Luigi": {
+    "nascita": 1904,
+    "morte": 1964,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Berto Giuseppe": {
+    "nascita": 1914,
+    "morte": 1978,
+    "reparto": "library"
+  },
+  "Bertolazzi Carlo": {
+    "nascita": 1870,
+    "morte": 1916,
+    "reparto": "library"
+  },
+  "Bertolucci Attilio": {
+    "nascita": 1911,
+    "morte": 2000,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Bertolucci Bernardo": {
+    "nascita": 1941,
+    "morte": 2018,
+    "reparto": "library"
+  },
+  "Bertone Manuela": {
+    "nascita": 1960,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Bertoni Alberto": {
+    "nascita": 1955,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Bertoni Federico": {
+    "nascita": 1970,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Bertoni Giulio": {
+    "nascita": 1878,
+    "morte": 1942,
+    "reparto": "library"
+  },
+  "Bertrand Louis": {
+    "nascita": 1866,
+    "morte": 1941,
+    "reparto": "library"
+  },
+  "Bessière Gustave": {
+    "nascita": 1915,
+    "morte": 2005,
+    "reparto": "library"
+  },
+  "Betocchi Carlo": {
+    "nascita": 1899,
+    "morte": 1986,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Betti Emilio": {
+    "nascita": 1890,
+    "morte": 1968,
+    "reparto": "library"
+  },
+  "Betti Ugo": {
+    "nascita": 1892,
+    "morte": 1953,
+    "categoria": "Compagni di guerra e di prigionia",
+    "reparto": "letter"
+  },
+  "Bettini Filippo": {
+    "nascita": 1950,
+    "morte": 2012,
+    "reparto": "secondary bibliography"
+  },
+  "Bevilacqua Alberto": {
+    "nascita": 1934,
+    "morte": 2013,
+    "reparto": "library"
+  },
+  "Bevilacqua Mirko": {
+    "nascita": 1950,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Bezzola Guido": {
+    "nascita": 1919,
+    "morte": 2016,
+    "reparto": "secondary bibliography"
+  },
+  "Biagini Mario": {
+    "nascita": 1912,
+    "morte": 1968,
+    "reparto": "library"
+  },
+  "Bianchi Icinio": {
+    "nascita": 1890,
+    "morte": 1970,
+    "categoria": "Contatti letterari"
+  },
+  "Bianchi Paolo": {
+    "nascita": 1908,
+    "morte": 1972,
+    "reparto": "secondary bibliography"
+  },
+  "Bianciardi Luciano": {
+    "nascita": 1922,
+    "morte": 1971,
+    "reparto": "library"
+  },
+  "Bianciotti Hector": {
+    "nascita": 1930,
+    "morte": 2012,
+    "reparto": "secondary bibliography"
+  },
+  "Bianconi Piero": {
+    "nascita": 1899,
+    "morte": 1984,
+    "reparto": "secondary bibliography"
+  },
+  "Biferali Giorgio": {
+    "nascita": 1988,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Bignone Ettore": {
+    "nascita": 1879,
+    "morte": 1953,
+    "reparto": "library"
+  },
+  "Bigongiari Piero": {
+    "nascita": 1914,
+    "morte": 1997,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Bilenchi Romano": {
+    "nascita": 1909,
+    "morte": 1989,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Binni Walter": {
+    "nascita": 1913,
+    "morte": 1997,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Bisicchia Andrea": {
+    "nascita": 1940,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Bisinger Gerald": {
+    "nascita": 1936,
+    "morte": 1999,
+    "reparto": "library"
+  },
+  "Blixen Karen": {
+    "nascita": 1885,
+    "morte": 1962,
+    "reparto": "library"
+  },
+  "Bo Carlo": {
+    "nascita": 1911,
+    "morte": 2001,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Bocelli Arnaldo": {
+    "nascita": 1900,
+    "morte": 1974,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Bodei Remo": {
+    "nascita": 1938,
+    "morte": 2019,
+    "reparto": "secondary bibliography"
+  },
+  "Bodini Vittorio": {
+    "nascita": 1914,
+    "morte": 1970,
+    "reparto": "library"
+  },
+  "Bodrero Emilio": {
+    "nascita": 1874,
+    "morte": 1949,
+    "reparto": "library"
+  },
+  "Boggio Marzet Albino": {
+    "nascita": 1878,
+    "morte": 1969,
+    "categoria": "Compagni di guerra e di prigionia",
+    "reparto": "letter"
+  },
+  "Bollati Giulio": {
+    "nascita": 1924,
+    "morte": 1996,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Bologna Corrado": {
+    "nascita": 1950,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Bompiani Valentino": {
+    "nascita": 1898,
+    "morte": 1992,
+    "categoria": "Editori, riviste e quotidiani",
+    "reparto": "letter"
+  },
+  "Bonacossa Aldo": {
+    "nascita": 1885,
+    "morte": 1975,
+    "reparto": "library"
+  },
+  "Bonalumi Giovanni": {
+    "nascita": 1920,
+    "morte": 2002,
+    "reparto": "secondary bibliography"
+  },
+  "Bonalumi Louis": {
+    "nascita": 1922,
+    "morte": 2004,
+    "categoria": "Contatti letterari",
+    "reparto": "translation"
+  },
+  "Boneschi Francesco": {
+    "nascita": 1923,
+    "morte": 1989,
+    "reparto": "library"
+  },
+  "Bonfadini Romualdo": {
+    "nascita": 1831,
+    "morte": 1899,
+    "reparto": "library"
+  },
+  "Bonfantini Mario": {
+    "nascita": 1904,
+    "morte": 1978,
+    "reparto": "library"
+  },
+  "Bongiovanni Giannetto": {
+    "nascita": 1890,
+    "morte": 1964,
+    "reparto": "library"
+  },
+  "Bonsanti Alessandro": {
+    "nascita": 1904,
+    "morte": 1984,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Bonsanti Sandra": {
+    "nascita": 1937,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Boothe Luce Clare": {
+    "nascita": 1903,
+    "morte": 1987,
+    "reparto": "library"
+  },
+  "Bordas Philippe": {
+    "nascita": 1961,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Borgese Giuseppe Antonio": {
+    "nascita": 1882,
+    "morte": 1952,
+    "reparto": "library"
+  },
+  "Borghese Junio Valerio": {
+    "nascita": 1906,
+    "morte": 1974,
+    "reparto": "library"
+  },
+  "Borlenghi Aldo": {
+    "nascita": 1913,
+    "morte": 1978,
+    "categoria": "Varia",
+    "reparto": "library"
+  },
+  "Bortolotti Marco": {
+    "nascita": 1991,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Boselli Carlo": {
+    "nascita": 1876,
+    "morte": 1946,
+    "reparto": "library"
+  },
+  "Boselli Mario": {
+    "nascita": 1941,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Bosisio Paolo": {
+    "nascita": 1949,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Bossert Adolphe": {
+    "nascita": 1832,
+    "morte": 1922,
+    "reparto": "library"
+  },
+  "Bottari Stefano": {
+    "nascita": 1907,
+    "morte": 1967,
+    "reparto": "library"
+  },
+  "Brancati Vitaliano": {
+    "nascita": 1907,
+    "morte": 1954,
+    "reparto": "library"
+  },
+  "Brandalise Adone": {
+    "nascita": 1949,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Brandi Cesare": {
+    "nascita": 1906,
+    "morte": 1988,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Brandi Karl": {
+    "nascita": 1868,
+    "morte": 1946,
+    "reparto": "library"
+  },
+  "Brecht Bertolt": {
+    "nascita": 1898,
+    "morte": 1956,
+    "reparto": "library"
+  },
+  "Brera Gianni": {
+    "nascita": 1919,
+    "morte": 1992,
+    "reparto": "secondary bibliography"
+  },
+  "Breton André": {
+    "nascita": 1896,
+    "morte": 1966,
+    "reparto": "library"
+  },
+  "Bricchi Mariarosa": {
+    "nascita": 1963,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Brignetti Raffaello": {
+    "nascita": 1921,
+    "morte": 1978,
+    "reparto": "library"
+  },
+  "Brion Marcel": {
+    "nascita": 1895,
+    "morte": 1984,
+    "reparto": "library"
+  },
+  "Brioschi Francesco": {
+    "nascita": 1824,
+    "morte": 1897,
+    "reparto": "library"
+  },
+  "Briosi Sandro": {
+    "nascita": 1941,
+    "morte": 1998,
+    "reparto": "secondary bibliography"
+  },
+  "Brockmeier Peter": {
+    "nascita": 1934,
+    "morte": 2024,
+    "reparto": "secondary bibliography"
+  },
+  "Brod Max": {
+    "nascita": 1884,
+    "morte": 1968,
+    "reparto": "library"
+  },
+  "Broggini Luigi": {
+    "nascita": 1908,
+    "morte": 1983,
+    "reparto": "library"
+  },
+  "Broglie Louis de": {
+    "nascita": 1892,
+    "morte": 1987,
+    "reparto": "library"
+  },
+  "Brooks Van Wyck": {
+    "nascita": 1886,
+    "morte": 1963,
+    "reparto": "library"
+  },
+  "Brosio Gino": {
+    "nascita": 1893,
+    "morte": 1968,
+    "categoria": "Contatti letterari"
+  },
+  "Brousson Jean-Jacques": {
+    "nascita": 1878,
+    "morte": 1958,
+    "reparto": "library"
+  },
+  "Bruce Jean": {
+    "nascita": 1921,
+    "morte": 1963,
+    "reparto": "library"
+  },
+  "Bruckner Ferdinand": {
+    "nascita": 1891,
+    "morte": 1958,
+    "reparto": "library"
+  },
+  "Brullo Davide": {
+    "nascita": 1978,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Brunacci Giorgio": {
+    "nascita": 1920,
+    "morte": 1991
+  },
+  "Bruni Flavia": {
+    "nascita": 1975,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Bruni Francesco": {
+    "nascita": 1961,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Buchan John": {
+    "nascita": 1875,
+    "morte": 1940,
+    "reparto": "library"
+  },
+  "Budigna Luciano": {
+    "nascita": 1924,
+    "morte": 1988,
+    "reparto": "library"
+  },
+  "Bulferetti Domenico": {
+    "nascita": 1884,
+    "morte": 1969,
+    "reparto": "library"
+  },
+  "Buonaiuti Ernesto": {
+    "nascita": 1881,
+    "morte": 1946,
+    "reparto": "library"
+  },
+  "Burckhardt Jacob": {
+    "nascita": 1818,
+    "morte": 1897,
+    "reparto": "library"
+  },
+  "Burnand Robert": {
+    "nascita": 1882,
+    "morte": 1953,
+    "reparto": "library"
+  },
+  "Burnet John": {
+    "nascita": 1863,
+    "morte": 1928,
+    "reparto": "library"
+  },
+  "Burzio Filippo": {
+    "nascita": 1891,
+    "morte": 1948,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Butor Michel": {
+    "nascita": 1926,
+    "morte": 2016,
+    "reparto": "secondary bibliography"
+  },
+  "Buzzi Giancarlo": {
+    "nascita": 1929,
+    "morte": 2015,
+    "reparto": "library"
+  },
+  "Bàrberi Squarotti Giorgio": {
+    "nascita": 1929,
+    "morte": 2017,
+    "reparto": "secondary bibliography"
+  },
+  "Bédier Joseph": {
+    "nascita": 1864,
+    "morte": 1938,
+    "reparto": "library"
+  },
+  "Cabrini Gabrielle": {
+    "nascita": 1953,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Caccia Dominioni Paolo": {
+    "nascita": 1896,
+    "morte": 1992,
+    "reparto": "library"
+  },
+  "Caddeo Rinaldo": {
+    "nascita": 1881,
+    "morte": 1956,
+    "reparto": "library"
+  },
+  "Cadioli Alberto": {
+    "nascita": 1952,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Cadorna Luigi": {
+    "nascita": 1850,
+    "morte": 1928,
+    "reparto": "library"
+  },
+  "Cagna Achille Giovanni": {
+    "nascita": 1847,
+    "morte": 1931,
+    "reparto": "library"
+  },
+  "Caillois Roger": {
+    "nascita": 1913,
+    "morte": 1978,
+    "reparto": "library"
+  },
+  "Cajumi Arrigo": {
+    "nascita": 1899,
+    "morte": 1955,
+    "reparto": "secondary bibliography"
+  },
+  "Caldarola Francesco": {
+    "nascita": 1884,
+    "morte": 1973,
+    "reparto": "secondary bibliography"
+  },
+  "Calderini Aristide": {
+    "nascita": 1883,
+    "morte": 1968,
+    "reparto": "library"
+  },
+  "Caldwell Taylor": {
+    "nascita": 1900,
+    "morte": 1985,
+    "reparto": "library"
+  },
+  "Calvino Italo": {
+    "nascita": 1923,
+    "morte": 1985,
+    "reparto": "secondary bibliography"
+  },
+  "Calzolari Andrea": {
+    "nascita": 1968,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Camerino Aldo": {
+    "nascita": 1901,
+    "morte": 1966,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Camilucci Marcello": {
+    "nascita": 1910,
+    "morte": 2000,
+    "reparto": "secondary bibliography"
+  },
+  "Campana Dino": {
+    "nascita": 1885,
+    "morte": 1932,
+    "reparto": "library"
+  },
+  "Camurri Edoardo": {
+    "nascita": 1974,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Cancogni Manlio": {
+    "nascita": 1916,
+    "morte": 2015,
+    "reparto": "library"
+  },
+  "Canessa Fabio": {
+    "nascita": 1962,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Canetti Elias": {
+    "nascita": 1905,
+    "morte": 1994,
+    "reparto": "library"
+  },
+  "Canna Giovanni": {
+    "nascita": 1832,
+    "morte": 1915,
+    "reparto": "library"
+  },
+  "Canova Gianni": {
+    "nascita": 1954,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Cantalupi Antonio": {
+    "nascita": 1811,
+    "morte": 1898,
+    "reparto": "library"
+  },
+  "Cantù Cesare": {
+    "nascita": 1804,
+    "morte": 1895,
+    "reparto": "library"
+  },
+  "Capote Truman": {
+    "nascita": 1924,
+    "morte": 1984,
+    "reparto": "library"
+  },
+  "Caproni Giorgio": {
+    "nascita": 1912,
+    "morte": 1990,
+    "reparto": "secondary bibliography"
+  },
+  "Capuana Luigi": {
+    "nascita": 1839,
+    "morte": 1915,
+    "reparto": "library"
+  },
+  "Carannante Antonio": {
+    "nascita": 1965,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Carbone Rocco": {
+    "nascita": 1962,
+    "morte": 2008,
+    "reparto": "secondary bibliography"
+  },
+  "Carcopino Jérôme": {
+    "nascita": 1881,
+    "morte": 1970,
+    "reparto": "library"
+  },
+  "Cardarelli Vincenzo": {
+    "nascita": 1887,
+    "morte": 1959,
+    "reparto": "library"
+  },
+  "Carducci Giosuè": {
+    "nascita": 1835,
+    "morte": 1907,
+    "reparto": "library"
+  },
+  "Caretti Lanfranco": {
+    "nascita": 1915,
+    "morte": 1995,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Carli Alberto": {
+    "nascita": 1974,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Carli Enzo": {
+    "nascita": 1910,
+    "morte": 1999,
+    "reparto": "library"
+  },
+  "Carlino Marcello": {
+    "nascita": 1949,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Carlo Bo": {
+    "nascita": 1911,
+    "morte": 2001,
+    "categoria": "Contatti letterari",
+    "reparto": "primary bibliography"
+  },
+  "Carlotto Massimo": {
+    "nascita": 1956,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Carocci Alberto": {
+    "nascita": 1904,
+    "morte": 1972,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Carossa Hans": {
+    "nascita": 1878,
+    "morte": 1956,
+    "reparto": "library"
+  },
+  "Carotti Giulio": {
+    "nascita": 1852,
+    "morte": 1922,
+    "reparto": "library"
+  },
+  "Carotti Laura": {
+    "nascita": 1991,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Carozzi Ivan": {
+    "nascita": 1972,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Carrai Stefano": {
+    "nascita": 1955,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Carrieri Raffaele": {
+    "nascita": 1905,
+    "morte": 1984,
+    "reparto": "library"
+  },
+  "Carrà Carlo": {
+    "nascita": 1881,
+    "morte": 1966,
+    "reparto": "library"
+  },
+  "Carta Elisabetta": {
+    "nascita": 1976,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Caruso Carlo": {
+    "nascita": 1960,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Casadei Alberto": {
+    "nascita": 1985,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Casamassima Pino": {
+    "nascita": 1953,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Casati Carlo": {
+    "nascita": 1929,
+    "morte": 2007,
+    "reparto": "library"
+  },
+  "Casati Gaetano": {
+    "nascita": 1838,
+    "morte": 1902,
+    "reparto": "library"
+  },
+  "Cases Cesare": {
+    "nascita": 1920,
+    "morte": 2005,
+    "reparto": "secondary bibliography"
+  },
+  "Casini Simone": {
+    "nascita": 1963,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Cassieri Giuseppe": {
+    "nascita": 1926,
+    "morte": 2008,
+    "reparto": "library"
+  },
+  "Cassirer Ernst": {
+    "nascita": 1874,
+    "morte": 1945,
+    "reparto": "library"
+  },
+  "Castagnola Raffaella": {
+    "nascita": 1960,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Castellaneta Carlo": {
+    "nascita": 1930,
+    "morte": 2013,
+    "reparto": "library"
+  },
+  "Castelnuovo Enrico": {
+    "nascita": 1839,
+    "morte": 1915,
+    "reparto": "library"
+  },
+  "Cataldi Pietro": {
+    "nascita": 1961,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Cattaneo Giulio": {
+    "nascita": 1925,
+    "morte": 2010,
+    "reparto": "secondary bibliography"
+  },
+  "Cavaglion Alberto": {
+    "nascita": 1956,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Cavallari Alberto": {
+    "nascita": 1927,
+    "morte": 1998,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Cavalleri Cesare": {
+    "nascita": 1936,
+    "morte": 2022,
+    "reparto": "secondary bibliography"
+  },
+  "Cavallotti Felice": {
+    "nascita": 1842,
+    "morte": 1898,
+    "reparto": "library"
+  },
+  "Cecchi Dario": {
+    "nascita": 1918,
+    "morte": 1992,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Cecchi Emilio": {
+    "nascita": 1884,
+    "morte": 1966,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Cecchi Pieraccini Leonetta": {
+    "nascita": 1882,
+    "morte": 1977,
+    "reparto": "library"
+  },
+  "Cecchini Giovanni": {
+    "nascita": 1897,
+    "morte": 1983,
+    "reparto": "library"
+  },
+  "Celli Teodoro": {
+    "nascita": 1917,
+    "morte": 1989,
+    "reparto": "library"
+  },
+  "Ceronetti Guido": {
+    "nascita": 1927,
+    "morte": 2018,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Cerquetti Walter": {
+    "nascita": 1937,
+    "morte": null,
+    "categoria": "Contatti letterari"
+  },
+  "Cerruti Marco": {
+    "nascita": 1938,
+    "morte": 2013,
+    "reparto": "secondary bibliography"
+  },
+  "Ceserani Remo": {
+    "nascita": 1933,
+    "morte": 2016,
+    "reparto": "secondary bibliography"
+  },
+  "Chamberlin William Henry": {
+    "nascita": 1897,
+    "morte": 1969,
+    "reparto": "library"
+  },
+  "Charteris Leslie": {
+    "nascita": 1907,
+    "morte": 1993,
+    "reparto": "library"
+  },
+  "Checchi Eugenio": {
+    "nascita": 1838,
+    "morte": 1932,
+    "reparto": "library"
+  },
+  "Cheli Pietro": {
+    "nascita": 1965,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Chesterton Gilbert Keith": {
+    "nascita": 1874,
+    "morte": 1936,
+    "reparto": "library"
+  },
+  "Chiappelli Zdekauer Maria": {
+    "nascita": 1902,
+    "morte": 1961,
+    "categoria": "Contatti letterari"
+  },
+  "Chiappini Filippo": {
+    "nascita": 1836,
+    "morte": 1905,
+    "reparto": "library"
+  },
+  "Chiara Piero": {
+    "nascita": 1913,
+    "morte": 1986,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Chiarini Giorgio": {
+    "nascita": 1929,
+    "morte": 1995,
+    "reparto": "secondary bibliography"
+  },
+  "Chiarini Giuseppe": {
+    "nascita": 1833,
+    "morte": 1908,
+    "reparto": "library"
+  },
+  "Chiarini Paolo": {
+    "nascita": 1931,
+    "morte": 2012,
+    "reparto": "secondary bibliography"
+  },
+  "Chierici Gino": {
+    "nascita": 1877,
+    "morte": 1961,
+    "reparto": "library"
+  },
+  "Chiesura Giorgio": {
+    "nascita": 1921,
+    "morte": 2003,
+    "reparto": "library"
+  },
+  "Chigusa Ken": {
+    "nascita": 1930,
+    "morte": 2014,
+    "categoria": "Contatti letterari",
+    "reparto": "translation"
+  },
+  "Chilanti Felice": {
+    "nascita": 1914,
+    "morte": 1982,
+    "reparto": "library"
+  },
+  "Cialente Fausta": {
+    "nascita": 1898,
+    "morte": 1994,
+    "reparto": "library"
+  },
+  "Cibotto Gian Antonio": {
+    "nascita": 1925,
+    "morte": 2017,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Cicala Roberto": {
+    "nascita": 1963,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Cima Giovanni Vincenzo": {
+    "nascita": 1893,
+    "morte": 1968,
+    "categoria": "Contatti letterari"
+  },
+  "Cimmino Marco": {
+    "nascita": 1960,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Cinquini Adolfo": {
+    "nascita": 1863,
+    "morte": 1949,
+    "reparto": "library"
+  },
+  "Cione Edmondo": {
+    "nascita": 1908,
+    "morte": 1965,
+    "reparto": "secondary bibliography"
+  },
+  "Cirese Alberto Mario": {
+    "nascita": 1921,
+    "morte": 2011,
+    "reparto": "library"
+  },
+  "Ciriello Marco": {
+    "nascita": 1975,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Cirri Massimo": {
+    "nascita": 1958,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Citati Pietro": {
+    "nascita": 1930,
+    "morte": 2022,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Claudio Vela": {
+    "nascita": 1955,
+    "morte": null,
+    "reparto": "primary bibliography"
+  },
+  "Clerico Giovanni": {
+    "nascita": 1933,
+    "morte": 2017,
+    "reparto": "secondary bibliography"
+  },
+  "Clodomiro Vanni": {
+    "nascita": 1940,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Cobban Alfred": {
+    "nascita": 1901,
+    "morte": 1968,
+    "reparto": "library"
+  },
+  "Cocco Giovanni": {
+    "nascita": 1976,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Colerus Egmont": {
+    "nascita": 1888,
+    "morte": 1939,
+    "reparto": "library"
+  },
+  "Coletti Vittorio": {
+    "nascita": 1948,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Collura Matteo": {
+    "nascita": 1945,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Colombi Guidotti Mario": {
+    "nascita": 1922,
+    "morte": 1955,
+    "reparto": "secondary bibliography"
+  },
+  "Colombo Angelo": {
+    "nascita": 1961,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Colombo Giuseppe": {
+    "nascita": 1920,
+    "morte": 1984,
+    "reparto": "library"
+  },
+  "Colucci Dalila": {
+    "nascita": 1987,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Comas Juan": {
+    "nascita": 1900,
+    "morte": 1979,
+    "reparto": "library"
+  },
+  "Comisso Giovanni": {
+    "nascita": 1895,
+    "morte": 1969,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Compagnone Luigi": {
+    "nascita": 1915,
+    "morte": 1998,
+    "reparto": "secondary bibliography"
+  },
+  "Conrad Joseph": {
+    "nascita": 1857,
+    "morte": 1924,
+    "reparto": "library"
+  },
+  "Consonni Giancarlo": {
+    "nascita": 1943,
+    "morte": 2026,
+    "reparto": "secondary bibliography"
+  },
+  "Conti Ettore": {
+    "nascita": 1924,
+    "morte": 2018,
+    "reparto": "library"
+  },
+  "Conti Gadda Piero": {
+    "nascita": 1902,
+    "morte": 1999
+  },
+  "Conti Gian Carlo": {
+    "nascita": 1928,
+    "morte": 1983,
+    "reparto": "library"
+  },
+  "Contini Gianfranco": {
+    "nascita": 1912,
+    "morte": 1990,
+    "categoria": "Amici",
+    "reparto": "letter"
+  },
+  "Cordelli Franco": {
+    "nascita": 1943,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Corradi Michele": {
+    "nascita": 1976,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Cortellessa Andrea": {
+    "nascita": 1968,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Corti Maria": {
+    "nascita": 1915,
+    "morte": 2002,
+    "reparto": "secondary bibliography"
+  },
+  "Cotroneo Roberto": {
+    "nascita": 1961,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Coulon Marcel": {
+    "nascita": 1873,
+    "morte": 1959,
+    "reparto": "library"
+  },
+  "Courteline Georges": {
+    "nascita": 1858,
+    "morte": 1929,
+    "reparto": "library"
+  },
+  "Cremaschi Inisero": {
+    "nascita": 1928,
+    "morte": 2014,
+    "reparto": "secondary bibliography"
+  },
+  "Croce Benedetto": {
+    "nascita": 1866,
+    "morte": 1952,
+    "reparto": "library"
+  },
+  "Croce Elena": {
+    "nascita": 1915,
+    "morte": 1994,
+    "reparto": "library"
+  },
+  "Crofts Freeman Wills": {
+    "nascita": 1879,
+    "morte": 1957,
+    "reparto": "library"
+  },
+  "Crotti Ilaria": {
+    "nascita": 1950,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Crovi Raffaele": {
+    "nascita": 1934,
+    "morte": 2007,
+    "reparto": "secondary bibliography"
+  },
+  "Cudini Piero": {
+    "nascita": 1946,
+    "morte": 2002,
+    "reparto": "secondary bibliography"
+  },
+  "Curi Fausto": {
+    "nascita": 1930,
+    "morte": 2026,
+    "reparto": "secondary bibliography"
+  },
+  "Cusatelli Giorgio": {
+    "nascita": 1930,
+    "morte": 2007,
+    "reparto": "secondary bibliography"
+  },
+  "D'Orrico Antonio": {
+    "nascita": 1954,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Daiches David": {
+    "nascita": 1912,
+    "morte": 2005,
+    "reparto": "library"
+  },
+  "Dal Fabbro Beniamino": {
+    "nascita": 1910,
+    "morte": 1989,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Dallamano Piero": {
+    "nascita": 1911,
+    "morte": 1979,
+    "reparto": "secondary bibliography"
+  },
+  "Damiani Rolando": {
+    "nascita": 1949,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Dani Franco": {
+    "nascita": 1946,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Daniele Antonio": {
+    "nascita": 1903,
+    "morte": 1982,
+    "reparto": "secondary bibliography"
+  },
+  "Dante Isella": {
+    "nascita": 1922,
+    "morte": 2007,
+    "categoria": "Contatti letterari",
+    "reparto": "primary bibliography"
+  },
+  "Dariès Georges": {
+    "nascita": 1863,
+    "morte": 1916,
+    "reparto": "library"
+  },
+  "Daudet Alphonse": {
+    "nascita": 1840,
+    "morte": 1897,
+    "reparto": "library"
+  },
+  "Dauzat Albert": {
+    "nascita": 1877,
+    "morte": 1955,
+    "reparto": "library"
+  },
+  "Davico Bonino Guido": {
+    "nascita": 1938,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "David Michel": {
+    "nascita": 1924,
+    "morte": 2020,
+    "reparto": "secondary bibliography"
+  },
+  "Dawson Christopher": {
+    "nascita": 1889,
+    "morte": 1970,
+    "reparto": "library"
+  },
+  "De Benedictis Maurizio": {
+    "nascita": 1951,
+    "morte": 2021,
+    "reparto": "secondary bibliography"
+  },
+  "De Feo Sandro": {
+    "nascita": 1905,
+    "morte": 1968,
+    "reparto": "secondary bibliography"
+  },
+  "De Giorgi Elsa": {
+    "nascita": 1914,
+    "morte": 1997,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "De Grada Raffaele": {
+    "nascita": 1916,
+    "morte": 2010,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "De Leva Giuseppe": {
+    "nascita": 1821,
+    "morte": 1895,
+    "reparto": "library"
+  },
+  "De Libero Libero": {
+    "nascita": 1903,
+    "morte": 1981,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "De Luca Giuseppe": {
+    "nascita": 1991,
+    "morte": null,
+    "reparto": "library"
+  },
+  "De Luca Pasquale": {
+    "nascita": 1962,
+    "morte": null,
+    "reparto": "library"
+  },
+  "De Marchi Pietro": {
+    "nascita": 1958,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "De Mattei Rodolfo": {
+    "nascita": 1899,
+    "morte": 1981,
+    "reparto": "library"
+  },
+  "De Matteis Carlo": {
+    "nascita": 1972,
+    "morte": null,
+    "categoria": "Varia",
+    "reparto": "secondary bibliography"
+  },
+  "De Pisis Filippo": {
+    "nascita": 1896,
+    "morte": 1956,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "De Rienzo Giorgio": {
+    "nascita": 1942,
+    "morte": 2011,
+    "reparto": "secondary bibliography"
+  },
+  "De Robertis Giuseppe": {
+    "nascita": 1888,
+    "morte": 1963,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "De Ruggiero Guido": {
+    "nascita": 1888,
+    "morte": 1948,
+    "reparto": "library"
+  },
+  "De Stefani Livia": {
+    "nascita": 1913,
+    "morte": 1991,
+    "reparto": "library"
+  },
+  "De Viti De Marco Antonio": {
+    "nascita": 1858,
+    "morte": 1943,
+    "reparto": "library"
+  },
+  "Deakin Frederick William": {
+    "nascita": 1913,
+    "morte": 2005,
+    "reparto": "library"
+  },
+  "Debenedetti Antonio": {
+    "nascita": 1937,
+    "morte": 2021,
+    "reparto": "secondary bibliography"
+  },
+  "Debenedetti Giacomo": {
+    "nascita": 1901,
+    "morte": 1967,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Deidier Roberto": {
+    "nascita": 1965,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Del Re Niccolò": {
+    "nascita": 1914,
+    "morte": 2005,
+    "reparto": "library"
+  },
+  "Delfini Antonio": {
+    "nascita": 1907,
+    "morte": 1963,
+    "reparto": "library"
+  },
+  "Dell'Arco Mario": {
+    "nascita": 1905,
+    "morte": 1996,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Dell'Arco Maurizio": {
+    "nascita": 1939,
+    "morte": 2002,
+    "categoria": "Contatti letterari"
+  },
+  "Della Terza Dante": {
+    "nascita": 1924,
+    "morte": 2021,
+    "reparto": "secondary bibliography"
+  },
+  "Desiderio Giancristiano": {
+    "nascita": 1968,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Deutscher Isaac": {
+    "nascita": 1907,
+    "morte": 1967,
+    "reparto": "library"
+  },
+  "Devoto Giacomo": {
+    "nascita": 1897,
+    "morte": 1974,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Di Biase Carmine": {
+    "nascita": 1925,
+    "morte": 2010,
+    "reparto": "secondary bibliography"
+  },
+  "Di Luzio Aldo": {
+    "nascita": 1933,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Di Meo Philippe": {
+    "nascita": 1953,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Di Paolo Paolo": {
+    "nascita": 1983,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Di Pino Guido": {
+    "nascita": 1912,
+    "morte": 2002,
+    "reparto": "library"
+  },
+  "Di Stefano Paolo": {
+    "nascita": 1956,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Diano Carlo": {
+    "nascita": 1902,
+    "morte": 1974,
+    "reparto": "library"
+  },
+  "Diehl Charles": {
+    "nascita": 1859,
+    "morte": 1944,
+    "reparto": "library"
+  },
+  "Dieudonné Eugène": {
+    "nascita": 1884,
+    "morte": 1944,
+    "reparto": "library"
+  },
+  "Dimier Louis": {
+    "nascita": 1865,
+    "morte": 1943,
+    "reparto": "library"
+  },
+  "Dini Massimo": {
+    "nascita": 1946,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Dixon Richard": {
+    "nascita": 1865,
+    "morte": 1949,
+    "reparto": "translation"
+  },
+  "Dobzhansky Theodosius": {
+    "nascita": 1900,
+    "morte": 1975,
+    "reparto": "library"
+  },
+  "Dommarco Alessandro": {
+    "nascita": 1912,
+    "morte": 1997,
+    "reparto": "library"
+  },
+  "Doninelli Luca": {
+    "nascita": 1956,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Doniselli Casimiro": {
+    "nascita": 1876,
+    "morte": 1960,
+    "reparto": "library"
+  },
+  "Donnarumma Raffaele": {
+    "nascita": 1969,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Doplicher Fabio": {
+    "nascita": 1938,
+    "morte": 2003,
+    "reparto": "library"
+  },
+  "Dos Passos John": {
+    "nascita": 1896,
+    "morte": 1970,
+    "reparto": "library"
+  },
+  "Dosi Delfini Giancarlo": {
+    "nascita": 1896,
+    "morte": 1979,
+    "categoria": "Amici"
+  },
+  "Dossena Giampaolo": {
+    "nascita": 1930,
+    "morte": 2009,
+    "reparto": "secondary bibliography"
+  },
+  "Dossi Carlo": {
+    "nascita": 1849,
+    "morte": 1910,
+    "reparto": "library"
+  },
+  "Dotti Ugo": {
+    "nascita": 1933,
+    "morte": 2017,
+    "reparto": "secondary bibliography"
+  },
+  "Du Bos Charles": {
+    "nascita": 1882,
+    "morte": 1939,
+    "reparto": "library"
+  },
+  "Dubini Antonio": {
+    "nascita": 1877,
+    "morte": 1931
+  },
+  "Dubreuil Hyacinthe": {
+    "nascita": 1883,
+    "morte": 1971,
+    "reparto": "library"
+  },
+  "Ducati Pericle": {
+    "nascita": 1880,
+    "morte": 1944,
+    "reparto": "library"
+  },
+  "Duclos Adolphe": {
+    "nascita": 1865,
+    "morte": 1939,
+    "reparto": "library"
+  },
+  "Dugas Ludovic": {
+    "nascita": 1857,
+    "morte": 1942,
+    "reparto": "library"
+  },
+  "Dulles John Foster": {
+    "nascita": 1888,
+    "morte": 1959,
+    "reparto": "library"
+  },
+  "Dumas Alexandre": {
+    "nascita": 1824,
+    "morte": 1895,
+    "reparto": "library"
+  },
+  "Dupouy Auguste": {
+    "nascita": 1872,
+    "morte": 1967,
+    "reparto": "library"
+  },
+  "Duproix Paul": {
+    "nascita": 1851,
+    "morte": 1912,
+    "reparto": "library"
+  },
+  "Durrell Lawrence": {
+    "nascita": 1912,
+    "morte": 1990,
+    "reparto": "library"
+  },
+  "Dwelshauvers Georges": {
+    "nascita": 1866,
+    "morte": 1937,
+    "reparto": "library"
+  },
+  "Eco Umberto": {
+    "nascita": 1932,
+    "morte": 2016,
+    "reparto": "secondary bibliography"
+  },
+  "Einaudi Giulio": {
+    "nascita": 1912,
+    "morte": 1999,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Einstein Albert": {
+    "nascita": 1879,
+    "morte": 1955,
+    "reparto": "library"
+  },
+  "Elia Olga": {
+    "nascita": 1902,
+    "morte": 1977,
+    "reparto": "library"
+  },
+  "Eliot Thomas Stearns": {
+    "nascita": 1888,
+    "morte": 1965,
+    "reparto": "library"
+  },
+  "Elli Emanuele": {
+    "nascita": 1963,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Emilio Manzotti": {
+    "nascita": 1947,
+    "morte": null,
+    "reparto": "primary bibliography"
+  },
+  "Enzensberger Hans Magnus": {
+    "nascita": 1929,
+    "morte": 2022,
+    "reparto": "translation"
+  },
+  "Episcopo Giuseppe": {
+    "nascita": 1847,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Erbani Francesco": {
+    "nascita": 1957,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Ercolani Adriano": {
+    "nascita": 1973,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Ermini Filippo": {
+    "nascita": 1868,
+    "morte": 1935,
+    "reparto": "library"
+  },
+  "Errante Vincenzo": {
+    "nascita": 1890,
+    "morte": 1951,
+    "categoria": "Contatti letterari"
+  },
+  "Esenin Sergej Aleksandrovič": {
+    "nascita": 1895,
+    "morte": 1925,
+    "reparto": "library"
+  },
+  "Esposito Edoardo": {
+    "nascita": 1947,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Evans Ivor": {
+    "nascita": 1966,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Fabiani Enzo": {
+    "nascita": 1924,
+    "morte": 2013,
+    "reparto": "secondary bibliography"
+  },
+  "Faggi Vico": {
+    "nascita": 1922,
+    "morte": 2010,
+    "reparto": "secondary bibliography"
+  },
+  "Falaschi Giovanni": {
+    "nascita": 1940,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Faldella Giovanni": {
+    "nascita": 1846,
+    "morte": 1928,
+    "reparto": "library"
+  },
+  "Falorsi Guido": {
+    "nascita": 1847,
+    "morte": 1920,
+    "reparto": "library"
+  },
+  "Falqui Enrico": {
+    "nascita": 1901,
+    "morte": 1974,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Farinelli Franco": {
+    "nascita": 1948,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Farnetti Monica": {
+    "nascita": 1960,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Fast Howard": {
+    "nascita": 1914,
+    "morte": 2003,
+    "reparto": "library"
+  },
+  "Fatta Corrado": {
+    "nascita": 1903,
+    "morte": 1979,
+    "reparto": "library"
+  },
+  "Favaro Roberto": {
+    "nascita": 1965,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Fenoglio Beppe": {
+    "nascita": 1922,
+    "morte": 1963,
+    "reparto": "library"
+  },
+  "Ferrabino Aldo": {
+    "nascita": 1892,
+    "morte": 1972,
+    "reparto": "library"
+  },
+  "Ferrari Alberto": {
+    "nascita": 2000,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Ferrari Pierangelo": {
+    "nascita": 1951,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Ferraris Galileo": {
+    "nascita": 1847,
+    "morte": 1897,
+    "reparto": "library"
+  },
+  "Ferraro Pietro": {
+    "nascita": 1908,
+    "morte": 1974,
+    "categoria": "Ingegneria e divulgazione tecnica",
+    "reparto": "library"
+  },
+  "Ferravilla Edoardo": {
+    "nascita": 1846,
+    "morte": 1915,
+    "reparto": "library"
+  },
+  "Ferrero Ernesto": {
+    "nascita": 1938,
+    "morte": 2023,
+    "reparto": "secondary bibliography"
+  },
+  "Ferrero Guglielmo": {
+    "nascita": 1871,
+    "morte": 1942,
+    "reparto": "library"
+  },
+  "Ferrero Mario": {
+    "nascita": 1903,
+    "morte": 1964,
+    "reparto": "library"
+  },
+  "Ferretti Gian Carlo": {
+    "nascita": 1930,
+    "morte": 2022,
+    "reparto": "secondary bibliography"
+  },
+  "Ferretti Giancarlo": {
+    "nascita": 1941,
+    "morte": null,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Ferri Francesco": {
+    "nascita": 1898,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Ferrone Siro": {
+    "nascita": 1946,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Ferroni Giulio": {
+    "nascita": 1943,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Ficara Giorgio": {
+    "nascita": 1952,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Filippini Felice": {
+    "nascita": 1917,
+    "morte": 1988,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Filon Augustin": {
+    "nascita": 1841,
+    "morte": 1916,
+    "reparto": "library"
+  },
+  "Fiore Elio": {
+    "nascita": 1935,
+    "morte": 2002,
+    "reparto": "library"
+  },
+  "Fiorentini Felice": {
+    "nascita": 1894,
+    "morte": 1945,
+    "categoria": "Ingegneria e divulgazione tecnica",
+    "reparto": "letter"
+  },
+  "Flora Francesco": {
+    "nascita": 1891,
+    "morte": 1962,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Flores Enrico": {
+    "nascita": 1936,
+    "morte": 2021,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Fo Alessandro": {
+    "nascita": 1955,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Foch Ferdinand": {
+    "nascita": 1851,
+    "morte": 1929,
+    "reparto": "library"
+  },
+  "Fogazzaro Antonio": {
+    "nascita": 1842,
+    "morte": 1911,
+    "reparto": "library"
+  },
+  "Foot Moore George": {
+    "nascita": 1851,
+    "morte": 1931,
+    "reparto": "library"
+  },
+  "Formaggio Dino": {
+    "nascita": 1914,
+    "morte": 2008,
+    "reparto": "library"
+  },
+  "Formentin Vittorio": {
+    "nascita": 1960,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Formichi Carlo": {
+    "nascita": 1871,
+    "morte": 1943,
+    "reparto": "library"
+  },
+  "Fornasini Emilio": {
+    "nascita": 1893,
+    "morte": 1971,
+    "categoria": "Familiari",
+    "reparto": "letter"
+  },
+  "Fornasini Gandolfi Anita": {
+    "nascita": 1888,
+    "categoria": "Familiari",
+    "reparto": "letter"
+  },
+  "Forni Giorgio": {
+    "nascita": 1966,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Forni Pier Massimo": {
+    "nascita": 1951,
+    "morte": 2018,
+    "reparto": "secondary bibliography"
+  },
+  "Forti Marco": {
+    "nascita": 1925,
+    "morte": 2019,
+    "reparto": "secondary bibliography"
+  },
+  "Fortini Franco": {
+    "nascita": 1917,
+    "morte": 1994,
+    "reparto": "secondary bibliography"
+  },
+  "Fortini Letizia": {
+    "nascita": 1929,
+    "morte": 2002,
+    "reparto": "secondary bibliography"
+  },
+  "Fouillée Alfred": {
+    "nascita": 1838,
+    "morte": 1912,
+    "reparto": "library"
+  },
+  "Fraccacreta Alberto": {
+    "nascita": 1989,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "France Anatole": {
+    "nascita": 1844,
+    "morte": 1924,
+    "reparto": "library"
+  },
+  "Franchi Luigi": {
+    "nascita": 1983,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Franchi Raffaello": {
+    "nascita": 1899,
+    "morte": 1949,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Franciosa Massimo": {
+    "nascita": 1924,
+    "morte": 1998,
+    "reparto": "secondary bibliography"
+  },
+  "Frank Tenney": {
+    "nascita": 1876,
+    "morte": 1939,
+    "reparto": "library"
+  },
+  "Franza Carlo": {
+    "nascita": 1949,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Frasca Gabriele": {
+    "nascita": 1957,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Frassineti Augusto": {
+    "nascita": 1911,
+    "morte": 1985,
+    "reparto": "library"
+  },
+  "Fratelli Armando": {
+    "nascita": 1888,
+    "morte": 1965,
+    "categoria": "Contatti letterari"
+  },
+  "Frattarolo Renzo": {
+    "nascita": 1912,
+    "morte": 2003,
+    "reparto": "secondary bibliography"
+  },
+  "Freud Sigmund": {
+    "nascita": 1856,
+    "morte": 1939,
+    "reparto": "library"
+  },
+  "Freyre Gilberto": {
+    "nascita": 1900,
+    "morte": 1987,
+    "reparto": "library"
+  },
+  "Friedmann Sigismund": {
+    "nascita": 1851,
+    "morte": 1917,
+    "reparto": "library"
+  },
+  "Frigerio Federico": {
+    "nascita": 1958,
+    "morte": 2020,
+    "reparto": "library"
+  },
+  "Frison-Roche Roger": {
+    "nascita": 1906,
+    "morte": 1999,
+    "reparto": "library"
+  },
+  "Fruttero Carlo": {
+    "nascita": 1926,
+    "morte": 2012,
+    "reparto": "letter"
+  },
+  "Frénaud André": {
+    "nascita": 1907,
+    "morte": 1993,
+    "reparto": "library"
+  },
+  "Frýbort Zdeněk": {
+    "nascita": 1931,
+    "morte": 2013,
+    "reparto": "translation"
+  },
+  "Fucini Renato": {
+    "nascita": 1843,
+    "morte": 1921,
+    "reparto": "library"
+  },
+  "Fusco Mario": {
+    "nascita": 1930,
+    "morte": 2015,
+    "reparto": "translation"
+  },
+  "Fuscà Franco": {
+    "nascita": 1907,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Förster Max": {
+    "nascita": 1867,
+    "morte": 1930,
+    "reparto": "library"
+  },
+  "Gabutti Diego": {
+    "nascita": 1950,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Gadda Ambrosi Clara": {
+    "nascita": 1895,
+    "morte": 1976,
+    "categoria": "Familiari",
+    "reparto": "letter"
+  },
+  "Gadda Belloni Luisa": {
+    "nascita": 1894,
+    "morte": 1971,
+    "categoria": "Familiari",
+    "reparto": "letter"
+  },
+  "Gadda Carlo Emilio": {
+    "nascita": 1893,
+    "morte": 1973,
+    "reparto": "letter"
+  },
+  "Gadda Conti Piero": {
+    "nascita": 1902,
+    "morte": 1999,
+    "categoria": "Familiari",
+    "reparto": "letter"
+  },
+  "Gadda Enrico": {
+    "nascita": 1896,
+    "morte": 1918,
+    "categoria": "Familiari",
+    "reparto": "letter"
+  },
+  "Gadda Fornasini Emilia": {
+    "nascita": 1867,
+    "morte": 1952,
+    "categoria": "Familiari",
+    "reparto": "letter"
+  },
+  "Gadda Francesco": {
+    "nascita": 1838,
+    "morte": 1909
+  },
+  "Gadda Podestà Luisa": {
+    "nascita": 1894,
+    "morte": 1971,
+    "categoria": "Familiari"
+  },
+  "Galante Garrone Alessandro": {
+    "nascita": 1909,
+    "morte": 2003,
+    "reparto": "library"
+  },
+  "Galli Sandro": {
+    "nascita": 1987,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Gallo Niccolò": {
+    "nascita": 1912,
+    "morte": 1971,
+    "reparto": "secondary bibliography"
+  },
+  "Gallo Ugo": {
+    "nascita": 1905,
+    "morte": 1957,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Galofaro Francesco": {
+    "nascita": 1976,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Gamow George": {
+    "nascita": 1904,
+    "morte": 1968,
+    "reparto": "library"
+  },
+  "Gandino Giovanni Battista": {
+    "nascita": 1827,
+    "morte": 1905,
+    "reparto": "library"
+  },
+  "Garboli Cesare": {
+    "nascita": 1928,
+    "morte": 2004,
+    "reparto": "secondary bibliography"
+  },
+  "Gardini Nicola": {
+    "nascita": 1965,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Gareffi Andrea": {
+    "nascita": 1949,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Gargiulo Alfredo": {
+    "nascita": 1876,
+    "morte": 1949,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Garrone Dino": {
+    "nascita": 1904,
+    "morte": 1931,
+    "reparto": "library"
+  },
+  "Garzanti Livio": {
+    "nascita": 1921,
+    "morte": 2015,
+    "categoria": "Editori, riviste e quotidiani",
+    "reparto": "letter"
+  },
+  "Gaspari Gianmarco": {
+    "nascita": 1955,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Gastaldi Giovanni": {
+    "nascita": 1919,
+    "morte": 1944,
+    "reparto": "library"
+  },
+  "Gatti Riccardo": {
+    "nascita": 1997,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Gatto Alfonso": {
+    "nascita": 1909,
+    "morte": 1976,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Gauguin Paul": {
+    "nascita": 1848,
+    "morte": 1903,
+    "reparto": "library"
+  },
+  "Gavagnin Gabriella": {
+    "nascita": 1963,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Gavazzeni Franco": {
+    "nascita": 1935,
+    "morte": 2008,
+    "reparto": "secondary bibliography"
+  },
+  "Gavazzeni Gianandrea": {
+    "nascita": 1909,
+    "morte": 1996,
+    "reparto": "library"
+  },
+  "Gaxotte Pierre": {
+    "nascita": 1895,
+    "morte": 1982,
+    "reparto": "library"
+  },
+  "Gelli Piero": {
+    "nascita": 1939,
+    "morte": 2020,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Genet Jean": {
+    "nascita": 1910,
+    "morte": 1986,
+    "reparto": "library"
+  },
+  "Gentile Iginio": {
+    "nascita": 1843,
+    "morte": 1893,
+    "reparto": "library"
+  },
+  "Gervasi Paolo": {
+    "nascita": 1984,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Gessi Leone": {
+    "nascita": 1889,
+    "morte": 1967,
+    "reparto": "library"
+  },
+  "Ghirotti Gigi": {
+    "nascita": 1920,
+    "morte": 1974,
+    "reparto": "secondary bibliography"
+  },
+  "Ghiselli Luca": {
+    "nascita": 1910,
+    "morte": 1939,
+    "reparto": "library"
+  },
+  "Ghisleri Arcangelo": {
+    "nascita": 1855,
+    "morte": 1938,
+    "reparto": "library"
+  },
+  "Giachery Emerico": {
+    "nascita": 1929,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Giachetti Cipriano": {
+    "nascita": 1877,
+    "morte": 1951,
+    "reparto": "library"
+  },
+  "Giambartolomei Aldo": {
+    "nascita": 1917,
+    "morte": 1991,
+    "categoria": "Ingegneria e divulgazione tecnica"
+  },
+  "Giammattei Emma": {
+    "nascita": 1949,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Gianfranco Contini": {
+    "nascita": 1912,
+    "morte": 1990,
+    "categoria": "Amici"
+  },
+  "Giannantonio Pompeo": {
+    "nascita": 1923,
+    "morte": 2001,
+    "reparto": "secondary bibliography"
+  },
+  "Giardina Andrea": {
+    "nascita": 1949,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Giardini Cesare": {
+    "nascita": 1893,
+    "morte": 1970,
+    "reparto": "library"
+  },
+  "Gibellini Pietro": {
+    "nascita": 1945,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Gide André": {
+    "nascita": 1869,
+    "morte": 1951,
+    "reparto": "library"
+  },
+  "Gifuni Fabrizio": {
+    "nascita": 1966,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Gigante Claudio": {
+    "nascita": 1972,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Gigli Lorenzo": {
+    "nascita": 1896,
+    "morte": 1983,
+    "reparto": "secondary bibliography"
+  },
+  "Giglioli Odoardo Hillyer": {
+    "nascita": 1873,
+    "morte": 1957,
+    "reparto": "library"
+  },
+  "Gigliucci Roberto": {
+    "nascita": 1962,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Ginzburg Natalia": {
+    "nascita": 1916,
+    "morte": 1991,
+    "reparto": "library"
+  },
+  "Gioanola Elio": {
+    "nascita": 1934,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Giolitti Antonio": {
+    "nascita": 1915,
+    "morte": 2010,
+    "reparto": "library"
+  },
+  "Giovanardi Claudio": {
+    "nascita": 1954,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Giovanardi Stefano": {
+    "nascita": 1949,
+    "morte": 2012,
+    "reparto": "secondary bibliography"
+  },
+  "Girardi Enzo Noè": {
+    "nascita": 1921,
+    "morte": 2016,
+    "reparto": "secondary bibliography"
+  },
+  "Giuliani Alfredo": {
+    "nascita": 1924,
+    "morte": 2007,
+    "reparto": "secondary bibliography"
+  },
+  "Giussani Camillo": {
+    "nascita": 1879,
+    "morte": 1960,
+    "reparto": "library"
+  },
+  "Giusso Lorenzo": {
+    "nascita": 1899,
+    "morte": 1957,
+    "reparto": "secondary bibliography"
+  },
+  "Giusti Simone": {
+    "nascita": 1955,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Glotz Gustave": {
+    "nascita": 1862,
+    "morte": 1935,
+    "reparto": "library"
+  },
+  "Gnerre Francesco": {
+    "nascita": 1944,
+    "morte": 2025,
+    "reparto": "secondary bibliography"
+  },
+  "Gobbi Ambrogio": {
+    "nascita": 1895,
+    "morte": 1968,
+    "categoria": "Amici",
+    "reparto": "letter"
+  },
+  "Godioli Alberto": {
+    "nascita": 1983,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Goldmann Julius": {
+    "nascita": 1875,
+    "morte": 1940,
+    "reparto": "secondary bibliography"
+  },
+  "Golino Enzo": {
+    "nascita": 1932,
+    "morte": 2020,
+    "reparto": "secondary bibliography"
+  },
+  "Golubtsova Anastasia": {
+    "nascita": 1986,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Gorni Guglielmo": {
+    "nascita": 1945,
+    "morte": 2010,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Govoni Corrado": {
+    "nascita": 1884,
+    "morte": 1965,
+    "reparto": "library"
+  },
+  "Gozzano Guido": {
+    "nascita": 1883,
+    "morte": 1916,
+    "reparto": "library"
+  },
+  "Graf Hansjörg": {
+    "nascita": 1922,
+    "morte": 2017,
+    "reparto": "secondary bibliography"
+  },
+  "Gramigna Giuliano": {
+    "nascita": 1920,
+    "morte": 2006,
+    "reparto": "secondary bibliography"
+  },
+  "Grana Gianni": {
+    "nascita": 1924,
+    "morte": 2001,
+    "reparto": "secondary bibliography"
+  },
+  "Grande Maurizio": {
+    "nascita": 1944,
+    "morte": 1996,
+    "reparto": "secondary bibliography"
+  },
+  "Grasso Aldo": {
+    "nascita": 1948,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Grasso Gabriele": {
+    "nascita": 1867,
+    "morte": 1908,
+    "reparto": "library"
+  },
+  "Grasso Sebastiano": {
+    "nascita": 1978,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Grazzini Stefano": {
+    "nascita": 1952,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Greco Lorenzo": {
+    "nascita": 1972,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Green Julien": {
+    "nascita": 1900,
+    "morte": 1998,
+    "reparto": "library"
+  },
+  "Greene Graham": {
+    "nascita": 1904,
+    "morte": 1991,
+    "reparto": "library"
+  },
+  "Grignani Elisa": {
+    "nascita": 1950,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Grimal Pierre": {
+    "nascita": 1912,
+    "morte": 1996,
+    "reparto": "library"
+  },
+  "Grimoldi Alberto": {
+    "nascita": 1949,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Grisi Francesco": {
+    "nascita": 1927,
+    "morte": 1999,
+    "reparto": "library"
+  },
+  "Grosse Max": {
+    "nascita": 1851,
+    "morte": 1912,
+    "reparto": "secondary bibliography"
+  },
+  "Grosso Orlando": {
+    "nascita": 1882,
+    "morte": 1968,
+    "reparto": "library"
+  },
+  "Guadagnucci Lorenzo": {
+    "nascita": 1963,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Guagnini Elvio": {
+    "nascita": 1939,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Guanda Ugo": {
+    "nascita": 1905,
+    "morte": 1971,
+    "categoria": "Contatti letterari"
+  },
+  "Guaraldo Enrico": {
+    "nascita": 1946,
+    "morte": 2013,
+    "reparto": "secondary bibliography"
+  },
+  "Guarnieri Corazzol Adriana": {
+    "nascita": 1947,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Guarnieri Silvio": {
+    "nascita": 1910,
+    "morte": 1992,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Guernici Enrico": {
+    "nascita": 1877,
+    "morte": 1955
+  },
+  "Guerreschi Giuseppe": {
+    "nascita": 1929,
+    "morte": 1985,
+    "reparto": "library"
+  },
+  "Guerzoni Corrado": {
+    "nascita": 1930,
+    "morte": 2011,
+    "reparto": "secondary bibliography"
+  },
+  "Guglielmi Angelo": {
+    "nascita": 1929,
+    "morte": 2022,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Guglielmi Guido": {
+    "nascita": 1930,
+    "morte": 2002,
+    "reparto": "secondary bibliography"
+  },
+  "Guglielminetti Marziano": {
+    "nascita": 1937,
+    "morte": 2006,
+    "reparto": "secondary bibliography"
+  },
+  "Guidacci Margherita": {
+    "nascita": 1921,
+    "morte": 1992,
+    "reparto": "library"
+  },
+  "Guidi Augusto": {
+    "nascita": 1838,
+    "morte": 1900,
+    "reparto": "library"
+  },
+  "Guidi Silvia": {
+    "nascita": 1935,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Gundolf Friedrich": {
+    "nascita": 1880,
+    "morte": 1931,
+    "reparto": "library"
+  },
+  "Guttmacher Alan Frank": {
+    "nascita": 1898,
+    "morte": 1974,
+    "reparto": "library"
+  },
+  "Gàbici Franco": {
+    "nascita": 1943,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Hamelin Octave": {
+    "nascita": 1856,
+    "morte": 1907,
+    "reparto": "library"
+  },
+  "Hauptmann Gerhart": {
+    "nascita": 1862,
+    "morte": 1946,
+    "reparto": "library"
+  },
+  "Heisenberg Werner": {
+    "nascita": 1901,
+    "morte": 1976,
+    "reparto": "library"
+  },
+  "Hergesheimer Joseph": {
+    "nascita": 1880,
+    "morte": 1954,
+    "reparto": "library"
+  },
+  "Herland Louis": {
+    "nascita": 1904,
+    "morte": 1962,
+    "reparto": "library"
+  },
+  "Hermanin Federico": {
+    "nascita": 1868,
+    "morte": 1953,
+    "reparto": "library"
+  },
+  "Hersch Jeanne": {
+    "nascita": 1910,
+    "morte": 2000,
+    "reparto": "library"
+  },
+  "Herzen Aleksandr": {
+    "nascita": 1839,
+    "morte": 1906,
+    "reparto": "library"
+  },
+  "Hibben John Grier": {
+    "nascita": 1861,
+    "morte": 1933,
+    "reparto": "library"
+  },
+  "Hofmannsthal Hugo von": {
+    "nascita": 1874,
+    "morte": 1929,
+    "reparto": "library"
+  },
+  "Homo Léon": {
+    "nascita": 1872,
+    "morte": 1957,
+    "reparto": "library"
+  },
+  "Hubert Henri": {
+    "nascita": 1872,
+    "morte": 1927,
+    "reparto": "library"
+  },
+  "Huizinga Johan": {
+    "nascita": 1872,
+    "morte": 1945,
+    "reparto": "library"
+  },
+  "Höllerer Walter": {
+    "nascita": 1922,
+    "morte": 2003,
+    "reparto": "library"
+  },
+  "Inama Vigilio": {
+    "nascita": 1835,
+    "morte": 1912,
+    "reparto": "library"
+  },
+  "Innamorati Giuliano": {
+    "nascita": 1926,
+    "morte": 1988,
+    "reparto": "secondary bibliography"
+  },
+  "Iori Ivo": {
+    "nascita": 1949,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Isella Dante": {
+    "nascita": 1922,
+    "morte": 2007,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Isnenghi Mario": {
+    "nascita": 1938,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Isotta Paolo": {
+    "nascita": 1950,
+    "morte": 2021,
+    "reparto": "secondary bibliography"
+  },
+  "Istrati Panait": {
+    "nascita": 1884,
+    "morte": 1935,
+    "reparto": "library"
+  },
+  "Italia Paola": {
+    "nascita": 1966,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Italiano Chiara": {
+    "nascita": 1987,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Iuppa Daniela": {
+    "nascita": 1986,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Jacobbi Ruggero": {
+    "nascita": 1920,
+    "morte": 1981,
+    "reparto": "library"
+  },
+  "Jaeger Werner": {
+    "nascita": 1888,
+    "morte": 1961,
+    "reparto": "library"
+  },
+  "James Henry": {
+    "nascita": 1843,
+    "morte": 1916,
+    "reparto": "library"
+  },
+  "Janner Arminio": {
+    "nascita": 1886,
+    "morte": 1949,
+    "categoria": "Varia",
+    "reparto": "library"
+  },
+  "Jeanson Francis": {
+    "nascita": 1922,
+    "morte": 2009,
+    "reparto": "library"
+  },
+  "Jespersen Otto": {
+    "nascita": 1860,
+    "morte": 1943,
+    "reparto": "library"
+  },
+  "Joppolo Giovanni": {
+    "nascita": 1948,
+    "morte": null,
+    "reparto": "translation"
+  },
+  "Jossa Stefano": {
+    "nascita": 1966,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Jouhandeau Marcel": {
+    "nascita": 1888,
+    "morte": 1979,
+    "reparto": "library"
+  },
+  "Joyce James": {
+    "nascita": 1882,
+    "morte": 1941,
+    "reparto": "library"
+  },
+  "Jung Carl Gustav": {
+    "nascita": 1875,
+    "morte": 1961,
+    "reparto": "library"
+  },
+  "Kafka Franz": {
+    "nascita": 1883,
+    "morte": 1924,
+    "reparto": "library"
+  },
+  "Kapp Volker": {
+    "nascita": 1940,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Kataev Valentin": {
+    "nascita": 1897,
+    "morte": 1986,
+    "reparto": "library"
+  },
+  "Keith Arthur": {
+    "nascita": 1866,
+    "morte": 1955,
+    "reparto": "library"
+  },
+  "Kienlechner Toni": {
+    "nascita": 1919,
+    "morte": 2010,
+    "reparto": "translation"
+  },
+  "Kipling Rudyard": {
+    "nascita": 1865,
+    "morte": 1936,
+    "reparto": "library"
+  },
+  "Kleinhans Martha": {
+    "nascita": 1961,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Kristeller Paul Oskar": {
+    "nascita": 1905,
+    "morte": 1999,
+    "reparto": "library"
+  },
+  "Kuby Erich": {
+    "nascita": 1910,
+    "morte": 2005,
+    "reparto": "library"
+  },
+  "Kunstler Charles": {
+    "nascita": 1887,
+    "morte": 1977,
+    "reparto": "library"
+  },
+  "Kühn Alfred": {
+    "nascita": 1885,
+    "morte": 1968,
+    "reparto": "library"
+  },
+  "La Penna Antonio": {
+    "nascita": 1925,
+    "morte": 2024,
+    "reparto": "secondary bibliography"
+  },
+  "Laberthonnière Lucien": {
+    "nascita": 1860,
+    "morte": 1932,
+    "reparto": "library"
+  },
+  "Lacour-Gayet Georges": {
+    "nascita": 1856,
+    "morte": 1935,
+    "reparto": "library"
+  },
+  "Lafue Pierre": {
+    "nascita": 1895,
+    "morte": 1975,
+    "reparto": "library"
+  },
+  "Lagazzi Paolo": {
+    "nascita": 1949,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Landolfi Tommaso": {
+    "nascita": 1908,
+    "morte": 1979,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Langella Giuseppe": {
+    "nascita": 1952,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Langone Camillo": {
+    "nascita": 1962,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Lanson Gustave": {
+    "nascita": 1857,
+    "morte": 1934,
+    "reparto": "library"
+  },
+  "Lanternari Vittorio": {
+    "nascita": 1918,
+    "morte": 2010,
+    "reparto": "library"
+  },
+  "Lanza Franco": {
+    "nascita": 1926,
+    "morte": 2007,
+    "reparto": "secondary bibliography"
+  },
+  "Lardo Cristiana": {
+    "nascita": 1963,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Larocchi Marica": {
+    "nascita": 1942,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Lasky Melvin J.": {
+    "nascita": 1920,
+    "morte": 2004,
+    "reparto": "secondary bibliography"
+  },
+  "Lavagnino Emilio": {
+    "nascita": 1898,
+    "morte": 1963,
+    "reparto": "library"
+  },
+  "Lazzeri Giulio": {
+    "nascita": 1861,
+    "morte": 1935,
+    "reparto": "library"
+  },
+  "Le Dantec Félix": {
+    "nascita": 1869,
+    "morte": 1917,
+    "reparto": "library"
+  },
+  "Le Roy Edouard": {
+    "nascita": 1870,
+    "morte": 1954,
+    "reparto": "library"
+  },
+  "Lefebvre Georges": {
+    "nascita": 1874,
+    "morte": 1959,
+    "reparto": "library"
+  },
+  "Lehr Adele": {
+    "nascita": 1861,
+    "morte": 1936,
+    "categoria": "Familiari",
+    "reparto": "letter"
+  },
+  "Lehr Carlo": {
+    "nascita": 1865,
+    "morte": 1918,
+    "categoria": "Familiari",
+    "reparto": "letter"
+  },
+  "Lehr luigia": {
+    "nascita": 1862,
+    "morte": 1939,
+    "categoria": "Familiari"
+  },
+  "Lelj Massimo": {
+    "nascita": 1888,
+    "morte": 1962,
+    "reparto": "library"
+  },
+  "Lemaire Gérard-Georges": {
+    "nascita": 1948,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Leone Piccioni": {
+    "nascita": 1925,
+    "morte": 2018,
+    "categoria": "Contatti letterari",
+    "reparto": "primary bibliography"
+  },
+  "Leonelli Giuseppe": {
+    "nascita": 1889,
+    "morte": 1915,
+    "reparto": "secondary bibliography"
+  },
+  "Leonetti Francesco": {
+    "nascita": 1924,
+    "morte": 2017,
+    "reparto": "library"
+  },
+  "Leri Clara": {
+    "nascita": 1959,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Levi Alis": {
+    "nascita": 1884,
+    "morte": 1982,
+    "reparto": "library"
+  },
+  "Levi Carlo": {
+    "nascita": 1902,
+    "morte": 1975,
+    "reparto": "library"
+  },
+  "Levi Ezio": {
+    "nascita": 1884,
+    "morte": 1941,
+    "reparto": "library"
+  },
+  "Limentani Ludovico": {
+    "nascita": 1884,
+    "morte": 1940,
+    "reparto": "library"
+  },
+  "Linati Carlo": {
+    "nascita": 1878,
+    "morte": 1949,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Livi Grazia": {
+    "nascita": 1930,
+    "morte": 2015,
+    "reparto": "library"
+  },
+  "Livorni Ernesto": {
+    "nascita": 1959,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Loisy Alfred": {
+    "nascita": 1857,
+    "morte": 1940,
+    "reparto": "library"
+  },
+  "Longhi Claudio": {
+    "nascita": 1966,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Longhi Roberto": {
+    "nascita": 1890,
+    "morte": 1970,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Longo Francesca": {
+    "nascita": 1956,
+    "morte": 2015,
+    "reparto": "secondary bibliography"
+  },
+  "Longoni Anna": {
+    "nascita": 1901,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Longoni Franco": {
+    "nascita": 1949,
+    "morte": 2014,
+    "reparto": "secondary bibliography"
+  },
+  "Lorenz Konrad": {
+    "nascita": 1903,
+    "morte": 1989,
+    "reparto": "library"
+  },
+  "Loreto Antonio": {
+    "nascita": 1975,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Loria Arturo": {
+    "nascita": 1902,
+    "morte": 1957,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Losacco Michele": {
+    "nascita": 1871,
+    "morte": 1944,
+    "reparto": "library"
+  },
+  "Lucarelli Massimo": {
+    "nascita": 1950,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Lucas-Dubreton Jean": {
+    "nascita": 1883,
+    "morte": 1972,
+    "reparto": "library"
+  },
+  "Lucchini Guido": {
+    "nascita": 1950,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Lucente Gregory L.": {
+    "nascita": 1948,
+    "morte": 1997,
+    "reparto": "secondary bibliography"
+  },
+  "Lucertini Mario": {
+    "nascita": 1947,
+    "morte": 2002,
+    "reparto": "library"
+  },
+  "Lucia Rodocanachi": {
+    "nascita": 1901,
+    "morte": 1978,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Lugli Vittorio": {
+    "nascita": 1885,
+    "morte": 1968,
+    "reparto": "library"
+  },
+  "Lugnani Lucio": {
+    "nascita": 1939,
+    "morte": 2021,
+    "reparto": "secondary bibliography"
+  },
+  "Luisi Luciano": {
+    "nascita": 1924,
+    "morte": 2021,
+    "reparto": "library"
+  },
+  "Lunetta Mario": {
+    "nascita": 1934,
+    "morte": 2017,
+    "categoria": "Varia",
+    "reparto": "secondary bibliography"
+  },
+  "Luperini Romano": {
+    "nascita": 1940,
+    "morte": 2026,
+    "reparto": "secondary bibliography"
+  },
+  "Lurati Ottavio": {
+    "nascita": 1938,
+    "morte": 2023,
+    "reparto": "secondary bibliography"
+  },
+  "Luti Giorgio": {
+    "nascita": 1926,
+    "morte": 2008,
+    "reparto": "library"
+  },
+  "Luzi Mario": {
+    "nascita": 1914,
+    "morte": 2005,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Luzzatto Sergio": {
+    "nascita": 1963,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Maccari Mino": {
+    "nascita": 1898,
+    "morte": 1989,
+    "reparto": "library"
+  },
+  "Macchia Giovanni": {
+    "nascita": 1912,
+    "morte": 2001,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Macrì Oreste": {
+    "nascita": 1913,
+    "morte": 1998,
+    "categoria": "Contatti letterari"
+  },
+  "Madelin Louis": {
+    "nascita": 1871,
+    "morte": 1956,
+    "reparto": "library"
+  },
+  "Maeterlinck Maurice": {
+    "nascita": 1862,
+    "morte": 1949,
+    "reparto": "library"
+  },
+  "Maggi Marco": {
+    "nascita": 1957,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Magli Adriano": {
+    "nascita": 1920,
+    "morte": 1988,
+    "categoria": "Varia",
+    "reparto": "secondary bibliography"
+  },
+  "Magnaghi Alberto": {
+    "nascita": 1874,
+    "morte": 1945,
+    "reparto": "library"
+  },
+  "Magnani Luigi": {
+    "nascita": 1906,
+    "morte": 1984,
+    "reparto": "library"
+  },
+  "Magnino Bianca": {
+    "nascita": 1902,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Mahnke Dietrich": {
+    "nascita": 1884,
+    "morte": 1939,
+    "reparto": "library"
+  },
+  "Maier Bruno": {
+    "nascita": 1922,
+    "morte": 2001,
+    "reparto": "library"
+  },
+  "Malamud Bernard": {
+    "nascita": 1914,
+    "morte": 1986,
+    "reparto": "library"
+  },
+  "Malaparte Curzio": {
+    "nascita": 1898,
+    "morte": 1957,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Malato Enrico": {
+    "nascita": 1935,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Malerba Luigi": {
+    "nascita": 1927,
+    "morte": 2008,
+    "reparto": "library"
+  },
+  "Malipiero Gian Francesco": {
+    "nascita": 1882,
+    "morte": 1973,
+    "reparto": "library"
+  },
+  "Mallarmé Stéphane": {
+    "nascita": 1842,
+    "morte": 1898,
+    "reparto": "library"
+  },
+  "Malraux André": {
+    "nascita": 1901,
+    "morte": 1976,
+    "reparto": "library"
+  },
+  "Manchester William": {
+    "nascita": 1922,
+    "morte": 2004,
+    "reparto": "library"
+  },
+  "Manganaro Jean-Paul": {
+    "nascita": 1944,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Manganelli Giorgio": {
+    "nascita": 1922,
+    "morte": 1990,
+    "reparto": "library"
+  },
+  "Manghetti Gloria": {
+    "nascita": 1956,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Mangiarotti Anna": {
+    "nascita": 1950,
+    "morte": 2016,
+    "reparto": "secondary bibliography"
+  },
+  "Mangoni Luisa": {
+    "nascita": 1941,
+    "morte": 2014,
+    "reparto": "secondary bibliography"
+  },
+  "Manica Raffaele": {
+    "nascita": 1958,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Mann Thomas": {
+    "nascita": 1875,
+    "morte": 1955,
+    "reparto": "library"
+  },
+  "Mannoni Francesco": {
+    "nascita": 1899,
+    "morte": 1978,
+    "reparto": "secondary bibliography"
+  },
+  "Mantegazza Paolo": {
+    "nascita": 1831,
+    "morte": 1910,
+    "reparto": "library"
+  },
+  "Mantegazza Vico": {
+    "nascita": 1856,
+    "morte": 1934,
+    "reparto": "library"
+  },
+  "Mantovani Tancredi": {
+    "nascita": 1864,
+    "morte": 1932,
+    "reparto": "library"
+  },
+  "Manzini Gianna": {
+    "nascita": 1896,
+    "morte": 1974,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Manzotti Emilio": {
+    "nascita": 1947,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Marabini Claudio": {
+    "nascita": 1930,
+    "morte": 2010,
+    "reparto": "secondary bibliography"
+  },
+  "Maraini Dacia": {
+    "nascita": 1936,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Maranini Lorenza": {
+    "nascita": 1909,
+    "morte": 1998,
+    "reparto": "library"
+  },
+  "Marcenaro Giuseppe": {
+    "nascita": 1942,
+    "morte": 2024,
+    "reparto": "secondary bibliography"
+  },
+  "Marchesi Concetto": {
+    "nascita": 1878,
+    "morte": 1957,
+    "reparto": "library"
+  },
+  "Marchesi Giovanni": {
+    "nascita": 1939,
+    "morte": 2007,
+    "reparto": "secondary bibliography"
+  },
+  "Marchi Gian Paolo": {
+    "nascita": 1941,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Marchi Marco": {
+    "nascita": 1951,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Marchi Monica": {
+    "nascita": 1979,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Marcolongo Roberto": {
+    "nascita": 1862,
+    "morte": 1943,
+    "reparto": "library"
+  },
+  "Margueritte Victor": {
+    "nascita": 1866,
+    "morte": 1942,
+    "reparto": "library"
+  },
+  "Mari Michele": {
+    "nascita": 1955,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Mariani Chiara": {
+    "nascita": 1976,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Mariani Gaetano": {
+    "nascita": 1923,
+    "morte": 1983,
+    "reparto": "library"
+  },
+  "Mariani Valerio": {
+    "nascita": 1899,
+    "morte": 1982,
+    "reparto": "library"
+  },
+  "Mariarosa Bricchi": {
+    "nascita": 1963,
+    "morte": null,
+    "reparto": "primary bibliography"
+  },
+  "Marin Biagio": {
+    "nascita": 1891,
+    "morte": 1985,
+    "reparto": "library"
+  },
+  "Marino Antonio": {
+    "nascita": 1942,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Marino Massimo": {
+    "nascita": 1960,
+    "morte": 2019,
+    "reparto": "secondary bibliography"
+  },
+  "Marra Realino": {
+    "nascita": 1956,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Martignoni Clelia": {
+    "nascita": 1900,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Martinetti Piero": {
+    "nascita": 1872,
+    "morte": 1943,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Martini Arturo": {
+    "nascita": 1889,
+    "morte": 1947,
+    "reparto": "library"
+  },
+  "Martini Ferdinando": {
+    "nascita": 1841,
+    "morte": 1928,
+    "reparto": "library"
+  },
+  "Martini Quinto": {
+    "nascita": 1908,
+    "morte": 1990,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Mascheroni Luigi": {
+    "nascita": 1967,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Masciotta Michelangelo": {
+    "nascita": 1905,
+    "morte": 1985,
+    "reparto": "secondary bibliography"
+  },
+  "Masi Ernesto": {
+    "nascita": 1836,
+    "morte": 1908,
+    "reparto": "library"
+  },
+  "Masneri Michele": {
+    "nascita": 1974,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Mathiez Albert": {
+    "nascita": 1874,
+    "morte": 1932,
+    "reparto": "library"
+  },
+  "Matt Luigi": {
+    "nascita": 1968,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Mattesini Francesco": {
+    "nascita": 1936,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Mattioli Raffaele": {
+    "nascita": 1895,
+    "morte": 1973,
+    "reparto": "letter"
+  },
+  "Maupassant Guy de": {
+    "nascita": 1850,
+    "morte": 1893,
+    "reparto": "library"
+  },
+  "Mauri Paolo": {
+    "nascita": 1945,
+    "morte": 2022,
+    "reparto": "secondary bibliography"
+  },
+  "Mauriès Patrick": {
+    "nascita": 1952,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Mauro Walter": {
+    "nascita": 1925,
+    "morte": 2012,
+    "reparto": "secondary bibliography"
+  },
+  "Maurois André": {
+    "nascita": 1885,
+    "morte": 1967,
+    "reparto": "library"
+  },
+  "Maxia Sandro": {
+    "nascita": 1932,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Mazzocchi Giuseppe": {
+    "nascita": 1960,
+    "morte": 2017,
+    "reparto": "secondary bibliography"
+  },
+  "Mazzucchetti Lavinia": {
+    "nascita": 1889,
+    "morte": 1965,
+    "reparto": "library"
+  },
+  "Meda Ambra": {
+    "nascita": 1982,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Meldolesi Claudio": {
+    "nascita": 1942,
+    "morte": 2009,
+    "reparto": "secondary bibliography"
+  },
+  "Mele Antonio": {
+    "nascita": 1942,
+    "morte": 2024,
+    "reparto": "secondary bibliography"
+  },
+  "Melville Anthony": {
+    "nascita": 1942,
+    "morte": 2014,
+    "reparto": "translation"
+  },
+  "Meneghello Luigi": {
+    "nascita": 1922,
+    "morte": 2007,
+    "reparto": "library"
+  },
+  "Mengaldo Pier Vincenzo": {
+    "nascita": 1936,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Meredith George": {
+    "nascita": 1828,
+    "morte": 1909,
+    "reparto": "library"
+  },
+  "Merlo Francesco": {
+    "nascita": 1951,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Merola Nicola": {
+    "nascita": 1944,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Merry Bruce": {
+    "nascita": 1944,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Messeri Antonio": {
+    "nascita": 1868,
+    "morte": 1933,
+    "reparto": "library"
+  },
+  "Messina Francesco": {
+    "nascita": 1900,
+    "morte": 1995,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Metalious Grace": {
+    "nascita": 1924,
+    "morte": 1964,
+    "reparto": "library"
+  },
+  "Micheli Silvio": {
+    "nascita": 1911,
+    "morte": 1990,
+    "reparto": "secondary bibliography"
+  },
+  "Migliorini Bruno": {
+    "nascita": 1896,
+    "morte": 1975,
+    "reparto": "library"
+  },
+  "Milanese Cesare": {
+    "nascita": 1930,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Milani Giuliano": {
+    "nascita": 1969,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Milani Milena": {
+    "nascita": 1917,
+    "morte": 2013,
+    "reparto": "library"
+  },
+  "Milano Paolo": {
+    "nascita": 1904,
+    "morte": 1988,
+    "reparto": "secondary bibliography"
+  },
+  "Mildonian Paola": {
+    "nascita": 1901,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Miller Henry": {
+    "nascita": 1891,
+    "morte": 1980,
+    "reparto": "library"
+  },
+  "Minazzi Fabio": {
+    "nascita": 1955,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Minore Renato": {
+    "nascita": 1944,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Miolati Arturo": {
+    "nascita": 1869,
+    "morte": 1956,
+    "reparto": "library"
+  },
+  "Mitford Nancy": {
+    "nascita": 1904,
+    "morte": 1973,
+    "reparto": "library"
+  },
+  "Momigliano Arnaldo": {
+    "nascita": 1908,
+    "morte": 1987,
+    "reparto": "library"
+  },
+  "Momigliano Attilio": {
+    "nascita": 1883,
+    "morte": 1952,
+    "reparto": "library"
+  },
+  "Mommsen Theodor": {
+    "nascita": 1817,
+    "morte": 1903,
+    "reparto": "library"
+  },
+  "Mondadori Alberto": {
+    "nascita": 1914,
+    "morte": 1976,
+    "categoria": "Editori, riviste e quotidiani",
+    "reparto": "letter"
+  },
+  "Mondo Lorenzo": {
+    "nascita": 1931,
+    "morte": 2022,
+    "reparto": "secondary bibliography"
+  },
+  "Monelli Paolo": {
+    "nascita": 1963,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Montale Eugenio": {
+    "nascita": 1896,
+    "morte": 1981,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Montalenti Giuseppe": {
+    "nascita": 1904,
+    "morte": 1990,
+    "reparto": "library"
+  },
+  "Montefoschi Giorgio": {
+    "nascita": 1946,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Montesano Giuseppe": {
+    "nascita": 1959,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Monteverdi Angelo": {
+    "nascita": 1886,
+    "morte": 1967,
+    "reparto": "library"
+  },
+  "Montgomery Florence": {
+    "nascita": 1843,
+    "morte": 1923,
+    "reparto": "library"
+  },
+  "Montorfani Pietro": {
+    "nascita": 1980,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Morand Paul": {
+    "nascita": 1888,
+    "morte": 1976,
+    "reparto": "library"
+  },
+  "Morandi Carlo": {
+    "nascita": 1904,
+    "morte": 1950,
+    "reparto": "library"
+  },
+  "Moravia Alberto": {
+    "nascita": 1907,
+    "morte": 1990,
+    "reparto": "library"
+  },
+  "Morchio Bruno": {
+    "nascita": 1954,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Morgan Thomas Hunt": {
+    "nascita": 1866,
+    "morte": 1945,
+    "reparto": "library"
+  },
+  "Mornet Daniel": {
+    "nascita": 1878,
+    "morte": 1954,
+    "reparto": "library"
+  },
+  "Moscardelli Nicola": {
+    "nascita": 1894,
+    "morte": 1943,
+    "reparto": "library"
+  },
+  "Mosso Angelo": {
+    "nascita": 1846,
+    "morte": 1910,
+    "reparto": "library"
+  },
+  "Motta Giacinto": {
+    "nascita": 1870,
+    "morte": 1943,
+    "reparto": "library"
+  },
+  "Mundula Angelo": {
+    "nascita": 1934,
+    "morte": 2015,
+    "reparto": "secondary bibliography"
+  },
+  "Murgia Michela": {
+    "nascita": 1972,
+    "morte": 2023,
+    "reparto": "secondary bibliography"
+  },
+  "Murry John Middleton": {
+    "nascita": 1889,
+    "morte": 1957,
+    "reparto": "library"
+  },
+  "Muscetta Carlo": {
+    "nascita": 1912,
+    "morte": 2004,
+    "reparto": "library"
+  },
+  "Musolino Francesco": {
+    "nascita": 1981,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Mussolini Benito": {
+    "nascita": 1883,
+    "morte": 1945,
+    "reparto": "library"
+  },
+  "Muzzioli Francesco": {
+    "nascita": 1949,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Müller Otto": {
+    "nascita": 1898,
+    "morte": 1979,
+    "reparto": "library"
+  },
+  "Nabokov Vladimir": {
+    "nascita": 1899,
+    "morte": 1977,
+    "reparto": "library"
+  },
+  "Narducci Emanuele": {
+    "nascita": 1950,
+    "morte": 2007,
+    "reparto": "secondary bibliography"
+  },
+  "Natoli Glauco": {
+    "nascita": 1908,
+    "morte": 1965,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Nava Giuseppe": {
+    "nascita": 1937,
+    "morte": 2019,
+    "reparto": "secondary bibliography"
+  },
+  "Negri Anna Maria": {
+    "nascita": 1961,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Negri Gaetano": {
+    "nascita": 1838,
+    "morte": 1902,
+    "reparto": "library"
+  },
+  "Negro Silvio": {
+    "nascita": 1897,
+    "morte": 1959,
+    "reparto": "library"
+  },
+  "Negroni Carlo": {
+    "nascita": 1819,
+    "morte": 1896,
+    "reparto": "library"
+  },
+  "Nemi Orsola": {
+    "nascita": 1903,
+    "morte": 1985,
+    "reparto": "library"
+  },
+  "Neppi Alberto": {
+    "nascita": 1890,
+    "morte": 1965,
+    "reparto": "library"
+  },
+  "Neri Pozza": {
+    "nascita": 1912,
+    "morte": 1988
+  },
+  "Nieri Idelfonso": {
+    "nascita": 1853,
+    "morte": 1920,
+    "reparto": "library"
+  },
+  "Nietzsche Friedrich": {
+    "nascita": 1844,
+    "morte": 1900,
+    "reparto": "library"
+  },
+  "Nispi-Landi Ciro": {
+    "nascita": 1846,
+    "morte": 1928,
+    "reparto": "library"
+  },
+  "Nixon Richard": {
+    "nascita": 1913,
+    "morte": 1994,
+    "reparto": "library"
+  },
+  "Nolhac Pierre de": {
+    "nascita": 1859,
+    "morte": 1936,
+    "reparto": "library"
+  },
+  "Nordau Max": {
+    "nascita": 1849,
+    "morte": 1923,
+    "reparto": "library"
+  },
+  "Notari Umberto": {
+    "nascita": 1878,
+    "morte": 1950,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Nottola Umberto": {
+    "nascita": 1866,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Noventa Giacomo": {
+    "nascita": 1898,
+    "morte": 1960,
+    "reparto": "library"
+  },
+  "Oberdorfer Aldo": {
+    "nascita": 1885,
+    "morte": 1941,
+    "reparto": "library"
+  },
+  "Ojetti Ugo": {
+    "nascita": 1871,
+    "morte": 1946,
+    "reparto": "library"
+  },
+  "Omodeo Adolfo": {
+    "nascita": 1889,
+    "morte": 1946,
+    "reparto": "library"
+  },
+  "Orelli Giorgio": {
+    "nascita": 1921,
+    "morte": 2013,
+    "reparto": "secondary bibliography"
+  },
+  "Orelli Giovanni": {
+    "nascita": 1928,
+    "morte": 2016,
+    "reparto": "secondary bibliography"
+  },
+  "Orlandi Giuseppe": {
+    "nascita": 1840,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Orlando Francesco": {
+    "nascita": 1963,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Ortese Anna Maria": {
+    "nascita": 1914,
+    "morte": 1998,
+    "reparto": "library"
+  },
+  "Ortolani Giuseppe": {
+    "nascita": 1872,
+    "morte": 1958,
+    "reparto": "library"
+  },
+  "Ortolani Sergio": {
+    "nascita": 1896,
+    "morte": 1949,
+    "reparto": "library"
+  },
+  "Ostwald Wilhelm": {
+    "nascita": 1853,
+    "morte": 1932,
+    "reparto": "library"
+  },
+  "Otto Walter Friedrich": {
+    "nascita": 1874,
+    "morte": 1958,
+    "reparto": "library"
+  },
+  "Pacchiano Giovanni": {
+    "nascita": 1942,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Pacini Renato": {
+    "nascita": 1901,
+    "morte": 1939,
+    "reparto": "library"
+  },
+  "Padoa Emanuele": {
+    "nascita": 1905,
+    "morte": 1980,
+    "reparto": "library"
+  },
+  "Painter George D.": {
+    "nascita": 1914,
+    "morte": 2005,
+    "reparto": "library"
+  },
+  "Pais Ettore": {
+    "nascita": 1856,
+    "morte": 1939,
+    "reparto": "library"
+  },
+  "Paladini Carlo": {
+    "nascita": 1861,
+    "morte": 1922,
+    "reparto": "library"
+  },
+  "Palatini Francesco": {
+    "nascita": 1865,
+    "morte": 1940,
+    "reparto": "library"
+  },
+  "Palazzeschi Aldo": {
+    "nascita": 1885,
+    "morte": 1974,
+    "reparto": "library"
+  },
+  "Palazzi Fernando": {
+    "nascita": 1884,
+    "morte": 1962,
+    "reparto": "library"
+  },
+  "Palermo Massimo": {
+    "nascita": 1963,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Palmarocchi Roberto": {
+    "nascita": 1887,
+    "morte": 1956,
+    "reparto": "library"
+  },
+  "Paléologue Maurice": {
+    "nascita": 1859,
+    "morte": 1944,
+    "reparto": "library"
+  },
+  "Pampaloni Geno": {
+    "nascita": 1918,
+    "morte": 2001,
+    "reparto": "secondary bibliography"
+  },
+  "Pamparana Andrea": {
+    "nascita": 1953,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Pancrazi Pietro": {
+    "nascita": 1893,
+    "morte": 1952,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Pandini Giancarlo": {
+    "nascita": 1932,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Pane Roberto": {
+    "nascita": 1897,
+    "morte": 1987,
+    "reparto": "library"
+  },
+  "Panizza Giorgio": {
+    "nascita": 1955,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Panzeri Fulvio": {
+    "nascita": 1957,
+    "morte": 2021,
+    "reparto": "secondary bibliography"
+  },
+  "Panzini Alfredo": {
+    "nascita": 1863,
+    "morte": 1939,
+    "reparto": "library"
+  },
+  "Paola Italia": {
+    "nascita": 1966,
+    "morte": null,
+    "reparto": "primary bibliography"
+  },
+  "Paoli Jacques": {
+    "nascita": 1924,
+    "morte": 1990,
+    "reparto": "library"
+  },
+  "Paoli Ugo Enrico": {
+    "nascita": 1884,
+    "morte": 1963,
+    "reparto": "library"
+  },
+  "Papini Giovanni": {
+    "nascita": 1881,
+    "morte": 1956,
+    "reparto": "library"
+  },
+  "Papponetti Giuseppe": {
+    "nascita": 1945,
+    "morte": 2012,
+    "reparto": "secondary bibliography"
+  },
+  "Paratore Ettore": {
+    "nascita": 1907,
+    "morte": 2000,
+    "reparto": "library"
+  },
+  "Parenti Marino": {
+    "nascita": 1900,
+    "morte": 1963,
+    "reparto": "library"
+  },
+  "Pareto Vilfredo": {
+    "nascita": 1848,
+    "morte": 1923,
+    "reparto": "library"
+  },
+  "Pareyson Luigi": {
+    "nascita": 1918,
+    "morte": 1991,
+    "reparto": "library"
+  },
+  "Paribeni Roberto": {
+    "nascita": 1876,
+    "morte": 1956,
+    "reparto": "library"
+  },
+  "Paris Jean": {
+    "nascita": 1921,
+    "morte": 2003,
+    "reparto": "library"
+  },
+  "Paris Renzo": {
+    "nascita": 1944,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Parise Goffredo": {
+    "nascita": 1929,
+    "morte": 1986,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Parronchi Alessandro": {
+    "nascita": 1914,
+    "morte": 2007,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Pasanisi Francesco Maria": {
+    "nascita": 1852,
+    "morte": 1905,
+    "reparto": "library"
+  },
+  "Pascal Ernesto": {
+    "nascita": 1865,
+    "morte": 1940,
+    "reparto": "library"
+  },
+  "Pascoli Giovanni": {
+    "nascita": 1855,
+    "morte": 1912,
+    "reparto": "library"
+  },
+  "Pasolini Pier Paolo": {
+    "nascita": 1922,
+    "morte": 1975,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Pasquali Giorgio": {
+    "nascita": 1885,
+    "morte": 1952,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Patrizi Giorgio": {
+    "nascita": 1949,
+    "morte": 2023,
+    "reparto": "secondary bibliography"
+  },
+  "Paulsen Friedrich": {
+    "nascita": 1846,
+    "morte": 1908,
+    "reparto": "library"
+  },
+  "Pavese Cesare": {
+    "nascita": 1908,
+    "morte": 1950,
+    "reparto": "library"
+  },
+  "Pea Enrico": {
+    "nascita": 1881,
+    "morte": 1958,
+    "reparto": "library"
+  },
+  "Pedini Mario": {
+    "nascita": 1918,
+    "morte": 2003,
+    "reparto": "library"
+  },
+  "Pedrotti Giovanni": {
+    "nascita": 1867,
+    "morte": 1938,
+    "reparto": "library"
+  },
+  "Pedullà Walter": {
+    "nascita": 1930,
+    "morte": 2024,
+    "reparto": "secondary bibliography"
+  },
+  "Pellegrini Alessandro": {
+    "nascita": 1964,
+    "morte": null,
+    "categoria": "Varia",
+    "reparto": "library"
+  },
+  "Pellegrini Rinaldo": {
+    "nascita": 1883,
+    "morte": 1977,
+    "reparto": "library"
+  },
+  "Pellegrini Silvio": {
+    "nascita": 1900,
+    "morte": 1972,
+    "reparto": "secondary bibliography"
+  },
+  "Pellizzi Camillo": {
+    "nascita": 1896,
+    "morte": 1979,
+    "reparto": "secondary bibliography"
+  },
+  "Penna Sandro": {
+    "nascita": 1906,
+    "morte": 1977,
+    "categoria": "Amici",
+    "reparto": "library"
+  },
+  "Pennella Giuseppe": {
+    "nascita": 1864,
+    "morte": 1925,
+    "reparto": "library"
+  },
+  "Pento Bortolo": {
+    "nascita": 1914,
+    "morte": 1997,
+    "reparto": "library"
+  },
+  "Pepe Gabriele": {
+    "nascita": 1896,
+    "morte": 1941,
+    "reparto": "library"
+  },
+  "Perriera Michele": {
+    "nascita": 1937,
+    "morte": 2010,
+    "reparto": "secondary bibliography"
+  },
+  "Perroux François": {
+    "nascita": 1903,
+    "morte": 1987,
+    "reparto": "library"
+  },
+  "Pestelli Leo": {
+    "nascita": 1909,
+    "morte": 1976,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Petit-Dutaillis Charles": {
+    "nascita": 1868,
+    "morte": 1947,
+    "reparto": "library"
+  },
+  "Petrocchi Giorgio": {
+    "nascita": 1921,
+    "morte": 1989,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Petroni Guglielmo": {
+    "nascita": 1911,
+    "morte": 1993,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Petroni Paolo": {
+    "nascita": 1942,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Petronio Giuseppe": {
+    "nascita": 1909,
+    "morte": 2003,
+    "reparto": "secondary bibliography"
+  },
+  "Petrucciani Mario": {
+    "nascita": 1924,
+    "morte": 2001,
+    "reparto": "secondary bibliography"
+  },
+  "Peyrefitte Roger": {
+    "nascita": 1907,
+    "morte": 2000,
+    "reparto": "library"
+  },
+  "Pia Pascal": {
+    "nascita": 1903,
+    "morte": 1979,
+    "reparto": "library"
+  },
+  "Piat Clodius": {
+    "nascita": 1854,
+    "morte": 1918,
+    "reparto": "library"
+  },
+  "Piazzolla Marino": {
+    "nascita": 1910,
+    "morte": 1985,
+    "reparto": "library"
+  },
+  "Picchi Mario": {
+    "nascita": 1930,
+    "morte": 2010,
+    "categoria": "Varia",
+    "reparto": "library"
+  },
+  "Piccioni Leone": {
+    "nascita": 1925,
+    "morte": 2018,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Picon Gaëtan": {
+    "nascita": 1915,
+    "morte": 1976,
+    "reparto": "library"
+  },
+  "Piemontese Felice": {
+    "nascita": 1942,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Pierangeli Fabio": {
+    "nascita": 1962,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Pieri Piero": {
+    "nascita": 1893,
+    "morte": 1979,
+    "reparto": "library"
+  },
+  "Pignatti Terisio": {
+    "nascita": 1920,
+    "morte": 2004,
+    "reparto": "library"
+  },
+  "Pilon Edmond": {
+    "nascita": 1874,
+    "morte": 1945,
+    "reparto": "library"
+  },
+  "Pincherle Onofrio Adriana": {
+    "nascita": 1905,
+    "morte": 1996,
+    "categoria": "Contatti letterari"
+  },
+  "Pincherle Salvatore": {
+    "nascita": 1853,
+    "morte": 1936,
+    "reparto": "library"
+  },
+  "Pinelli Tullio": {
+    "nascita": 1908,
+    "morte": 2009,
+    "reparto": "library"
+  },
+  "Pinto Domenico": {
+    "nascita": 1948,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Piovene Guido": {
+    "nascita": 1907,
+    "morte": 1974,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Pirandello Luigi": {
+    "nascita": 1867,
+    "morte": 1936,
+    "reparto": "library"
+  },
+  "Pireddu Nicoletta": {
+    "nascita": 1965,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Piroué Georges": {
+    "nascita": 1920,
+    "morte": 2005,
+    "reparto": "secondary bibliography"
+  },
+  "Pisani Vittore": {
+    "nascita": 1899,
+    "morte": 1990,
+    "reparto": "library"
+  },
+  "Podadera Luis Miranda": {
+    "nascita": 1889,
+    "morte": 1969,
+    "reparto": "library"
+  },
+  "Podestà Giuditta": {
+    "nascita": 1921,
+    "morte": 2005,
+    "reparto": "secondary bibliography"
+  },
+  "Polimeni Giuseppe": {
+    "nascita": 1973,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Pomeau René": {
+    "nascita": 1917,
+    "morte": 2000,
+    "reparto": "library"
+  },
+  "Pomilio Mario": {
+    "nascita": 1921,
+    "morte": 1990,
+    "reparto": "secondary bibliography"
+  },
+  "Pontiggia Giuseppe": {
+    "nascita": 1934,
+    "morte": 2003,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Ponzi Mauro": {
+    "nascita": 1950,
+    "morte": 2019,
+    "reparto": "secondary bibliography"
+  },
+  "Porena Filippo": {
+    "nascita": 1839,
+    "morte": 1910,
+    "reparto": "library"
+  },
+  "Portaluppi Piero": {
+    "nascita": 1888,
+    "morte": 1967,
+    "reparto": "library"
+  },
+  "Portmann Adolf": {
+    "nascita": 1897,
+    "morte": 1982,
+    "reparto": "library"
+  },
+  "Power Eileen": {
+    "nascita": 1889,
+    "morte": 1940,
+    "reparto": "library"
+  },
+  "Pozza Neri": {
+    "nascita": 1912,
+    "morte": 1988,
+    "reparto": "library"
+  },
+  "Pozzi Gianni": {
+    "nascita": 1957,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Prat Michel": {
+    "nascita": 1946,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Prati Angelico": {
+    "nascita": 1883,
+    "morte": 1960,
+    "reparto": "library"
+  },
+  "Pratolini Vasco": {
+    "nascita": 1913,
+    "morte": 1991,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Praz Mario": {
+    "nascita": 1896,
+    "morte": 1982,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Procacci Ugo": {
+    "nascita": 1905,
+    "morte": 1991,
+    "reparto": "library"
+  },
+  "Prono Franco": {
+    "nascita": 1949,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Proust Marcel": {
+    "nascita": 1871,
+    "morte": 1922,
+    "reparto": "library"
+  },
+  "Puletti Ruggero": {
+    "nascita": 1924,
+    "morte": 2003,
+    "reparto": "secondary bibliography"
+  },
+  "Pulina Paolo": {
+    "nascita": 1948,
+    "morte": null,
+    "categoria": "Varia",
+    "reparto": "secondary bibliography"
+  },
+  "Pullini Giorgio": {
+    "nascita": 1928,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Punzo Giorgio": {
+    "nascita": 1911,
+    "morte": 2005,
+    "categoria": "Varia",
+    "reparto": "library"
+  },
+  "Puppa Paolo": {
+    "nascita": 1945,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Putelli Romolo": {
+    "nascita": 1880,
+    "morte": 1939,
+    "reparto": "library"
+  },
+  "Péguy Charles": {
+    "nascita": 1873,
+    "morte": 1914,
+    "reparto": "library"
+  },
+  "Quadrelli Rodolfo": {
+    "nascita": 1939,
+    "morte": 1984,
+    "reparto": "library"
+  },
+  "Quaquarelli Leonardo": {
+    "nascita": 1950,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Quasimodo Salvatore": {
+    "nascita": 1901,
+    "morte": 1968,
+    "reparto": "library"
+  },
+  "Quintavalle Armando Ottaviano": {
+    "nascita": 1894,
+    "morte": 1967,
+    "reparto": "library"
+  },
+  "Raboni Giovanni": {
+    "nascita": 1932,
+    "morte": 2004,
+    "reparto": "secondary bibliography"
+  },
+  "Radet Georges": {
+    "nascita": 1859,
+    "morte": 1941,
+    "reparto": "library"
+  },
+  "Radice Raul": {
+    "nascita": 1902,
+    "morte": 1988,
+    "reparto": "secondary bibliography"
+  },
+  "Raffaeli Massimo": {
+    "nascita": 1957,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Raffaelli Sergio": {
+    "nascita": 1934,
+    "morte": 2010,
+    "reparto": "secondary bibliography"
+  },
+  "Rago Michele": {
+    "nascita": 1913,
+    "morte": 2008,
+    "reparto": "secondary bibliography"
+  },
+  "Ragusa Olga": {
+    "nascita": 1922,
+    "morte": 2018,
+    "reparto": "secondary bibliography"
+  },
+  "Raimondi Ezio": {
+    "nascita": 1924,
+    "morte": 2014,
+    "reparto": "secondary bibliography"
+  },
+  "Raimondo Saverio": {
+    "nascita": 1984,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Ramat Raffaello": {
+    "nascita": 1905,
+    "morte": 1967,
+    "reparto": "library"
+  },
+  "Ramat Silvio": {
+    "nascita": 1939,
+    "morte": null,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Ramorino Felice": {
+    "nascita": 1852,
+    "morte": 1929,
+    "reparto": "library"
+  },
+  "Ranieri Daniela": {
+    "nascita": 1977,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Ranzoli Cesare": {
+    "nascita": 1876,
+    "morte": 1926,
+    "reparto": "library"
+  },
+  "Rapisardi Mario": {
+    "nascita": 1844,
+    "morte": 1912,
+    "reparto": "library"
+  },
+  "Ravasi Gianfranco": {
+    "nascita": 1942,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Ravegnani Giuseppe": {
+    "nascita": 1895,
+    "morte": 1964,
+    "reparto": "secondary bibliography"
+  },
+  "Raya Gino": {
+    "nascita": 1906,
+    "morte": 1987,
+    "reparto": "secondary bibliography"
+  },
+  "Read Herbert": {
+    "nascita": 1893,
+    "morte": 1968,
+    "reparto": "library"
+  },
+  "Reggiori Ferdinando": {
+    "nascita": 1898,
+    "morte": 1976,
+    "reparto": "library"
+  },
+  "Reimann Daniel": {
+    "nascita": 1974,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Remarque Erich Maria": {
+    "nascita": 1898,
+    "morte": 1970,
+    "reparto": "library"
+  },
+  "Renucci Paul": {
+    "nascita": 1915,
+    "morte": 1977,
+    "reparto": "secondary bibliography"
+  },
+  "Renzi Emilio": {
+    "nascita": 1908,
+    "morte": 1990,
+    "reparto": "secondary bibliography"
+  },
+  "Revelli Paolo": {
+    "nascita": 1959,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Rialti Edoardo": {
+    "nascita": 1982,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Riatsch Clà": {
+    "nascita": 1956,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Ribatti Domenico": {
+    "nascita": 1956,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Ricci Andrea": {
+    "nascita": 1965,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Ricci Roberta": {
+    "nascita": 1974,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Riedt Heinz": {
+    "nascita": 1919,
+    "morte": 1997,
+    "reparto": "translation"
+  },
+  "Rigoni Stern Mario": {
+    "nascita": 1921,
+    "morte": 2008,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Rigutini Giuseppe": {
+    "nascita": 1829,
+    "morte": 1903,
+    "reparto": "library"
+  },
+  "Rilke Rainer Maria": {
+    "nascita": 1875,
+    "morte": 1926,
+    "reparto": "library"
+  },
+  "Ringger Kurt": {
+    "nascita": 1934,
+    "morte": 1988,
+    "reparto": "secondary bibliography"
+  },
+  "Ripa di Meana Lodovica": {
+    "nascita": 1933,
+    "morte": null,
+    "categoria": "Contatti letterari"
+  },
+  "Riva Massimo": {
+    "nascita": 1963,
+    "morte": 1999,
+    "reparto": "secondary bibliography"
+  },
+  "Rivière Jacques": {
+    "nascita": 1886,
+    "morte": 1925,
+    "reparto": "library"
+  },
+  "Rizzo Francesco": {
+    "nascita": 1943,
+    "morte": 2022,
+    "reparto": "secondary bibliography"
+  },
+  "Robecchi Alessandro": {
+    "nascita": 1960,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Robin Léon": {
+    "nascita": 1866,
+    "morte": 1947,
+    "reparto": "library"
+  },
+  "Robiquet Jean": {
+    "nascita": 1874,
+    "morte": 1960,
+    "reparto": "library"
+  },
+  "Rodocanachi Lucia": {
+    "nascita": 1901,
+    "morte": 1978,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Rodocanachi Paolo": {
+    "nascita": 1891,
+    "morte": 1958,
+    "reparto": "letter"
+  },
+  "Rodolico Niccolò": {
+    "nascita": 1873,
+    "morte": 1969,
+    "reparto": "library"
+  },
+  "Rohlfs Gerhard": {
+    "nascita": 1831,
+    "morte": 1896,
+    "reparto": "library"
+  },
+  "Roic Sergio": {
+    "nascita": 1959,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Rolland Romain": {
+    "nascita": 1866,
+    "morte": 1944,
+    "reparto": "library"
+  },
+  "Romagnoli Sergio": {
+    "nascita": 1922,
+    "morte": 1997,
+    "reparto": "secondary bibliography"
+  },
+  "Romani Cinzia": {
+    "nascita": 1954,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Romano Antonio": {
+    "nascita": 1995,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Romano Giuseppe": {
+    "nascita": 1918,
+    "morte": 1965,
+    "reparto": "secondary bibliography"
+  },
+  "Romanò Angelo": {
+    "nascita": 1920,
+    "morte": 1989,
+    "reparto": "secondary bibliography"
+  },
+  "Romussi Carlo": {
+    "nascita": 1847,
+    "morte": 1913,
+    "reparto": "library"
+  },
+  "Roncaglia Aurelio": {
+    "nascita": 1917,
+    "morte": 2001,
+    "reparto": "library"
+  },
+  "Roncoroni Federico": {
+    "nascita": 1944,
+    "morte": 2021,
+    "reparto": "secondary bibliography"
+  },
+  "Rosai Ottone": {
+    "nascita": 1895,
+    "morte": 1957,
+    "reparto": "library"
+  },
+  "Rosati Salvatore": {
+    "nascita": 1895,
+    "morte": 1976,
+    "categoria": "Varia",
+    "reparto": "library"
+  },
+  "Rosato Giuseppe": {
+    "nascita": 1932,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Roscioni Gian Carlo": {
+    "nascita": 1927,
+    "morte": 2012,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Rosina Tito": {
+    "nascita": 1899,
+    "morte": 1958,
+    "categoria": "Varia",
+    "reparto": "library"
+  },
+  "Rosselli Aldo": {
+    "nascita": 1934,
+    "morte": 2013,
+    "reparto": "library"
+  },
+  "Rossi Carolina": {
+    "nascita": 1989,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Rossi Franco": {
+    "nascita": 1919,
+    "morte": 2000,
+    "categoria": "Ingegneria e divulgazione tecnica",
+    "reparto": "letter"
+  },
+  "Rossi Laura": {
+    "nascita": 1975,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Rossi Luca": {
+    "nascita": 1969,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Rossi Umberto": {
+    "nascita": 1879,
+    "morte": 1952,
+    "reparto": "secondary bibliography"
+  },
+  "Rossi Vittorio": {
+    "nascita": 1865,
+    "morte": 1938,
+    "reparto": "library"
+  },
+  "Rostand Jean": {
+    "nascita": 1894,
+    "morte": 1977,
+    "reparto": "library"
+  },
+  "Rotta Paolo": {
+    "nascita": 1832,
+    "morte": 1911,
+    "reparto": "library"
+  },
+  "Rouché Max": {
+    "nascita": 1902,
+    "morte": 1985,
+    "reparto": "library"
+  },
+  "Rougemont Denis de": {
+    "nascita": 1906,
+    "morte": 1985,
+    "reparto": "library"
+  },
+  "Roujon Jacques": {
+    "nascita": 1884,
+    "morte": 1971,
+    "reparto": "library"
+  },
+  "Roversi Roberto": {
+    "nascita": 1923,
+    "morte": 2012,
+    "reparto": "library"
+  },
+  "Rovetta Gerolamo": {
+    "nascita": 1851,
+    "morte": 1910,
+    "reparto": "library"
+  },
+  "Rubagotti Angelo": {
+    "nascita": 1859,
+    "morte": 1921,
+    "reparto": "library"
+  },
+  "Ruesch Hans": {
+    "nascita": 1913,
+    "morte": 2007,
+    "reparto": "library"
+  },
+  "Ruffilli Paolo": {
+    "nascita": 1949,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Ruggiero Corrado": {
+    "nascita": 1935,
+    "morte": 2009,
+    "reparto": "secondary bibliography"
+  },
+  "Rusconi Antonio": {
+    "nascita": 1958,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Russell Bertrand": {
+    "nascita": 1872,
+    "morte": 1970,
+    "reparto": "library"
+  },
+  "Russell Henry Norris": {
+    "nascita": 1877,
+    "morte": 1957,
+    "reparto": "library"
+  },
+  "Russo Luigi": {
+    "nascita": 1892,
+    "morte": 1961,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Ryan Cornelius": {
+    "nascita": 1920,
+    "morte": 1974,
+    "reparto": "library"
+  },
+  "Rüssel Herbert Werner": {
+    "nascita": 1897,
+    "morte": 1940,
+    "reparto": "library"
+  },
+  "Saba Umberto": {
+    "nascita": 1883,
+    "morte": 1957,
+    "reparto": "library"
+  },
+  "Saccone Antonio": {
+    "nascita": 1969,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Saccone Eduardo": {
+    "nascita": 1938,
+    "morte": 2008,
+    "reparto": "secondary bibliography"
+  },
+  "Sachs Maurice": {
+    "nascita": 1906,
+    "morte": 1945,
+    "reparto": "library"
+  },
+  "Sadler Percy": {
+    "nascita": 1790,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Saint-Exupéry Antoine de": {
+    "nascita": 1900,
+    "morte": 1944,
+    "reparto": "library"
+  },
+  "Saitta Armando": {
+    "nascita": 1919,
+    "morte": 1991,
+    "reparto": "library"
+  },
+  "Salina Borello Rosalma": {
+    "nascita": 1944,
+    "morte": 2018,
+    "reparto": "secondary bibliography"
+  },
+  "Salinari Carlo": {
+    "nascita": 1919,
+    "morte": 1977,
+    "reparto": "secondary bibliography"
+  },
+  "Salmi Mario": {
+    "nascita": 1889,
+    "morte": 1980,
+    "reparto": "library"
+  },
+  "Salvatorelli Luigi": {
+    "nascita": 1886,
+    "morte": 1974,
+    "reparto": "library"
+  },
+  "Sampaio Ernesto": {
+    "nascita": 1935,
+    "morte": 2001,
+    "reparto": "translation"
+  },
+  "Sanesi Tommaso": {
+    "nascita": 1830,
+    "morte": 1920,
+    "reparto": "library"
+  },
+  "Sanguineti Edoardo": {
+    "nascita": 1930,
+    "morte": 2010,
+    "reparto": "secondary bibliography"
+  },
+  "Santayana George": {
+    "nascita": 1863,
+    "morte": 1952,
+    "reparto": "library"
+  },
+  "Santi Mara": {
+    "nascita": 1973,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Santi Piero": {
+    "nascita": 1923,
+    "morte": 2007,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Sanvitale Francesca": {
+    "nascita": 1928,
+    "morte": 2011,
+    "reparto": "library"
+  },
+  "Sapegno Natalino": {
+    "nascita": 1901,
+    "morte": 1990,
+    "reparto": "library"
+  },
+  "Sapienza Goliarda": {
+    "nascita": 1924,
+    "morte": 1996,
+    "reparto": "library"
+  },
+  "Sapori Armando": {
+    "nascita": 1892,
+    "morte": 1976,
+    "reparto": "library"
+  },
+  "Sartori Carlo": {
+    "nascita": 1948,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Sassella Stefano": {
+    "nascita": 1876,
+    "categoria": "Compagni di guerra e di prigionia",
+    "reparto": "letter"
+  },
+  "Savettieri Cristina": {
+    "nascita": 1978,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Savinio Alberto": {
+    "nascita": 1891,
+    "morte": 1952,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Savj-Lopez Paolo": {
+    "nascita": 1876,
+    "morte": 1919,
+    "reparto": "library"
+  },
+  "Sbarbaro Camillo": {
+    "nascita": 1888,
+    "morte": 1967,
+    "reparto": "library"
+  },
+  "Scalia Gianni": {
+    "nascita": 1928,
+    "morte": 2016,
+    "reparto": "secondary bibliography"
+  },
+  "Scarlini Luca": {
+    "nascita": 1966,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Scarpa Domenico": {
+    "nascita": 1965,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Scarsella Alessandro": {
+    "nascita": 1958,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Scheiwiller Vanni": {
+    "nascita": 1934,
+    "morte": 1999,
+    "reparto": "secondary bibliography"
+  },
+  "Schelsky Helmut": {
+    "nascita": 1912,
+    "morte": 1984,
+    "reparto": "library"
+  },
+  "Schiaffini Alfredo": {
+    "nascita": 1895,
+    "morte": 1971,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Schiarini Pompilio": {
+    "nascita": 1855,
+    "morte": 1935,
+    "reparto": "library"
+  },
+  "Schneider Marianne": {
+    "nascita": 1937,
+    "morte": 2023,
+    "reparto": "translation"
+  },
+  "Schultz Ferdinand": {
+    "nascita": 1829,
+    "morte": 1901,
+    "reparto": "library"
+  },
+  "Sciascia Leonardo": {
+    "nascita": 1921,
+    "morte": 1989,
+    "reparto": "library"
+  },
+  "Scobel Albert": {
+    "nascita": 1851,
+    "morte": 1912,
+    "reparto": "library"
+  },
+  "Scorrano Luigi": {
+    "nascita": 1849,
+    "morte": 1924,
+    "reparto": "secondary bibliography"
+  },
+  "Scrivano Riccardo": {
+    "nascita": 1928,
+    "morte": 2020,
+    "reparto": "secondary bibliography"
+  },
+  "Sechi Giovanni": {
+    "nascita": 1871,
+    "morte": 1948,
+    "reparto": "secondary bibliography"
+  },
+  "Segre Cesare": {
+    "nascita": 1928,
+    "morte": 2014,
+    "reparto": "secondary bibliography"
+  },
+  "Seibt Gustav": {
+    "nascita": 1959,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Selvafolta Ornella": {
+    "nascita": 1949,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Semenza Carlo": {
+    "nascita": 1893,
+    "morte": 1961,
+    "categoria": "Amici",
+    "reparto": "library"
+  },
+  "Semenza Lydia": {
+    "nascita": 1896,
+    "categoria": "Amici"
+  },
+  "Serafini Carlo": {
+    "nascita": 1969,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Serao Matilde": {
+    "nascita": 1856,
+    "morte": 1927,
+    "reparto": "library"
+  },
+  "Sereni Vittorio": {
+    "nascita": 1913,
+    "morte": 1983,
+    "reparto": "library"
+  },
+  "Serini Paolo": {
+    "nascita": 1899,
+    "morte": 1965,
+    "reparto": "library"
+  },
+  "Sermonti Vittorio": {
+    "nascita": 1929,
+    "morte": 2016,
+    "reparto": "library"
+  },
+  "Seroni Adriano": {
+    "nascita": 1918,
+    "morte": 1990,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Serra Renato": {
+    "nascita": 1884,
+    "morte": 1915,
+    "reparto": "library"
+  },
+  "Serravalli Luigi": {
+    "nascita": 1914,
+    "morte": 2002,
+    "reparto": "library"
+  },
+  "Serri Mirella": {
+    "nascita": 1949,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Sessa Giuseppe": {
+    "nascita": 1895,
+    "morte": 1985,
+    "reparto": "library"
+  },
+  "Shakespeare William": {
+    "nascita": 1912,
+    "morte": 1974,
+    "reparto": "library"
+  },
+  "Shaw George Bernard": {
+    "nascita": 1856,
+    "morte": 1950,
+    "reparto": "library"
+  },
+  "Siciliano Enzo": {
+    "nascita": 1934,
+    "morte": 2006,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Siciliano Italo": {
+    "nascita": 1895,
+    "morte": 1980,
+    "reparto": "library"
+  },
+  "Signorini Telemaco": {
+    "nascita": 1835,
+    "morte": 1901,
+    "reparto": "library"
+  },
+  "Silva Pietro": {
+    "nascita": 1887,
+    "morte": 1954,
+    "reparto": "library"
+  },
+  "Silvestri Mario": {
+    "nascita": 1919,
+    "morte": 1994,
+    "reparto": "library"
+  },
+  "Simenon Georges": {
+    "nascita": 1903,
+    "morte": 1989,
+    "reparto": "library"
+  },
+  "Simeoni Luigi": {
+    "nascita": 1875,
+    "morte": 1952,
+    "reparto": "library"
+  },
+  "Simonet Francisco Javier": {
+    "nascita": 1829,
+    "morte": 1897,
+    "reparto": "library"
+  },
+  "Sinigaglia Sandro": {
+    "nascita": 1921,
+    "morte": 1990,
+    "reparto": "library"
+  },
+  "Sinisgalli Leonardo": {
+    "nascita": 1908,
+    "morte": 1981,
+    "reparto": "library"
+  },
+  "Sipione Marialuigia": {
+    "nascita": 1983,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Soavi Giorgio": {
+    "nascita": 1923,
+    "morte": 2008,
+    "reparto": "library"
+  },
+  "Sobrero Ornella": {
+    "nascita": 1926,
+    "morte": 2005,
+    "reparto": "secondary bibliography"
+  },
+  "Soffici Ardengo": {
+    "nascita": 1879,
+    "morte": 1964,
+    "reparto": "library"
+  },
+  "Soldati Mario": {
+    "nascita": 1906,
+    "morte": 1999,
+    "reparto": "library"
+  },
+  "Soldini Adriano": {
+    "nascita": 1921,
+    "morte": 1989,
+    "reparto": "library"
+  },
+  "Solinas Stenio": {
+    "nascita": 1951,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Solmi Sergio": {
+    "nascita": 1899,
+    "morte": 1981,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Sommavilla Guido": {
+    "nascita": 1920,
+    "morte": 2007,
+    "reparto": "secondary bibliography"
+  },
+  "Spagnoletti Giacinto": {
+    "nascita": 1920,
+    "morte": 2003,
+    "reparto": "secondary bibliography"
+  },
+  "Spallicci Aldo": {
+    "nascita": 1886,
+    "morte": 1973,
+    "reparto": "library"
+  },
+  "Specchia Francesco": {
+    "nascita": 1929,
+    "morte": 2019,
+    "reparto": "secondary bibliography"
+  },
+  "Spellanzon Cesare": {
+    "nascita": 1884,
+    "morte": 1957,
+    "reparto": "library"
+  },
+  "Spencer Herbert": {
+    "nascita": 1820,
+    "morte": 1903,
+    "reparto": "library"
+  },
+  "Spila Cristiano": {
+    "nascita": 1968,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Spinazzola Vittorio": {
+    "nascita": 1863,
+    "morte": 1943,
+    "reparto": "library"
+  },
+  "Spinosa Antonio": {
+    "nascita": 1923,
+    "morte": 2009,
+    "reparto": "library"
+  },
+  "Spitzer Leo": {
+    "nascita": 1887,
+    "morte": 1960,
+    "reparto": "library"
+  },
+  "Squarcia Francesco": {
+    "nascita": 1901,
+    "morte": 1970,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Stancanelli Elena": {
+    "nascita": 1965,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Stein Gertrude": {
+    "nascita": 1874,
+    "morte": 1946,
+    "reparto": "library"
+  },
+  "Steinbeck John": {
+    "nascita": 1902,
+    "morte": 1968,
+    "reparto": "library"
+  },
+  "Stoker Bram": {
+    "nascita": 1847,
+    "morte": 1912,
+    "reparto": "library"
+  },
+  "Stoppelli Pasquale": {
+    "nascita": 1943,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Stussi Alfredo": {
+    "nascita": 1939,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Suitner Franco": {
+    "nascita": 1952,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Synge John Millington": {
+    "nascita": 1871,
+    "morte": 1909,
+    "reparto": "library"
+  },
+  "Tanzi Drusilla": {
+    "nascita": 1885,
+    "morte": 1963,
+    "categoria": "Contatti letterari"
+  },
+  "Tasca Angelo": {
+    "nascita": 1892,
+    "morte": 1960,
+    "reparto": "library"
+  },
+  "Taviani Ferdinando": {
+    "nascita": 1942,
+    "morte": 2020,
+    "reparto": "secondary bibliography"
+  },
+  "Tecchi Bonaventura": {
+    "nascita": 1896,
+    "morte": 1968,
+    "categoria": "Compagni di guerra e di prigionia",
+    "reparto": "letter"
+  },
+  "Tellini Gino": {
+    "nascita": 1946,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Terzoli Maria Antonietta": {
+    "nascita": 1954,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Tessa Delio": {
+    "nascita": 1886,
+    "morte": 1939,
+    "reparto": "library"
+  },
+  "Tessari Roberto": {
+    "nascita": 1943,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Testori Giovanni": {
+    "nascita": 1923,
+    "morte": 1993,
+    "reparto": "library"
+  },
+  "Thibaud Jean": {
+    "nascita": 1901,
+    "morte": 1960,
+    "reparto": "library"
+  },
+  "Thibaudet Albert": {
+    "nascita": 1874,
+    "morte": 1936,
+    "reparto": "library"
+  },
+  "Tilgher Adriano": {
+    "nascita": 1947,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Titta Rosa Giovanni": {
+    "nascita": 1891,
+    "morte": 1972,
+    "reparto": "secondary bibliography"
+  },
+  "Tobino Mario": {
+    "nascita": 1910,
+    "morte": 1991,
+    "reparto": "library"
+  },
+  "Tomasi di Lampedusa Giuseppe": {
+    "nascita": 1896,
+    "morte": 1957,
+    "reparto": "library"
+  },
+  "Tomasin Lorenzo": {
+    "nascita": 1975,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Tomizza Fulvio": {
+    "nascita": 1935,
+    "morte": 1999,
+    "reparto": "library"
+  },
+  "Tondo Michele": {
+    "nascita": 1922,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Tonelli Luigi": {
+    "nascita": 1890,
+    "morte": 1939,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Toni Alberto": {
+    "nascita": 1954,
+    "morte": 2019,
+    "reparto": "secondary bibliography"
+  },
+  "Tonna Giuseppe": {
+    "nascita": 1920,
+    "morte": 1979,
+    "reparto": "library"
+  },
+  "Torraca Francesco": {
+    "nascita": 1853,
+    "morte": 1938,
+    "reparto": "library"
+  },
+  "Torre Elena": {
+    "nascita": 1973,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Tortato Alessandro": {
+    "nascita": 1969,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Tosi Giuseppe": {
+    "nascita": 1916,
+    "morte": 1981,
+    "reparto": "secondary bibliography"
+  },
+  "Toti Rigatelli Laura": {
+    "nascita": 1941,
+    "morte": 2023,
+    "reparto": "secondary bibliography"
+  },
+  "Traverso Leone": {
+    "nascita": 1910,
+    "morte": 1968,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Treccani Ernesto": {
+    "nascita": 1920,
+    "morte": 2009,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Trevelyan George Macaulay": {
+    "nascita": 1876,
+    "morte": 1962,
+    "reparto": "library"
+  },
+  "Trevi Emanuele": {
+    "nascita": 1964,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Trizzino Antonino": {
+    "nascita": 1899,
+    "morte": 1973,
+    "reparto": "library"
+  },
+  "Troilo Erminio": {
+    "nascita": 1874,
+    "morte": 1968,
+    "reparto": "library"
+  },
+  "Trombatore Gaetano": {
+    "nascita": 1900,
+    "morte": 1994,
+    "reparto": "secondary bibliography"
+  },
+  "Trombetti Alfredo": {
+    "nascita": 1866,
+    "morte": 1929,
+    "reparto": "library"
+  },
+  "Truzzi Silvia": {
+    "nascita": 1974,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Turchi Nicola": {
+    "nascita": 1882,
+    "morte": 1958,
+    "reparto": "library"
+  },
+  "Turco Mario": {
+    "nascita": 1956,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Turolla Enrico": {
+    "nascita": 1896,
+    "morte": 1985,
+    "reparto": "library"
+  },
+  "Tuzzi Hans": {
+    "nascita": 1952,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Tyrrell George Walter": {
+    "nascita": 1883,
+    "morte": 1961,
+    "reparto": "library"
+  },
+  "Ulivi Ferruccio": {
+    "nascita": 1912,
+    "morte": 2002,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Unamuno Miguel de": {
+    "nascita": 1864,
+    "morte": 1936,
+    "reparto": "library"
+  },
+  "Ungaretti Giuseppe": {
+    "nascita": 1888,
+    "morte": 1970,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Valensise Marina": {
+    "nascita": 1957,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Valenti Ghino": {
+    "nascita": 1852,
+    "morte": 1921,
+    "reparto": "library"
+  },
+  "Valeri Diego": {
+    "nascita": 1887,
+    "morte": 1976,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Valeri Manera Mario": {
+    "nascita": 1921,
+    "morte": 2014,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Valeri Nino": {
+    "nascita": 1897,
+    "morte": 1978,
+    "reparto": "library"
+  },
+  "Valgimigli Manara": {
+    "nascita": 1876,
+    "morte": 1965,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Valiani Leo": {
+    "nascita": 1909,
+    "morte": 1999,
+    "reparto": "library"
+  },
+  "Valli Bernardo": {
+    "nascita": 1930,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Valsecchi Marco": {
+    "nascita": 1913,
+    "morte": 1980,
+    "reparto": "library"
+  },
+  "Valzania Sergio": {
+    "nascita": 1951,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Valéry Paul": {
+    "nascita": 1871,
+    "morte": 1945,
+    "reparto": "library"
+  },
+  "Vanni Manfredo": {
+    "nascita": 1860,
+    "morte": 1937,
+    "reparto": "library"
+  },
+  "Varanini Francesco": {
+    "nascita": 1949,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Varese Claudio": {
+    "nascita": 1909,
+    "morte": 2002,
+    "reparto": "secondary bibliography"
+  },
+  "Vassalli Sebastiano": {
+    "nascita": 1941,
+    "morte": 2015,
+    "reparto": "library"
+  },
+  "Vela Claudio": {
+    "nascita": 1955,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Ventura Giovanni": {
+    "nascita": 1944,
+    "morte": 2010,
+    "reparto": "library"
+  },
+  "Venturi Franco": {
+    "nascita": 1914,
+    "morte": 1994,
+    "reparto": "library"
+  },
+  "Verdi Giuseppe": {
+    "nascita": 1813,
+    "morte": 1901,
+    "reparto": "library"
+  },
+  "Verga Giovanni": {
+    "nascita": 1840,
+    "morte": 1922,
+    "reparto": "library"
+  },
+  "Vergani Orio": {
+    "nascita": 1899,
+    "morte": 1960,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Verlaine Paul": {
+    "nascita": 1844,
+    "morte": 1896,
+    "reparto": "library"
+  },
+  "Veronelli Luigi": {
+    "nascita": 1926,
+    "morte": 2004,
+    "reparto": "library"
+  },
+  "Veronesi Giulia": {
+    "nascita": 1906,
+    "morte": 1970,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Verrengia Enzo": {
+    "nascita": 1955,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Vian Boris": {
+    "nascita": 1920,
+    "morte": 1959,
+    "reparto": "library"
+  },
+  "Vianello Daniele": {
+    "nascita": 1969,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Viani Lorenzo": {
+    "nascita": 1882,
+    "morte": 1936,
+    "reparto": "library"
+  },
+  "Viani Rolando": {
+    "nascita": 1923,
+    "morte": 1977,
+    "reparto": "library"
+  },
+  "Vicari Giambattista": {
+    "nascita": 1909,
+    "morte": 1978,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Viganò Vittoriano": {
+    "nascita": 1919,
+    "morte": 1996,
+    "reparto": "secondary bibliography"
+  },
+  "Vigevani Alberto": {
+    "nascita": 1918,
+    "morte": 1999,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Vigo Pietro": {
+    "nascita": 1856,
+    "morte": 1918,
+    "reparto": "library"
+  },
+  "Vigolo Giorgio": {
+    "nascita": 1894,
+    "morte": 1983,
+    "categoria": "Contatti letterari",
+    "reparto": "library"
+  },
+  "Vigorelli Giancarlo": {
+    "nascita": 1913,
+    "morte": 2005,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Vilches Patricia": {
+    "nascita": 1960,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Villa Carlo": {
+    "nascita": 1931,
+    "morte": 2026,
+    "reparto": "library"
+  },
+  "Villa Guido": {
+    "nascita": 1867,
+    "morte": 1949,
+    "reparto": "library"
+  },
+  "Villari Pasquale": {
+    "nascita": 1827,
+    "morte": 1917,
+    "reparto": "library"
+  },
+  "Villat Louis": {
+    "nascita": 1878,
+    "morte": 1949,
+    "reparto": "library"
+  },
+  "Virgili Elena": {
+    "nascita": 1995,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Viscardi Antonio": {
+    "nascita": 1900,
+    "morte": 1972,
+    "reparto": "library"
+  },
+  "Vita Finzi Paolo": {
+    "nascita": 1899,
+    "morte": 1986,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Vitale Vincenzo": {
+    "nascita": 1908,
+    "morte": 1984,
+    "reparto": "secondary bibliography"
+  },
+  "Viti Gorizio": {
+    "nascita": 1915,
+    "morte": 2002,
+    "reparto": "library"
+  },
+  "Vittorini Elio": {
+    "nascita": 1908,
+    "morte": 1966,
+    "categoria": "Contatti letterari",
+    "reparto": "letter"
+  },
+  "Vivante Arturo": {
+    "nascita": 1923,
+    "morte": 2008,
+    "reparto": "library"
+  },
+  "Vogelmann Daniel": {
+    "nascita": 1948,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Vogt Henri": {
+    "nascita": 1864,
+    "morte": 1927,
+    "reparto": "library"
+  },
+  "Volpi Iacopo": {
+    "nascita": 1957,
+    "morte": null,
+    "categoria": "Varia",
+    "reparto": "library"
+  },
+  "Volpini Valerio": {
+    "nascita": 1923,
+    "morte": 2000,
+    "reparto": "secondary bibliography"
+  },
+  "Volponi Paolo": {
+    "nascita": 1924,
+    "morte": 1994,
+    "reparto": "library"
+  },
+  "Vossler Karl": {
+    "nascita": 1872,
+    "morte": 1949,
+    "reparto": "library"
+  },
+  "Vucetic Mirko": {
+    "nascita": 1898,
+    "morte": 1975,
+    "categoria": "Contatti letterari"
+  },
+  "Wahl François": {
+    "nascita": 1925,
+    "morte": 2014,
+    "reparto": "translation"
+  },
+  "Wain John": {
+    "nascita": 1925,
+    "morte": 1994,
+    "reparto": "library"
+  },
+  "Waismann Friedrich": {
+    "nascita": 1896,
+    "morte": 1959,
+    "reparto": "library"
+  },
+  "Waldberg Patrick": {
+    "nascita": 1913,
+    "morte": 1985,
+    "reparto": "library"
+  },
+  "Watson Fowler Henry": {
+    "nascita": 1858,
+    "morte": 1933,
+    "reparto": "library"
+  },
+  "Watson Francis": {
+    "nascita": 1907,
+    "morte": 1992,
+    "reparto": "library"
+  },
+  "Weaver William": {
+    "nascita": 1923,
+    "morte": 2013,
+    "categoria": "Contatti letterari",
+    "reparto": "translation"
+  },
+  "Weber Alfred": {
+    "nascita": 1868,
+    "morte": 1958,
+    "reparto": "library"
+  },
+  "Wegener Alfred": {
+    "nascita": 1880,
+    "morte": 1930,
+    "reparto": "library"
+  },
+  "Werfel Franz": {
+    "nascita": 1890,
+    "morte": 1945,
+    "reparto": "library"
+  },
+  "Westerwelle Karin": {
+    "nascita": 1959,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Wilcock J. Rodolfo": {
+    "nascita": 1919,
+    "morte": 1978,
+    "reparto": "library"
+  },
+  "Wilde Oscar": {
+    "nascita": 1854,
+    "morte": 1900,
+    "reparto": "library"
+  },
+  "Wilder Thornton": {
+    "nascita": 1897,
+    "morte": 1975,
+    "reparto": "library"
+  },
+  "Williams Tennessee": {
+    "nascita": 1911,
+    "morte": 1983,
+    "reparto": "library"
+  },
+  "Wilson Colin": {
+    "nascita": 1989,
+    "morte": null,
+    "reparto": "library"
+  },
+  "Wilson Edmund": {
+    "nascita": 1895,
+    "morte": 1972,
+    "reparto": "library"
+  },
+  "Windelband Wilhelm": {
+    "nascita": 1848,
+    "morte": 1915,
+    "reparto": "library"
+  },
+  "Withers Hartley": {
+    "nascita": 1867,
+    "morte": 1950,
+    "reparto": "library"
+  },
+  "Woolf Virginia": {
+    "nascita": 1882,
+    "morte": 1941,
+    "reparto": "library"
+  },
+  "Yeats William Butler": {
+    "nascita": 1865,
+    "morte": 1939,
+    "reparto": "library"
+  },
+  "Zaccuri Alessandro": {
+    "nascita": 1963,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Zampa Giorgio": {
+    "nascita": 1921,
+    "morte": 2008,
+    "categoria": "Contatti letterari",
+    "reparto": "secondary bibliography"
+  },
+  "Zampese Luciano": {
+    "nascita": 1961,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Zanazzo Giggi": {
+    "nascita": 1860,
+    "morte": 1911,
+    "reparto": "library"
+  },
+  "Zancani Diego": {
+    "nascita": 1944,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Zanelli Severino": {
+    "nascita": 1839,
+    "morte": 1899,
+    "reparto": "library"
+  },
+  "Zeller Edward": {
+    "nascita": 1925,
+    "morte": 1996,
+    "reparto": "library"
+  },
+  "Zigaina Giuseppe": {
+    "nascita": 1924,
+    "morte": 2015,
+    "reparto": "secondary bibliography"
+  },
+  "Zolla Elémire": {
+    "nascita": 1926,
+    "morte": 2002,
+    "reparto": "library"
+  },
+  "Zollino Antonio": {
+    "nascita": 1961,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Zoppi Garampi Silvia": {
+    "nascita": 1962,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Zorzi Ludovico": {
+    "nascita": 1928,
+    "morte": 1983,
+    "reparto": "secondary bibliography"
+  },
+  "Zottoli Angelandrea": {
+    "nascita": 1879,
+    "morte": 1956,
+    "reparto": "library"
+  },
+  "Zuccante Giuseppe": {
+    "nascita": 1857,
+    "morte": 1932,
+    "reparto": "library"
+  },
+  "Zuccoli Luciano": {
+    "nascita": 1868,
+    "morte": 1929,
+    "reparto": "library"
+  },
+  "Zunino Pier Giorgio": {
+    "nascita": 1946,
+    "morte": 2025,
+    "reparto": "secondary bibliography"
+  },
+  "Zweig Stefan": {
+    "nascita": 1881,
+    "morte": 1942,
+    "reparto": "library"
+  },
+  "de Seta Cesare": {
+    "nascita": 1941,
+    "morte": null,
+    "reparto": "secondary bibliography"
+  },
+  "Čechov Anton Pavlovič": {
+    "nascita": 1860,
+    "morte": 1904,
+    "reparto": "library"
+  },
+  "Šušulić Aleksa": {
+    "nascita": 1961,
+    "morte": null,
+    "reparto": "translation"
+  }
+}

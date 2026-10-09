@@ -23580,35 +23580,6 @@
     "genere": "Compagni di guerra e di prigionia"
   },
   {
-    "id": "Let497",
-    "category": "letter",
-    "date": "1921-07-08",
-    "year": 1921,
-    "title": "Gadda Carlo Emilio → Bigongiari Piero",
-    "subtitle": "",
-    "detail": "Roma (Crescenzio 63) · Firenze (Cavalleggeri)",
-    "themes": [
-      "LPBi"
-    ],
-    "people": [
-      {
-        "name": "Gadda Carlo Emilio",
-        "role": "mittente"
-      },
-      {
-        "name": "Bigongiari Piero",
-        "role": "destinatario"
-      }
-    ],
-    "pub_detail": "",
-    "archivio": "",
-    "luogo_di_invio": "Roma (Crescenzio 63)",
-    "luogo_destinatario": "Firenze (Cavalleggeri)",
-    "sigla_sciolta": "C.E. Gadda, Lettere a Piero, a cura di Simona Priami, Firenze, Edizioni Polistampa, 1999.",
-    "segnatura": "",
-    "genere": "Contatti letterari"
-  },
-  {
     "id": "arc11",
     "category": "archive",
     "date": "1921-08-01",
@@ -35995,35 +35966,6 @@
     "note": "",
     "corpus_lettere": "",
     "date_start": "1928-03-01"
-  },
-  {
-    "id": "Let1496",
-    "category": "letter",
-    "date": "1928-03-31",
-    "year": 1928,
-    "title": "Rossi Franco → Gadda Carlo Emilio",
-    "subtitle": "",
-    "detail": "",
-    "themes": [
-      "MioGa"
-    ],
-    "people": [
-      {
-        "name": "Rossi Franco",
-        "role": "mittente"
-      },
-      {
-        "name": "Gadda Carlo Emilio",
-        "role": "destinatario"
-      }
-    ],
-    "pub_detail": "",
-    "archivio": "",
-    "luogo_di_invio": "",
-    "luogo_destinatario": "",
-    "sigla_sciolta": "Arnaldo Liberati, Il mio Gadda: padri, madri, zie e una E., Verona, Stimmgraf, 2014.",
-    "segnatura": "",
-    "genere": "Ingegneria e divulgazione"
   },
   {
     "id": "Let1689",
@@ -107618,6 +107560,35 @@
     "sigla_sciolta": "C.E. Gadda, Lettere a Gianfranco Contini a cura del destinatario - 1934-1967, Milano, Garzanti, 1988.",
     "segnatura": "",
     "genere": "Amici"
+  },
+  {
+    "id": "Let497",
+    "category": "letter",
+    "date": "1951-07-08",
+    "year": 1951,
+    "title": "Gadda Carlo Emilio → Bigongiari Piero",
+    "subtitle": "",
+    "detail": "Roma (Crescenzio 63) · Firenze (Cavalleggeri)",
+    "themes": [
+      "LPBi"
+    ],
+    "people": [
+      {
+        "name": "Gadda Carlo Emilio",
+        "role": "mittente"
+      },
+      {
+        "name": "Bigongiari Piero",
+        "role": "destinatario"
+      }
+    ],
+    "pub_detail": "",
+    "archivio": "",
+    "luogo_di_invio": "Roma (Crescenzio 63)",
+    "luogo_destinatario": "Firenze (Cavalleggeri)",
+    "sigla_sciolta": "C.E. Gadda, Lettere a Piero, a cura di Simona Priami, Firenze, Edizioni Polistampa, 1999.",
+    "segnatura": "",
+    "genere": "Contatti letterari"
   },
   {
     "id": "Let1342",
