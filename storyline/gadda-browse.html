@@ -67,12 +67,13 @@
   }
   .download-btn:disabled { opacity: 0.4; cursor: default; }
 
-  /* focus mode: title, subtitle and download button hidden for now; only a
-     slim tab bar stays so you can still switch graphs, and the frame takes
-     the rest of the viewport. Delete this block to bring everything back. */
-  body { padding: 0.5rem 0 0; height: 100vh; overflow: hidden; }
-  h1, p.sub, .download-btn { display: none; }
-  .tab-bar { margin: 0 0 0.5rem; }
+  /* focus mode: title, subtitle, tab bar and download button hidden for now,
+     and the frame takes the whole viewport. Switching graphs happens from
+     the Reparti section in each graph's sidebar, which presses these hidden
+     tabs — so the tab bar must stay in the page, only hidden. Delete this
+     block to bring everything back. */
+  body { padding: 0; height: 100vh; overflow: hidden; }
+  h1, p.sub, .tab-bar, .download-btn { display: none; }
   .frame-wrap { max-width: none; padding-bottom: 0; }
   iframe { min-height: 0; border: none; border-radius: 0; }
 </style>
