@@ -360,11 +360,6 @@
     "categoria": "Contatti letterari",
     "reparto": "library"
   },
-  "Bacon Francis": {
-    "nascita": 1909,
-    "morte": 1992,
-    "reparto": "library"
-  },
   "Badoni Piera": {
     "nascita": 1912,
     "morte": 1989,
@@ -566,12 +561,6 @@
     "nascita": 1954,
     "morte": null,
     "reparto": "secondary bibliography"
-  },
-  "Beltrami Veneziani Giuliana": {
-    "nascita": 1944,
-    "morte": 1996,
-    "categoria": "Contatti letterari",
-    "reparto": "letter"
   },
   "Benco Silvio": {
     "nascita": 1874,
@@ -1740,8 +1729,8 @@
     "reparto": "secondary bibliography"
   },
   "Colombo Giuseppe": {
-    "nascita": 1920,
-    "morte": 1984,
+    "nascita": 1836,
+    "morte": 1921,
     "reparto": "library"
   },
   "Colucci Dalila": {
@@ -2458,11 +2447,6 @@
     "morte": 1942,
     "reparto": "library"
   },
-  "Ferrero Mario": {
-    "nascita": 1903,
-    "morte": 1964,
-    "reparto": "library"
-  },
   "Ferretti Gian Carlo": {
     "nascita": 1930,
     "morte": 2022,
@@ -2676,8 +2660,8 @@
     "reparto": "library"
   },
   "Frigerio Federico": {
-    "nascita": 1958,
-    "morte": 2020,
+    "nascita": 1873,
+    "morte": 1959,
     "reparto": "library"
   },
   "Frison-Roche Roger": {
@@ -2845,11 +2829,6 @@
   "Gastaldi Giovanni": {
     "nascita": 1919,
     "morte": 1944,
-    "reparto": "library"
-  },
-  "Gatti Riccardo": {
-    "nascita": 1997,
-    "morte": null,
     "reparto": "library"
   },
   "Gatto Alfonso": {
@@ -3613,7 +3592,7 @@
   },
   "Lehr Carlo": {
     "nascita": 1865,
-    "morte": 1918,
+    "morte": 1919,
     "categoria": "Familiari",
     "reparto": "letter"
   },
@@ -5128,11 +5107,6 @@
     "morte": 1988,
     "reparto": "library"
   },
-  "Pozzi Gianni": {
-    "nascita": 1957,
-    "morte": null,
-    "reparto": "library"
-  },
   "Prat Michel": {
     "nascita": 1946,
     "morte": null,
@@ -5949,11 +5923,6 @@
     "morte": 1985,
     "reparto": "library"
   },
-  "Shakespeare William": {
-    "nascita": 1912,
-    "morte": 1974,
-    "reparto": "library"
-  },
   "Shaw George Bernard": {
     "nascita": 1856,
     "morte": 1950,
@@ -6452,8 +6421,8 @@
     "reparto": "secondary bibliography"
   },
   "Ventura Giovanni": {
-    "nascita": 1944,
-    "morte": 2010,
+    "nascita": 1800,
+    "morte": 1869,
     "reparto": "library"
   },
   "Venturi Franco": {
@@ -6785,11 +6754,6 @@
   "Zanelli Severino": {
     "nascita": 1839,
     "morte": 1899,
-    "reparto": "library"
-  },
-  "Zeller Edward": {
-    "nascita": 1925,
-    "morte": 1996,
     "reparto": "library"
   },
   "Zigaina Giuseppe": {

@@ -230,6 +230,8 @@
     padding: 0.35rem 0.5rem; border: 1px solid var(--grid); border-radius: 6px;
     background: var(--bg); color: var(--ink); cursor: pointer;
   }
+  /* Gadda's own line: never faded, whatever is selected or previewed */
+  .life.gadda-life { opacity: 1 !important; }
 </style>
 </head>
 <body>
@@ -382,6 +384,9 @@
   // sides; "year" = the original layout; "crossings" = rearranged to cross
   // less. Remembered across graphs.
   let rowOrder = "balanced";
+  // how lines meet Gadda's while in contact: "lanes" (default) or "close" — see dipYFor
+  let dipStyle = "lanes";
+  try { dipStyle = localStorage.getItem("gadda-dip-style") || "lanes"; } catch (e) {}
   try { rowOrder = localStorage.getItem("gadda-row-order") || "balanced"; } catch (e) {}
   // when the page last scrolled — hover previews wait until scrolling stops
   let lastScrollAt = 0;
@@ -596,8 +601,23 @@
     }
     const people = layoutRows(byBarycenter, null, d => (d.interactions && d.interactions.length ? clusterInteractions(d.interactions).map(c => [c[0], c[c.length - 1]]) : []));
 
+    // in dense views (Show all) the rows nearest Gadda would sit inside the
+    // width of his line and its clearance, with no room left to dip, so they'd
+    // lie flat against it. Leave as many empty rows on each side of him as it
+    // takes to keep NEAR_ROOM units free: half his line (5) + air (2) + half
+    // the thickest line with its halo (5) + room to dip (6). In sparse views
+    // (Most active) rows are already further apart and no empty row is added.
+    // (at least 30 screen pixels, so it still shows when Show all shrinks the graph)
+    const NEAR_ROOM = Math.max(18, 30 * unitsPerPx);
+    let nearSpacers = 0;
+    for (let i = 0; i < 3; i++) {
+      const step = (height - margin.bottom - margin.top) / (people.length + 2 * nearSpacers + 1);
+      nearSpacers = Math.max(0, Math.ceil(NEAR_ROOM / step) - 1);
+    }
     const yScale = d3.scalePoint()
-      .domain(people.map(d => d.name))
+      .domain(people.flatMap(d => (d.name === "Gadda Carlo Emilio"
+        ? [...d3.range(nearSpacers).map(i => `__above${i}`), d.name, ...d3.range(nearSpacers).map(i => `__below${i}`)]
+        : [d.name])))
       .range([margin.top, height - margin.bottom])
       .padding(1);
     const y = name => yScale(name);
@@ -636,7 +656,11 @@
       hcl.c = Math.max(hcl.c, 50);
       return hcl.formatHex();
     }
+    // Gadda's own line is the spine of the graph: thicker than any other
+    // line and fully opaque (see .gadda-life), so it always stands out
+    const GADDA_WIDTH = 10;
     function strokeWidthFor(d) {
+      if (d.name === "Gadda Carlo Emilio") return Math.max(GADDA_WIDTH, 3 * unitsPerPx);   // at least 3 px on screen
       return minStrokeWidth + (maxStrokeWidth - minStrokeWidth) * strengthFor(d);
     }
 
@@ -656,17 +680,37 @@
         .attr("text-anchor", "middle")
         .text(d3.format("d"));
 
+    // where a line goes while it's in contact with Gadda — two styles,
+    // picked in the sidebar ("Dips"):
+    //   "close": right up to Gadda's line, with just DIP_AIR of air so they
+    //            never sit on it; stronger ties come closer (depth tiers)
+    //   "lanes": every person has their own lane beside Gadda's line —
+    //            inner rows inner lanes — so lines in contact at the same
+    //            time run side by side instead of on top of each other
+    // Either way a dip never goes past the person's own row.
+    const DIP_AIR = 2;
+    const rowIndex = new Map(people.map((p, i) => [p.name, i]));
+    const gaddaIndex = rowIndex.get("Gadda Carlo Emilio");
+    const laneWidth = Math.min(maxStrokeWidth + DIP_AIR, rowStep * 0.9);
     function dipYFor(d) {
       const rowY = y(d.name);
       const direction = rowY < gaddaY ? 1 : -1;
-      const w = quantizeToTier(rescaleWeight(d.weight ?? 1));
-      // never on top of Gadda's own line: every dip keeps a clearance of
-      // half his line's width + half this line's width and halo + GADDA_GAP
-      // of empty space; the depth tiers (maxGap * w) come on top of that, and
-      // a dip never goes past its own row
-      const GADDA_GAP = 8;
-      const clearance = strokeWidthFor(gadda) / 2 + (strokeWidthFor(d) + haloExtra) / 2 + GADDA_GAP;
-      return gaddaY - direction * Math.min(clearance + maxGap * w, Math.abs(rowY - gaddaY));
+      const distance = Math.abs(rowY - gaddaY);
+      // air and tier band have a minimum size on SCREEN (3 px / 12 px), so in
+      // dense, shrunk views lines still stop visibly short of Gadda's line
+      // and their strength tiers stay distinguishable
+      const air = Math.max(DIP_AIR, 3 * unitsPerPx);
+      const tierBand = Math.max(maxGap, 12 * unitsPerPx);
+      const gaddaEdge = strokeWidthFor(gadda) / 2 + air;
+      let offset;
+      if (dipStyle === "lanes") {
+        const lane = Math.abs(rowIndex.get(d.name) - gaddaIndex) - 1;   // 0 = nearest row
+        offset = gaddaEdge + laneWidth * (lane + 0.5);
+      } else {
+        const w = quantizeToTier(rescaleWeight(d.weight ?? 1));
+        offset = gaddaEdge + (strokeWidthFor(d) + haloExtra) / 2 + tierBand * (1 - w);
+      }
+      return gaddaY - direction * Math.min(offset, distance);
     }
 
     people.forEach(d => {
@@ -719,7 +763,7 @@
       .attr("stroke-width", d => strokeWidthFor(d) + haloExtra)
       .attr("d", lifePath);
     rows.append("path")
-      .attr("class", "life")
+      .attr("class", d => (d.name === "Gadda Carlo Emilio" ? "life gadda-life" : "life"))
       .attr("stroke", shadeFor)
       .attr("stroke-width", strokeWidthFor)
       .attr("d", lifePath);
@@ -1433,6 +1477,24 @@
     orderToggle.selectAll(".filter-btn").classed("active", function () { return this.dataset.order === rowOrder; });
   }
   syncOrderToggle();
+  const dipToggle = d3.select(selectionSection).insert("div", ".search-box").attr("class", "view-toggle dip-toggle");
+  [["close", "Dips: close"], ["lanes", "Dips: lanes"]].forEach(([key, label]) => {
+    dipToggle.append("button").attr("class", "filter-btn").attr("data-dip", key).text(label)
+      .attr("title", key === "close"
+        ? "Lines in contact come right up to Gadda's line; stronger ties come closer"
+        : "Lines in contact run in their own lane beside Gadda's line, side by side")
+      .on("click", () => {
+        if (dipStyle === key) return;
+        dipStyle = key;
+        try { localStorage.setItem("gadda-dip-style", key); } catch (e) {}
+        syncDipToggle();
+        applyFilter();
+      });
+  });
+  function syncDipToggle() {
+    dipToggle.selectAll(".filter-btn").classed("active", function () { return this.dataset.dip === dipStyle; });
+  }
+  syncDipToggle();
   function setSelectionMode(on) {
     if (on && typeof activeCats !== "undefined") activeCats.clear(); // My selection ignores categories
     const btn = document.querySelector(`#mode-filter .filter-btn[data-value="${on ? "__custom__" : "__all__"}"]`);
