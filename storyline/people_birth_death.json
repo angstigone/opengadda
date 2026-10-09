@@ -1769,10 +1769,6 @@
     "morte": 2018,
     "reparto": "library"
   },
-  "Conti Gadda Piero": {
-    "nascita": 1902,
-    "morte": 1999
-  },
   "Conti Gian Carlo": {
     "nascita": 1928,
     "morte": 1983,
@@ -2450,11 +2446,6 @@
   "Ferretti Gian Carlo": {
     "nascita": 1930,
     "morte": 2022,
-    "reparto": "secondary bibliography"
-  },
-  "Ferretti Giancarlo": {
-    "nascita": 1941,
-    "morte": null,
     "categoria": "Contatti letterari",
     "reparto": "secondary bibliography"
   },
@@ -2634,7 +2625,7 @@
     "morte": 1985,
     "reparto": "library"
   },
-  "Fratelli Armando": {
+  "Frateili Armando": {
     "nascita": 1888,
     "morte": 1965,
     "categoria": "Contatti letterari"
@@ -2696,7 +2687,6 @@
   },
   "Fuscà Franco": {
     "nascita": 1907,
-    "morte": null,
     "reparto": "secondary bibliography"
   },
   "Förster Max": {
@@ -2757,11 +2747,6 @@
     "nascita": 1909,
     "morte": 2003,
     "reparto": "library"
-  },
-  "Galli Sandro": {
-    "nascita": 1987,
-    "morte": null,
-    "reparto": "secondary bibliography"
   },
   "Gallo Niccolò": {
     "nascita": 1912,
