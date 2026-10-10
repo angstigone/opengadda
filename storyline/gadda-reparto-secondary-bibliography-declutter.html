@@ -307,6 +307,18 @@
   // works picked in the legend — several can be combined; empty = all.
   // A person matches if any of their pieces discusses a picked work.
   let activeCats = new Set();
+  // with works picked, only the pieces about those works count — for who is
+  // shown, where their line dips, its strength, the hover and the readout
+  // (a piece with no theme counts as "general")
+  const matchesWorks = w => !activeCats.size || ((w.themes && w.themes.length) ? w.themes : ["general"]).some(t => activeCats.has(t));
+  const workYearsOf = name => (secondaryWorks[name] || []).filter(matchesWorks).map(w => w.year).filter(Number.isFinite);
+  function worksWindow(d) {
+    if (!activeCats.size || d.name === "Gadda Carlo Emilio") return d;
+    const years = new Set(workYearsOf(d.name));
+    const inside = (d.interactions || []).filter(yr => years.has(yr));
+    const n = (secondaryWorks[d.name] || []).filter(w => matchesWorks(w) && inside.includes(w.year)).length;
+    return { ...d, interactions: inside, weight: n };
+  }
 
   const gadda = rawPeople.find(d => d.name === "Gadda Carlo Emilio");
   const allCorrespondents = rawPeople.filter(d => d !== gadda);
@@ -353,7 +365,7 @@
   let updateReadout = () => {};
   const readout = d3.select("body").append("div").attr("class", "year-readout");
   const contactKinds = [
-    { noun: "publications on Gadda", yearsOf: name => (secondaryWorks[name] || []).map(w => w.year).filter(Number.isFinite) },
+    { noun: "publications on Gadda", yearsOf: name => workYearsOf(name) },
   ];
   // what one person contributes to a year range: a record count per kind,
   // and whether they were in contact at all (people with no dated records
@@ -422,7 +434,7 @@
 
   function render(shownCorrespondents, initialSelected = []) {
     svg.selectAll("*").remove();
-    shownCorrespondents = shownCorrespondents.map(focusWindow);
+    shownCorrespondents = shownCorrespondents.map(focusWindow).map(worksWindow);
     const eligible = shownCorrespondents;
     if (topN != null && eligible.length > topN) {
       const ranked = [...eligible].sort((a, b) => (b.weight ?? 0) - (a.weight ?? 0));
@@ -1153,7 +1165,7 @@
         // the contact point's year IS this person's secondary-bibliography
         // publication year (see the rawPeople comment above), so only the
         // work(s) they actually published that specific year belong here.
-        const works = (secondaryWorks[d.name] || []).filter(w => w.year === d.year);
+        const works = (secondaryWorks[d.name] || []).filter(w => w.year === d.year && matchesWorks(w));
         const workLines = works.slice(0, 6).map(w => {
           const bits = [w.tipo, w.rivista || w.editore, ...(w.themes || [])].filter(Boolean).join(", ");
           return `${w.title}${bits ? ` (${bits})` : ""}`;
@@ -1217,7 +1229,8 @@
       : timeFocus
       ? allCorrespondents.filter(d => (d.interactions || []).some(yr => yr >= timeFocus.start && yr <= timeFocus.end))
       : allCorrespondents;
-    const matching = timeMatching.filter(d => !activeCats.size || [...worksOf(d.name)].some(w => activeCats.has(w)));
+    const matching = timeMatching.filter(d => !activeCats.size ||
+      workYearsOf(d.name).some(yr => !timeFocus || (yr >= timeFocus.start && yr <= timeFocus.end)));
     const base = isCustom ? [] : matching.slice().sort((a, b) => b.weight - a.weight);
     const baseNames = new Set(base.map(d => d.name));
     const pinnedExtra = allCorrespondents.filter(d => pinnedNames.has(d.name) && !baseNames.has(d.name));
