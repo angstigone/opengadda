@@ -1,0 +1,459 @@
+field,value,count
+luogo_di_pubblicazione,Milano,976
+luogo_di_pubblicazione,Firenze,397
+luogo_di_pubblicazione,Paris,305
+luogo_di_pubblicazione,Torino,302
+luogo_di_invio,Milano,268
+luogo_di_invio,Roma,268
+luogo_di_invio,Firenze,267
+luogo_di_pubblicazione,Roma,240
+luogo_di_invio,Roma (Blumenstihl 19),159
+luogo_di_invio,Firenze (Repetti 11),95
+luogo_destinatario,Milano (Simpliciano 2),73
+luogo_di_pubblicazione,Bari,62
+luogo_di_invio,Roma (Blumestihl 19),58
+luogo_di_pubblicazione,Bologna,49
+luogo_di_pubblicazione,Venezia,46
+luogo_di_invio,Roma (Innocenzo X 21),39
+luogo_destinatario,Milano,38
+luogo_di_invio,Domodossola,38
+luogo_di_invio,Roma (Bluemnstihl 19),37
+luogo_di_invio,Buenos Aires,35
+luogo_di_pubblicazione,Lanciano,34
+luogo_destinatario,Parma,33
+luogo_destinatario,Milano (Caccianino 25),31
+luogo_destinatario,Longone,29
+luogo_destinatario,Milano (Rio De Janeiro 5),29
+luogo_di_pubblicazione,Napoli,25
+luogo_destinatario,Firenze (Repetti 11),25
+luogo_di_invio,Roma (Crescenzo 63),23
+luogo_di_pubblicazione,Leipzig,22
+luogo_di_invio,Edolo,22
+luogo_di_invio,Longone,21
+luogo_destinatario,Roma (Mazzini 134),20
+luogo_di_pubblicazione,Parma,19
+luogo_di_pubblicazione,London,19
+luogo_di_invio,Milano (Simpliciano 2),19
+luogo_di_pubblicazione,Modena,19
+luogo_destinatario,Firenze (Cavalleggeri),19
+luogo_di_pubblicazione,Madrid,18
+luogo_di_pubblicazione,Sesto San Giovanni,18
+luogo_destinatario,Lagonegro,18
+luogo_di_invio,Milano (Caccianino 25),18
+luogo_di_pubblicazione,Milano-Napoli,17
+luogo_di_pubblicazione,Milano-Roma,17
+luogo_di_invio,Milano (San Simpliciano 2),17
+luogo_di_invio,Roma (Crescenzio 63),17
+luogo_di_invio,Terni,16
+luogo_di_invio,Milano (Rio de Janeiro 5),16
+luogo_di_invio,Roma (Asiago 10),16
+luogo_destinatario,Milano (Valazze 46),15
+luogo_di_invio,Venezia,15
+luogo_di_invio,Roma (Colonna 39),14
+luogo_di_invio,Cagliari,13
+luogo_destinatario,Roma,12
+luogo_destinatario,Milano (Monte Leone),12
+luogo_di_pubblicazione,Padova,11
+luogo_di_pubblicazione,Berlin,11
+luogo_di_pubblicazione,Livorno,11
+luogo_di_pubblicazione,Bergamo,11
+luogo_di_invio,Parma,11
+luogo_di_invio,Torino,11
+luogo_di_invio,Roma (Colonna 11),11
+luogo_di_invio,Parigi,11
+luogo_di_pubblicazione,Milano-Roma-Napoli,10
+luogo_destinatario,Edolo,10
+luogo_di_invio,Forte dei Marmi,10
+luogo_di_pubblicazione,Novara,9
+luogo_di_pubblicazione,Genova,9
+luogo_di_invio,Roma (Mazzini 134),9
+luogo_destinatario,San Domenico Fiesole,9
+luogo_di_invio,Verona,8
+luogo_destinatario,Modica,8
+luogo_di_invio,Rastatt,8
+luogo_di_invio,Bergamo,8
+luogo_destinatario,Milano (Legnano 16),8
+luogo_destinatario,Forte dei Marmi,8
+luogo_destinatario,Firenze,8
+luogo_di_invio,Roma (Bluemenstihl 19),8
+luogo_di_pubblicazione,Brescia,7
+luogo_di_invio,Altopiano di Asiago,7
+luogo_destinatario,Roma (Colonna 39),7
+luogo_di_pubblicazione,Verona,6
+luogo_di_pubblicazione,Como,6
+luogo_di_invio,Ponte di Legno,6
+luogo_di_invio,Perugia,6
+luogo_di_pubblicazione,Treviso,6
+luogo_di_invio,Roma (Ortigara 10),6
+luogo_di_invio,Roma (Botteghe Oscure 54),6
+luogo_di_invio,Vicenza,5
+luogo_di_invio,Stresa,5
+luogo_di_invio,Porto Vesme,5
+luogo_di_invio,Campana,5
+luogo_destinatario,Milano (Monte Leone 2),5
+luogo_di_invio,Milano (Monte Leone 2),5
+luogo_di_invio,Milano (Legnano 16),5
+luogo_di_invio,Milano (Caccianino  25),5
+luogo_di_invio,Bocca di Magra,5
+luogo_di_invio,Antignano,5
+luogo_destinatario,Milano (Morone 3),5
+luogo_di_pubblicazione,Stuttgart,4
+luogo_di_invio,Iseo,4
+luogo_di_pubblicazione,Pavia,4
+luogo_di_pubblicazione,Milano-Palermo-Napoli,4
+luogo_destinatario,Val di Ledro,4
+luogo_di_invio,Celle,4
+luogo_di_invio,Resistencia,4
+luogo_destinatario,Buenos Aires,4
+luogo_destinatario,Torno,4
+luogo_di_invio,Castellamonte,4
+luogo_destinatario,Roma (Palestrina 63),4
+luogo_di_invio,Roma (Parlamento 9),4
+luogo_di_invio,Roma (SS. Apostoli),4
+luogo_di_pubblicazione,Fi renze,4
+luogo_destinatario,Sterkrade,4
+luogo_di_invio,Sterkrade,4
+luogo_di_pubblicazione,Oxford,4
+luogo_destinatario,Gresmatten,4
+luogo_di_pubblicazione,Reggio Emilia,4
+luogo_di_pubblicazione,Trieste,4
+luogo_di_invio,Genova,4
+luogo_di_pubblicazione,Urbino,4
+luogo_di_invio,Firenze (Grazie 2),4
+luogo_destinatario,Padova,4
+luogo_di_invio,Roma (Ortigiara 10),4
+luogo_destinatario,Torino (Biancamano 20),4
+luogo_di_pubblicazione,Siena,3
+luogo_di_pubblicazione,Grosseto,3
+luogo_di_pubblicazione,Città di Castello,3
+luogo_di_pubblicazione,Roma-Milano,3
+luogo_di_pubblicazione,Milano-Torino-Roma,3
+luogo_di_invio,Bormio,3
+luogo_destinatario,Ponte di Legno,3
+luogo_di_invio,Zona di Guerra,3
+luogo_di_invio,Cima della Caldiera,3
+luogo_di_invio,Romans,3
+luogo_di_invio,Lagonegro,3
+luogo_destinatario,Celle Lager,3
+luogo_di_invio,Mafalda,3
+luogo_di_invio,Roma (Umiltà 79),3
+luogo_di_invio,Carling,3
+luogo_di_invio,Cavalcaselle,3
+luogo_destinatario,Roma (Colonna 11),3
+luogo_destinatario,Roma (Colonna 29),3
+luogo_destinatario,Milano (Pontaccio 16),3
+luogo_destinatario,Milano (Rovello 10),3
+luogo_di_invio,Firenze (Lungarno 2),3
+luogo_destinatario,Firenze (Palazzo Strozzi),3
+luogo_di_pubblicazione,London-New York,3
+luogo_di_invio,Treviso,3
+luogo_di_pubblicazione,Amsterdam,2
+luogo_di_pubblicazione,Udine,2
+luogo_di_pubblicazione,Foligno,2
+luogo_di_pubblicazione,Tours,2
+luogo_di_pubblicazione,Genève,2
+luogo_di_pubblicazione,Pistoia,2
+luogo_di_pubblicazione,Palermo,2
+luogo_destinatario,Forcella di Montorzo,2
+luogo_destinatario,Bormio,2
+luogo_destinatario,Busto Arsizio,2
+luogo_destinatario,Preccasaglio,2
+luogo_di_invio,Temù,2
+luogo_di_invio,Treschè Conca,2
+luogo_di_invio,Val d'Assa,2
+luogo_destinatario,Val d'Assa,2
+luogo_di_invio,Gallarate,2
+luogo_destinatario,Canove,2
+luogo_di_invio,Canove,2
+luogo_destinatario,Spiazzo Langabisa,2
+luogo_di_pubblicazione,New York,2
+luogo_destinatario,Risano,2
+luogo_di_invio,Clodig,2
+luogo_destinatario,Celle,2
+luogo_di_invio,Celle-Lager,2
+luogo_di_invio,Lione,2
+luogo_di_invio,Livorno,2
+luogo_di_invio,Sterkade,2
+luogo_di_pubblicazione,s.l,2
+luogo_di_pubblicazione,Monza,2
+luogo_di_pubblicazione,Torino-Milano-Firenze-Roma-Napoli-Palermo,2
+luogo_di_pubblicazione,Torino-Milano-Firenze-Roma-NapoliPalermo,2
+luogo_di_pubblicazione,Treviglio,2
+luogo_destinatario,Parigi Petrotel,2
+luogo_di_invio,Ostenda,2
+luogo_destinatario,Terni,2
+luogo_destinatario,Roma (Bruxelles),2
+luogo_destinatario,Roma (Cesalpino),2
+luogo_di_invio,Roma (Adriana 31),2
+luogo_di_pubblicazione,Milano-Verona,2
+luogo_di_invio,Roma (Guattani 20),2
+luogo_di_pubblicazione,Messina-Milano,2
+luogo_di_invio,MIlano,2
+luogo_di_pubblicazione,Pisa-Roma,2
+luogo_di_invio,Friburgo,2
+luogo_destinatario,Lucca,2
+luogo_di_invio,Margherita a Montici,2
+luogo_di_pubblicazione,Casarsa,2
+luogo_di_pubblicazione,Barcelona,2
+luogo_di_pubblicazione,Lugano,2
+luogo_di_pubblicazione,Ivrea,2
+luogo_di_pubblicazione,Ferrara,2
+luogo_di_invio,Roma (Botte Oscure 54),2
+luogo_di_pubblicazione,Pisa,2
+luogo_destinatario,Roma (Bluemnstihl 19),2
+luogo_destinatario,Milano (Borgonovo 3),2
+luogo_destinatario,Roma (Blumenstihl 19),2
+luogo_di_pubblicazione,München,2
+luogo_di_pubblicazione,Frankfurt,2
+luogo_di_invio,Pocol,2
+luogo_destinatario,Milano (Spiga 30),2
+luogo_di_invio,Abertone,2
+luogo_di_pubblicazione,Turin,1
+luogo_di_pubblicazione,Filadelfia,1
+luogo_di_pubblicazione,Paris-Bruxelles,1
+luogo_di_pubblicazione,Bruxelles,1
+luogo_di_pubblicazione,Lucca,1
+luogo_di_pubblicazione,St Hilaire,1
+luogo_di_pubblicazione,Savona,1
+luogo_di_pubblicazione,BruxellesLivourne-Leipzig,1
+luogo_di_pubblicazione,London-New YorkCincinnati-Chicago,1
+luogo_di_pubblicazione,Francfort,1
+luogo_di_pubblicazione,New York-Chicago,1
+luogo_di_pubblicazione,Milan,1
+luogo_di_pubblicazione,Mantova,1
+luogo_di_pubblicazione,L’Aja,1
+luogo_di_pubblicazione,New York-London,1
+luogo_di_pubblicazione,Alpignano,1
+luogo_di_pubblicazione,Torino-Roma-Milano-Firenze-Napoli,1
+luogo_di_pubblicazione,Torino-Roma-Firenze-Napoli,1
+luogo_di_pubblicazione,Tornio,1
+luogo_di_pubblicazione,a. Milano-Palermo-Napoli-Genova,1
+luogo_di_pubblicazione,TorinoRoma-Milano-Firenze-Napoli,1
+luogo_di_pubblicazione,Prato,1
+luogo_di_pubblicazione,Torino-Roma-Firenze-Napoli-Palermo,1
+luogo_di_pubblicazione,MilanoTorino-Roma,1
+luogo_di_pubblicazione,Perugia,1
+luogo_di_invio,St. Jerréol,1
+luogo_di_invio,Gressoney S. Jean,1
+luogo_di_pubblicazione,Berlin-Schöneberg-Milano,1
+luogo_di_pubblicazione,o. Torino-Roma-Milano-FirenzeNapoli,1
+luogo_di_pubblicazione,Torino-Milano-Roma,1
+luogo_di_invio,Rogeno,1
+luogo_di_invio,Porlezza,1
+luogo_di_pubblicazione,St. GallenNeuchâtel,1
+luogo_destinatario,Stresa,1
+luogo_di_pubblicazione,Berlino,1
+luogo_di_pubblicazione,Buenos Aires,1
+luogo_di_pubblicazione,Strasburgo,1
+luogo_di_pubblicazione,Todi,1
+luogo_destinatario,Laveno,1
+luogo_di_invio,Kandertseg,1
+luogo_di_pubblicazione,Milano-Palermo-NapoliGenova,1
+luogo_di_pubblicazione,Paris-Nancy,1
+luogo_di_pubblicazione,Breno,1
+luogo_di_pubblicazione,Milano-Palermo,1
+luogo_di_pubblicazione,Milano.Roma,1
+luogo_di_invio,Modena,1
+luogo_di_invio,Cremia,1
+luogo_di_invio,Preccasaglio,1
+luogo_destinatario,Brescia,1
+luogo_di_invio,Val di Ledro,1
+luogo_destinatario,Vesio di Tremosine,1
+luogo_destinatario,Zona di Guerrra,1
+luogo_di_pubblicazione,Piacenza  L’arte bodoniana,1
+luogo_di_invio,Treviglio,1
+luogo_di_invio,Vezzo d'Oglio,1
+luogo_di_invio,Cesena,1
+luogo_di_invio,Tresché Conca,1
+luogo_di_invio,Monte Sperone,1
+luogo_destinatario,Thiene,1
+luogo_di_invio,Thierne,1
+luogo_di_invio,Campiello,1
+luogo_destinatario,Campiello,1
+luogo_di_invio,Lognone,1
+luogo_di_invio,Spazzo Langabisa,1
+luogo_di_invio,Busto Arsizio,1
+luogo_di_invio,Spiazzo Langabisa,1
+luogo_di_invio,Modica,1
+luogo_destinatario,Malga Fossetta,1
+luogo_di_invio,Logo di Vicenza,1
+luogo_di_invio,Foggia,1
+luogo_di_invio,Napoli,1
+luogo_di_invio,Chiasottis,1
+luogo_destinatario,Santa Giustina,1
+luogo_di_invio,Faiti,1
+luogo_di_invio,San Vito al Torre,1
+luogo_di_invio,Corno di Rosazzo,1
+luogo_di_invio,Monte Sabotino,1
+luogo_destinatario,Chiasottis,1
+luogo_di_invio,Ponte San Pietro,1
+luogo_destinatario,Rastatt,1
+luogo_di_pubblicazione,Weimar,1
+luogo_di_invio,Bagnorea,1
+luogo_di_pubblicazione,Bruges,1
+luogo_di_pubblicazione,Bagnoregio,1
+luogo_destinatario,Sant'Ulrico,1
+luogo_destinatario,Cagliari,1
+luogo_di_invio,Iglesias,1
+luogo_di_pubblicazione,Roma-Milano-Firenze,1
+luogo_di_pubblicazione,Jena,1
+luogo_di_invio,Giessen,1
+luogo_di_invio,Keokuk,1
+luogo_di_pubblicazione,Torino-Milano-FirenzeRoma-Napoli-Palermo,1
+luogo_di_pubblicazione,Torino-Milano-Firenze-Roma-NapoliPlermo,1
+luogo_di_invio,Montevideo,1
+luogo_di_pubblicazione,Halle,1
+luogo_di_pubblicazione,Alba,1
+luogo_di_pubblicazione,Milano-Como-Bergamo,1
+luogo_di_invio,Roma (Palestrina 63),1
+luogo_di_invio,Musella,1
+luogo_di_invio,Piacenza,1
+luogo_di_pubblicazione,Jesi,1
+luogo_di_invio,Roma (Parlamentare 9),1
+luogo_di_invio,Viège,1
+luogo_destinatario,Roma (Parlamento 9),1
+luogo_di_invio,Roma (Apostoli 73),1
+luogo_di_pubblicazione,Torino-Milano-FirenzeNapoli-Roma-Palermo,1
+luogo_di_pubblicazione,Roma-Napoli-Palermo-TorinoMilano-Firenze,1
+luogo_di_pubblicazione,Jersey City,1
+luogo_di_invio,Pegli,1
+luogo_di_pubblicazione,Postumia,1
+luogo_destinatario,Rheinland,1
+luogo_di_invio,Oberhausen-Holten,1
+luogo_di_invio,Bruxelles,1
+luogo_di_invio,Mons,1
+luogo_di_pubblicazione,Ginevra,1
+luogo_di_pubblicazione,Parigi,1
+luogo_destinatario,Firenze (Indipendenza 10),1
+luogo_di_invio,Isola del Giglio,1
+luogo_di_invio,Giglio (Grosseto),1
+luogo_destinatario,Levanto,1
+luogo_destinatario,Castelnuovo del Garda,1
+luogo_di_pubblicazione,Hamburg-Paris-Milano,1
+luogo_di_pubblicazione,Milano  Mon dadori,1
+luogo_di_pubblicazione,Pescara,1
+luogo_destinatario,Roma (Burxelles 67),1
+luogo_di_invio,Roma (Bruxelles 67),1
+luogo_di_pubblicazione,Città del Vaticano,1
+luogo_destinatario,Roma (Toscana 13),1
+luogo_destinatario,Firenze (Indipendenza 9),1
+luogo_di_invio,Città del Vaticano,1
+luogo_destinatario,Roma (Colonna),1
+luogo_di_invio,Brno,1
+luogo_di_invio,L'Aquila,1
+luogo_di_pubblicazione,Ancona,1
+luogo_di_invio,Feltre,1
+luogo_di_invio,Brugherio,1
+luogo_di_invio,Firenze (Tintori 9),1
+luogo_di_invio,Salò sul Garda,1
+luogo_di_invio,Sestri Levante,1
+luogo_di_invio,Sestri-Levante,1
+luogo_destinatario,Città del Vaticano,1
+luogo_destinatario,Napoli,1
+luogo_destinatario,Roma (Bari 11),1
+luogo_di_pubblicazione,Roma-Paris,1
+luogo_di_pubblicazione,Ginevra-Parigi-Firenze,1
+luogo_di_invio,Firenze (Sansetti 2),1
+luogo_destinatario,Roma (Hotel Bologna),1
+luogo_destinatario,Sarzana,1
+luogo_di_invio,Firenze (Sassetti 2),1
+luogo_di_invio,Cortina d'Ampezzo,1
+luogo_di_invio,Rapallo,1
+luogo_di_pubblicazione,Asti,1
+luogo_di_pubblicazione,Rom,1
+luogo_di_invio,Losanna,1
+luogo_di_invio,Rma,1
+luogo_di_invio,Firenze (Puccinotti 11),1
+luogo_destinatario,Firenze (Grazie 2),1
+luogo_destinatario,Roma (Guttaroni 20),1
+luogo_di_invio,Arenzano,1
+luogo_di_pubblicazione,Milano  Ce schina,1
+luogo_di_pubblicazione,Firenza,1
+luogo_destinatario,Firenze (Repetti 5),1
+luogo_destinatario,Firenze (Lungarno 2),1
+luogo_destinatario,Milano (Legnano 10),1
+luogo_di_invio,Pico,1
+luogo_di_pubblicazione,Milano  Garzanti,1
+luogo_di_pubblicazione,Vigevano,1
+luogo_di_pubblicazione,Torino-Milano-GenovaParma-Roma-Catania,1
+luogo_di_pubblicazione,Milanp,1
+luogo_di_invio,Padova,1
+luogo_di_pubblicazione,Fribourg,1
+luogo_di_pubblicazione,Madison,1
+luogo_di_pubblicazione,Roma  Colombo,1
+luogo_di_pubblicazione,Roma-Firenze-Milano,1
+luogo_di_pubblicazione,Civitanova Alta,1
+luogo_di_pubblicazione,Harmondsworth,1
+luogo_di_pubblicazione,Nevers,1
+luogo_di_pubblicazione,Vesenaz-Genève,1
+luogo_di_pubblicazione,Roma-Lanciano,1
+luogo_destinatario,Marina di Petrasanta,1
+luogo_di_pubblicazione,Mexico,1
+luogo_di_pubblicazione,Firenze  L’Arte della Stampa,1
+luogo_di_pubblicazione,Catania,1
+luogo_di_pubblicazione,Estratto da «Quaderni ACI»,1
+luogo_di_invio,Taranto,1
+luogo_destinatario,Firenze (Piazza della Repubblica),1
+luogo_di_invio,S. Margherita Ligure,1
+luogo_destinatario,Vicenza (S. Michele 13),1
+luogo_destinatario,Roma (Asiago 10),1
+luogo_di_pubblicazione,Valencia,1
+luogo_di_pubblicazione,Torino  Einaudi,1
+luogo_di_pubblicazione,Milano-Firenze,1
+luogo_destinatario,Cortina d'Ampezzo,1
+luogo_di_pubblicazione,Estratto da «La civiltà delle macchine»,1
+luogo_di_pubblicazione,Tricesimo,1
+luogo_di_pubblicazione,Lausanne,1
+luogo_di_invio,Roma (Cesalpino 1-A),1
+luogo_di_invio,Avila,1
+luogo_di_invio,Saint Moritz,1
+luogo_di_invio,Agrigento,1
+luogo_di_pubblicazione,Salamanca,1
+luogo_di_pubblicazione,Bogotà,1
+luogo_di_pubblicazione,Faenza,1
+luogo_di_invio,Roma (Decimo 21),1
+luogo_di_pubblicazione,Cal tanissetta,1
+luogo_di_pubblicazione,Sarzana,1
+luogo_di_pubblicazione,London-New York-Toronto,1
+luogo_di_pubblicazione,New-York,1
+luogo_di_pubblicazione,Fiorentino,1
+luogo_di_pubblicazione,Torino-Roma,1
+luogo_di_pubblicazione,Stresa,1
+luogo_di_invio,Roma (Posta Centrale),1
+luogo_di_invio,Antiganano,1
+luogo_di_pubblicazione,Cremona,1
+luogo_di_pubblicazione,Pompei,1
+luogo_di_invio,Santa Margherita Ligure,1
+luogo_destinatario,Barberino di Mugello,1
+luogo_di_invio,Roma (Blumenstihl 19,1
+luogo_di_invio,Barcellona,1
+luogo_di_pubblicazione,Viareggio,1
+luogo_di_pubblicazione,Washington,1
+luogo_destinatario,Firenze (Tornabuoni 15),1
+luogo_destinatario,Treviso (Quattro Novembre),1
+luogo_di_pubblicazione,Bolzano,1
+luogo_di_pubblicazione,Pozzuoli (Napoli),1
+luogo_di_pubblicazione,Messina,1
+luogo_destinatario,Cinquale,1
+luogo_di_invio,San Domenico Fiesole,1
+luogo_di_pubblicazione,Messina-Firenze,1
+luogo_di_pubblicazione,Arezzo,1
+luogo_destinatario,Grosseto,1
+luogo_di_pubblicazione,Bern,1
+luogo_di_pubblicazione,Comune di Ferrara,1
+luogo_di_invio,Bologna,1
+luogo_di_invio,Rio de Janeiro,1
+luogo_di_pubblicazione,Azzate,1
+luogo_di_pubblicazione,Messina- Firenze,1
+luogo_di_pubblicazione,AnnoniStresa,1
+luogo_di_pubblicazione,Milano-Palermo-Napoli-Genova-Bologna,1
+luogo_di_pubblicazione,LeipzigWien,1
+luogo_di_pubblicazione,Lyon,1
+luogo_di_pubblicazione,Torino-Milano-Firenze-Napoli-RomaPalermo,1
+luogo_di_pubblicazione,MilanoNapoli-Bologna-Firenze-RomaTorino,1
+luogo_di_pubblicazione,Milano-Parigi,1
+luogo_di_pubblicazione,Spoleto,1
+luogo_di_pubblicazione,Strasbourg,1
+luogo_di_pubblicazione,Liepzig,1
+luogo_di_pubblicazione,Pascal,1
+luogo_di_pubblicazione,Milano-Palermo- Napoli,1
