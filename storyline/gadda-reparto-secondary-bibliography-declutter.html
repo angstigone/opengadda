@@ -108,7 +108,7 @@
      for now (not removed — the script still looks them up by id). Search,
      year focus and the legend live in a fixed sidebar on the left, and the
      graph fills the rest of the window. */
-  :root { --side-w: 240px; }
+  :root { --side-w: 270px; }
   body { padding: 0; height: 100vh; overflow: visible; align-items: flex-start; }
   h1, p.sub, .filter-bar, .count-panel, .cross-link { display: none !important; }
   /* only <html> scrolls — if body had its own overflow too, body would
@@ -122,13 +122,19 @@
     position: fixed; left: 0; top: 0; bottom: 0; width: var(--side-w); z-index: 60;
     box-sizing: border-box; padding: 1rem 0.9rem; overflow-y: auto;
     background: var(--bg); border-right: 1px solid var(--grid);
-    display: flex; flex-direction: column; gap: 1.25rem;
+    display: flex; flex-direction: column; gap: 0.85rem;
   }
   .side-panel h2 {
     font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
     opacity: 0.55; margin: 0 0 0.45rem;
   }
   .side-panel .controls-bar { display: contents; }
+  /* fold-away sidebar sections: click a heading to fold it */
+  .side-panel h2.foldable { cursor: pointer; user-select: none; }
+  .side-panel h2.foldable::before { content: "▾"; display: inline-block; width: 0.9em; }
+  .side-panel section.folded > h2.foldable::before { content: "▸"; }
+  .side-panel section.folded > :not(h2) { display: none !important; }
+  .year-readout { pointer-events: auto; }
   .side-panel .search-box { width: 100%; }
   .side-panel .time-focus { flex-wrap: wrap; }
   .side-panel .time-focus > span:first-child { display: none; } /* replaced by the section heading */
@@ -145,6 +151,7 @@
   .view-toggle { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.6rem; }
   .view-toggle .filter-btn { flex: 1 1 auto; padding: 0.3rem 0.55rem; }
   .selection-hint { font-size: 0.72rem; opacity: 0.65; margin-top: 0.45rem; }
+  .selection-hint:empty { display: none; }
 
 
   /* reparto switcher at the top of the sidebar */
@@ -164,8 +171,14 @@
     box-shadow: 0 2px 10px rgba(0,0,0,0.08); pointer-events: none;
   }
   .year-readout strong { font-size: 0.9rem; }
-  .year-readout .ro-years { font-weight: 700; opacity: 0.7; margin-bottom: 0.15rem; }
+  .year-readout .ro-years { font-weight: 700; opacity: 0.7; }
   .year-readout .ro-sub { opacity: 0.6; }
+  .year-readout .ro-person { border-top: 1px solid var(--grid); margin-top: 0.35rem; padding-top: 0.35rem; }
+  .year-readout .ro-name { font-weight: 700; }
+  .year-readout .ro-total { border-top: 1px solid var(--grid); margin-top: 0.35rem; padding-top: 0.35rem; }
+  /* the numbers box sits in the sidebar, under the cross-links, so it
+     never covers the graph */
+  .year-readout { position: static; max-width: none; box-shadow: none; background: transparent; padding: 0.45rem 0.6rem; }
   .shown-count { font-size: 0.78rem; margin-bottom: 0.55rem; line-height: 1.45; }
   .shown-count strong { font-size: 0.9rem; }
 
@@ -174,6 +187,7 @@
 
   /* connections between graphs */
   .xref-dot { font-size: 0.85em; }
+  .cross-links { background: color-mix(in srgb, var(--accent, #4a5059) 7%, transparent); border: 1px solid var(--grid); border-radius: 8px; padding: 0.55rem 0.65rem 0.25rem; }
   .cross-person { margin-bottom: 0.55rem; }
   .cross-name { font-size: 0.78rem; font-weight: 600; margin-bottom: 0.25rem; }
   .cross-btns { display: flex; flex-wrap: wrap; gap: 0.3rem; }
@@ -208,7 +222,7 @@
   }
   .side-toggle:hover { opacity: 1; }
   /* category legend — part of the sidebar */
-  .category-legend { font-size: 0.75rem; line-height: 1.8; }
+  .category-legend { font-size: 0.75rem; line-height: 1.6; }
   .category-legend .swatch {
     display: inline-block; width: 0.75rem; height: 0.75rem; border-radius: 3px;
     margin-right: 0.4rem; vertical-align: -0.1rem;
@@ -217,6 +231,10 @@
   .category-legend .legend-row {
     cursor: pointer; border-radius: 4px; padding: 0 0.3rem; margin: 0 -0.3rem;
   }
+  /* legend items flow side by side, wrapping, so the legend stays short
+     enough to keep open without the sidebar scrolling */
+  .category-legend .legend-row { display: inline-block; max-width: 100%; margin: 0 0.15rem 0.1rem -0.3rem; }
+  .category-legend .legend-row.not-theirs { display: none; }
   .category-legend .legend-row:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); }
   /* while a category is picked, the others fade so the active one reads clearly */
   .category-legend.filtering .legend-row:not(.active) { opacity: 0.4; }
@@ -357,6 +375,19 @@
   // added with the search box is always drawn on top of these.
   const TOP_N_DEFAULT = 15;
   let topN = TOP_N_DEFAULT; // null = everyone
+  // all-time totals per person (letters: archive tally from mittenti_enriched
+  // plus catalogued items, undated included), shown in the
+  // readout for the people clicked, whatever years are on screen
+  const personTotals = {"Accrocca Elio Filippo":["<strong>2</strong> publications on Gadda (to 1973)"],"Amoruso Vito":["<strong>2</strong> publications on Gadda (to 1973)"],"Anceschi Luciano":["<strong>1</strong> publication on Gadda (to 1973)"],"Antonielli Sergio":["<strong>1</strong> publication on Gadda (to 1973)"],"Antonini Giacomo":["<strong>1</strong> publication on Gadda (to 1973)"],"Arbasino Alberto":["<strong>3</strong> publications on Gadda (to 1973) · <strong>10</strong> in all"],"Asor Rosa Alberto":["<strong>1</strong> publication on Gadda (to 1973) · <strong>5</strong> in all"],"Baldacci Luigi":["<strong>3</strong> publications on Gadda (to 1973) · <strong>4</strong> in all"],"Barilli Renato":["<strong>1</strong> publication on Gadda (to 1973) · <strong>2</strong> in all"],"Bartolucci Giuseppe":["<strong>3</strong> publications on Gadda (to 1973)"],"Bellonci Goffredo":["<strong>1</strong> publication on Gadda (to 1973)"],"Benedetti Arrigo":["<strong>1</strong> publication on Gadda (to 1973)"],"Beretta Alberto":["<strong>1</strong> publication on Gadda (to 1973)"],"Bertacchini Renato":["<strong>2</strong> publications on Gadda (to 1973)"],"Bertolucci Attilio":["<strong>1</strong> publication on Gadda (to 1973)"],"Bezzola Guido":["<strong>1</strong> publication on Gadda (to 1973)"],"Bianconi Piero":["<strong>1</strong> publication on Gadda (to 1973)"],"Bigongiari Piero":["<strong>1</strong> publication on Gadda (to 1973)"],"Binni Walter":["<strong>5</strong> publications on Gadda (to 1973)"],"Bo Carlo":["<strong>9</strong> publications on Gadda (to 1973)"],"Bocelli Arnaldo":["<strong>1</strong> publication on Gadda (to 1973)"],"Bodei Remo":["<strong>1</strong> publication on Gadda (to 1973)"],"Bonsanti Alessandro":["<strong>2</strong> publications on Gadda (to 1973)"],"Boselli Mario":["<strong>1</strong> publication on Gadda (to 1973)"],"Butor Michel":["<strong>1</strong> publication on Gadda (to 1973)"],"Bàrberi Squarotti Giorgio":["<strong>1</strong> publication on Gadda (to 1973) · <strong>4</strong> in all"],"Cajumi Arrigo":["<strong>3</strong> publications on Gadda (to 1973)"],"Calvino Italo":["<strong>4</strong> publications on Gadda (to 1973) · <strong>5</strong> in all"],"Camerino Aldo":["<strong>1</strong> publication on Gadda (to 1973)"],"Camilucci Marcello":["<strong>1</strong> publication on Gadda (to 1973)"],"Cases Cesare":["<strong>1</strong> publication on Gadda (to 1973) · <strong>2</strong> in all"],"Cattaneo Giulio":["<strong>6</strong> publications on Gadda (to 1973) · <strong>8</strong> in all"],"Cavallari Alberto":["<strong>1</strong> publication on Gadda (to 1973)"],"Cecchi Emilio":["<strong>5</strong> publications on Gadda (to 1973) · <strong>6</strong> in all"],"Chiarini Paolo":["<strong>1</strong> publication on Gadda (to 1973)"],"Cibotto Gian Antonio":["<strong>1</strong> publication on Gadda (to 1973)"],"Cione Edmondo":["<strong>1</strong> publication on Gadda (to 1973)"],"Citati Pietro":["<strong>4</strong> publications on Gadda (to 1973) · <strong>16</strong> in all"],"Colombi Guidotti Mario":["<strong>1</strong> publication on Gadda (to 1973)"],"Compagnone Luigi":["<strong>1</strong> publication on Gadda (to 1973)"],"Contini Gianfranco":["<strong>12</strong> publications on Gadda (to 1973) · <strong>18</strong> in all"],"Crovi Raffaele":["<strong>1</strong> publication on Gadda (to 1973)"],"Curi Fausto":["<strong>2</strong> publications on Gadda (to 1973) · <strong>3</strong> in all"],"Cusatelli Giorgio":["<strong>1</strong> publication on Gadda (to 1973)"],"Dal Fabbro Beniamino":["<strong>1</strong> publication on Gadda (to 1973)"],"Dallamano Piero":["<strong>1</strong> publication on Gadda (to 1973)"],"David Michel":["<strong>1</strong> publication on Gadda (to 1973)"],"De Feo Sandro":["<strong>1</strong> publication on Gadda (to 1973)"],"De Robertis Giuseppe":["<strong>14</strong> publications on Gadda (to 1973)"],"Devoto Giacomo":["<strong>3</strong> publications on Gadda (to 1973)"],"Di Pino Guido":["<strong>1</strong> publication on Gadda (to 1973)"],"Dossena Giampaolo":["<strong>1</strong> publication on Gadda (to 1973) · <strong>2</strong> in all"],"Enzensberger Hans Magnus":["<strong>2</strong> publications on Gadda (to 1973)"],"Falqui Enrico":["<strong>13</strong> publications on Gadda (to 1973)"],"Ferrero Ernesto":["<strong>1</strong> publication on Gadda (to 1973) · <strong>4</strong> in all"],"Ferretti Gian Carlo":["<strong>1</strong> publication on Gadda (to 1973) · <strong>4</strong> in all"],"Flores Enrico":["<strong>2</strong> publications on Gadda (to 1973) · <strong>3</strong> in all"],"Franchi Raffaello":["<strong>3</strong> publications on Gadda (to 1973)"],"Franciosa Massimo":["<strong>1</strong> publication on Gadda (to 1973)"],"Frattarolo Renzo":["<strong>1</strong> publication on Gadda (to 1973)"],"Fusco Mario":["<strong>1</strong> publication on Gadda (to 1973)"],"Fuscà Franco":["<strong>2</strong> publications on Gadda (to 1973)"],"Gadda Conti Piero":["<strong>5</strong> publications on Gadda (to 1973) · <strong>6</strong> in all"],"Gallo Niccolò":["<strong>2</strong> publications on Gadda (to 1973)"],"Garboli Cesare":["<strong>2</strong> publications on Gadda (to 1973) · <strong>5</strong> in all"],"Gargiulo Alfredo":["<strong>6</strong> publications on Gadda (to 1973)"],"Gelli Piero":["<strong>1</strong> publication on Gadda (to 1973) · <strong>6</strong> in all"],"Ghirotti Gigi":["<strong>1</strong> publication on Gadda (to 1973)"],"Gigli Lorenzo":["<strong>1</strong> publication on Gadda (to 1973)"],"Giusso Lorenzo":["<strong>1</strong> publication on Gadda (to 1973)"],"Gorni Guglielmo":["<strong>2</strong> publications on Gadda (to 1973) · <strong>4</strong> in all"],"Gramigna Giuliano":["<strong>2</strong> publications on Gadda (to 1973)"],"Guarnieri Silvio":["<strong>3</strong> publications on Gadda (to 1973) · <strong>5</strong> in all"],"Guglielmi Angelo":["<strong>8</strong> publications on Gadda (to 1973) · <strong>13</strong> in all"],"Guglielmi Guido":["<strong>1</strong> publication on Gadda (to 1973) · <strong>7</strong> in all"],"Innamorati Giuliano":["<strong>1</strong> publication on Gadda (to 1973)"],"Isnenghi Mario":["<strong>1</strong> publication on Gadda (to 1973)"],"Lasky Melvin J.":["<strong>1</strong> publication on Gadda (to 1973)"],"Linati Carlo":["<strong>4</strong> publications on Gadda (to 1973)"],"Luzi Mario":["<strong>1</strong> publication on Gadda (to 1973)"],"Manzini Gianna":["<strong>2</strong> publications on Gadda (to 1973)"],"Marabini Claudio":["<strong>1</strong> publication on Gadda (to 1973) · <strong>2</strong> in all"],"Masciotta Michelangelo":["<strong>2</strong> publications on Gadda (to 1973)"],"Mauro Walter":["<strong>1</strong> publication on Gadda (to 1973) · <strong>2</strong> in all"],"Mele Antonio":["<strong>1</strong> publication on Gadda (to 1973)"],"Micheli Silvio":["<strong>1</strong> publication on Gadda (to 1973)"],"Milanese Cesare":["<strong>1</strong> publication on Gadda (to 1973)"],"Milano Paolo":["<strong>3</strong> publications on Gadda (to 1973)"],"Montale Eugenio":["<strong>1</strong> publication on Gadda (to 1973) · <strong>2</strong> in all"],"Moravia Alberto":["<strong>1</strong> publication on Gadda (to 1973)"],"Nava Giuseppe":["<strong>1</strong> publication on Gadda (to 1973)"],"Pampaloni Geno":["<strong>2</strong> publications on Gadda (to 1973)"],"Pancrazi Pietro":["<strong>2</strong> publications on Gadda (to 1973)"],"Pandini Giancarlo":["<strong>1</strong> publication on Gadda (to 1973) · <strong>2</strong> in all"],"Pasolini Pier Paolo":["<strong>9</strong> publications on Gadda (to 1973)"],"Pedullà Walter":["<strong>4</strong> publications on Gadda (to 1973) · <strong>18</strong> in all"],"Pellegrini Silvio":["<strong>1</strong> publication on Gadda (to 1973)"],"Pellizzi Camillo":["<strong>1</strong> publication on Gadda (to 1973)"],"Picchi Mario":["<strong>1</strong> publication on Gadda (to 1973) · <strong>2</strong> in all"],"Piccioni Leone":["<strong>12</strong> publications on Gadda (to 1973) · <strong>15</strong> in all"],"Piovene Guido":["<strong>1</strong> publication on Gadda (to 1973)"],"Piroué Georges":["<strong>1</strong> publication on Gadda (to 1973)"],"Pomilio Mario":["<strong>1</strong> publication on Gadda (to 1973)"],"Pullini Giorgio":["<strong>2</strong> publications on Gadda (to 1973)"],"Raboni Giovanni":["<strong>2</strong> publications on Gadda (to 1973)"],"Radice Raul":["<strong>1</strong> publication on Gadda (to 1973)"],"Rago Michele":["<strong>2</strong> publications on Gadda (to 1973)"],"Ravegnani Giuseppe":["<strong>1</strong> publication on Gadda (to 1973)"],"Raya Gino":["<strong>1</strong> publication on Gadda (to 1973)"],"Romanò Angelo":["<strong>3</strong> publications on Gadda (to 1973)"],"Roscioni Gian Carlo":["<strong>2</strong> publications on Gadda (to 1973) · <strong>11</strong> in all"],"Russo Luigi":["<strong>2</strong> publications on Gadda (to 1973)"],"Salinari Carlo":["<strong>5</strong> publications on Gadda (to 1973)"],"Scalia Gianni":["<strong>1</strong> publication on Gadda (to 1973)"],"Scrivano Riccardo":["<strong>1</strong> publication on Gadda (to 1973) · <strong>3</strong> in all"],"Seroni Adriano":["<strong>3</strong> publications on Gadda (to 1973)"],"Siciliano Enzo":["<strong>2</strong> publications on Gadda (to 1973) · <strong>4</strong> in all"],"Sobrero Ornella":["<strong>2</strong> publications on Gadda (to 1973) · <strong>4</strong> in all"],"Spagnoletti Giacinto":["<strong>1</strong> publication on Gadda (to 1973) · <strong>3</strong> in all"],"Squarcia Francesco":["<strong>3</strong> publications on Gadda (to 1973)"],"Tecchi Bonaventura":["<strong>4</strong> publications on Gadda (to 1973)"],"Titta Rosa Giovanni":["<strong>1</strong> publication on Gadda (to 1973)"],"Tondo Michele":["<strong>2</strong> publications on Gadda (to 1973)"],"Traverso Leone":["<strong>1</strong> publication on Gadda (to 1973)"],"Trombatore Gaetano":["<strong>1</strong> publication on Gadda (to 1973)"],"Ulivi Ferruccio":["<strong>1</strong> publication on Gadda (to 1973)"],"Ungaretti Giuseppe":["<strong>1</strong> publication on Gadda (to 1973)"],"Varese Claudio":["<strong>2</strong> publications on Gadda (to 1973)"],"Vicari Giambattista":["<strong>1</strong> publication on Gadda (to 1973)"],"Vigorelli Giancarlo":["<strong>3</strong> publications on Gadda (to 1973) · <strong>4</strong> in all"],"Vittorini Elio":["<strong>5</strong> publications on Gadda (to 1973) · <strong>6</strong> in all"],"Volpini Valerio":["<strong>1</strong> publication on Gadda (to 1973)"],"Wahl François":["<strong>1</strong> publication on Gadda (to 1973)"],"Zampa Giorgio":["<strong>1</strong> publication on Gadda (to 1973) · <strong>4</strong> in all"],"Zolla Elémire":["<strong>1</strong> publication on Gadda (to 1973)"],"Zorzi Ludovico":["<strong>1</strong> publication on Gadda (to 1973)"]};
+  const DATASET_TOTAL = "<strong>2,756</strong> publications on Gadda <span class=\"ro-sub\">(280 here)</span>";
+  function selectedTotals() {
+    const names = lastSelectedNames.filter(n => personTotals[n]);
+    if (!names.length) return "";
+    const shown = names.slice(0, 4);
+    return `<div class="ro-person">` + shown.map(n =>
+      `<div><span class="ro-name">${n === "Gadda Carlo Emilio" ? "Gadda" : n}</span><br>${personTotals[n].join("<br>")}</div>`
+    ).join("") + (names.length > shown.length ? `<div class="ro-sub">…and ${names.length - shown.length} more selected</div>` : "") + `</div>`;
+  }
   // --- live readout (bottom-right): for the years currently on screen, how
   // many people were in contact with Gadda and how many records there are,
   // counted over EVERYONE matching the current filters — not just the people
@@ -391,6 +422,10 @@
   const otherReparti = name => (repartoMembership[name] || []).filter(k => k !== THIS_REPARTO && k !== "undifferentiated");
   let updateCrossLinks = () => {};
   let lastSelectedNames = [];
+  // picking or clearing a category starts afresh: the people clicked are
+  // let go (switching graph keeps them)
+  function dropSelection() { lastSelectedNames = []; searchSelected = new Set(); }
+  let syncPersonLegend = () => {};
   // row order (see layoutRows): year order on both sides of Gadda, people
   // dipping at the same time on opposite sides
   const rowOrder = "balanced";
@@ -435,7 +470,7 @@
     if (topN != null && eligible.length > topN) {
       const ranked = [...eligible].sort((a, b) => (b.weight ?? 0) - (a.weight ?? 0));
       const keep = new Set(ranked.slice(0, topN).map(d => d.name));
-      shownCorrespondents = eligible.filter(d => keep.has(d.name) || pinnedNames.has(d.name));
+      shownCorrespondents = eligible.filter(d => keep.has(d.name) || pinnedNames.has(d.name) || [...initialSelected].includes(d.name));
     }
     topNStats = { shown: shownCorrespondents.length, total: eligible.length };
     // in a focused period, contacts a few years apart are separate events,
@@ -914,10 +949,10 @@
         c.counts.forEach((n, i) => totals[i] += n);
       });
       readout.html(
-        `<div class="ro-years">${lo} – ${hi} on screen</div>` +
-        `<div><strong>${people}</strong> ${people === 1 ? "person" : "people"} in contact` +
-        (drawn < people ? ` <span class="ro-sub">(${drawn} drawn)</span>` : "") + `</div>` +
-        contactKinds.map((k, i) => `<div><strong>${totals[i]}</strong> ${k.noun}</div>`).join("")
+        `<div><span class="ro-years">${lo}–${hi}:</span> <strong>${people}</strong> ${people === 1 ? "person" : "people"}` +
+        (drawn < people ? ` <span class="ro-sub">(${drawn} drawn)</span>` : "") +
+        contactKinds.map((k, i) => ` · <strong>${totals[i]}</strong> ${k.noun}`).join("") + `</div>` +
+        selectedTotals() + `<div class="ro-total">All: ${DATASET_TOTAL}</div>`
       );
     };
     updateReadout();
@@ -1061,6 +1096,8 @@
         if (newlySelected.length) scrollToFirstContact(newlySelected);
         lastSelectedNames = [...selected];
         updateCrossLinks(lastSelectedNames);
+        updateReadout();
+        syncPersonLegend();
       }
       rows.selectAll(".life, .life-halo").style("opacity", d => (isRelevant(d.name) ? null : 0.08));
       rows.selectAll(".pt").style("opacity", d => (isRelevant(d.name) ? 1 : 0.08));
@@ -1231,7 +1268,12 @@
     const baseNames = new Set(base.map(d => d.name));
     const pinnedExtra = allCorrespondents.filter(d => pinnedNames.has(d.name) && !baseNames.has(d.name));
     const shown = [...base, ...pinnedExtra];
-    render(shown, searchSelected);
+    // the current selection survives filter changes (categories, years,
+    // Most active / Show all): selected people stay drawn and highlighted
+    const keepSelected = new Set([...searchSelected, ...lastSelectedNames]);
+    const keptNames = new Set(shown.map(d => d.name));
+    const selectedExtra = allCorrespondents.filter(d => keepSelected.has(d.name) && !keptNames.has(d.name));
+    render([...shown, ...selectedExtra], keepSelected);
 
     d3.select("#count-panel").html(
       isCustom
@@ -1246,7 +1288,7 @@
       .join("div")
         .attr("class", "pinned-chip")
         .text(d => d)
-        .on("click", (event, d) => { pinnedNames.delete(d); searchSelected.delete(d); applyFilter(); });
+        .on("click", (event, d) => { pinnedNames.delete(d); searchSelected.delete(d); lastSelectedNames = lastSelectedNames.filter(n => n !== d); applyFilter(); });
     if (selectionToggleReady) syncSelectionToggle(); // the switch is built after the first draw
   }
 
@@ -1333,10 +1375,12 @@
 
   // arriving here via a cross-graph link (?focus=Name) pins and highlights
   // that person immediately, same as picking them from the search box.
+  // several names (switching graph with people selected) come joined by "|"
   const focusParam = new URLSearchParams(location.search).get("focus");
-  if (focusParam && allCorrespondents.some(d => d.name === focusParam)) {
-    pinnedNames.add(focusParam);
-    searchSelected = new Set([focusParam]);
+  const focusNames = (focusParam || "").split("|").filter(n => allCorrespondents.some(d => d.name === n));
+  if (focusNames.length) {
+    focusNames.forEach(n => pinnedNames.add(n));
+    searchSelected = new Set(focusNames);
   }
 
   applyFilter();
@@ -1355,25 +1399,42 @@
       .attr("data-cat", work)
       .attr("title", workLabels[work])
       .on("click", () => {
+        dropSelection();
         if (activeCats.has(work)) activeCats.delete(work);
         else activeCats.add(work);
         if (customMode) setSelectionMode(false); // picking a work leaves My selection
         else applyFilter();
         syncLegend();
       });
-    row.append("span").text(work === "general" ? workLabels.general : `${work} — ${workLabels[work]}`);
+    // just the siglum, to keep the legend short; the full title shows on hover
+    row.append("span").text(work === "general" ? "general" : work);
     row.append("span").attr("class", "n").text(n);
   });
   const clearCats = legendSection.append("button")
     .attr("class", "filter-btn clear-cats")
     .text("Show all works")
-    .on("click", () => { activeCats.clear(); applyFilter(); syncLegend(); });
+    .on("click", () => { dropSelection(); activeCats.clear(); applyFilter(); syncLegend(); });
   function syncLegend() {
     categoryLegend.classed("filtering", activeCats.size > 0);
     categoryLegend.selectAll(".legend-row").classed("active", function () { return activeCats.has(this.dataset.cat); });
     clearCats.style("display", activeCats.size ? null : "none");
   }
   syncLegend();
+  // with people clicked, the legend shows only their data: just the works
+  // their pieces discuss, each with how many of their pieces; the rest is
+  // hidden until they're deselected
+  syncPersonLegend = () => {
+    const picked = lastSelectedNames.filter(n => secondaryWorks[n]);
+    const pieces = picked.flatMap(n => secondaryWorks[n]);
+    categoryLegend.selectAll(".legend-row").each(function () {
+      const row = d3.select(this), n = row.select(".n");
+      if (this.dataset.total == null) this.dataset.total = n.text();
+      const mine = pieces.filter(w => ((w.themes && w.themes.length) ? w.themes : ["general"]).includes(this.dataset.cat)).length;
+      row.classed("not-theirs", picked.length > 0 && !mine);
+      n.text(picked.length ? mine : this.dataset.total);
+    });
+  };
+  syncPersonLegend();
 
   // --- reparti: the graphs this one links to (cross-links, download name).
   // Switching between them is done from gadda-browse.html's top tab bar.
@@ -1399,8 +1460,10 @@
       try {
         if (window.parent !== window && typeof window.parent.openReparto === "function") parentOpen = window.parent.openReparto;
       } catch (e) { /* parent not reachable (e.g. file://) */ }
-      if (parentOpen) parentOpen(r.key);
-      else location.href = r.file;
+      // the people selected here come along, selected in the other graph too
+      const focus = lastSelectedNames.filter(n => n !== "Gadda Carlo Emilio").join("|");
+      if (parentOpen) parentOpen(r.key, focus || undefined);
+      else location.href = r.file + (focus ? `?focus=${encodeURIComponent(focus)}` : "");
     });
   graphSelect.selectAll("option").data(reparti).join("option")
     .attr("value", r => r.key)
@@ -1424,7 +1487,11 @@
     if (parentOpen) parentOpen(key, name);
     else location.href = `${r.file}?focus=${encodeURIComponent(name)}`;
   }
-  const crossSection = d3.select("#side-panel").insert("section", () => repartiSection.node()).attr("class", "cross-links");
+  // right under the Graph drop-down, so it shows as soon as someone is clicked
+  const crossSection = d3.select("#side-panel").insert("section", () => graphSection.node().nextSibling).attr("class", "cross-links");
+  const numbersSection = d3.select("#side-panel").insert("section", () => crossSection.node().nextSibling).attr("class", "numbers");
+  numbersSection.append("h2").text("In numbers");
+  numbersSection.node().appendChild(readout.node());
   crossSection.append("h2").text("Also in other reparti");
   const crossBody = crossSection.append("div");
   updateCrossLinks = names => {
@@ -1482,8 +1549,8 @@
     selectionHint.text(on
       ? (pinnedNames.size ? "Only the people you added are shown. Click a name chip to remove it." : "Your selection is empty: search a name above to add someone.")
       : mode === "all"
-      ? "Everyone matching your categories and years is drawn."
-      : "Names you add with search are always shown, on top of these.");
+      ? ""
+      : "");
     // how many people are drawn, out of how many — the graph only draws the
     // most active by default, so this keeps the reduced view honest
     const { shown, total } = topNStats;
@@ -1492,9 +1559,8 @@
       ? `Your selection: <strong>${shown}</strong> of ${everyone} people`
       : (shown >= total
           ? `Showing ${total === 1 ? "the only" : "all"} <strong>${total}</strong> ${total === 1 ? "person" : "people"}`
-          : `Showing <strong>${shown}</strong> of ${total} people`) +
-        (total < everyone ? ` matching your filters (${everyone} in all)` : "") +
-        (shown < total ? ` — the most active; choose "Show all" to draw everyone` : ""));
+          : `Showing the <strong>${shown}</strong> most active of ${total} people`) +
+        (total < everyone ? ` matching your filters (${everyone} in all)` : ""));
   }
   // --- download "My selection" as a PNG or JPG image. Only offered in My
   // selection mode. The page's colours, fonts and line widths come from CSS classes and
@@ -1702,6 +1768,41 @@
     }
   }, { passive: false });
   window.addEventListener("scroll", () => { pinLabels(); updateReadout(); }, { passive: true });
+</script>
+<script>
+  // fold-away sidebar sections: every heading except "Graph" folds its
+  // section; what you fold is remembered across graphs. Focus on years and
+  // the note about the dots start folded.
+  window.addEventListener("load", () => {
+    const panel = document.getElementById("side-panel");
+    if (!panel) return;
+    const hint = panel.querySelector(".xref-hint");
+    const hintSection = hint && hint.closest("section");
+    if (hintSection && !hintSection.querySelector(":scope > h2")) {
+      const h = document.createElement("h2");
+      h.textContent = "About the dots";
+      hintSection.prepend(h);
+    }
+    let folded;
+    try { folded = JSON.parse(localStorage.getItem("gadda-folded-sections")); } catch (e) {}
+    if (!Array.isArray(folded)) folded = ["focus on years", "about the dots"];
+    const save = () => { try { localStorage.setItem("gadda-folded-sections", JSON.stringify(folded)); } catch (e) {} };
+    panel.querySelectorAll(":scope > section, :scope > .controls-bar > section").forEach(section => {
+      const h = section.querySelector(":scope > h2");
+      // the graph switch and the colour legends always stay open
+      if (!h || section.classList.contains("graph-switch") || /click to combine/i.test(h.textContent)) return;
+      const key = h.textContent.trim().toLowerCase();
+      h.classList.add("foldable");
+      section.classList.toggle("folded", folded.includes(key));
+      h.addEventListener("click", () => {
+        const now = !section.classList.contains("folded");
+        section.classList.toggle("folded", now);
+        folded = folded.filter(k => k !== key);
+        if (now) folded.push(key);
+        save();
+      });
+    });
+  });
 </script>
 </body>
 </html>

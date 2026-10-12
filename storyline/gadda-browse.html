@@ -142,7 +142,7 @@
   });
 
   // ?tab=library (or similar) picks which graph opens initially; defaults
-  // to letters. A graph's own cross-links (?focus=Name) still work since
+  // to everyone (undifferentiated). A graph's own cross-links (?focus=Name) still work since
   // they're passed straight through to the iframe's src by each tab's file.
   // graphs inside the frame call this to jump to another reparto with a
   // person already selected ("Also in other reparti" in their sidebar)
@@ -152,7 +152,7 @@
   };
 
   const requestedKey = new URLSearchParams(location.search).get("tab");
-  const initial = tabs.find(t => t.key === requestedKey) || tabs[0];
+  const initial = tabs.find(t => t.key === requestedKey) || tabs.find(t => t.key === "undifferentiated");
   activate(initial);
 
   // --- download: export the SVG currently showing inside the iframe (the
