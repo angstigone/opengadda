@@ -376,15 +376,11 @@
   const otherReparti = name => (repartoMembership[name] || []).filter(k => k !== THIS_REPARTO && k !== "undifferentiated");
   let updateCrossLinks = () => {};
   let lastSelectedNames = [];
-  // row order, picked in the sidebar (see layoutRows): "balanced" (default)
-  // = year order on both sides, people dipping at the same time on opposite
-  // sides; "year" = the original layout; "crossings" = rearranged to cross
-  // less. Remembered across graphs.
-  let rowOrder = "balanced";
-  // how lines meet Gadda's while in contact: "lanes" (default) or "close" — see dipYFor
-  let dipStyle = "lanes";
-  try { dipStyle = localStorage.getItem("gadda-dip-style") || "lanes"; } catch (e) {}
-  try { rowOrder = localStorage.getItem("gadda-row-order") || "balanced"; } catch (e) {}
+  // row order (see layoutRows): year order on both sides of Gadda, people
+  // dipping at the same time on opposite sides
+  const rowOrder = "balanced";
+  // lines in contact come right up to Gadda's, stronger ties closer — see dipYFor
+  const dipStyle = "close";
   // when the page last scrolled — hover previews wait until scrolling stops
   let lastScrollAt = 0;
   window.addEventListener("wheel", () => { lastScrollAt = Date.now(); }, { passive: true });
@@ -1508,45 +1504,6 @@
     .on("click", () => { topN = null; setSelectionMode(false); });
   viewToggle.append("button").attr("class", "filter-btn").attr("data-mode", "custom").text("★ My selection")
     .on("click", () => setSelectionMode(true));
-  const orderToggle = d3.select(selectionSection).insert("div", ".search-box").attr("class", "view-toggle order-toggle");
-  const orderTitles = {
-    year: "Rows sorted by year, half above Gadda and half below; people with (nearly) the same year are ordered to cross less",
-    balanced: "Rows in year order on both sides of Gadda; people whose lines dip at the same time are put on opposite sides, where they can't cross",
-    crossings: "Sorted by year, then neighbouring rows swapped wherever that makes lines cross less (order only roughly chronological)",
-  };
-  [["year", "By year"], ["balanced", "Balanced sides"], ["crossings", "Fewest crossings"]].forEach(([key, label]) => {
-    orderToggle.append("button").attr("class", "filter-btn").attr("data-order", key).text(label)
-      .attr("title", orderTitles[key])
-      .on("click", () => {
-        if (rowOrder === key) return;
-        rowOrder = key;
-        try { localStorage.setItem("gadda-row-order", key); } catch (e) {}
-        syncOrderToggle();
-        applyFilter();
-      });
-  });
-  function syncOrderToggle() {
-    orderToggle.selectAll(".filter-btn").classed("active", function () { return this.dataset.order === rowOrder; });
-  }
-  syncOrderToggle();
-  const dipToggle = d3.select(selectionSection).insert("div", ".search-box").attr("class", "view-toggle dip-toggle");
-  [["close", "Dips: close"], ["lanes", "Dips: lanes"]].forEach(([key, label]) => {
-    dipToggle.append("button").attr("class", "filter-btn").attr("data-dip", key).text(label)
-      .attr("title", key === "close"
-        ? "Lines in contact come right up to Gadda's line; stronger ties come closer"
-        : "Lines in contact run in their own lane beside Gadda's line, side by side")
-      .on("click", () => {
-        if (dipStyle === key) return;
-        dipStyle = key;
-        try { localStorage.setItem("gadda-dip-style", key); } catch (e) {}
-        syncDipToggle();
-        applyFilter();
-      });
-  });
-  function syncDipToggle() {
-    dipToggle.selectAll(".filter-btn").classed("active", function () { return this.dataset.dip === dipStyle; });
-  }
-  syncDipToggle();
   function setSelectionMode(on) {
     if (on && typeof activeCats !== "undefined") activeCats.clear(); // My selection ignores categories
     const btn = document.querySelector(`#categoria-filter .filter-btn[data-value="${on ? "__custom__" : "__all__"}"]`);
