@@ -189,6 +189,9 @@
   .year-readout strong { font-size: 0.9rem; }
   .year-readout .ro-years { font-weight: 700; opacity: 0.7; margin-bottom: 0.15rem; }
   .year-readout .ro-sub { opacity: 0.6; }
+  .year-readout .ro-person { border-top: 1px solid var(--grid); margin-top: 0.35rem; padding-top: 0.35rem; }
+  .year-readout .ro-name { font-weight: 700; }
+  .year-readout .ro-total { border-top: 1px solid var(--grid); margin-top: 0.35rem; padding-top: 0.35rem; }
   .shown-count { font-size: 0.78rem; margin-bottom: 0.55rem; line-height: 1.45; }
   .shown-count strong { font-size: 0.9rem; }
 
@@ -342,6 +345,22 @@
   let topN = TOP_N_DEFAULT; // null = everyone
   // categories picked in the legend — several can be combined; empty = all
   let activeCats = new Set();
+  // letters in items.json, undated ones included: [sent, received] per person
+  const letterTotals = {"Ambrosi Paolo":[2,1],"Amicucci Ermanno":[2,1],"Angelini Cesare":[1,0],"Angioletti Giovanni Battista":[0,2],"Antonini Gianni":[2,37],"Ardigò Fausto":[0,1],"Bacchelli Riccardo":[1,0],"Baldini Antonio":[1,0],"Ballo Ferdinando":[0,6],"Bassani Giorgio":[2,0],"Berenson Bernard":[1,0],"Betocchi Carlo":[2,0],"Betti Ugo":[2,54],"Bigongiari Piero":[0,26],"Bilenchi Romano":[1,0],"Binni Walter":[0,1],"Bo Carlo":[1,1],"Boggio Marzet Albino":[1,0],"Bollati Giulio":[0,1],"Bompiani Valentino":[0,3],"Bonalumi Louis":[2,0],"Bonsanti Alessandro":[215,133],"Calvino Italo":[0,1],"Caretti Lanfranco":[1,0],"Carocci Alberto":[4,56],"Cecchi Emilio":[0,1],"Cecchi Pieraccini Leonetta":[1,0],"Citati Pietro":[0,44],"Contini Gianfranco":[56,101],"Dal Fabbro Beniamino":[1,0],"De Grada Raffaele":[2,0],"De Robertis Giuseppe":[2,3],"Debenedetti Giacomo":[1,0],"Dell'Arco Mario":[2,0],"Einaudi Giulio":[2,50],"Falqui Enrico":[0,2],"Ferretti Gian Carlo":[1,0],"Filippini Felice":[1,0],"Fiorentini Felice":[2,0],"Fornasini Emilio":[2,1],"Fornasini Gandolfi Anita":[1,28],"Fratelli Armando":[1,0],"Fruttero Carlo":[0,3],"Gadda Ambrosi Clara":[14,67],"Gadda Belloni Luisa":[1,0],"Gadda Carlo Emilio":[1524,957],"Gadda Conti Piero":[1,125],"Gadda Enrico":[11,18],"Gadda Fornasini Emilia":[3,0],"Garzanti Livio":[0,75],"Gobbi Ambrogio":[3,23],"Gorni Guglielmo":[1,0],"Guarnieri Silvio":[3,8],"Landolfi Tommaso":[1,0],"Lehr Adele":[22,140],"Lehr Carlo":[1,1],"Lehr luigia":[1,0],"Linati Carlo":[0,17],"Longhi Roberto":[2,0],"Lucia Rodocanachi":[1,0],"Lunetta Mario":[1,0],"Luzi Mario":[1,0],"Manzini Gianna":[1,0],"Martinetti Piero":[17,0],"Martini Quinto":[1,0],"Mattioli Raffaele":[0,4],"Messina Francesco":[1,0],"Mondadori Alberto":[0,2],"Montale Eugenio":[2,0],"Natoli Glauco":[0,3],"Notari Umberto":[1,0],"Parise Goffredo":[3,15],"Parronchi Alessandro":[1,0],"Pasquali Giorgio":[1,0],"Penna Sandro":[1,0],"Petrocchi Giorgio":[1,0],"Picchi Mario":[1,0],"Piccioni Leone":[14,22],"Punzo Giorgio":[1,0],"Rigoni Stern Mario":[1,0],"Rodocanachi Lucia":[0,149],"Rodocanachi Paolo":[0,5],"Roscioni Gian Carlo":[0,3],"Rosina Tito":[2,0],"Rossi Franco":[1,10],"Santi Piero":[1,0],"Sassella Stefano":[1,0],"Semenza Carlo":[1,0],"Sereni Vittorio":[0,2],"Siciliano Enzo":[1,0],"Tecchi Bonaventura":[3,136],"Traverso Leone":[0,17],"Ulivi Ferruccio":[1,0],"Valeri Manera Mario":[2,0],"Valgimigli Manara":[1,0],"Veronesi Giulia":[0,3],"Vicari Giambattista":[1,0],"Vigevani Alberto":[2,0],"Vita Finzi Paolo":[1,0],"Vittorini Elio":[4,5],"Weaver William":[1,0]};
+  const LETTERS_IN_DATASET = 2482;   // every letter in items.json
+  const LETTERS_IN_GRAPH = 1854;     // those with someone drawn in this graph
+  // all-time letter counts for the people clicked, whatever years are on screen
+  function selectedLetterTotals() {
+    const names = lastSelectedNames.filter(n => letterTotals[n]);
+    if (!names.length) return "";
+    const shown = names.slice(0, 4);
+    return `<div class="ro-person">` + shown.map(n => {
+      const [sent, received] = letterTotals[n];
+      const who = n === "Gadda Carlo Emilio" ? "Gadda" : n;
+      const verb = n === "Gadda Carlo Emilio" ? ["sent", "received"] : ["sent to Gadda", "from Gadda"];
+      return `<div><span class="ro-name">${who}</span><br><strong>${sent}</strong> ${verb[0]} · <strong>${received}</strong> ${verb[1]}</div>`;
+    }).join("") + (names.length > shown.length ? `<div class="ro-sub">…and ${names.length - shown.length} more selected</div>` : "") + `</div>`;
+  }
   // --- live readout (bottom-right): for the years currently on screen, how
   // many people were in contact with Gadda and how many records there are,
   // counted over EVERYONE matching the current filters — not just the people
@@ -937,7 +956,10 @@
         `<div class="ro-years">${lo} – ${hi} on screen</div>` +
         `<div><strong>${people}</strong> ${people === 1 ? "person" : "people"} in contact` +
         (drawn < people ? ` <span class="ro-sub">(${drawn} drawn)</span>` : "") + `</div>` +
-        contactKinds.map((k, i) => `<div><strong>${totals[i]}</strong> ${k.noun}</div>`).join("")
+        contactKinds.map((k, i) => `<div><strong>${totals[i]}</strong> ${k.noun}</div>`).join("") +
+        selectedLetterTotals() +
+        `<div class="ro-total">Whole dataset: <strong>${LETTERS_IN_DATASET.toLocaleString("en")}</strong> letters` +
+        ` <span class="ro-sub">(${LETTERS_IN_GRAPH.toLocaleString("en")} with people in this graph)</span></div>`
       );
     };
     updateReadout();
@@ -1052,6 +1074,7 @@
         if (newlySelected.length) scrollToFirstContact(newlySelected);
         lastSelectedNames = [...selected];
         updateCrossLinks(lastSelectedNames);
+        updateReadout();
       }
       const hasSelection = selected.size > 0;
       // unselected lines fade almost all the way out; the selected ones get
