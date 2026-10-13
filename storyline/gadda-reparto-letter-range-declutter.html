@@ -335,7 +335,19 @@
   // from their contact INSIDE the window, and render() re-normalises
   // strength across whoever is shown, so the strongest line is the
   // strongest tie OF THAT PERIOD.
+  // which letters build the storylines: "all" (both ways), "out" = sent by
+  // Gadda to the person, "in" = received by Gadda from them (letterFlow)
+  let letterDirection = "all";
+  const directionYears = name => (letterFlow[name] || [])
+    .filter(([, dir]) => dir === letterDirection).map(([iso]) => +iso.slice(0, 4)).filter(Number.isFinite);
   function focusWindow(d) {
+    // one direction only: each line is rebuilt from that direction's dated
+    // letters alone (one dip per group of nearby letters, strength = how
+    // many), within the year focus when one is set
+    if (letterDirection !== "all") {
+      const years = directionYears(d.name).filter(yr => !timeFocus || (yr >= timeFocus.start && yr <= timeFocus.end));
+      return { ...d, focusYears: years, weight: years.length };
+    }
     if (!timeFocus) return d;
     const { start, end } = timeFocus;
     const years = (letterDates[d.name] || []).map(s => +String(s).slice(0, 4)).filter(Number.isFinite);
@@ -381,7 +393,8 @@
   let updateReadout = () => {};
   const readout = d3.select("body").append("div").attr("class", "year-readout");
   const contactKinds = [
-    { noun: "letters", yearsOf: name => (letterDates[name] || []).map(s => +String(s).slice(0, 4)).filter(Number.isFinite) },
+    { get noun() { return letterDirection === "out" ? "letters sent by Gadda" : letterDirection === "in" ? "letters received by Gadda" : "letters"; },
+      yearsOf: name => letterDirection !== "all" ? directionYears(name) : (letterDates[name] || []).map(s => +String(s).slice(0, 4)).filter(Number.isFinite) },
   ];
   // what one person contributes to a year range: a record count per kind,
   // and whether they were in contact at all (people with no dated records
@@ -781,7 +794,9 @@
       if (d.focusYears) {
         // focused period: one dip per group of nearby letters in it
         if (!d.focusYears.length) return shapePath(d, [[x(d.frameBirth), rowY], [x(d.frameDeath), rowY]], false);
-        const gap = Math.max(1, Math.round(focusSpan / 10));
+        // letters this many years apart or less share one dip (whole-life
+        // view, one direction only: 2 years)
+        const gap = focusSpan != null ? Math.max(1, Math.round(focusSpan / 10)) : 2;
         const years = [...new Set(d.focusYears)].sort((a, b) => a - b);
         const clusters = [[years[0]]];
         for (let i = 1; i < years.length; i++) {
@@ -1002,7 +1017,9 @@
     // gaddaY, a dot at the dip, and a diamond sitting right on Gadda's own
     // line at that x.
     const collabPoints = people.flatMap(d => {
-      const dates = letterDates[d.name];
+      const dates = letterDirection === "all" ? letterDates[d.name]
+        : (letterFlow[d.name] || []).filter(([, dir]) => dir === letterDirection).map(([iso]) => iso);
+      if (letterDirection !== "all" && !(dates && dates.length)) return [];
       if (dates && dates.length) {
         const years = [...new Set(dates.map(iso => +iso.slice(0, 4)))].sort((a, b) => a - b);
         return years.map(year => ({ x: x(year), y: dipYFor(d), color: colorFor(d.name), name: d.name, year }));
@@ -1224,8 +1241,8 @@
     function flowLine(label, n) { return n ? `<span class="flow-count">${label}: <b>${n}</b></span>` : ""; }
     collabG
       .on("mouseenter", (event, d) => {
-        const allDates = letterDates[d.name] || [];
-        const flow = letterFlow[d.name] || [];
+        const allDates = letterDirection === "all" ? (letterDates[d.name] || []) : [];
+        const flow = (letterFlow[d.name] || []).filter(([, dir]) => letterDirection === "all" || dir === letterDirection);
         const them = surname(d.name);
         const toThem = `Gadda → ${them}`, toGadda = `${them} → Gadda`;
         // this point represents one specific year — show exactly the
@@ -1306,7 +1323,7 @@
     // correspondence actually overlaps that window are eligible — otherwise
     // zooming in just shows whoever the strongest ties overall happen to be,
     // most of them flat lines with nothing going on in the focused years.
-    const matching = timeFocus && !isCustom
+    const matching = (timeFocus || letterDirection !== "all") && !isCustom
       ? categoryMatching.filter(d => focusWindow(d).weight > 0)
       : categoryMatching;
     const base = isCustom ? [] : matching.slice().sort((a, b) => b.weight - a.weight);
@@ -1558,6 +1575,21 @@
   // same mode the old hidden menu had; a category picked in the legend is
   // dropped when you switch, since My selection ignores categories.
   const selectionSection = d3.select("#search-input").node().closest("section");
+  // --- letters both ways, or only one direction: each choice builds its own
+  // storylines (who is shown, where lines dip, how thick they are)
+  const directionToggle = d3.select(selectionSection).insert("div", ".search-box").attr("class", "view-toggle direction-toggle");
+  [["all", "Both ways", "Every dated letter, whoever wrote it"],
+   ["out", "Sent", "Sent by Gadda: only his letters to each person"],
+   ["in", "Received", "Received by Gadda: only the letters each person wrote to him"]].forEach(([key, label, tip]) => {
+    directionToggle.append("button").attr("class", "filter-btn").attr("data-dir", key).attr("title", tip).text(label)
+      .on("click", () => {
+        if (letterDirection === key) return;
+        letterDirection = key;
+        directionToggle.selectAll(".filter-btn").classed("active", function () { return this.dataset.dir === letterDirection; });
+        applyFilter();
+      });
+  });
+  directionToggle.selectAll(".filter-btn").classed("active", function () { return this.dataset.dir === letterDirection; });
   const viewToggle = d3.select(selectionSection).insert("div", ".search-box").attr("class", "view-toggle");
   const selectionHint = d3.select(selectionSection).append("div").attr("class", "selection-hint");
   const shownCount = d3.select(selectionSection).insert("div", ".view-toggle").attr("class", "shown-count");
