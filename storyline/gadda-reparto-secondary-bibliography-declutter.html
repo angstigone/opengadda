@@ -173,6 +173,9 @@
   .year-readout strong { font-size: 0.9rem; }
   .year-readout .ro-years { font-weight: 700; opacity: 0.7; }
   .year-readout .ro-sub { opacity: 0.6; }
+  .year-readout .ro-link { display: block; margin-top: 0.3rem; padding: 0; border: 0; background: none; font: inherit;
+    color: inherit; text-align: left; text-decoration: underline; text-underline-offset: 2px; opacity: 0.8; cursor: pointer; }
+  .year-readout .ro-link:hover { opacity: 1; }
   .year-readout .ro-person { border-top: 1px solid var(--grid); margin-top: 0.35rem; padding-top: 0.35rem; }
   .year-readout .ro-name { font-weight: 700; }
   .year-readout .ro-total { border-top: 1px solid var(--grid); margin-top: 0.35rem; padding-top: 0.35rem; }
@@ -395,6 +398,12 @@
   let topNStats = { shown: 0, total: 0 };
   let updateReadout = () => {};
   const readout = d3.select("body").append("div").attr("class", "year-readout");
+  readout.on("click", event => {
+    if (!event.target.closest("[data-act='primary']")) return;
+    showPrimaryWorks = !showPrimaryWorks;
+    d3.select('#mode-filter .filter-btn[data-value="__primary__"]').classed("active", showPrimaryWorks);
+    applyFilter();
+  });
   const contactKinds = [
     { noun: "publications on Gadda", yearsOf: name => workYearsOf(name) },
   ];
@@ -952,7 +961,7 @@
         `<div><span class="ro-years">${lo}–${hi}:</span> <strong>${people}</strong> ${people === 1 ? "person" : "people"}` +
         (drawn < people ? ` <span class="ro-sub">(${drawn} drawn)</span>` : "") +
         contactKinds.map((k, i) => ` · <strong>${totals[i]}</strong> ${k.noun}`).join("") + `</div>` +
-        selectedTotals() + `<div class="ro-total">All: ${DATASET_TOTAL}</div>`
+        selectedTotals() + `<div class="ro-total">All: ${DATASET_TOTAL}<button class="ro-link" data-act="primary">${showPrimaryWorks ? "Hide" : "Show"} Gadda's own works (${primaryWorks.length}) on his line</button></div>`
       );
     };
     updateReadout();
@@ -1048,13 +1057,16 @@
           `<strong>${d.title}</strong>` +
           `<div style="opacity:0.85">${d.date && !d.date.endsWith("-01-01") ? formatEntryDate(d.date) : d.year} — ${d.edition}</div>` +
           (d.raccolta ? `<div style="margin-top:0.15rem;opacity:0.7">${d.raccolta}</div>` : "") +
-          `<div style="margin-top:0.2rem;opacity:0.6;font-size:0.7rem;">GADDA'S OWN WORK (${d.sigla})</div>`
+          `<div style="margin-top:0.2rem;opacity:0.6;font-size:0.7rem;">GADDA'S OWN WORK (${d.sigla}) · click to open the record</div>`
         );
         tooltip.attr("hidden", null);
         moveTooltip(event);
       })
       .on("mousemove", moveTooltip)
-      .on("mouseleave", () => tooltip.attr("hidden", true));
+      .on("mouseleave", () => tooltip.attr("hidden", true))
+      // a click opens the work's record
+      .on("click", (event, d) => window.open(`../code_updated/detail.html?id=${encodeURIComponent(d.id)}`, "_blank"))
+      .style("cursor", "pointer");
 
     // a set, not a single name — picking several people from search should
     // highlight all of them together, not just whichever was picked last.
@@ -1251,7 +1263,9 @@
   let customMode = false;
   // whether Gadda's own primary-bibliography works are scattered along his
   // line — on by default, since that's the whole point of this overlay.
-  let showPrimaryWorks = true;
+  // Gadda's own works as ticks on his line: off until asked for in the
+  // numbers box
+  let showPrimaryWorks = false;
 
   const CUSTOM_MODE = "__custom__";
 
@@ -1364,7 +1378,7 @@
   // independent of the All / My selection choice above — toggles the amber
   // dots for Gadda's own published works on and off.
   modeFilterBar.append("button")
-    .attr("class", "filter-btn active")
+    .attr("class", "filter-btn")
     .attr("data-value", "__primary__")
     .text("● Gadda's own works")
     .on("click", function () {

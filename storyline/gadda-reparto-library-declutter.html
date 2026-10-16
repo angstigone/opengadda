@@ -199,6 +199,11 @@
   .year-readout strong { font-size: 0.9rem; }
   .year-readout .ro-years { font-weight: 700; opacity: 0.7; }
   .year-readout .ro-sub { opacity: 0.6; }
+  .year-readout .ro-link { display: block; margin-top: 0.3rem; padding: 0; border: 0; background: none; font: inherit;
+    color: inherit; text-align: left; text-decoration: underline; text-underline-offset: 2px; opacity: 0.8; cursor: pointer; }
+  .year-readout .ro-link:hover { opacity: 1; }
+  .unshown-copy { fill: #7a7f87; stroke: var(--bg); stroke-width: 0.8; opacity: 0.9; }
+  .unshown-copy:hover { fill: var(--ink); }
   .year-readout .ro-person { border-top: 1px solid var(--grid); margin-top: 0.35rem; padding-top: 0.35rem; }
   .year-readout .ro-name { font-weight: 700; }
   .year-readout .ro-total { border-top: 1px solid var(--grid); margin-top: 0.35rem; padding-top: 0.35rem; }
@@ -402,6 +407,12 @@
       `<div><span class="ro-name">${n === "Gadda Carlo Emilio" ? "Gadda" : n}</span><br>${personTotals[n].join("<br>")}</div>`
     ).join("") + (names.length > shown.length ? `<div class="ro-sub">…and ${names.length - shown.length} more selected</div>` : "") + `</div>`;
   }
+  // annotated copies with a dated note whose person has no line in the graph
+  // (not in people_birth_death.json, or not recorded for the book), shown on
+  // request as dots on Gadda's own line at the note's date; a click opens
+  // the book's record
+  const unshownCopies = [{"id":"lib408","date":"1851","title":"Storia della guerra d’indipendenza","note":"Dedica a Francesco Gadda in data 1851.","who":"Botta Carlo","why":"not in people_birth_death.json"},{"id":"lib1234","date":"1920-06-25","title":"Il genere grammaticale nell’indoeuropeo. Studi e ricerche con riguardo anche ad altri gruppi linguistici","note":"Omaggio 25.6.1920","who":"Gatti Riccardo","why":"not in people_birth_death.json"},{"id":"lib496","date":"1925","title":"Canti alpini","note":"Nota di possesso di Gadda, C.E. Gadda Capitano nel 5° reggimento alpini marzo 1925 Milano (dono di Dubini). Sottolineature e postille.","who":"Dubini","why":"not in people_birth_death.json"},{"id":"lib1210","date":"1942","title":"Galileo: pagine di scienza con introduzione, note e ritratti. II","note":"Dedica del curatore in data 1942.","who":"curatore not recorded","why":"the curatore isn't recorded for this book"},{"id":"lib1235","date":"1929-11-17","title":"Il parlare di Jesi e l’italiano","note":"Omaggio dell’autore 17.11.1929.","who":"Gatti Riccardo","why":"not in people_birth_death.json"},{"id":"lib2362","date":"1926-10","title":"A Short History of English Civilization and Literature","note":"Dedica dell’autrice ad Adele Gadda Lehr in data 10.1926. Postille.","who":"Riggio Cinelli Linda","why":"not in people_birth_death.json"},{"id":"lib1251","date":"1935-10-24","title":"Renzo Gerla","note":"Dedica dell’autore in data 24.10.1935.","who":"Gerla Renzo","why":"not in people_birth_death.json"},{"id":"lib2240","date":"1942-02-04","title":"Le stanze, L’Orfeo e le Rime","note":"Dedica del curatore in data 4.2.1942.","who":"curatore not recorded","why":"the curatore isn't recorded for this book"},{"id":"lib1456","date":"1934-10-17","title":"L’americano","note":"Dedica del traduttore in data 17.10.1934.","who":"traduttore not recorded","why":"the traduttore isn't recorded for this book"},{"id":"lib1942","date":"1934-05-29","title":"Le confessioni di un italiano","note":"Dedica del curatore in data 29.5.1934.","who":"curatore not recorded","why":"the curatore isn't recorded for this book"},{"id":"lib2940","date":"1941-04","title":"Romanzi e racconti","note":"Dedica del traduttore in data 4.1941","who":"traduttore not recorded","why":"the traduttore isn't recorded for this book"},{"id":"lib1090","date":"1947-11-16","title":"Il Baldus e le altre opere latine e volgari","note":"Dedica del curatore in Firenze 16.11.1947. Parzialmente intonso. Postille.","who":"curatore not recorded","why":"the curatore isn't recorded for this book"},{"id":"lib2891","date":"1941","title":"Constancias 1925-1938","note":"Dedica dell’autore in data 1941.","who":"Villanova Rafael Lasso de la Vega, marquès de","why":"not in people_birth_death.json"},{"id":"lib1262","date":"1946","title":"Poesie","note":"Dedica dell’autore in data 1946.","who":"Giampieri Dante","why":"not in people_birth_death.json"},{"id":"lib2892","date":"1945-09","title":"Prestigi (1911-1916)","note":"Dedica del traduttore in data 9.1945.","who":"traduttore not recorded","why":"the traduttore isn't recorded for this book"},{"id":"lib1685","date":"1945-10","title":"L’aprèsmidi d’un faune. Preceduto dalla genesi dell’«Aprèsmidi d’un faune» di C. Gujot","note":"Dedica del traduttore in data 10.1945.         Postille del traduttore.","who":"traduttore not recorded","why":"the traduttore isn't recorded for this book"},{"id":"lib2124","date":"1952-09-01","title":"La nostra ora","note":"Dedica del curatore in data 1.9.1952.","who":"curatore not recorded","why":"the curatore isn't recorded for this book"},{"id":"lib1693","date":"1952-10-28","title":"Le confessioni di un cavaliere d’industria","note":"Dedica di Alberto Savini in data 28.10.1952.","who":"Alberto Savini","why":"not in people_birth_death.json"},{"id":"lib1883","date":"1953-07","title":"Il balcone di pietra","note":"Dedica dell’autore in data 7.1953.","who":"Mor Nando","why":"not in people_birth_death.json"},{"id":"lib2829","date":"1953","title":"La Espera","note":"Dedica dell’autore in data 1953.","who":"Valverde José Maria","why":"not in people_birth_death.json"},{"id":"lib2050","date":"1950-10","title":"Piccolo giudizio universale","note":"Dedica dell’autore in data 10.1950.","who":"Papi Roberto","why":"not in people_birth_death.json"},{"id":"lib1686","date":"1951-11","title":"Monologo; Improvviso; Pomeriggio d’un fauno","note":"Dedica del traduttore in data 11.1951. Postille.","who":"traduttore not recorded","why":"the traduttore isn't recorded for this book"},{"id":"lib1220","date":"1953-06-03","title":"Tus rosas frente al espejo","note":"Dedica dell’autore in data 3.6.1953.","who":"Gamo José M. Alonso","why":"not in people_birth_death.json"},{"id":"lib892","date":"1954-12-16","title":"Scoperta d’un grande segreto nel l’arte del Giudizio Universale di Michelangelo","note":"Dedica dell’autore in data 16.12.1954.","who":"Díaz González Joaquin","why":"not in people_birth_death.json"},{"id":"lib2567","date":"1957-05","title":"Re Enrico VI. Con tutt’intera la contesa fra le due famiglie di Lancaster e York","note":"Dedica del traduttore in data 5.1957.","who":"traduttore not recorded","why":"the traduttore isn't recorded for this book"},{"id":"lib2862","date":"1957-12-21","title":"Ceneri di paradiso","note":"Dedica dell’autore in data 21.12.1957. In tonso.","who":"Verginelli Vinci","why":"not in people_birth_death.json"},{"id":"lib1338","date":"1959-06-11","title":"Introduzione all’Amleto","note":"Dedica del traduttore in data 11.6.1959.","who":"traduttore not recorded","why":"the traduttore isn't recorded for this book"},{"id":"lib531","date":"1961-05","title":"Le carte alfieriane della raccoltaCora: catalogo e testi","note":"Dedica autografa in data 5.1961.","who":"Caretti Lanfranco","why":"in people_birth_death.json but not linked in the graph"},{"id":"lib770","date":"1964-02","title":"Gli alberi non vogliono morire","note":"Dedica dell’autore in data 2.1964.","who":"Curetti Adriano","why":"not in people_birth_death.json"},{"id":"lib1324","date":"1961-08-14","title":"Sonetti funebri","note":"Dedica del curatore in data 14.8.1961.","who":"curatore not recorded","why":"the curatore isn't recorded for this book"},{"id":"lib2262","date":"1965","title":"La poesia italiana del Novecento","note":"Dedica dell’autore in data 1965.","who":"Pozzi Gianni","why":"not in people_birth_death.json"},{"id":"lib2706","date":"1966-10","title":"’l Cont Piolet","note":"Dedica del curatore in data 10.1966.","who":"curatore not recorded","why":"the curatore isn't recorded for this book"},{"id":"lib1556","date":"1967-09-12","title":"Il Garzella","note":"Dedica dell’autore in data 12.9.1967. Postille.","who":"Leoni Leonetto","why":"not in people_birth_death.json"},{"id":"lib2199","date":"1967","title":"La rabbia morta","note":"Dedica dell’autore in data 1967.","who":"Pirola Floriano","why":"not in people_birth_death.json"},{"id":"lib1253","date":"1969-10-10","title":"Carlo Emilio Gadda Wirklichkeit und Verzerrung","note":"Dedica dell’autore in data 10.10.1969 e biglietto da visita.","who":"Gersbach Markus","why":"not in people_birth_death.json"},{"id":"lib1109","date":"1944-01-14","title":"Fragmente frühgriechischerLyrik","note":"Dedica del traduttore in data 14.1. 1944.","who":"traduttore not recorded","why":"the traduttore isn't recorded for this book"},{"id":"lib1695","date":"1945-07-16","title":"Mario e il mago. Una tragica esperienza di viaggio.","note":"Dedica del curatore in data 16.7.1945.","who":"curatore not recorded","why":"the curatore isn't recorded for this book"},{"id":"lib2538","date":"1963-09","title":"Pecchè?","note":"Con lettera dell’autore a Gadda in data 9.1963 Salerno.","who":"Sellitti Gabriele","why":"not in people_birth_death.json"}];
+  let showUnshown = false;
   // --- live readout (bottom-right): for the years currently on screen, how
   // many people were in contact with Gadda and how many records there are,
   // counted over EVERYONE matching the current filters — not just the people
@@ -409,6 +420,11 @@
   let topNStats = { shown: 0, total: 0 };
   let updateReadout = () => {};
   const readout = d3.select("body").append("div").attr("class", "year-readout");
+  readout.on("click", event => {
+    if (!event.target.closest("[data-act='unshown']")) return;
+    showUnshown = !showUnshown;
+    applyFilter();
+  });
   const contactKinds = [
     { noun: "annotated copies", yearsOf: name => (libraryBooks[name] || []).filter(inPickedLibs).map(b => b.year).filter(Number.isFinite) },
   ];
@@ -1027,7 +1043,7 @@
         `<div><span class="ro-years">${lo}–${hi}:</span> <strong>${people}</strong> ${people === 1 ? "person" : "people"}` +
         (drawn < people ? ` <span class="ro-sub">(${drawn} drawn)</span>` : "") +
         contactKinds.map((k, i) => ` · <strong>${totals[i]}</strong> ${k.noun}`).join("") + `</div>` +
-        selectedTotals() + `<div class="ro-total">All: ${DATASET_TOTAL}</div>`
+        selectedTotals() + `<div class="ro-total">All: ${DATASET_TOTAL}<button class="ro-link" data-act="unshown">${showUnshown ? "Hide" : "Show"} the ${unshownCopies.length} annotated copies whose person isn't in the graph, on Gadda's line</button></div>`
       );
     };
     updateReadout();
@@ -1282,6 +1298,36 @@
     const tooltip = d3.select("#tooltip");
     function moveTooltip(event) {
       tooltip.style("left", (event.clientX + 14) + "px").style("top", (event.clientY + 14) + "px");
+    }
+    // --- annotated copies whose person isn't in the graph, as grey dots on
+    // Gadda's line (when asked for in the numbers box), at the note's date;
+    // hover for the note and why, click for the book's record
+    if (showUnshown) {
+      const when = iso => { const [yy, mm, dd] = iso.split("-").map(Number); return yy + ((mm || 1) - 1) / 12 + ((dd || 1) - 1) / 365; };
+      const step = Math.max(3, 3.5 * unitsPerPx), maxOff = Math.min(rowStep / 2 - 4, 30 * unitsPerPx);
+      const dots = unshownCopies.map(c => ({ ...c, t: when(c.date) })).filter(c => c.t >= yearMin && c.t <= yearMax + 1);
+      d3.group(dots, c => Math.floor(c.t)).forEach(group => group.forEach((c, i) => {
+        c.dy = (i % 2 ? 1 : -1) * Math.min(Math.ceil((i + 1) / 2) * step, maxOff);
+      }));
+      svg.append("g").attr("class", "unshown-copies").selectAll("circle").data(dots).join("circle")
+        .attr("class", "unshown-copy")
+        .attr("cx", c => x(c.t)).attr("cy", c => gaddaY + c.dy)
+        .attr("r", Math.max(2.4, 3 * unitsPerPx))
+        .style("cursor", "pointer")
+        .on("mouseenter", (event, c) => {
+          tooltip.html(
+            `<strong>${c.title}</strong>` +
+            `<div style="opacity:0.85">${c.date} — ${c.who}</div>` +
+            `<div style="margin-top:0.15rem;opacity:0.75;font-style:italic">${c.note}</div>` +
+            `<div style="margin-top:0.2rem;opacity:0.65;font-size:0.72rem">NOT IN THE GRAPH: ${c.why}</div>` +
+            `<div style="margin-top:0.2rem;opacity:0.65;font-size:0.72rem">click to open the record (${c.id})</div>`
+          );
+          tooltip.attr("hidden", null);
+          moveTooltip(event);
+        })
+        .on("mousemove", moveTooltip)
+        .on("mouseleave", () => tooltip.attr("hidden", true))
+        .on("click", (event, c) => window.open(`../code_updated/detail.html?id=${encodeURIComponent(c.id)}`, "_blank"));
     }
     yearMarkG
       .on("mouseenter", (event, d) => {
