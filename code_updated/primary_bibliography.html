@@ -588,7 +588,7 @@ function buildOperaBtns(pool) {
   container.innerHTML = '';
   const counts = {};
   pool.forEach(d => toThemesArray(d.themes).forEach(t => { counts[t] = (counts[t]||0)+1; }));
-  const operas = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+  const operas = Object.entries(counts).sort((a,b) => a[0].localeCompare(b[0], 'it', {sensitivity:'base'}));
 
   const allBtn = document.createElement('button');
   allBtn.className = 'opera-bubble' + (!activeOpera ? ' active' : '');
@@ -919,14 +919,13 @@ function entryHtml(d) {
     '<span class="type-tag" style="cursor:pointer" onclick="event.stopPropagation();setOperaFilter(' + JSON.stringify(d.opera_collegata) + ')">' + d.opera_collegata +
     ((SIGLE[d.opera_collegata]&&SIGLE[d.opera_collegata].titolo_completo) ? '<span class="tag-full">' + SIGLE[d.opera_collegata].titolo_completo + '</span>' : '') +
     '</span></div>' : '';
-  const dThemes = toThemesArray(d.themes);
+  const dThemes = [...toThemesArray(d.themes)].sort((a,b) => a.localeCompare(b, 'it', {sensitivity:'base'}));
   const operaTags = (!crossMode && dThemes.length) ? '<div class="conn-badges" style="margin-top:4px">' + dThemes.map(t => '<span class="type-tag" style="cursor:pointer" data-opera="' + t.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();setOperaFilter(this.dataset.opera)">' + t + ((SIGLE[t]&&SIGLE[t].titolo_completo) ? '<span class="tag-full">' + SIGLE[t].titolo_completo + '</span>' : '') + '</span>').join(' ') + '</div>' : '';
-  const curatori = (d.people||[]).filter(p=>p.role==='curatore').map(p => '<span class="person-link" onclick="event.stopPropagation();setPersonFilter(' + JSON.stringify(p.name) + ')" style="color:var(--muted)" title="' + authorityTitle(p.name) + '">' + p.name + '</span>' + authorityIcon(p.name)).join(', ');
   const titleHtml = '<span class="entry-title-inline">' + (d.title||'') + '</span>';
   const venue = d.rivista || d.editore || '';
   const venueHtml = venue ? '<span class="person-link" data-venue="' + venue.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();setVenueFilter(this.dataset.venue)" style="color:var(--muted)" title="' + authorityTitle(venue, VENUE_AUTHORITY) + '">' + venue + '</span>' + authorityIcon(venue, VENUE_AUTHORITY) : '';
   const place = d.detail ? (d.detail.includes(' · ') ? d.detail.split(' · ').slice(-1)[0] : (venue ? '' : d.detail)) : '';
-  const lineParts = [curatori, titleHtml, venueHtml, place].filter(Boolean);
+  const lineParts = [titleHtml, venueHtml, place].filter(Boolean);
   return '<div class="entry" onclick="goDetail(\'' + d.id + '\')">' +
     '<div class="entry-year">' + fullDate + '</div>' +
     '<div>' +
@@ -1015,7 +1014,7 @@ function statsPanelContent(key) {
   if (key === 'works') {
     const counts = {};
     filtered.forEach(d => toThemesArray(d.themes).filter(Boolean).forEach(op => { counts[op] = (counts[op]||0)+1; }));
-    const entries = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+    const entries = Object.entries(counts).sort((a,b) => a[0].localeCompare(b[0], 'it', {sensitivity:'base'}));
     return barListHtml(entries, label => `event.stopPropagation();activeOpera==='${label.replace(/'/g,"\\'")}'?clearFilter():setOperaFilter('${label.replace(/'/g,"\\'")}')`);
   }
   return '';
