@@ -715,6 +715,19 @@ function yearSort(a, b) {
   return a.year - b.year;
 }
 
+// "Pubbl. in volume" order: Opere I–V first (by roman numeral), then other
+// volumes (DM, SD, Biz…), then items with no volume. Within a volume, order by
+// pagine_volume only — `pagine` is the rivista page range, not the volume's.
+const ROMAN = { I:1, II:2, III:3, IV:4, V:5 };
+function volumeSortKey(d) {
+  const page = parseInt((d.pagine_volume || '').replace(/[^\d].*/, '')) || 99999;
+  const v = (d.volume || '').trim().replace(/,$/, '');
+  if (!v) return { group: 2, name: '', page };
+  const m = v.match(/\bOp(?:e)?re\s+(I{1,3}|IV|V)\b/);
+  if (m) return { group: 0, name: String(ROMAN[m[1]]), page };
+  return { group: 1, name: v, page };
+}
+
 function applyFilters() {
   const q = document.getElementById('search').value.toLowerCase();
   const yf = parseInt(document.getElementById('yearFrom').value) || 0;
@@ -739,10 +752,8 @@ function applyFilters() {
     if (viewMode === 'list')    return alphaSortKey(a.title).localeCompare(alphaSortKey(b.title), 'it');
     if (viewMode === 'rivista') return (a.date||'').localeCompare(b.date||'');
     if (viewMode === 'volume') {
-      const va = a.volume || 'zzz', vb = b.volume || 'zzz';
-      const pa = parseInt((a.pagine_volume || a.pagine || '').replace(/[^\d].*/, '')) || 99999;
-      const pb = parseInt((b.pagine_volume || b.pagine || '').replace(/[^\d].*/, '')) || 99999;
-      return va.localeCompare(vb) || pa - pb;
+      const ka = volumeSortKey(a), kb = volumeSortKey(b);
+      return ka.group - kb.group || ka.name.localeCompare(kb.name, 'it') || ka.page - kb.page || yearSort(a, b);
     }
     return yearSort(a, b); // timeline default
   });
