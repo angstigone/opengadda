@@ -62,12 +62,11 @@
     },
     "EP": {
       "titolo_completo": "Eros e Priapo (da furore a cenere)",
-      "edizione_originale": "a cura di Paola Italia e Giorgio Pinotti, Milano, Adelphi, 2016"
-    },
-      "EP67": {
-      "titolo_completo": "Eros e Priapo (da furore a cenere)",
       "edizione_originale": "Milano, Garzanti, 1967",
-      "raccolta": "SGF II, pp. 213-374"
+      "raccolta": "SGF II, pp. 213-374",
+      "edizioni": [
+        "a cura di Paola Italia e Giorgio Pinotti, Milano, Adelphi, 2016"
+      ]
     },
     "GASP": {
       "titolo_completo": "Il guerriero, l'amazzone, lo spirito della poesia nel verso immortale del Foscolo – Conversazione a tre voci",

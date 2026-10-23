@@ -404,7 +404,7 @@ body.no-sigla-panel .viz-static-panel { display:none; }
       <div class="work-header-card" id="work-header"></div>
       <span class="section-label" id="alt-editions-label" style="display:none">Altre edizioni</span>
       <div id="alt-editions"></div>
-      <span class="section-label">Opere correlate</span>
+      <span class="section-label">Testi contenuti</span>
       <div id="related-works"></div>
     </div>
 
@@ -891,6 +891,18 @@ function primaryMatches(title, sigla) {
   }).sort((a,b) => (a.date || '').localeCompare(b.date || ''));
 }
 
+// Same matching as chapterHtml(), for the "Testi contenuti" cards on a work's
+// page: the title links to its primary-bibliography record, or to each record
+// (by year) when the text came out in several instalments.
+function chapterTitleHtml(title, sigla) {
+  const hits = primaryMatches(title, sigla);
+  const esc = t => String(t).replace(/"/g, '&quot;');
+  if (!hits.length) return title;
+  if (hits.length === 1) return `<a class="chapter-link" href="detail.html?id=${encodeURIComponent(hits[0].id)}" title="${esc(hits[0].title)}">${title}</a>`;
+  return `${title} <span class="chapter-links" style="display:inline-flex;margin-left:8px">${hits.map(d =>
+    `<a class="chapter-link" href="detail.html?id=${encodeURIComponent(d.id)}" title="${esc(d.title)}">${d.year || '?'}</a>`).join('')}</span>`;
+}
+
 function chapterHtml(c, sigla) {
   const hits = primaryMatches(c.titolo, sigla);
   const esc = t => String(t).replace(/"/g, '&quot;');
@@ -1098,11 +1110,11 @@ function renderWorkDetail() {
     ? related.map(w => `
       <div class="opera-card static">
         <div class="opera-card-body">
-          <div class="opera-head"><span class="opera-title">${w.titolo}</span></div>
+          <div class="opera-head"><span class="opera-title">${chapterTitleHtml(w.titolo, sigla)}</span></div>
           ${w.note ? `<div class="opera-blurb">${w.note}</div>` : ''}
         </div>
       </div>`).join('')
-    : '<div class="no-results">Nessuna opera correlata trovata.</div>';
+    : '<div class="no-results">Nessun testo contenuto trovato.</div>';
 
   // Same card presentation as the main grid, rather than a bespoke dark
   // header block — reusing operaCardHtml() keeps the two in sync for free.
@@ -1632,5 +1644,6 @@ Promise.all([
 })();
 </script>
 
+<script src="img_credits.js"></script>
 </body>
 </html>
