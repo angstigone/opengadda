@@ -96596,7 +96596,7 @@
     "subtitle": "Prosa in rivista",
     "detail": "Letteratura · Firenze",
     "themes": [
-      "QPL"
+      "QP"
     ],
     "people": [],
     "pub_detail": "8, 26 · 1",
@@ -96790,7 +96790,7 @@
     "subtitle": "Prosa in rivista",
     "detail": "Letteratura · Firenze",
     "themes": [
-      "QPL"
+      "QP"
     ],
     "people": [],
     "pub_detail": "8, 27 · 2",
@@ -97115,7 +97115,7 @@
     "subtitle": "Prosa in rivista",
     "detail": "Letteratura · Firenze",
     "themes": [
-      "QPL"
+      "QP"
     ],
     "people": [],
     "pub_detail": "8, 28 · 3",
@@ -97337,7 +97337,7 @@
     "subtitle": "Prosa in rivista",
     "detail": "Letteratura · Firenze",
     "themes": [
-      "QPL"
+      "QP"
     ],
     "people": [],
     "pub_detail": "8, 29 · 4",
@@ -97643,7 +97643,7 @@
     "subtitle": "Prosa in rivista",
     "detail": "Letteratura · Firenze",
     "themes": [
-      "QPL"
+      "QP"
     ],
     "people": [],
     "pub_detail": "8, 31 · 6",
@@ -147409,7 +147409,7 @@
     "subtitle": "Gadda, Carlo Emilio",
     "detail": "Garzanti · Milano",
     "themes": [
-      "QPL"
+      "QP"
     ],
     "people": [
       {
@@ -174560,7 +174560,7 @@
     "subtitle": "Libri e raccolte d'autore",
     "detail": "Garzanti · Milano",
     "themes": [
-      "QPL",
+      "QP",
       "QP",
       "M",
       "AG",
@@ -197206,7 +197206,7 @@
     "rivista": "",
     "sito_web": "",
     "da_verificare": "",
-    "corpus_lettere": "CGQPL",
+    "corpus_lettere": "CGQP",
     "date_start": "2003-01-01"
   },
   {
