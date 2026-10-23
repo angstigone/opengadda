@@ -69,6 +69,7 @@ nav a.nav-cat:hover { color: var(--cat-color); }
 .cat-letter { background: #ecdff0; color: #5a1e7a; }
 .cat-translation { background: #f0ecdc; color: #6a5a1a; }
 
+.record-cover { float: right; width: 110px; height: 165px; object-fit: cover; border-radius: 3px; border: 1px solid var(--border); margin: 0 0 1rem 1.25rem; }
 .record-title {
   font-size: 1.9rem; font-weight: 400; line-height: 1.25;
   margin-bottom: 0.5rem; font-style: italic;
@@ -749,11 +750,50 @@ function buildGenealogyPanel(item) {
   }
 
   let html = '<div class="sidebar-card"><h3>Struttura dell\'opera</h3>' +
+    renderSection('Contenuto in',      'var(--accent)',      sortIds(genitore)) +
     renderSection('Contiene',          'var(--accent)',      sortIds(figlio)) +
     renderSection('Collegato a',     'var(--accent-blue)', sortIds(collegate), item.opera_collegata) +
     renderSection('Collegata a questo','var(--accent-blue)', sortIds(collegateInverse)) +
     '</div>';
   return html;
+}
+
+// Cover of the work a record belongs to. For each linked sigla, tries the
+// edition's own cover first (img/<sigla>-<year>.png|.jpg, e.g. CdD-1963.png),
+// then the work's general one (img/<sigla>.png|.jpg); if none exists the
+// <img> removes itself, so rows without a cover show nothing.
+// Only books carry a cover: a story or article printed in a magazine shares
+// its work's sigla but isn't that book, so it gets no image.
+const COVER_TYPES = ["Libri e raccolte d'autore"];
+function coverCandidates(d) {
+  if (!COVER_TYPES.includes(d.subtitle)) return [];
+  const siglas = [].concat(d.themes || []).filter(Boolean);
+  const out = [];
+  siglas.forEach(s => {
+    const base = 'img/' + encodeURIComponent(s);
+    // <sigla>-<year>-<publisher> only matters when two editions share a year
+    // (Biz 1981: All'insegna del pesce d'oro and Adelphi → Biz-1981-adelphi.jpg).
+    const pub = (d.editore || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
+    if (d.year && pub) out.push(base + '-' + d.year + '-' + pub + '.png', base + '-' + d.year + '-' + pub + '.jpg');
+    if (d.year) out.push(base + '-' + d.year + '.png', base + '-' + d.year + '.jpg');
+    out.push(base + '.png', base + '.jpg');
+  });
+  return out;
+}
+function coverImgTag(d, cssClass) {
+  const srcs = coverCandidates(d);
+  if (!srcs.length) return '';
+  return '<img class="' + cssClass + '" src="' + srcs[0] + '" data-srcs="' + srcs.slice(1).join('|').replace(/"/g, '&quot;') + '" alt="" loading="lazy" onerror="nextCover(this)">';
+}
+// The <img onerror> handler runs in global scope, but this code lives inside
+// the data-loading callback — expose it, or the fallback chain stops at the
+// first missing file and leaves a broken image.
+window.nextCover = nextCover;
+function nextCover(img) {
+  const rest = img.dataset.srcs ? img.dataset.srcs.split('|') : [];
+  if (!rest.length) { img.remove(); return; }
+  img.dataset.srcs = rest.slice(1).join('|');
+  img.src = rest[0];
 }
 
 function themeColor(t) {
@@ -1124,6 +1164,7 @@ if (!item) {
     <div class="page-wrap">
       <div class="main-card">
         <a href="${backLink(item.category)}" class="cat-tag ${catClass(item.category)}" style="text-decoration:none;display:inline-block">${catLabel(item.category)}</a>
+        ${item.category === 'primary bibliography' ? coverImgTag(item, 'record-cover') : ''}
         <h1 class="record-title">${item.title}</h1>
         ${author ? `<div class="record-author">${author}</div>` : ''}
         <hr class="divider">

@@ -126,6 +126,49 @@ header p { color:#9a9080; font-size:1rem; }
 .section-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin:0 0 0.6rem; display:block; }
 .collection-legend { font-size:0.85rem; font-style:italic; color:var(--muted); margin:-0.3rem 0 0.9rem; }
 .collection-legend strong { font-style:normal; letter-spacing:0.03em; }
+.sigla-chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:0.25rem; }
+.sigla-chip { display:inline-flex; align-items:baseline; gap:6px; border:1px solid var(--border); border-radius:20px; padding:5px 14px; font-family:'DM Mono',monospace; font-size:12px; letter-spacing:0.05em; cursor:pointer; color:var(--ink); background:var(--white); transition:border-color 0.15s, color 0.15s; }
+.sigla-chip:hover { border-color:var(--accent); color:var(--accent); }
+.sigla-chip .n { font-size:10px; color:var(--muted); }
+.sigla-tiles { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px; margin-top:0.25rem; }
+.sig-tile { display:flex; flex-direction:column; gap:4px; text-align:left; padding:0.6rem 0.75rem; border:1px solid var(--border); border-radius:3px; background:var(--white); color:var(--ink); cursor:pointer; font:inherit; transition:border-color 0.15s; }
+.sig-tile:hover { border-color:var(--accent); }
+.sig-tile .sig-code { font-size:14px; }
+.sig-code { font-family:'DM Mono',monospace; letter-spacing:0.04em; color:var(--accent); }
+.sig-title { font-family:'EB Garamond',serif; font-style:italic; line-height:1.3; }
+.sig-tile .sig-title { font-size:0.9rem; color:var(--muted); }
+body.no-sigla-panel .layout { grid-template-columns:240px 1fr; }
+body.no-sigla-panel .viz-static-panel { display:none; }
+.coll-tabs { display:flex; flex-direction:column; gap:8px; margin-bottom:0.75rem; }
+.coll-tab { display:flex; align-items:center; gap:1rem; width:100%; text-align:left; border:1px solid var(--border); border-radius:3px; padding:0.55rem 0.9rem; background:var(--white); color:var(--ink); cursor:pointer; font-family:'EB Garamond',serif; transition:border-color 0.15s; }
+.coll-tab:hover { border-color:var(--accent); }
+.coll-tab.active { background:var(--ink); border-color:var(--ink); color:var(--white); }
+.coll-tab .coll-id { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:0.08em; }
+.coll-cover { width:38px; height:56px; object-fit:cover; border-radius:2px; border:1px solid var(--border); flex-shrink:0; }
+.coll-tab .coll-text { display:flex; flex-direction:column; gap:2px; min-width:0; }
+.coll-tab .coll-sub { font-size:0.85rem; opacity:0.7; }
+.coll-tree { border-top:1px solid var(--border); margin:-8px 0 0.5rem 1.25rem; }
+.coll-work, .coll-chapter { display:grid; grid-template-columns:18px 1fr auto auto; gap:0.75rem; align-items:baseline; padding:0.6rem 0.25rem; border-bottom:1px solid var(--border); }
+.coll-work { cursor:pointer; }
+.coll-work.leaf { cursor:default; }
+.coll-work:not(.leaf):hover .coll-work-title { color:var(--accent); }
+.coll-caret { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); transition:transform 0.15s; }
+.coll-work.open .coll-caret { transform:rotate(90deg); }
+.coll-work-title { font-size:1.05rem; letter-spacing:0.02em; }
+.coll-work-title.fallback { font-style:italic; }
+.coll-meta { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); white-space:nowrap; }
+.coll-sigla { font-family:'DM Mono',monospace; font-size:10px; padding:2px 7px; border-radius:2px; background:var(--tag-bg); color:var(--tag-text); }
+.coll-sigla.link { cursor:pointer; }
+.coll-sigla.link:hover { text-decoration:underline; }
+.coll-chapters { display:none; padding-left:1.75rem; background:var(--white); }
+.coll-work.open + .coll-chapters { display:block; }
+.coll-chapter { grid-template-columns:1fr auto; padding:0.4rem 0.5rem; font-size:0.95rem; }
+.coll-chapter:last-child { border-bottom:none; }
+.chapter-link { color:var(--ink); text-decoration:underline; text-decoration-color:var(--border); text-underline-offset:3px; }
+.chapter-link:hover { color:var(--accent); text-decoration-color:var(--accent); }
+.chapter-links { display:flex; gap:10px; font-family:'DM Mono',monospace; font-size:10px; }
+.chapter-links .chapter-link { color:var(--accent); }
+.coll-empty { font-style:italic; color:var(--muted); }
 .collections-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:10px; margin-bottom:0.6rem; }
 .collection-card { background:var(--ink); color:var(--white); border-radius:4px; padding:0.9rem 1rem; cursor:pointer; border:2px solid transparent; transition:border-color 0.15s; display:flex; gap:0.85rem; }
 .collection-card:hover { border-color:var(--accent-light); }
@@ -327,37 +370,33 @@ header p { color:#9a9080; font-size:1rem; }
       <input type="text" id="search" placeholder="Titolo…" oninput="applyFilters()">
     </div>
     <div class="sidebar-section">
-      <span class="sidebar-label">Ordinamento</span>
-      <div class="filter-group">
-        <button class="filter-btn active" id="s-year" onclick="setSort('year')">Cronologico</button>
-        <button class="filter-btn" id="s-title" onclick="setSort('title')">Alfabetico</button>
-      </div>
-    </div>
-    <div class="sidebar-section">
       <span class="sidebar-label">Raccolta</span>
       <div class="filter-group" id="collection-filter-group"></div>
+    </div>
+    <!-- TEMP: switch to compare layouts — remove once a choice is made -->
+    <div class="sidebar-section">
+      <span class="sidebar-label">Confronto: pannello Sigle a destra</span>
+      <div class="filter-group">
+        <button class="filter-btn active" id="panel-on" onclick="setSiglaPanelVisible(true)">Mostra</button>
+        <button class="filter-btn" id="panel-off" onclick="setSiglaPanelVisible(false)">Nascondi</button>
+      </div>
     </div>
   </aside>
 
   <main class="main">
     <div id="view-list">
-      <span class="section-label">Edizione critica — Garzanti, a cura di Dante Isella (1988–1993)</span>
-      <div class="collections-grid" id="collections"></div>
+      <span class="section-label">Sigle delle opere</span>
       <div id="collection-filter-banner" class="collection-filter-banner" style="display:none">
         <span id="collection-filter-text"></span>
         <button onclick="clearAllFilters()">× Mostra tutte le opere</button>
       </div>
+      <div class="sigla-chips" id="sigla-chips"><div style="padding:3rem 1rem;text-align:center;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted)">Caricamento…</div></div>
 
-      <span class="section-label">Tutte le opere</span>
-      <div class="stats-accordion">
-        <div class="stats-bar" id="stats-bar">
-          <button class="stat" id="stat-shown" onclick="setStatsPanel('collections')"><span class="stat-n" id="sn-shown">0</span><span class="stat-l">visualizzate</span></button>
-          <button class="stat" id="stat-items" onclick="setStatsPanel('categories')"><span class="stat-n" id="sn-items">0</span><span class="stat-l">schede collegate</span></button>
-          <button class="stat" id="stat-timeline" onclick="setStatsPanel('timeline')"><span class="stat-n" id="sn-timeline">0</span><span class="stat-l">anni coperti</span></button>
-        </div>
-        <div class="stats-detail" id="stats-detail"></div>
-      </div>
-      <div id="entries"><div style="padding:3rem 1rem;text-align:center;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted)">Caricamento…</div></div>
+      <span class="section-label" style="margin-top:2rem">Edizioni Garzanti, «i libri della Spiga», a cura di Dante Isella (1988–1993)</span>
+      <div class="coll-tabs" id="coll-tabs"></div>
+
+      <span class="section-label" style="margin-top:2rem">Edizioni Adelphi</span>
+      <div class="coll-tabs" id="adelphi-list"></div>
     </div>
 
     <div id="view-work" style="display:none">
@@ -565,22 +604,31 @@ function safeDomId(sigla) {
 // `fallbackKey` (optional) is a second sigla to try — used for alt-edition
 // cards, so if that edition has no cover of its own (img/<key>.png/.jpg)
 // it falls back to the parent work's cover instead of showing nothing.
-function thumbImgTag(key, cssClass, fallbackKey) {
-  const base = 'img/' + encodeURIComponent(key);
-  const fb = fallbackKey ? 'img/' + encodeURIComponent(fallbackKey) : '';
-  return `<img class="${cssClass}" src="${base}.png" data-fallback="${base}.jpg" data-fallback2="${fb}" alt="" onerror="handleThumbErr(this)">`;
+// Tries each key in turn (key.png, key.jpg, next key…); if none exists the
+// <img> removes itself.
+function thumbImgTag(keys, cssClass, fallbackKey) {
+  keys = [].concat(keys, fallbackKey || []).filter(Boolean);
+  const srcs = [...new Set(keys)].flatMap(k => ['img/' + encodeURIComponent(k) + '.png', 'img/' + encodeURIComponent(k) + '.jpg']);
+  return `<img class="${cssClass}" src="${srcs[0]}" data-srcs="${srcs.slice(1).join('|').replace(/"/g, '&quot;')}" alt="" onerror="handleThumbErr(this)">`;
 }
-// Reassigning this.onerror to a new function *from inside the handler
-// that's currently running* doesn't reliably take effect for images
-// inserted via innerHTML (the next error event still fires the original
-// handler in some browsers) — so track fallback state with data
-// attributes instead of swapping the handler itself. Tries: own .png →
-// own .jpg → fallback sigla's .png → fallback sigla's .jpg → give up.
 function handleThumbErr(img) {
-  if (!img.dataset.tried) { img.dataset.tried = '1'; img.src = img.dataset.fallback; return; }
-  if (!img.dataset.tried2 && img.dataset.fallback2) { img.dataset.tried2 = '1'; img.src = img.dataset.fallback2 + '.png'; return; }
-  if (!img.dataset.tried3 && img.dataset.fallback2) { img.dataset.tried3 = '1'; img.src = img.dataset.fallback2 + '.jpg'; return; }
-  img.remove();
+  const rest = img.dataset.srcs ? img.dataset.srcs.split('|') : [];
+  if (!rest.length) { img.remove(); return; }
+  img.dataset.srcs = rest.slice(1).join('|');
+  img.src = rest[0];
+}
+
+// Edition covers: img/<sigla>-<year>-<publisher>, then <sigla>-<year>, then
+// <sigla>. The publisher part is only needed when two editions share a year
+// (Biz 1981: All'insegna del pesce d'oro and Adelphi → Biz-1981-adelphi.jpg).
+const pubSlug = p => (p || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '');
+let KNOWN_PUBLISHERS = ['Adelphi'];
+function publisherOf(edizione) {
+  return KNOWN_PUBLISHERS.find(p => (edizione || '').includes(p)) || '';
+}
+function editionKeys(sigla, year, publisher) {
+  if (!year) return [sigla];
+  return [publisher && `${sigla}-${year}-${pubSlug(publisher)}`, `${sigla}-${year}`, sigla];
 }
 
 // JSON.stringify() wraps in double quotes, which collides with onclick="..."
@@ -601,6 +649,7 @@ function collectionOf(raccolta) {
 
 function formatRaccolta(raccolta) {
   if (!raccolta) return '';
+  raccolta = raccolta.replace(/,?\s*pp?\.\s*[\d\s,–-]+$/, ''); // page numbers aren't shown on the site
   const collId = collectionOf(raccolta);
   const coll = collId && COLLECTIONS.find(c => c.id === collId);
   return coll ? `${coll.numero} — ${raccolta}` : raccolta;
@@ -638,6 +687,7 @@ function setCollectionFilter(id) {
 }
 
 function renderCollections() {
+  if (!document.getElementById('collections')) return;
   const html = COLLECTIONS.map(coll => {
     const members = Object.entries(SIGLE)
       .filter(([, meta]) => collectionOf(meta.raccolta) === coll.id)
@@ -694,11 +744,6 @@ function doSort() {
   });
 }
 
-function setSort(key) {
-  if (sortKey === key) sortDir *= -1; else { sortKey = key; sortDir = 1; }
-  ['year','title'].forEach(k => document.getElementById('s-'+k).classList.toggle('active', k === key));
-  applyFilters();
-}
 
 function applyFilters() {
   const q = document.getElementById('search').value.toLowerCase();
@@ -731,7 +776,7 @@ function operaCardHtml(o) {
     ? `<div class="opera-raccolta">Altra edizione di: <span style="cursor:pointer;text-decoration:underline" onclick="event.stopPropagation();showWorkDetail(${jsAttr(o.realSigla)})">${o.titolo_completo} (${o.displaySigla})</span></div>`
     : '';
   return `<div class="opera-card" id="opera-${safeDomId(o.sigla)}" onclick="showWorkDetail(${jsAttr(navSigla)})">
-    ${o.isAltEdition ? thumbImgTag(o.sigla, 'opera-thumb', navSigla) : thumbImgTag(navSigla, 'opera-thumb')}
+    ${thumbImgTag(editionKeys(navSigla, o.year, publisherOf(o.edizione_originale)), 'opera-thumb')}
     <div class="opera-card-body">
       <div class="opera-head">
         <span class="opera-title">${o.titolo_completo}</span>
@@ -745,25 +790,28 @@ function operaCardHtml(o) {
 }
 
 function render() {
-  document.getElementById('sn-shown').textContent = filtered.length;
-  const totalLinked = filtered.reduce((s,o) => s + o.total, 0);
-  document.getElementById('sn-items').textContent = totalLinked.toLocaleString('it');
-  const yearsCovered = new Set(filtered.filter(o => o.year).map(o => o.year)).size;
-  document.getElementById('sn-timeline').textContent = yearsCovered;
-  refreshStatsPanel();
   renderCollectionFilterGroup();
   renderSiglaPanel();
-
-  if (!filtered.length) {
-    document.getElementById('entries').innerHTML = '<div class="no-results">Nessuna opera trovata.</div>';
+  const el = document.getElementById('sigla-chips');
+  const works = primaryOnly(filtered); // other editions open from the work's own page
+  if (!works.length) {
+    el.innerHTML = '<div class="no-results">Nessuna opera trovata.</div>';
     return;
   }
-
-  // Just 35 works total — a flat sorted list reads better than splitting
-  // into decade buckets. Undated works fall in wherever doSort() places
-  // them (at the end, for the 'year' sort) without a separate section.
-  document.getElementById('entries').innerHTML = filtered.map(operaCardHtml).join('');
+  // Always alphabetical by sigla, whatever order `filtered` is in.
+  const label = o => o.displaySigla || o.sigla;
+  works.sort((a,b) => label(a).localeCompare(label(b), 'it', {sensitivity:'base'}) || (a.titolo_completo||'').localeCompare(b.titolo_completo||'', 'it'));
+  el.className = 'sigla-tiles';
+  el.innerHTML = works.map(o => `<button type="button" class="sig-tile" onclick="showWorkDetail(${jsAttr(o.realSigla || o.sigla)})"><span class="sig-code">${label(o)}</span><span class="sig-title">${o.titolo_completo || ''}</span></button>`).join('');
 }
+
+// TEMP: layout comparison switch (?panel=0 to start without the right panel)
+function setSiglaPanelVisible(on) {
+  document.body.classList.toggle('no-sigla-panel', !on);
+  document.getElementById('panel-on').classList.toggle('active', on);
+  document.getElementById('panel-off').classList.toggle('active', !on);
+}
+if (new URLSearchParams(location.search).get('panel') === '0') document.addEventListener('DOMContentLoaded', () => setSiglaPanelVisible(false));
 
 // ── Work detail view — every entry across every category for one work ────────
 
@@ -784,6 +832,158 @@ function backToList() {
   document.getElementById('view-work').style.display = 'none';
   document.getElementById('view-collection').style.display = 'none';
   history.pushState(null, '', 'opere.html');
+}
+
+// ── Collection tree — volume → works (ALL CAPS headings) → chapters ─────────
+// collections.json is a flat list per volume. An entry whose title is written
+// in capitals is the volume's own heading for a work; every other entry with
+// the same sigla is one of its chapters. Siglas with no capitals heading fall
+// back to the title in sigle_gadda.json.
+let openColl = null;
+const openTreeWorks = new Set();
+
+function firstPage(p) { return parseInt(String(p || '').match(/\d+/)) || 99999; }
+
+function isTocHeading(t) {
+  const head = String(t || '').split(' - ')[0];
+  return head === head.toUpperCase() && head !== head.toLowerCase();
+}
+
+function collectionTree(collId) {
+  const seen = new Set();
+  const groups = new Map();
+  (COLLECTION_WORKS[collId] || []).forEach(e => {
+    const key = e.titolo + '|' + e.pagine + '|' + e.sigla;
+    if (seen.has(key)) return; // collections.json has a few repeated rows
+    seen.add(key);
+    if (!groups.has(e.sigla)) groups.set(e.sigla, { sigla: e.sigla, heading: null, chapters: [] });
+    const g = groups.get(e.sigla);
+    if (isTocHeading(e.titolo) && !g.heading) g.heading = e;
+    else g.chapters.push(e);
+  });
+  return [...groups.values()].map(g => {
+    g.chapters.sort((a,b) => firstPage(a.pagine) - firstPage(b.pagine));
+    // A lone entry with no heading is a work on its own, not a chapter.
+    if (!g.heading && g.chapters.length === 1) { g.heading = g.chapters[0]; g.chapters = []; g.single = true; }
+    g.title = g.heading ? g.heading.titolo : ((SIGLE[g.sigla] && SIGLE[g.sigla].titolo_completo) || g.sigla);
+    g.fallback = !g.heading;
+    g.pagine = g.heading ? g.heading.pagine : (g.chapters[0] && g.chapters[0].pagine);
+    return g;
+  }).sort((a,b) => firstPage(a.pagine) - firstPage(b.pagine));
+}
+
+// A chapter links to its record(s) in the primary bibliography when the titles
+// agree: same title, or the record's title continues it after punctuation
+// ("Notte di Luna" → "Notte di luna – Paese, …", but not "La casa" → "La casa
+// dei ricchi"). Records tagged with other siglas are skipped.
+const foldTitle = t => (t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+  .replace(/[«»"“”]/g, '').replace(/[‘’`]/g, "'").replace(/…/g, '...').replace(/\s+/g, ' ').trim();
+function primaryMatches(title, sigla) {
+  const n = foldTitle(title).replace(/[.\s]+$/, '');
+  if (!n) return [];
+  return ALL_DATA.filter(d => {
+    if (d.category !== 'primary bibliography') return false;
+    const themes = [].concat(d.themes || []);
+    if (themes.length && sigla && !themes.includes(sigla)) return false;
+    const t = foldTitle(d.title);
+    if (t.replace(/[.\s]+$/, '') === n) return true;
+    return t.startsWith(n) && /^\s*[(\[–—:.,;-]/.test(t.slice(n.length));
+  }).sort((a,b) => (a.date || '').localeCompare(b.date || ''));
+}
+
+function chapterHtml(c, sigla) {
+  const hits = primaryMatches(c.titolo, sigla);
+  const esc = t => String(t).replace(/"/g, '&quot;');
+  if (!hits.length) return `<div class="coll-chapter"><span>${c.titolo}</span></div>`;
+  if (hits.length === 1) return `<div class="coll-chapter"><a class="chapter-link" href="detail.html?id=${encodeURIComponent(hits[0].id)}" title="${esc(hits[0].title)}">${c.titolo}</a></div>`;
+  // Several records (e.g. a text published in instalments): one link per record.
+  return `<div class="coll-chapter"><span>${c.titolo}</span><span class="chapter-links">${hits.map(d =>
+    `<a class="chapter-link" href="detail.html?id=${encodeURIComponent(d.id)}" title="${esc(d.title)}">${d.year || '?'}</a>`).join('')}</span></div>`;
+}
+
+function toggleTreeColl(id) {
+  openColl = openColl === id ? null : id;
+  openTreeWorks.clear();
+  renderCollectionTree();
+}
+
+function toggleTreeWork(key) {
+  openTreeWorks.has(key) ? openTreeWorks.delete(key) : openTreeWorks.add(key);
+  renderCollectionTree();
+}
+
+function renderCollectionTree() {
+  const el = document.getElementById('coll-tabs');
+  if (!el) return;
+  // Volumes stacked vertically; the open one shows its works right below it.
+  el.innerHTML = COLLECTIONS.map(c =>
+    `<button type="button" class="coll-tab${openColl === c.id ? ' active' : ''}" onclick="toggleTreeColl(${jsAttr(c.id)})">${thumbImgTag(c.numero.replace(/\s+/g, ''), 'coll-cover')}<span class="coll-text"><span class="coll-id">${c.id}</span><span class="coll-sub">${c.numero} · ${c.titolo}</span></span></button>` +
+    (openColl === c.id ? `<div class="coll-tree">${collectionTreeHtml(c.id)}</div>` : '')
+  ).join('');
+}
+
+function collectionTreeHtml(collId) {
+  const works = collectionTree(collId);
+  if (!works.length) return '<div class="no-results">Nessuna opera in collections.json per questo volume.</div>';
+  return works.map(g => {
+    const key = collId + '|' + g.sigla;
+    const leaf = !g.chapters.length;
+    const open = !leaf && openTreeWorks.has(key);
+    const hasEntry = SIGLE[g.sigla];
+    const sigla = `<span class="coll-sigla${hasEntry ? ' link' : ''}"${hasEntry ? ` title="Apri la scheda dell'opera" onclick="event.stopPropagation();showWorkDetail(${jsAttr(g.sigla)})"` : ''}>${g.sigla}</span>`;
+    const row = `<div class="coll-work${leaf ? ' leaf' : ''}${open ? ' open' : ''}"${leaf ? '' : ` onclick="toggleTreeWork(${jsAttr(key)})"`}>
+      <span class="coll-caret">${leaf ? '' : '▸'}</span>
+      <span class="coll-work-title${g.fallback ? ' fallback' : ''}">${g.title}</span>
+      <span class="coll-meta">${leaf ? '' : g.chapters.length + (g.chapters.length === 1 ? ' testo' : ' testi')}</span>
+      ${sigla}
+    </div>`;
+    const chapters = leaf ? '' : `<div class="coll-chapters">${g.chapters.map(c =>
+      chapterHtml(c, g.sigla)).join('')}</div>`;
+    return row + chapters;
+  }).join('');
+}
+
+// ── Adelphi editions — one volume per work ───────────────────────────────────
+// Unlike the Garzanti Opere (each volume collects many works), every Adelphi
+// volume is a single work, so this list starts one level down. Everything
+// comes from adelphi.json:
+//   { "<sigla>": { "titolo", "curatore", "anno", "capitoli": [ { "titolo" }, … ] } }
+// "titolo" may be left out to reuse the one in sigle_gadda.json.
+// Covers: img/<sigla>-<anno>-adelphi or img/<sigla>-<anno> (.png/.jpg), e.g.
+// CdD-2024.png — the same file the primary bibliography uses for that edition.
+let ADELPHI_WORKS = {};
+let openAdelphi = null;
+
+function adelphiEditions() {
+  return Object.entries(ADELPHI_WORKS).map(([sigla, v]) => ({
+    sigla,
+    titolo: v.titolo || (SIGLE[sigla] && SIGLE[sigla].titolo_completo) || sigla,
+    cura: v.curatore || '',
+    year: v.anno || '',
+    capitoli: v.capitoli || [],
+  })).sort((a,b) => a.sigla.localeCompare(b.sigla, 'it', {sensitivity:'base'}));
+}
+
+// Opens in place — never jumps to the work page, which gathers every edition
+// and record with that sigla rather than this Adelphi volume.
+function toggleAdelphi(sigla) {
+  openAdelphi = openAdelphi === sigla ? null : sigla;
+  renderAdelphi();
+}
+
+function renderAdelphi() {
+  const el = document.getElementById('adelphi-list');
+  if (!el) return;
+  const eds = adelphiEditions();
+  if (!eds.length) { el.innerHTML = '<div class="no-results">Nessuna edizione in adelphi.json.</div>'; return; }
+  el.innerHTML = eds.map(e => {
+    const open = openAdelphi === e.sigla;
+    const meta = [e.cura && 'a cura di ' + e.cura, e.year].filter(Boolean).join(' · ');
+    return `<button type="button" class="coll-tab${open ? ' active' : ''}" onclick="toggleAdelphi(${jsAttr(e.sigla)})">${e.year ? thumbImgTag([`${e.sigla}-${e.year}-adelphi`, `${e.sigla}-${e.year}`], 'coll-cover') : ''}<span class="coll-text"><span class="coll-id">${e.sigla}</span><span class="coll-sub"><em>${e.titolo}</em>${meta ? ' · ' + meta : ''}</span></span></button>` +
+      (open ? `<div class="coll-tree">${e.capitoli.length
+        ? e.capitoli.map(c => chapterHtml(c, e.sigla)).join('')
+        : '<div class="coll-chapter coll-empty"><span>Indice non ancora inserito.</span></div>'}</div>` : '');
+  }).join('');
 }
 
 // ── Collection detail view — every work contained in one Garzanti volume ──────
@@ -836,7 +1036,6 @@ function collectionWorkCardHtml(w) {
         <span class="opera-title">${w.titolo}</span>
         ${w.sigla ? `<span class="opera-sigla${hasEntry ? ' opera-sigla-link' : ''}"${hasEntry ? ` onclick="showWorkDetail(${jsAttr(w.sigla)})"` : ''}>${w.sigla}</span>` : ''}
       </div>
-      ${w.pagine ? `<div class="opera-edition">pp. ${w.pagine}</div>` : ''}
       ${w.note ? `<div class="opera-blurb">${w.note}</div>` : ''}
       ${!hasEntry ? '<span class="opera-links-empty">Nessuna scheda collegata nel dataset</span>' : ''}
     </div>
@@ -900,7 +1099,6 @@ function renderWorkDetail() {
       <div class="opera-card static">
         <div class="opera-card-body">
           <div class="opera-head"><span class="opera-title">${w.titolo}</span></div>
-          ${w.pagine ? `<div class="opera-edition">pp. ${w.pagine}</div>` : ''}
           ${w.note ? `<div class="opera-blurb">${w.note}</div>` : ''}
         </div>
       </div>`).join('')
@@ -947,7 +1145,7 @@ function renderCollectionFilterGroup() {
 function renderSiglaPanel() {
   const entries = primaryOnly(filtered)
     .map(o => [o.displaySigla || o.sigla, o.total, o.sigla, o.titolo_completo])
-    .sort((a,b) => b[1]-a[1]);
+    .sort((a,b) => a[0].localeCompare(b[0], 'it', {sensitivity:'base'}) || (a[3]||'').localeCompare(b[3]||'', 'it'));
   const el = document.getElementById('viz-siglas');
   if (!el) return;
   el.innerHTML = '';
@@ -1148,10 +1346,13 @@ Promise.all([
   // collectionMembers() can't derive them from `raccolta` alone. Optional:
   // falls back to the raccolta-based listing until this file is added.
   // Expected shape: { "RR I": [ { titolo, sigla /* or null */, pagine, note }, ... ], ... }
-  fetch('collections.json').then(r => r.json()).catch(() => ({}))
-]).then(([allData, sigleData, collectionsData]) => {
+  fetch('collections.json').then(r => r.json()).catch(() => ({})),
+  fetch('adelphi.json').then(r => r.json()).catch(() => ({}))
+]).then(([allData, sigleData, collectionsData, adelphiData]) => {
+  ADELPHI_WORKS = adelphiData || {};
   SIGLE = sigleData.sigle || {};
   ALL_DATA = allData;
+  KNOWN_PUBLISHERS = [...new Set(['Adelphi', ...allData.map(d => d.editore).filter(Boolean)])].sort((a,b) => b.length - a.length);
   COLLECTION_WORKS = collectionsData || {};
   SUB_WORKS = Object.entries(sigleData.sub_opere || {})
     .filter(([key, sw]) => key !== '_meta' && sw && sw.matchTitle)
@@ -1255,6 +1456,8 @@ Promise.all([
     `${totalLinked.toLocaleString('it')} schede collegate nel dataset`;
 
   renderCollections();
+  renderCollectionTree();
+  renderAdelphi();
   applyFilters();
 
   const urlP = new URLSearchParams(window.location.search);
@@ -1262,7 +1465,7 @@ Promise.all([
   else if (urlP.get('collection')) showCollectionDetail(decodeURIComponent(urlP.get('collection')));
 }).catch(err => {
   console.error('Errore caricamento dati:', err);
-  document.getElementById('entries').innerHTML = '<p style="padding:2rem;color:#c00;font-family:monospace">Errore: ' + err + '</p>';
+  document.getElementById('sigla-chips').innerHTML = '<p style="padding:2rem;color:#c00;font-family:monospace">Errore: ' + err + '</p>';
 });
 </script>
 <script>
