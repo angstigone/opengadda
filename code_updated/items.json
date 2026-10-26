@@ -70456,7 +70456,7 @@
     "category": "primary bibliography",
     "date": "1938-10-03",
     "year": 1938,
-    "title": "Grandezza e biogra$a. A proposito della «Vita segreta»",
+    "title": "Grandezza e biografia. A proposito della «Vita segreta»",
     "subtitle": "Prosa in rivista",
     "detail": "L'Ambrosiano · Milano",
     "themes": [
@@ -83635,6 +83635,34 @@
     "sigla_sciolta": "C.E. Gadda-A. Bonsanti, Sono il pero e la zucca di me stesso. Carteggio 1930-1970, a cura di Roberta Corbeltaldo, Firenze, Leo S. Olschki, 2021.",
     "segnatura": "",
     "genere": "Contatti letterari"
+  },
+  {
+    "id": "1941-11",
+    "category": "primary bibliography",
+    "date": "1941-03-03",
+    "year": 1941,
+    "title": "La domenica",
+    "subtitle": "Prosa in rivista",
+    "detail": "La Nazione · Firenze",
+    "themes": [
+      "AG"
+    ],
+    "people": [],
+    "pub_detail": "",
+    "volume": "Opere II",
+    "pagine": "3",
+    "pubblicazione in volume": [
+      "1953-3",
+      "1963-3",
+      "2015-1"
+    ],
+    "altra edizione": [],
+    "ristampa articolo": [],
+    "rivista": "La Nazione",
+    "editore": "",
+    "note": "",
+    "corpus_lettere": "",
+    "date_start": "1941-03-02"
   },
   {
     "id": "Let1135",
@@ -99635,7 +99663,7 @@
     "genere": "Amici"
   },
   {
-    "id": "1947",
+    "id": "1947-1",
     "category": "primary bibliography",
     "date": "1947-06-30",
     "year": 1947,
@@ -99918,6 +99946,34 @@
     "sigla_sciolta": "C.E. Gadda, Lettere a una gentile signora, a cura di Giuseppe Mercenaro. Con un saggio di Giuseppe Pontiggia, Milano, Adelphi, 1983.",
     "segnatura": "",
     "genere": "Contatti letterari"
+  },
+  {
+    "id": "1947-2",
+    "category": "primary bibliography",
+    "date": "1947-11-12",
+    "year": 1947,
+    "title": "Socer generque",
+    "subtitle": "Prosa in rivista",
+    "detail": "Il Ponte · Firenze",
+    "themes": [
+      "AG"
+    ],
+    "people": [],
+    "pub_detail": "",
+    "volume": "Opere II",
+    "pagine": "1145-1161",
+    "pubblicazione in volume": [
+      "2015-1",
+      "1963-3",
+      "1953-3"
+    ],
+    "altra edizione": [],
+    "ristampa articolo": [],
+    "rivista": "Il Ponte",
+    "editore": "",
+    "note": "",
+    "corpus_lettere": "",
+    "date_start": "1947-11-11"
   },
   {
     "id": "arc103",
@@ -105492,6 +105548,33 @@
     "sigla_sciolta": "C.E. Gadda, Lettere a Leone Traverso (1939-1953), a cura di Francesco Venturi, in \"I Quaderni dell'Ingegnere. Testi e studi gaddiani\", 4 (nuova serie), 2013, pp. 112-46.",
     "segnatura": "",
     "genere": "Contatti letterari"
+  },
+  {
+    "id": "1950-13",
+    "category": "primary bibliography",
+    "date": "1950-07-02",
+    "year": 1950,
+    "title": "Emilio e Narcisso",
+    "subtitle": "Prosa in rivista",
+    "detail": "Ca Balà · Compiobbi",
+    "themes": [
+      "VM"
+    ],
+    "people": [],
+    "pub_detail": "1 · 1",
+    "volume": "Opere III",
+    "pagine": "6-8",
+    "pubblicazione in volume": [
+      "1958-3",
+      "2023-2"
+    ],
+    "altra edizione": [],
+    "ristampa articolo": [],
+    "rivista": "Ca Balà",
+    "editore": "",
+    "note": "",
+    "corpus_lettere": "",
+    "date_start": "1950-06-01"
   },
   {
     "id": "1950-6",
@@ -186372,7 +186455,7 @@
     "corpus_lettere": ""
   },
   {
-    "id": "1995, 2015-1",
+    "id": "1995",
     "category": "primary bibliography",
     "date": "1995-12-31",
     "year": 1995,
