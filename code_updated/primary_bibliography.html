@@ -929,11 +929,6 @@ function entryHtml(d) {
   const catBadge = crossMode
     ? '<a href="' + _catPage + '" onclick="event.stopPropagation()" style="display:inline-block;text-decoration:none;font-family:\'DM Mono\',monospace;font-size:9px;padding:2px 6px;border-radius:2px;background:' + (BADGE_COLORS[d.category]||'#888') + '18;color:' + (BADGE_COLORS[d.category]||'#888') + ';border:1px solid ' + (BADGE_COLORS[d.category]||'#888') + '40">' + (BADGE_SHORT[d.category]||d.category) + '</a>'
     : typeTag;
-  const collegataHtml = d.opera_collegata ? '<div style="font-family:\'DM Mono\',monospace;font-size:10px;color:var(--muted);margin-top:4px">' +
-    '<span style="letter-spacing:0.08em;text-transform:uppercase">collegata a →</span> ' +
-    '<span class="type-tag" style="cursor:pointer" onclick="event.stopPropagation();setOperaFilter(' + JSON.stringify(d.opera_collegata) + ')">' + d.opera_collegata +
-    ((SIGLE[d.opera_collegata]&&SIGLE[d.opera_collegata].titolo_completo) ? '<span class="tag-full">' + SIGLE[d.opera_collegata].titolo_completo + '</span>' : '') +
-    '</span></div>' : '';
   const dThemes = [...toThemesArray(d.themes)].sort((a,b) => a.localeCompare(b, 'it', {sensitivity:'base'}));
   const operaTags = (!crossMode && dThemes.length) ? '<div class="conn-badges" style="margin-top:4px">' + dThemes.map(t => '<span class="type-tag" style="cursor:pointer" data-opera="' + t.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();setOperaFilter(this.dataset.opera)">' + t + ((SIGLE[t]&&SIGLE[t].titolo_completo) ? '<span class="tag-full">' + SIGLE[t].titolo_completo + '</span>' : '') + '</span>').join(' ') + '</div>' : '';
   const titleHtml = '<span class="entry-title-inline">' + (d.title||'') + '</span>';
@@ -946,7 +941,6 @@ function entryHtml(d) {
     '<div class="entry-main">' + coverImgTag(d, 'entry-cover') + '<div class="entry-text">' +
       '<div class="entry-line">' + lineParts.join(' · ') + '</div>' +
       (d.corpus_lettere ? '<div style="margin-top:4px"><span class="corpus-tag" onclick="event.stopPropagation();setCorpusFilter(' + JSON.stringify(d.corpus_lettere) + ')">✉ ' + (SIGLA_TO_NAME[d.corpus_lettere] || d.corpus_lettere) + '</span></div>' : '') +
-      collegataHtml +
       operaTags +
     '</div></div>' +
     '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">' +

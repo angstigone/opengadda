@@ -712,16 +712,30 @@ document.addEventListener('click', function(e) {
   if (btn) toggleMore(btn.dataset.toggle, btn);
 });
 
+// Links between primary-bibliography records, each a list of record ids:
+//   "pubblicazione in volume" — the volume(s) this piece was later published in
+//   "altra edizione"          — other editions of the same book
+//   "ristampa articolo"       — another piece in which this one was published again
+// Only one side of a link has to record it: the other direction is found by
+// searching every record. An entry holding two ids by mistake ("1964-2 2013")
+// is read as two.
+function linkedIds(d, field) {
+  return [].concat(d[field] || [])
+    .flatMap(v => String(v).split(/[\s,;]+/))
+    .filter(id => id && id !== d.id);
+}
+function linkingIds(item, field) {
+  return ALL_DATA
+    .filter(d => d.id !== item.id && linkedIds(d, field).includes(item.id))
+    .map(d => d.id);
+}
 function buildGenealogyPanel(item) {
-  const genitore = (item.genitore||[]).filter(Boolean);
-  const figlio = ALL_DATA
-    .filter(d => d.id !== item.id && (d.genitore||[]).includes(item.id))
-    .map(d => d.id);
-  const collegate = (item.opere_collegate||[]).filter(Boolean);
-  const collegateInverse = ALL_DATA
-    .filter(d => d.id !== item.id && (d.opere_collegate||[]).includes(item.id))
-    .map(d => d.id);
-  if (!genitore.length && !figlio.length && !collegate.length && !collegateInverse.length) return '';
+  const inVolume   = linkedIds(item, 'pubblicazione in volume');
+  const contains   = linkingIds(item, 'pubblicazione in volume');
+  const editions   = [...new Set([...linkedIds(item, 'altra edizione'), ...linkingIds(item, 'altra edizione')])];
+  const reprinted  = linkedIds(item, 'ristampa articolo');
+  const reprintOf  = linkingIds(item, 'ristampa articolo');
+  if (!inVolume.length && !contains.length && !editions.length && !reprinted.length && !reprintOf.length) return '';
 
   function sortIds(ids) {
     return [...ids].sort((a, b) => {
@@ -731,29 +745,32 @@ function buildGenealogyPanel(item) {
     });
   }
 
-  function genealogyItem(rid, fallbackLabel) {
+  function genealogyItem(rid) {
     const rec = INDEX[rid];
-    const title = rec ? (rec.title.length>65 ? rec.title.slice(0,65)+'…' : rec.title) : (fallbackLabel || rid);
-    const year  = rec ? rec.year : '';
+    // an id that matches no record: shown, not linked, so the gap is visible
+    if (!rec) return '<div class="conn-item" style="opacity:0.6"><div class="conn-item-title">' + rid + ' — scheda non trovata</div></div>';
+    const title = rec.title.length>65 ? rec.title.slice(0,65)+'…' : rec.title;
+    const year  = rec.year;
     return '<a href="detail.html?id=' + rid + '" class="conn-item">' +
       (year ? '<div class="conn-item-year">' + year + '</div>' : '') +
       '<div class="conn-item-title">' + title + '</div>' +
     '</a>';
   }
 
-  function renderSection(label, color, ids, fallbackLabel) {
+  function renderSection(label, color, ids) {
     if (!ids.length) return '';
     return '<div class="conn-section" data-section="' + label + '">' +
       '<div class="conn-section-title"><span class="conn-dot" style="background:' + color + '"></span>' + label + '</div>' +
-      '<div class="genealogy-items">' + ids.map(id => genealogyItem(id, fallbackLabel)).join('') + '</div>' +
+      '<div class="genealogy-items">' + ids.map(id => genealogyItem(id)).join('') + '</div>' +
     '</div>';
   }
 
   let html = '<div class="sidebar-card"><h3>Struttura dell\'opera</h3>' +
-    renderSection('Contenuto in',      'var(--accent)',      sortIds(genitore)) +
-    renderSection('Contiene',          'var(--accent)',      sortIds(figlio)) +
-    renderSection('Collegato a',     'var(--accent-blue)', sortIds(collegate), item.opera_collegata) +
-    renderSection('Collegata a questo','var(--accent-blue)', sortIds(collegateInverse)) +
+    renderSection('Pubblicato in volume', 'var(--accent)',      sortIds(inVolume)) +
+    renderSection('Contiene',             'var(--accent)',      sortIds(contains)) +
+    renderSection('Altre edizioni',       'var(--accent-blue)', sortIds(editions)) +
+    renderSection('Ristampato in',        '#1a6a40',            sortIds(reprinted)) +
+    renderSection('Ristampa di',          '#1a6a40',            sortIds(reprintOf)) +
     '</div>';
   return html;
 }
@@ -928,15 +945,8 @@ if (!item) {
       ]);
     }
 
-    if (item.opera_collegata) {
-      const opChip = `<span style="display:inline-flex;align-items:center;gap:3px">` +
-        `<a href="primary_bibliography.html?theme=${encodeURIComponent(item.opera_collegata)}" style="display:inline-block;background:#dff0e8;color:#1a6a40;padding:2px 8px;border-radius:2px;font-family:'DM Mono',monospace;font-size:10px;text-decoration:none;letter-spacing:0.05em;border:1px solid #b8dfc8">${item.opera_collegata}</a>` +
-        `<a href="search.html?q=${encodeURIComponent(item.opera_collegata)}" title="Cerca sul database" style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--muted);white-space:nowrap">cerca sul database</a>` +
-      `</span>`;
-      metaRows.push(['collegata a →', opChip]);
-    }
-
-    // genitore / opere_collegate shown in the dedicated sidebar box below
+    // pubblicazione in volume / altra edizione / ristampa articolo are shown
+    // in the "Struttura dell'opera" sidebar box (buildGenealogyPanel)
 
   } else if (item.category === 'secondary bibliography') {
     const autoriLinks = peopleLinks(item, 'autore', 'secondary_bibliography.html')
