@@ -155,7 +155,6 @@ body.no-sigla-panel .viz-static-panel { display:none; }
 .coll-caret { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); transition:transform 0.15s; }
 .coll-work.open .coll-caret { transform:rotate(90deg); }
 .coll-work-title { font-size:1.05rem; letter-spacing:0.02em; }
-.coll-work-title.fallback { font-style:italic; }
 .coll-meta { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); white-space:nowrap; }
 .coll-sigla { font-family:'DM Mono',monospace; font-size:10px; padding:2px 7px; border-radius:2px; background:var(--tag-bg); color:var(--tag-text); }
 .coll-sigla.link { cursor:pointer; }
@@ -867,7 +866,6 @@ function collectionTree(collId) {
     // A lone entry with no heading is a work on its own, not a chapter.
     if (!g.heading && g.chapters.length === 1) { g.heading = g.chapters[0]; g.chapters = []; g.single = true; }
     g.title = g.heading ? g.heading.titolo : ((SIGLE[g.sigla] && SIGLE[g.sigla].titolo_completo) || g.sigla);
-    g.fallback = !g.heading;
     g.pagine = g.heading ? g.heading.pagine : (g.chapters[0] && g.chapters[0].pagine);
     return g;
   }).sort((a,b) => firstPage(a.pagine) - firstPage(b.pagine));
@@ -987,7 +985,7 @@ function collectionTreeHtml(collId) {
     const sigla = `<span class="coll-sigla${hasEntry ? ' link' : ''}"${hasEntry ? ` title="Apri la scheda dell'opera" onclick="event.stopPropagation();showWorkDetail(${jsAttr(g.sigla)})"` : ''}>${g.sigla}</span>`;
     const row = `<div class="coll-work${leaf ? ' leaf' : ''}${open ? ' open' : ''}"${leaf ? '' : ` onclick="toggleTreeWork(${jsAttr(key)})"`}>
       <span class="coll-caret">${leaf ? '' : '▸'}</span>
-      <span class="coll-work-title${g.fallback ? ' fallback' : ''}">${g.title}</span>
+      <span class="coll-work-title">${g.title}</span>
       <span class="coll-meta">${leaf ? '' : g.chapters.length + (g.chapters.length === 1 ? ' testo' : ' testi')}</span>
       ${sigla}
     </div>`;

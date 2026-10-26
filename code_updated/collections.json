@@ -96,6 +96,9 @@
     {
       "titolo":"L'Editore chiede venia del recupero chiamando in causa l'Autore", "sigla":"CdD", "pagine": "759"
     },
+      {
+      "tito lo":"L'ortolano di Rapallo", "sigla":"MdF", "pagine": "37", "id": ["1926"]
+    },
     {
       "titolo":"Manovre di artiglieria da campagna", "sigla":"MdF", "pagine": "21", "id": ["1928-3"]
     },
@@ -284,7 +287,7 @@
       "titolo":"Al Teatro della Floridiana: Le corna di Don Friolera", "sigla":"SD", "pagine": "1029"
     },
     {
-      "titolo":"Amleto al Teatro Valle", "sigla":"VN", "pagine": "539", "id": ["1952-5"]
+      "titolo":"Amleto al Teatro Valle", "sigla":"VM", "pagine": "539", "id": ["1952-5"]
     },
     {
       "titolo":"Anastomosi", "sigla":"A", "pagine": "263", "id": ["1940-6"]
@@ -312,9 +315,6 @@
     },
     {
       "titolo":"Arte del belli", "sigla":"VM", "pagine": "548", "id": ["1945-1"]
-    },
-    {
-      "titolo":"Automobili e automotrici azionate ad ammoniaca", "sigla":"DT", "pagine": "131", "id": ["1937-5"]
     },
     {
       "titolo":"Bonaventura Tecchi «Idilli moravi»", "sigla":"SD", "pagine": "847", "id": ["1940-12"]
@@ -434,7 +434,7 @@
       "titolo":"Giuseppe Berto, «Il male oscuro»", "sigla":"SD", "pagine": "1200", "id": ["1965-1"]
     },
     {
-      "titolo":"Gli Anni", "sigla":"A", "pagine": "201", "id": ["1943-5"]
+      "titolo":"GLI ANNI", "sigla":"A", "pagine": "201", "id": ["1943-5"]
     },
     {
       "titolo":"Grandezza e biografia", "sigla":"SD", "pagine": "825", "id": ["1938-6"]
@@ -641,9 +641,6 @@
       "titolo":"Lo rividi direttore alla «Fiera»", "sigla":"SD", "pagine": "986", "id": ["1951-7"]
     },
     {
-      "titolo":"L'ortolano di Rapallo", "sigla":"MdF", "pagine": "37", "id": ["1926"]
-    },
-    {
       "titolo":"Luigi Tonelli, «Manzoni»", "sigla":"SD", "pagine": "689"
     },
     {
@@ -821,7 +818,7 @@
       "titolo":"Terra lombarda", "sigla":"VlC", "pagine": "287", "id": ["1940-9"]
     },
     {
-      "titolo":"Tirinnanzi", "sigla":"DT", "pagine": "973", "id": ["1949-4"]
+      "titolo":"Tirinnanzi", "sigla":"SD", "pagine": "973", "id": ["1949-4"]
     },
     {
       "titolo":"Toscanelli e Colombo", "sigla":"SD", "pagine": "992", "id": ["1973"]
@@ -857,7 +854,7 @@
       "titolo":"Una narratore: Bonaventura Tecchi", "sigla":"SD", "pagine": "698", "id": ["1930"]
     },
     {
-      "titolo":"Un'opinione sul neorealismo", "sigla":"VN", "pagine": "629", "id": ["1951-2"]
+      "titolo":"Un'opinione sul neorealismo", "sigla":"VM ", "pagine": "629", "id": ["1951-2"]
     },
     {
       "titolo":"Un romanzo giallo nella geologia", "sigla":"MdI", "pagine": "145", "id": ["1934-12"]
@@ -867,6 +864,9 @@
     },
     {
       "titolo":"Versilia", "sigla":"VlC", "pagine": "363", "id": ["1950-11"]
+    },
+     {
+      "titolo":"VERSO LA CERTOSA", "sigla":"VlC"
     },
     {
       "titolo":"Verso Teramo", "sigla":"A", "pagine": "235"
@@ -934,6 +934,9 @@
     },
     {
       "titolo":"A tavola", "sigla":"AS", "pagine": "1158"
+    },
+        {
+      "titolo":"Automobili e automotrici azionate ad ammoniaca", "sigla":"DT", "pagine": "131", "id": ["1937-5"]
     },
     {
       "titolo":"A zonzo per la Fiera", "sigla":"DT", "pagine": "87", "id": ["1932-8"]
@@ -1008,7 +1011,7 @@
       "titolo":"La calcionamide", "sigla":"DT", "pagine": "77"
     },
     {
-      "titolo":"La centrale di Conigliano", "sigla":"VM", "pagine": "419"
+      "titolo":"La centrale di Conigliano", "sigla":"DT", "pagine": "419"
     },
     {
       "titolo":"La chirurgia dei quadri all'Istituto Centrale dell'Editore chiede venia del recupero Restauro", "sigla":"DT", "pagine": "188"
