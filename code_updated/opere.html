@@ -873,8 +873,9 @@ function collectionTree(collId) {
   }).sort((a,b) => firstPage(a.pagine) - firstPage(b.pagine));
 }
 
-// A chapter links to its record(s) in the primary bibliography when the titles
-// agree: same title, or the record's title continues it after punctuation
+// A chapter links to its record(s) in the primary bibliography by the ids in
+// its "id" field (collections.json). Chapters without one fall back to titles,
+// linking when they agree: same title, or the record's title continues it after punctuation
 // ("Notte di Luna" → "Notte di luna – Paese, …", but not "La casa" → "La casa
 // dei ricchi"). Records tagged with other siglas are skipped.
 const foldTitle = t => (t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
@@ -898,10 +899,15 @@ function editDistance(a, b) {
   }
   return prev[b.length];
 }
-function primaryMatches(title, sigla) {
+function primaryMatches(title, sigla, ids) {
+  const byDate = (a, b) => (a.date || '').localeCompare(b.date || '');
+  // a chapter whose "id" (in collections.json) names its record(s) links to
+  // exactly those; the title matching below is only for chapters without one
+  // ("1946-1, 1946-2" written as one entry is read as two)
+  const wanted = [].concat(ids || []).flatMap(v => String(v).split(/[\s,;]+/)).filter(Boolean);
+  if (wanted.length) return ALL_DATA.filter(d => wanted.includes(d.id)).sort(byDate);
   const n = foldTitle(title).replace(/[.\s]+$/, '');
   if (!n) return [];
-  const byDate = (a, b) => (a.date || '').localeCompare(b.date || '');
   const primary = ALL_DATA.filter(d => d.category === 'primary bibliography');
   const exact = primary.filter(d => {
     const themes = [].concat(d.themes || []);
@@ -934,15 +940,15 @@ function chapterLink(d, text) {
   const tip = d.approx ? `Titolo nella bibliografia primaria: ${d.title}` : d.title;
   return `<a class="chapter-link${d.approx ? ' approx' : ''}" href="detail.html?id=${encodeURIComponent(d.id)}" title="${esc(tip)}">${text}</a>`;
 }
-function chapterTitleHtml(title, sigla) {
-  const hits = primaryMatches(title, sigla);
+function chapterTitleHtml(title, sigla, ids) {
+  const hits = primaryMatches(title, sigla, ids);
   if (!hits.length) return title;
   if (hits.length === 1) return chapterLink(hits[0], title);
   return `${title} <span class="chapter-links" style="display:inline-flex;margin-left:8px">${hits.map(d => chapterLink(d, d.year || '?')).join('')}</span>`;
 }
 
 function chapterHtml(c, sigla) {
-  const hits = primaryMatches(c.titolo, sigla);
+  const hits = primaryMatches(c.titolo, sigla, c.id);
   if (!hits.length) return `<div class="coll-chapter"><span>${c.titolo}</span></div>`;
   if (hits.length === 1) return `<div class="coll-chapter">${chapterLink(hits[0], c.titolo)}</div>`;
   // Several records (e.g. a text published in instalments): one link per record.
@@ -1146,7 +1152,7 @@ function renderWorkDetail() {
     ? related.map(w => `
       <div class="opera-card static">
         <div class="opera-card-body">
-          <div class="opera-head"><span class="opera-title">${chapterTitleHtml(w.titolo, sigla)}</span></div>
+          <div class="opera-head"><span class="opera-title">${chapterTitleHtml(w.titolo, sigla, w.id)}</span></div>
           ${w.note ? `<div class="opera-blurb">${w.note}</div>` : ''}
         </div>
       </div>`).join('')
