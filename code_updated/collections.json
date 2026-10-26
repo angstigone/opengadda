@@ -97,7 +97,7 @@
       "titolo":"L'Editore chiede venia del recupero chiamando in causa l'Autore", "sigla":"CdD", "pagine": "759"
     },
       {
-      "tito lo":"L'ortolano di Rapallo", "sigla":"MdF", "pagine": "37", "id": ["1926"]
+      "titolo":"L'ortolano di Rapallo", "sigla":"MdF", "pagine": "37", "id": ["1926"]
     },
     {
       "titolo":"Manovre di artiglieria da campagna", "sigla":"MdF", "pagine": "21", "id": ["1928-3"]
@@ -854,7 +854,7 @@
       "titolo":"Una narratore: Bonaventura Tecchi", "sigla":"SD", "pagine": "698", "id": ["1930"]
     },
     {
-      "titolo":"Un'opinione sul neorealismo", "sigla":"VM ", "pagine": "629", "id": ["1951-2"]
+      "titolo":"Un'opinione sul neorealismo", "sigla":"VM", "pagine": "629", "id": ["1951-2"]
     },
     {
       "titolo":"Un romanzo giallo nella geologia", "sigla":"MdI", "pagine": "145", "id": ["1934-12"]
