@@ -715,7 +715,8 @@ document.addEventListener('click', function(e) {
 // Links between primary-bibliography records, each a list of record ids:
 //   "pubblicazione in volume" — the volume(s) this piece was later published in
 //   "altra edizione"          — other editions of the same book
-//   "ristampa articolo"       — another piece in which this one was published again
+//   "ristampa articolo"       — the piece this one reprints ("Ristampa di"); the
+//                               original then shows it under "Ristampato in"
 // Only one side of a link has to record it: the other direction is found by
 // searching every record. An entry holding two ids by mistake ("1964-2 2013")
 // is read as two.
@@ -769,8 +770,8 @@ function buildGenealogyPanel(item) {
     renderSection('Pubblicato in volume', 'var(--accent)',      sortIds(inVolume)) +
     renderSection('Contiene',             'var(--accent)',      sortIds(contains)) +
     renderSection('Altre edizioni',       'var(--accent-blue)', sortIds(editions)) +
-    renderSection('Ristampato in',        '#1a6a40',            sortIds(reprinted)) +
-    renderSection('Ristampa di',          '#1a6a40',            sortIds(reprintOf)) +
+    renderSection('Ristampa di',          '#1a6a40',            sortIds(reprinted)) +
+    renderSection('Ristampato in',        '#1a6a40',            sortIds(reprintOf)) +
     '</div>';
   return html;
 }

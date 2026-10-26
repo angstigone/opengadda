@@ -166,6 +166,7 @@ body.no-sigla-panel .viz-static-panel { display:none; }
 .coll-chapter:last-child { border-bottom:none; }
 .chapter-link { color:var(--ink); text-decoration:underline; text-decoration-color:var(--border); text-underline-offset:3px; }
 .chapter-link:hover { color:var(--accent); text-decoration-color:var(--accent); }
+.chapter-link.approx { text-decoration-style:dotted; }
 .chapter-links { display:flex; gap:10px; font-family:'DM Mono',monospace; font-size:10px; }
 .chapter-links .chapter-link { color:var(--accent); }
 .coll-empty { font-style:italic; color:var(--muted); }
@@ -878,39 +879,74 @@ function collectionTree(collId) {
 // dei ricchi"). Records tagged with other siglas are skipped.
 const foldTitle = t => (t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
   .replace(/[«»"“”]/g, '').replace(/[‘’`]/g, "'").replace(/…/g, '...').replace(/\s+/g, ' ').trim();
+// When no title agrees exactly, two looser checks follow, both only among the
+// records tagged with the work's sigla: titles that differ just in punctuation
+// or spelling form ("Il castello d'Udine" = "Il castello di Udine", "ed" =
+// "e"), then titles one or two letters apart — a typo on either side
+// ("Tripolitana" / "Tripolitania"). Matches found this way are marked
+// approximate (see chapterTitleHtml).
+const bareTitle = t => foldTitle(t).replace(/\bd'(?=[a-z])/g, 'di ').replace(/\bed\b/g, 'e')
+  .replace(/[^a-z0-9]+/g, ' ').trim();
+function editDistance(a, b) {
+  let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    for (let j = 1; j <= b.length; j++) {
+      cur.push(Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)));
+    }
+    prev = cur;
+  }
+  return prev[b.length];
+}
 function primaryMatches(title, sigla) {
   const n = foldTitle(title).replace(/[.\s]+$/, '');
   if (!n) return [];
-  return ALL_DATA.filter(d => {
-    if (d.category !== 'primary bibliography') return false;
+  const byDate = (a, b) => (a.date || '').localeCompare(b.date || '');
+  const primary = ALL_DATA.filter(d => d.category === 'primary bibliography');
+  const exact = primary.filter(d => {
     const themes = [].concat(d.themes || []);
     if (themes.length && sigla && !themes.includes(sigla)) return false;
     const t = foldTitle(d.title);
     if (t.replace(/[.\s]+$/, '') === n) return true;
     return t.startsWith(n) && /^\s*[(\[–—:.,;-]/.test(t.slice(n.length));
-  }).sort((a,b) => (a.date || '').localeCompare(b.date || ''));
+  });
+  if (exact.length || !sigla) return exact.sort(byDate);
+  const sameWork = primary.filter(d => [].concat(d.themes || []).includes(sigla));
+  const bare = bareTitle(title);
+  const samePunct = sameWork.filter(d => bareTitle(d.title) === bare);
+  if (samePunct.length) return samePunct.map(d => ({ ...d, approx: true })).sort(byDate);
+  if (bare.length < 6) return [];
+  const maxEdits = Math.max(2, Math.floor(bare.length / 12));
+  const scored = sameWork.map(d => ({ d, dist: editDistance(bare, bareTitle(d.title)) })).filter(x => x.dist <= maxEdits);
+  if (!scored.length) return [];
+  const best = Math.min(...scored.map(x => x.dist));
+  return scored.filter(x => x.dist === best).map(x => ({ ...x.d, approx: true })).sort(byDate);
 }
 
 // Same matching as chapterHtml(), for the "Testi contenuti" cards on a work's
 // page: the title links to its primary-bibliography record, or to each record
 // (by year) when the text came out in several instalments.
+// A link to a matched record. An approximate match (see primaryMatches) is
+// drawn with a dotted underline, and its tooltip gives the title as the
+// database writes it, so the differing spelling can be spotted and fixed.
+function chapterLink(d, text) {
+  const esc = t => String(t).replace(/"/g, '&quot;');
+  const tip = d.approx ? `Titolo nella bibliografia primaria: ${d.title}` : d.title;
+  return `<a class="chapter-link${d.approx ? ' approx' : ''}" href="detail.html?id=${encodeURIComponent(d.id)}" title="${esc(tip)}">${text}</a>`;
+}
 function chapterTitleHtml(title, sigla) {
   const hits = primaryMatches(title, sigla);
-  const esc = t => String(t).replace(/"/g, '&quot;');
   if (!hits.length) return title;
-  if (hits.length === 1) return `<a class="chapter-link" href="detail.html?id=${encodeURIComponent(hits[0].id)}" title="${esc(hits[0].title)}">${title}</a>`;
-  return `${title} <span class="chapter-links" style="display:inline-flex;margin-left:8px">${hits.map(d =>
-    `<a class="chapter-link" href="detail.html?id=${encodeURIComponent(d.id)}" title="${esc(d.title)}">${d.year || '?'}</a>`).join('')}</span>`;
+  if (hits.length === 1) return chapterLink(hits[0], title);
+  return `${title} <span class="chapter-links" style="display:inline-flex;margin-left:8px">${hits.map(d => chapterLink(d, d.year || '?')).join('')}</span>`;
 }
 
 function chapterHtml(c, sigla) {
   const hits = primaryMatches(c.titolo, sigla);
-  const esc = t => String(t).replace(/"/g, '&quot;');
   if (!hits.length) return `<div class="coll-chapter"><span>${c.titolo}</span></div>`;
-  if (hits.length === 1) return `<div class="coll-chapter"><a class="chapter-link" href="detail.html?id=${encodeURIComponent(hits[0].id)}" title="${esc(hits[0].title)}">${c.titolo}</a></div>`;
+  if (hits.length === 1) return `<div class="coll-chapter">${chapterLink(hits[0], c.titolo)}</div>`;
   // Several records (e.g. a text published in instalments): one link per record.
-  return `<div class="coll-chapter"><span>${c.titolo}</span><span class="chapter-links">${hits.map(d =>
-    `<a class="chapter-link" href="detail.html?id=${encodeURIComponent(d.id)}" title="${esc(d.title)}">${d.year || '?'}</a>`).join('')}</span></div>`;
+  return `<div class="coll-chapter"><span>${c.titolo}</span><span class="chapter-links">${hits.map(d => chapterLink(d, d.year || '?')).join('')}</span></div>`;
 }
 
 function toggleTreeColl(id) {
