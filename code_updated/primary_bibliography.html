@@ -83,6 +83,8 @@ header p { color:#9a9080; font-size:1rem; }
 .filter-btn:hover { background: var(--tag-bg); color: var(--ink); }
 .filter-btn.active { background: var(--accent); color: var(--white); }
 .filter-btn .count { font-family: 'DM Mono', monospace; font-size: 10px; opacity: 0.7; flex-shrink: 0; }
+/* a filter option that would show nothing with the other filters set */
+.filter-btn.empty { opacity: 0.35; }
 #type-filters .filter-btn { align-items: flex-start; gap: 8px; padding: 0.4rem 0.5rem; }
 
 .main { padding: 1.5rem 2rem; min-width: 0; overflow-x: clip; }
@@ -736,22 +738,26 @@ function applyFilters() {
   const q = document.getElementById('search').value.toLowerCase();
   const yf = parseInt(document.getElementById('yearFrom').value) || 0;
   const yt = parseInt(document.getElementById('yearTo').value) || 9999;
-  if (venueFilter) { filtered = ALL_DATA.filter(d => (d.rivista||'').toLowerCase() === venueFilter.toLowerCase() || (d.editore||'').toLowerCase() === venueFilter.toLowerCase() || (d.detail||'').toLowerCase().includes(venueFilter.toLowerCase())); filtered.sort(yearSort); currentPage = 1; render(); return; }
-  if (themeFilter) { filtered = ALL_DATA.filter(d => toThemesArray(d.themes).includes(themeFilter)); filtered.sort(yearSort); currentPage = 1; render(); return; }
-  if (personFilter) { filtered = ALL_DATA.filter(d => getCuratoriNames(d).includes(personFilter)); filtered.sort(yearSort); currentPage = 1; render(); return; }
-  if (corpusFilter) { filtered = ALL_DATA.filter(d => d.corpus_lettere === corpusFilter); filtered.sort(yearSort); currentPage = 1; render(); return; }
-  const preOperaPool = ALL_DATA.filter(d => {
+  if (venueFilter) { filtered = ALL_DATA.filter(d => (d.rivista||'').toLowerCase() === venueFilter.toLowerCase() || (d.editore||'').toLowerCase() === venueFilter.toLowerCase() || (d.detail||'').toLowerCase().includes(venueFilter.toLowerCase())); filtered.sort(yearSort); updateTypeCounts(filtered); currentPage = 1; render(); return; }
+  if (themeFilter) { filtered = ALL_DATA.filter(d => toThemesArray(d.themes).includes(themeFilter)); filtered.sort(yearSort); updateTypeCounts(filtered); currentPage = 1; render(); return; }
+  if (personFilter) { filtered = ALL_DATA.filter(d => getCuratoriNames(d).includes(personFilter)); filtered.sort(yearSort); updateTypeCounts(filtered); currentPage = 1; render(); return; }
+  if (corpusFilter) { filtered = ALL_DATA.filter(d => d.corpus_lettere === corpusFilter); filtered.sort(yearSort); updateTypeCounts(filtered); currentPage = 1; render(); return; }
+  // every filter but the type and the work: the sidebar counts start from here
+  const basePool = ALL_DATA.filter(d => {
     if (d.category !== 'primary bibliography') return false;
     if (q && !((d.title||'').toLowerCase().includes(q) || (d.detail||'').toLowerCase().includes(q) || (d.pub_detail||'').toLowerCase().includes(q) || (d.people||[]).some(p => nameMatches(p.name, q)))) return false;
-    if (activeType && d.subtitle !== activeType) return false;
     if (d.year === null) {
       // Items with no year: only excluded when a year range is actively set.
       if (yf > 0 || yt < 9999) return false;
     } else if (d.year < yf || d.year > yt) return false;
     return true;
   });
+  const byOpera = d => !activeOpera || toThemesArray(d.themes).includes(activeOpera);
+  const preOperaPool = basePool.filter(d => !activeType || d.subtitle === activeType);
   buildOperaBtns(preOperaPool);
-  filtered = preOperaPool.filter(d => !activeOpera || toThemesArray(d.themes).includes(activeOpera));
+  // each type's count = what that type would show with the other filters kept
+  updateTypeCounts(basePool.filter(byOpera));
+  filtered = preOperaPool.filter(byOpera);
   filtered.sort((a,b) => {
     if (viewMode === 'list')    return alphaSortKey(a.title).localeCompare(alphaSortKey(b.title), 'it');
     if (viewMode === 'rivista') return (a.date||'').localeCompare(b.date||'');
@@ -793,6 +799,20 @@ function buildTypeFilters() {
     container.appendChild(btn);
   });
   syncTypeButtons();
+}
+
+// The number on each type button: how many records that type would show
+// given every other filter currently set. A type that would show none is
+// dimmed (still clickable when it is the active one, to switch it off).
+function updateTypeCounts(pool) {
+  const counts = {};
+  pool.forEach(d => { if (d.subtitle) counts[d.subtitle] = (counts[d.subtitle]||0)+1; });
+  document.querySelectorAll('#type-filters .filter-btn').forEach(b => {
+    const n = counts[b.dataset.type] || 0;
+    const c = b.querySelector('.count');
+    if (c) c.textContent = n;
+    b.classList.toggle('empty', !n && b.dataset.type !== activeType);
+  });
 }
 
 function syncTypeButtons() {
@@ -880,7 +900,7 @@ function renderSidebarViz() {
 }
 
 function render() {
-  document.getElementById('sn-total').textContent = DATA.length;
+  document.getElementById('sn-total').textContent = filtered.length;
   document.getElementById('sn-types').textContent = new Set(filtered.map(d=>d.subtitle).filter(Boolean)).size;
   document.getElementById('sn-curatori').textContent = new Set(filtered.flatMap(getCuratoriNames)).size;
   document.getElementById('sn-works').textContent = new Set(filtered.flatMap(d=>toThemesArray(d.themes))).size;

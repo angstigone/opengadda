@@ -505,6 +505,8 @@ header p { color:#9a9080; font-size:1rem; }
   text-transform: uppercase; background: none; color: var(--muted);
   border: 1px solid var(--border); padding: 5px 14px; border-radius: 2px; cursor: pointer;
 }
+/* a filter option that would show nothing with the other filters set */
+.filter-btn.empty { opacity: 0.35; }
 </style>
 </head>
 <body>
@@ -726,6 +728,8 @@ let themeFilter = null;
 let venueFilter = null;
 let personFilter = null;
 let activeFondo = null;
+// the records the work bubbles and the fondi are counted on (all filters but their own)
+let operaCountPool = null, fondoCountPool = null;
 let activeGenere = null;
 let activeOpera = null;
 let filtered = [];
@@ -914,7 +918,7 @@ function toggleAuthorsSort() {
 
 function renderSidebarViz() {
   const fondoCounts = {};
-  filtered.forEach(d => getFondi(d).forEach(f => { fondoCounts[f] = (fondoCounts[f]||0)+1; }));
+  (fondoCountPool || filtered).forEach(d => getFondi(d).forEach(f => { fondoCounts[f] = (fondoCounts[f]||0)+1; }));
   const fondoEntries = Object.entries(fondoCounts).sort((a,b) => b[1]-a[1]);
   renderViz('viz-fondi', fondoEntries, code => { activeFondo = activeFondo === code ? null : code; applyFilters(); });
   document.querySelectorAll('#viz-fondi .bar-row-label').forEach(lbl => {
@@ -945,25 +949,45 @@ function renderSidebarViz() {
   }
 }
 
+// The number on each filter button: how many records that option would show
+// with every other filter kept as it is. An option that would show none is
+// dimmed (still clickable when it is the active one, to switch it off).
+function updateFacetCounts(selector, attr, pool, keyOf, active) {
+  const counts = {};
+  pool.forEach(d => [].concat(keyOf(d) || []).forEach(k => { if (k) counts[k] = (counts[k] || 0) + 1; }));
+  document.querySelectorAll(selector).forEach(b => {
+    const key = b.dataset[attr];
+    const n = counts[key] || 0;
+    const c = b.querySelector('.count');
+    if (c) c.textContent = n;
+    b.classList.toggle('empty', !n && key !== active);
+  });
+}
+
 function applyFilters() {
-  if (themeFilter) { filtered = ALL_DATA.filter(d => (d.themes||[]).includes(themeFilter)); doSort(); currentPage = 1; render(); return; }
-  if (venueFilter) { filtered = ALL_DATA.filter(d => (d.casa_editrice||d.detail||'').toLowerCase().includes(venueFilter.toLowerCase())); doSort(); currentPage = 1; render(); return; }
-  if (personFilter) { filtered = ALL_DATA.filter(d => (d.people||[]).some(p => p.name === personFilter)); doSort(); currentPage = 1; render(); return; }
+  if (themeFilter) { filtered = ALL_DATA.filter(d => (d.themes||[]).includes(themeFilter)); operaCountPool = null; fondoCountPool = null; updateFacetCounts('#genere-filters .filter-btn', 'genere', filtered, d => getGenere(d), activeGenere); doSort(); currentPage = 1; render(); return; }
+  if (venueFilter) { filtered = ALL_DATA.filter(d => (d.casa_editrice||d.detail||'').toLowerCase().includes(venueFilter.toLowerCase())); operaCountPool = null; fondoCountPool = null; updateFacetCounts('#genere-filters .filter-btn', 'genere', filtered, d => getGenere(d), activeGenere); doSort(); currentPage = 1; render(); return; }
+  if (personFilter) { filtered = ALL_DATA.filter(d => (d.people||[]).some(p => p.name === personFilter)); operaCountPool = null; fondoCountPool = null; updateFacetCounts('#genere-filters .filter-btn', 'genere', filtered, d => getGenere(d), activeGenere); doSort(); currentPage = 1; render(); return; }
   const q = document.getElementById('search').value.toLowerCase();
   const yf = parseInt(document.getElementById('yearFrom').value) || 0;
   const yt = parseInt(document.getElementById('yearTo').value) || 9999;
-  const preOperaPool = ALL_DATA.filter(d => {
+  const basePool = ALL_DATA.filter(d => {
     if (d.category !== 'library') return false;
     if (q && !((d.title||'').toLowerCase().includes(q) || (d.subtitle||'').toLowerCase().includes(q) || (d.people||[]).some(p => nameMatches(p.name, q)))) return false;
     if (d.year === null) {
       // Items with no year: only excluded when a year range is actively set.
       if (yf > 0 || yt < 9999) return false;
     } else if (d.year < yf || d.year > yt) return false;
-    if (activeFondo && !getFondi(d).includes(activeFondo)) return false;
-    if (activeGenere && getGenere(d) !== activeGenere) return false;
     return true;
   });
-  filtered = preOperaPool.filter(d => !activeOpera || (d.themes||[]).includes(activeOpera));
+  const byFondo = d => !activeFondo || getFondi(d).includes(activeFondo);
+  const byGenere = d => !activeGenere || getGenere(d) === activeGenere;
+  const byOpera = d => !activeOpera || (d.themes||[]).includes(activeOpera);
+  // each list is counted with every filter but its own
+  updateFacetCounts('#genere-filters .filter-btn', 'genere', basePool.filter(d => byFondo(d) && byOpera(d)), d => getGenere(d), activeGenere);
+  fondoCountPool = basePool.filter(d => byGenere(d) && byOpera(d));
+  operaCountPool = basePool.filter(d => byFondo(d) && byGenere(d));
+  filtered = operaCountPool.filter(byOpera);
   doSort(); currentPage = 1; render();
 }
 
@@ -1046,7 +1070,7 @@ function render() {
   syncGenereButtons();
   renderSidebarViz();
 
-  buildOperaBtns(filtered);
+  buildOperaBtns(operaCountPool || filtered);
 
   if (!filtered.length) {
     document.getElementById('entries').innerHTML = '<div class="no-results">Nessun risultato trovato.</div>';

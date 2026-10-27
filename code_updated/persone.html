@@ -150,6 +150,8 @@ header p { color:#9a9080; font-size:1rem; }
   .layout { grid-template-columns: 1fr; }
   .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
 }
+/* a filter option that would show nothing with the other filters set */
+.filter-btn.empty { opacity: 0.35; }
 </style>
 </head>
 <body>
@@ -335,14 +337,30 @@ function setSort(key) {
   applyFilters();
 }
 
+// The number on each filter button: how many records that option would show
+// with every other filter kept as it is. An option that would show none is
+// dimmed (still clickable when it is the active one, to switch it off).
+function updateFacetCounts(selector, attr, pool, keyOf, active) {
+  const counts = {};
+  pool.forEach(d => [].concat(keyOf(d) || []).forEach(k => { if (k) counts[k] = (counts[k] || 0) + 1; }));
+  document.querySelectorAll(selector).forEach(b => {
+    const key = b.dataset[attr];
+    const n = counts[key] || 0;
+    const c = b.querySelector('.count');
+    if (c) c.textContent = n;
+    b.classList.toggle('empty', !n && key !== active);
+  });
+}
+
 function applyFilters() {
   const q = document.getElementById('search').value.toLowerCase().trim();
-  filtered = PEOPLE.filter(p => {
-    if (q && !nameMatches(p.name, q)) return false;
-    if (activeRole && !p.roles.has(activeRole)) return false;
-    if (activeCat && !p.cats.has(activeCat)) return false;
-    return true;
-  });
+  const byName = p => !q || nameMatches(p.name, q);
+  const byRole = p => !activeRole || p.roles.has(activeRole);
+  const byCat = p => !activeCat || p.cats.has(activeCat);
+  // the role counts leave out the role filter, the section counts the section filter
+  updateFacetCounts('#role-filters .filter-btn', 'role', PEOPLE.filter(p => byName(p) && byCat(p)), p => [...p.roles], activeRole);
+  updateFacetCounts('#cat-filters .filter-btn', 'cat', PEOPLE.filter(p => byName(p) && byRole(p)), p => [...p.cats], activeCat);
+  filtered = PEOPLE.filter(p => byName(p) && byRole(p) && byCat(p));
   filtered.sort((a,b) => sortKey === 'alpha'
     ? alphaSortKey(a.name).localeCompare(alphaSortKey(b.name), 'it')
     : b.count - a.count || alphaSortKey(a.name).localeCompare(alphaSortKey(b.name), 'it'));

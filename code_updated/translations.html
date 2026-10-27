@@ -283,6 +283,8 @@ header p { color:#9a9080; font-size:1rem; }
   text-transform: uppercase; background: none; color: var(--muted);
   border: 1px solid var(--border); padding: 5px 14px; border-radius: 2px; cursor: pointer;
 }
+/* a filter option that would show nothing with the other filters set */
+.filter-btn.empty { opacity: 0.35; }
 </style>
 </head>
 <body>
@@ -607,14 +609,28 @@ function clearFilter() {
   applyFilters();
 }
 
+// The number on each filter button: how many records that option would show
+// with every other filter kept as it is. An option that would show none is
+// dimmed (still clickable when it is the active one, to switch it off).
+function updateFacetCounts(selector, attr, pool, keyOf, active) {
+  const counts = {};
+  pool.forEach(d => [].concat(keyOf(d) || []).forEach(k => { if (k) counts[k] = (counts[k] || 0) + 1; }));
+  document.querySelectorAll(selector).forEach(b => {
+    const key = b.dataset[attr];
+    const n = counts[key] || 0;
+    const c = b.querySelector('.count');
+    if (c) c.textContent = n;
+    b.classList.toggle('empty', !n && key !== active);
+  });
+}
+
 function applyFilters() {
   const q = document.getElementById('search').value.toLowerCase();
   const yf = parseInt(document.getElementById('yearFrom').value) || 0;
   const yt = parseInt(document.getElementById('yearTo').value) || 9999;
   // Pool without themeFilter — used to compute which opera buttons to show
-  const preThemePool = ALL_DATA.filter(d => {
+  const basePool = ALL_DATA.filter(d => {
     if (d.category !== 'translation') return false;
-    if (activeLang && d.subtitle !== activeLang) return false;
     if (venueFilter && !(d.detail||'').toLowerCase().includes(venueFilter.toLowerCase())) return false;
     if (personFilter && !(d.people||[]).some(p => p.name === personFilter)) return false;
     if (q && !((d.title||'').toLowerCase().includes(q) || (d.detail||'').toLowerCase().includes(q) || (d.people||[]).some(p => nameMatches(p.name, q)))) return false;
@@ -622,8 +638,12 @@ function applyFilters() {
     else if (d.year < yf || d.year > yt) return false;
     return true;
   });
+  const byWork = d => !themeFilter || (d.themes||[]).includes(themeFilter);
+  // the language counts leave out the language filter, the work counts the work filter
+  updateFacetCounts('#lang-filters .filter-btn', 'lang', basePool.filter(byWork), d => d.subtitle, activeLang);
+  const preThemePool = basePool.filter(d => !activeLang || d.subtitle === activeLang);
   buildOperaBtns(preThemePool);
-  filtered = preThemePool.filter(d => !themeFilter || (d.themes||[]).includes(themeFilter));
+  filtered = preThemePool.filter(byWork);
   doSort(); render();
 }
 
