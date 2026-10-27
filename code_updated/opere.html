@@ -1087,7 +1087,7 @@ function renderAdelphi() {
     const meta = [e.cura && 'a cura di ' + e.cura, e.year].filter(Boolean).join(' · ');
     return `<button type="button" class="coll-tab${open ? ' active' : ''}" onclick="toggleAdelphi(${jsAttr(e.sigla)})">${e.year ? thumbImgTag([`${e.sigla}-${e.year}-adelphi`, `${e.sigla}-${e.year}`], 'coll-cover') : ''}<span class="coll-text"><span class="coll-id">${e.sigla}</span><span class="coll-sub"><em>${e.titolo}</em>${meta ? ' · ' + meta : ''}</span></span></button>` +
       (open ? `<div class="coll-tree">${e.capitoli.length
-        ? e.capitoli.map(c => chapterHtml(c, e.sigla)).join('')
+        ? [...e.capitoli].sort((a, b) => firstPage(a.pagine) - firstPage(b.pagine)).map(c => chapterHtml(c, e.sigla)).join('')
         : '<div class="coll-chapter coll-empty"><span>Indice non ancora inserito.</span></div>'}</div>` : '');
   }).join('');
 }
@@ -1124,14 +1124,23 @@ function isStraightforwardTitle(t) {
   return !!t && t === t.toUpperCase() && t !== t.toLowerCase();
 }
 
+// A work's texts in the Garzanti volumes, in reading order: volume by volume
+// (Opere I → V), then by the page each starts on. Rows repeated in
+// collections.json are listed once.
 function relatedCollectionEntries(sigla) {
   const out = [];
-  Object.values(COLLECTION_WORKS).forEach(arr => {
+  const seen = new Set();
+  const volOrder = id => { const i = COLLECTIONS.findIndex(c => c.id === id); return i < 0 ? 99 : i; };
+  Object.entries(COLLECTION_WORKS).forEach(([collId, arr]) => {
     (arr || []).forEach(w => {
-      if (w.sigla === sigla && !isStraightforwardTitle(w.titolo)) out.push(w);
+      if (w.sigla !== sigla || isStraightforwardTitle(w.titolo)) return;
+      const key = collId + '|' + w.titolo + '|' + w.pagine;
+      if (seen.has(key)) return;
+      seen.add(key);
+      out.push({ ...w, _coll: collId });
     });
   });
-  return out;
+  return out.sort((a, b) => volOrder(a._coll) - volOrder(b._coll) || firstPage(a.pagine) - firstPage(b.pagine));
 }
 
 function collectionWorkCardHtml(w) {

@@ -1105,11 +1105,8 @@ function setStatsPanel(key) {
   const detail = document.getElementById('stats-detail');
   const sameKey = activeStatsPanel === key;
   document.querySelectorAll('.stat').forEach(b => b.classList.remove('active'));
-  if (sameKey) {
-    activeStatsPanel = null;
-    detail.classList.remove('open');
-    return;
-  }
+  // the panel always stays open: clicking the open one keeps it, another switches
+  if (sameKey) { document.getElementById('stat-' + key).classList.add('active'); return; }
   activeStatsPanel = key;
   document.getElementById('stat-' + key).classList.add('active');
   detail.innerHTML = statsPanelContent(key);
@@ -1421,5 +1418,9 @@ function exportData(fmt) {
 </script>
 
 <script src="img_credits.js"></script>
+<script>
+  // the visualization panel is open from the start, on its first view
+  window.addEventListener('load', () => { if (!activeStatsPanel) setStatsPanel('records'); });
+</script>
 </body>
 </html>

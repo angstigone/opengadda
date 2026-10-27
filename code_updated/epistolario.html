@@ -1457,11 +1457,8 @@ function setStatsPanel(scope, key) {
   const detail = document.getElementById('stats-detail-' + scope);
   const sameKey = activeStatsPanel[scope] === key;
   document.querySelectorAll('#stats-bar-' + scope + ' .stat').forEach(b => b.classList.remove('active'));
-  if (sameKey) {
-    activeStatsPanel[scope] = null;
-    detail.classList.remove('open');
-    return;
-  }
+  // the panel always stays open: clicking the open one keeps it, another switches
+  if (sameKey) { document.getElementById('stat-' + scope + '-' + key).classList.add('active'); return; }
   activeStatsPanel[scope] = key;
   document.getElementById('stat-' + scope + '-' + key).classList.add('active');
   detail.innerHTML = statsPanelContent(scope, key);
@@ -1853,5 +1850,12 @@ window.addEventListener('pageshow', function(e) {
 })();
 </script>
 
+<script>
+  // both visualization panels are open from the start, on their first view
+  window.addEventListener('load', () => {
+    if (!activeStatsPanel.s) setStatsPanel('s', 'letters');
+    if (!activeStatsPanel.l) setStatsPanel('l', 'records');
+  });
+</script>
 </body>
 </html>

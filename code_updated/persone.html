@@ -516,11 +516,8 @@ function setStatsPanel(key) {
   const detail = document.getElementById('stats-detail');
   const sameKey = activeStatsPanel === key;
   document.querySelectorAll('.stat').forEach(b => b.classList.remove('active'));
-  if (sameKey) {
-    activeStatsPanel = null;
-    detail.classList.remove('open');
-    return;
-  }
+  // the panel always stays open: clicking the open one keeps it, another switches
+  if (sameKey) { document.getElementById('stat-' + key).classList.add('active'); return; }
   activeStatsPanel = key;
   document.getElementById('stat-' + key).classList.add('active');
   detail.innerHTML = statsPanelContent(key);
@@ -546,6 +543,10 @@ Promise.all([
   console.error('Errore caricamento dati:', err);
   document.getElementById('entries').innerHTML = '<p style="padding:2rem;color:#c00;font-family:monospace">Errore: ' + err + '</p>';
 });
+</script>
+<script>
+  // the visualization panel is open from the start, on its first view
+  window.addEventListener('load', () => { if (!activeStatsPanel) setStatsPanel('total'); });
 </script>
 </body>
 </html>

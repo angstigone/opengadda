@@ -108,7 +108,7 @@
       "id_edizione_originale": "1944",
       "raccolta": "RR I, pp. 283-564",
       "edizioni": [
-        {"edizione": "a cura di Claudio Vela, Milano, Adelphi, 2012", "id": ""}
+        {"edizione": "a cura di Claudio Vela, Milano, Adelphi, 2014", "id": ""}
       ]
     },
     "LdF": {
@@ -235,6 +235,8 @@
     },
     "TR": {
       "titolo_completo": "Traduzioni",
+      "edizione_originale": "Milano, Bompiani, 1977",
+      "id_edizione_originale": "1977-3",
       "raccolta": "SVP, pp. 205-378",
       "nota": "corrisponde alla sigla 'Tr' del siglario ufficiale; comprende La verità sospetta (VS) e altre versioni (es. Il mondo com'è di Quevedo, Il viaggio di saggezza di Salas Barbadillo)"
     },
