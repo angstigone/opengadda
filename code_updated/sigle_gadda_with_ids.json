@@ -18,7 +18,7 @@
       "id_edizione_originale": "1963-3",
       "raccolta": "RR II, pp. 591-920",
       "edizioni": [
-        {"edizione": "a cura di Paola Italia, Milano, Adelphi, 2011", "id": ""}
+        {"edizione": "a cura di Paola Italia, Milano, Adelphi, 2015", "id": "2015-1"}
       ]
     },
     "AS": {
@@ -30,7 +30,7 @@
       "edizione_originale": "Milano, All'insegna del pesce d'oro, 1981",
       "id_edizione_originale": "1981",
       "edizioni": [
-        {"edizione": "Milano, Adelphi, 1981", "id": "1981"}
+        {"edizione": "Milano, Adelphi, 1981", "id": ""}
       ]
     },
     "CdD": {
@@ -39,7 +39,7 @@
       "id_edizione_originale": "1963-4",
       "edizioni": [
         {"edizione": "Milano, Garzanti, 1988", "id": "1988-5"},
-        {"edizione": "A cura di Claudio Vela, Milano, Adelphi, 2024", "id": ""}
+        {"edizione": "A cura di Claudio Vela, Milano, Adelphi, 2017", "id": "2017"}
       ],
       "raccolta": "RR I, pp. 565-772"
     },
@@ -49,7 +49,7 @@
       "id_edizione_originale": "1934-2",
       "raccolta": "RR I, pp. 119-281",
       "edizioni": [
-        {"edizione": "a cura di Paola Italia, Giorgio Pinotti, Claudio Vela, Milano, Adelphi, 2017", "id": ""}
+        {"edizione": "a cura di Paola Italia, Giorgio Pinotti, Claudio Vela, Milano, Adelphi, 2024", "id": "2024-1"}
       ]
     },
     "DG": {
@@ -57,7 +57,7 @@
       "raccolta": "SVP, pp. 13-203",
       "nota": "comprende anche Az (Azoto e altri scritti di divulgazione scientifica)",
       "edizioni": [
-        {"edizione": "a cura di Liliana Milano, Adelphi, 2019", "id": ""}
+        {"edizione": "a cura di Liliana Milano, Adelphi, 2018", "id": ""}
       ]
     },
     "DT": {
@@ -67,14 +67,12 @@
     },
     "EP": {
       "titolo_completo": "Eros e Priapo (da furore a cenere)",
-      "edizione_originale": "a cura di Paola Italia e Giorgio Pinotti, Milano, Adelphi, 2016",
-      "id_edizione_originale": "2016-1"
-    },
-    "EP67": {
-      "titolo_completo": "Eros e Priapo (da furore a cenere)",
       "edizione_originale": "Milano, Garzanti, 1967",
-      "id_edizione_originale": "",
-      "raccolta": "SGF II, pp. 213-374"
+      "id_edizione_originale": "2016-1",
+      "raccolta": "SGF II, pp. 213-374",
+      "edizioni": [
+        {"edizione": "a cura di Paola Italia, Giorgio Pinotti, Claudio Vela, Milano, Adelphi, 2016", "id": "2016-1"}*
+
     },
     "GASP": {
       "titolo_completo": "Il guerriero, l'amazzone, lo spirito della poesia nel verso immortale del Foscolo – Conversazione a tre voci",
