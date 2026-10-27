@@ -777,7 +777,10 @@ function workRecords(sigla) {
 // ("Milano, Adelphi, 2024") or {"edizione": text, "id": record id}; the
 // original edition's record id is in `id_edizione_originale`.
 const editionText = e => (e && typeof e === 'object') ? (e.edizione || '') : (e || '');
-const editionId = e => (e && typeof e === 'object') ? String(e.id || '').trim() : '';
+// null = no id given (plain text: the record is looked up); '' = id left
+// empty on purpose (no record: nothing is looked up)
+const editionId = e => (e && typeof e === 'object' && 'id' in e) ? String(e.id || '').trim() : null;
+const originalId = m => (m && 'id_edizione_originale' in m) ? String(m.id_edizione_originale || '').trim() : null;
 function editionRecord(sigla, edizione) {
   const year = extractYear(edizione);
   if (!year) return null;
@@ -818,6 +821,7 @@ function operaCardHtml(o, onWorkPage) {
   // the id written in sigle_gadda.json wins; without one, the record is looked up
   const record = !onWorkPage ? null
     : o.editionId ? (ALL_DATA.find(d => d.id === o.editionId) || null)
+    : o.editionId === '' ? null
     : editionRecord(navSigla, o.edizione_originale);
   const recordNote = !onWorkPage ? ''
     : record ? `<div class="opera-raccolta"><a href="detail.html?id=${encodeURIComponent(record.id)}" onclick="event.stopPropagation()" style="color:var(--accent)">Scheda dell'edizione nella bibliografia primaria →</a></div>`
@@ -1187,7 +1191,7 @@ function renderWorkDetail() {
   const cardData = work || {
     sigla, titolo_completo: meta.titolo_completo || sigla,
     edizione_originale: meta.edizione_originale || '', raccolta: meta.raccolta || '',
-    editionId: String(meta.id_edizione_originale || '').trim(),
+    editionId: originalId(meta),
     counts: {}, total: 0,
   };
 
@@ -1479,7 +1483,7 @@ Promise.all([
       sigla,
       titolo_completo: meta.titolo_completo || sigla,
       edizione_originale: meta.edizione_originale || '',
-      editionId: String(meta.id_edizione_originale || '').trim(),
+      editionId: originalId(meta),
       edizioni: meta.edizioni || [],
       raccolta: meta.raccolta || '',
       year: extractYear(meta.edizione_originale),
@@ -1535,7 +1539,7 @@ Promise.all([
       matchTitle: sw.matchTitle,
       titolo_completo: sw.titolo_completo,
       edizione_originale: sw.edizione_originale || '',
-      editionId: String(sw.id_edizione_originale || '').trim(),
+      editionId: originalId(sw),
       raccolta: parentMeta.raccolta || '',
       year: extractYear(sw.edizione_originale),
       counts: catCounts,
