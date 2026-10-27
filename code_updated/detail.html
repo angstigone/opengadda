@@ -946,6 +946,12 @@ if (!item) {
       ]);
     }
 
+    // the record's free-text note (e.g. later titles of the piece), as written
+    if (item.note && String(item.note).trim()) {
+      metaRows.push(['Note', String(item.note).trim()
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')]);
+    }
+
     // pubblicazione in volume / altra edizione / ristampa articolo are shown
     // in the "Struttura dell'opera" sidebar box (buildGenealogyPanel)
 

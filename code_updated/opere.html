@@ -404,7 +404,7 @@ body.no-sigla-panel .viz-static-panel { display:none; }
       <div class="work-header-card" id="work-header"></div>
       <span class="section-label" id="alt-editions-label" style="display:none">Altre edizioni</span>
       <div id="alt-editions"></div>
-      <span class="section-label">Testi contenuti</span>
+      <span class="section-label" id="related-works-label">Testi contenuti</span>
       <div id="related-works"></div>
     </div>
 
@@ -757,7 +757,47 @@ function applyFilters() {
   render();
 }
 
-function operaCardHtml(o) {
+// The primary-bibliography record of one edition of a work: a record of that
+// year belonging to the work — tagged with its sigla, linked to such a record
+// as an "altra edizione", or (untagged) titled like the work. When a year has
+// several, the book is preferred, then the one from the edition's publisher.
+function workRecords(sigla) {
+  const primary = ALL_DATA.filter(d => d.category === 'primary bibliography');
+  const own = primary.filter(d => [].concat(d.themes || []).includes(sigla));
+  const ownIds = new Set(own.map(d => d.id));
+  const ids = d => [].concat(d['altra edizione'] || []).flatMap(v => String(v).split(/[\s,;]+/));
+  const linked = primary.filter(d => !ownIds.has(d.id) &&
+    (ids(d).some(id => ownIds.has(id)) || own.some(o => ids(o).includes(d.id))));
+  const title = foldTitle((SIGLE[sigla] && SIGLE[sigla].titolo_completo) || '');
+  const untagged = title ? primary.filter(d => !ownIds.has(d.id) && ![].concat(d.themes || []).length
+    && foldTitle(d.title).startsWith(title)) : [];
+  return [...own, ...linked, ...untagged];
+}
+// sigle_gadda.json: an entry of `edizioni` is either the edition's text
+// ("Milano, Adelphi, 2024") or {"edizione": text, "id": record id}; the
+// original edition's record id is in `id_edizione_originale`.
+const editionText = e => (e && typeof e === 'object') ? (e.edizione || '') : (e || '');
+const editionId = e => (e && typeof e === 'object') ? String(e.id || '').trim() : '';
+function editionRecord(sigla, edizione) {
+  const year = extractYear(edizione);
+  if (!year) return null;
+  let hits = workRecords(sigla).filter(d => String(d.year) === String(year));
+  if (hits.length > 1) {
+    const books = hits.filter(d => d.subtitle === "Libri e raccolte d'autore");
+    if (books.length) hits = books;
+  }
+  if (hits.length > 1) {
+    const pub = pubSlug(publisherOf(edizione) || (edizione.split(',')[1] || ''));
+    const same = hits.filter(d => pub && pubSlug(d.editore || d.detail).includes(pub));
+    if (same.length) hits = same;
+  }
+  return hits[0] || null;
+}
+
+// onWorkPage: on a work's own page each card is one edition, so a click opens
+// that edition's record in the primary bibliography (or does nothing, with a
+// note, when the edition has no record); in the lists it opens the work page.
+function operaCardHtml(o, onWorkPage) {
   const navSigla = o.realSigla || o.sigla;
   const catEntries = Object.entries(o.counts).sort((a,b) => b[1]-a[1]);
   const links = catEntries.length
@@ -775,7 +815,16 @@ function operaCardHtml(o) {
   const altEditionNote = o.isAltEdition
     ? `<div class="opera-raccolta">Altra edizione di: <span style="cursor:pointer;text-decoration:underline" onclick="event.stopPropagation();showWorkDetail(${jsAttr(o.realSigla)})">${o.titolo_completo} (${o.displaySigla})</span></div>`
     : '';
-  return `<div class="opera-card" id="opera-${safeDomId(o.sigla)}" onclick="showWorkDetail(${jsAttr(navSigla)})">
+  // the id written in sigle_gadda.json wins; without one, the record is looked up
+  const record = !onWorkPage ? null
+    : o.editionId ? (ALL_DATA.find(d => d.id === o.editionId) || null)
+    : editionRecord(navSigla, o.edizione_originale);
+  const recordNote = !onWorkPage ? ''
+    : record ? `<div class="opera-raccolta"><a href="detail.html?id=${encodeURIComponent(record.id)}" onclick="event.stopPropagation()" style="color:var(--accent)">Scheda dell'edizione nella bibliografia primaria →</a></div>`
+    : `<div class="opera-raccolta">Nessuna scheda di questa edizione nella bibliografia primaria</div>`;
+  const click = !onWorkPage ? `onclick="showWorkDetail(${jsAttr(navSigla)})"`
+    : record ? `onclick="location.href='detail.html?id=${encodeURIComponent(record.id)}'"` : '';
+  return `<div class="opera-card${onWorkPage && !record ? ' static' : ''}" id="opera-${safeDomId(o.sigla)}" ${click}>
     ${thumbImgTag(editionKeys(navSigla, o.year, publisherOf(o.edizione_originale)), 'opera-thumb')}
     <div class="opera-card-body">
       <div class="opera-head">
@@ -784,6 +833,7 @@ function operaCardHtml(o) {
       </div>
       ${o.edizione_originale ? `<div class="opera-edition">${editionHtml(o.edizione_originale)}</div>` : ''}
       ${altEditionNote || subWorkNote || (o.raccolta ? `<div class="opera-raccolta">Edizione critica: ${formatRaccolta(o.raccolta)}</div>` : '')}
+      ${recordNote}
       <div class="opera-links">${links}</div>
     </div>
   </div>`;
@@ -1137,13 +1187,14 @@ function renderWorkDetail() {
   const cardData = work || {
     sigla, titolo_completo: meta.titolo_completo || sigla,
     edizione_originale: meta.edizione_originale || '', raccolta: meta.raccolta || '',
+    editionId: String(meta.id_edizione_originale || '').trim(),
     counts: {}, total: 0,
   };
 
   const altEditions = OPERE.filter(o => o.isAltEdition && o.realSigla === sigla)
     .sort((a,b) => (a.year||9999) - (b.year||9999));
   document.getElementById('alt-editions-label').style.display = altEditions.length ? '' : 'none';
-  document.getElementById('alt-editions').innerHTML = altEditions.map(operaCardHtml).join('');
+  document.getElementById('alt-editions').innerHTML = altEditions.map(o => operaCardHtml(o, true)).join('');
 
   const related = relatedCollectionEntries(sigla);
   document.getElementById('related-works').innerHTML = related.length
@@ -1154,11 +1205,13 @@ function renderWorkDetail() {
           ${w.note ? `<div class="opera-blurb">${w.note}</div>` : ''}
         </div>
       </div>`).join('')
-    : '<div class="no-results">Nessun testo contenuto trovato.</div>';
+    : '';
+  // a work with no contained texts simply has no such section
+  document.getElementById('related-works-label').style.display = related.length ? '' : 'none';
 
   // Same card presentation as the main grid, rather than a bespoke dark
   // header block — reusing operaCardHtml() keeps the two in sync for free.
-  document.getElementById('work-header').innerHTML = operaCardHtml(cardData);
+  document.getElementById('work-header').innerHTML = operaCardHtml(cardData, true);
 }
 
 window.addEventListener('popstate', function(e) {
@@ -1368,7 +1421,7 @@ function exportData(fmt) {
   if (!filtered || !filtered.length) return;
   const rows = filtered.map(o => ({
     sigla: o.sigla, titolo_completo: o.titolo_completo, edizione_originale: o.edizione_originale,
-    edizioni_successive: (o.edizioni || []).join('; '),
+    edizioni_successive: (o.edizioni || []).map(editionText).join('; '),
     raccolta: o.raccolta, year: o.year, schede_collegate: o.total
   }));
   let content, mime, ext;
@@ -1426,6 +1479,7 @@ Promise.all([
       sigla,
       titolo_completo: meta.titolo_completo || sigla,
       edizione_originale: meta.edizione_originale || '',
+      editionId: String(meta.id_edizione_originale || '').trim(),
       edizioni: meta.edizioni || [],
       raccolta: meta.raccolta || '',
       year: extractYear(meta.edizione_originale),
@@ -1450,9 +1504,10 @@ Promise.all([
         displaySigla: sigla,
         isAltEdition: true,
         titolo_completo: parent.titolo_completo,
-        edizione_originale: edizione,
+        edizione_originale: editionText(edizione),
+        editionId: editionId(edizione),
         raccolta: parent.raccolta,
-        year: extractYear(edizione),
+        year: extractYear(editionText(edizione)),
         counts: parent.counts,
         total: 0, // avoids double-counting the parent's schede in aggregate stats
       });
@@ -1480,6 +1535,7 @@ Promise.all([
       matchTitle: sw.matchTitle,
       titolo_completo: sw.titolo_completo,
       edizione_originale: sw.edizione_originale || '',
+      editionId: String(sw.id_edizione_originale || '').trim(),
       raccolta: parentMeta.raccolta || '',
       year: extractYear(sw.edizione_originale),
       counts: catCounts,
@@ -1494,9 +1550,10 @@ Promise.all([
         displaySigla: sw.parentSigla,
         isAltEdition: true,
         titolo_completo: sw.titolo_completo,
-        edizione_originale: edizione,
+        edizione_originale: editionText(edizione),
+        editionId: editionId(edizione),
         raccolta: parentMeta.raccolta || '',
-        year: extractYear(edizione),
+        year: extractYear(editionText(edizione)),
         counts: catCounts,
         total: 0,
       });

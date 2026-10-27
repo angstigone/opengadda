@@ -46,7 +46,7 @@
       "titolo":"IL CASTELLO D'UDINE", "sigla":"CdU", "pagine": "109", "id": ["1934-2", "2024-1"]
     },
     {
-      "titolo":"Il castello d'Udine", "sigla":"CdU", "pagine": "125", "id": ["1934-2", "2024-1"]
+      "titolo":"Il castello d'Udine", "sigla":"CdU", "pagine": "125"
     },
     {
       "titolo":"Il fontanone a Montorio", "sigla":"CdU", "pagine": "255"
@@ -67,10 +67,10 @@
       "titolo":"La chiesa antica", "sigla":"CdU", "pagine": "247"
     },
     {
-      "titolo":"LA COGNIZIONE DEL DOLORE", "sigla":"CdD", "pagine": "565", "id": ["1938-1", "1938-4", "1939-2", "1939-4", "1940-1", "1940-8", "1941-2", "1963-4", "1970-1", "2004-1", "2017", "2019"]
+      "titolo":"LA COGNIZIONE DEL DOLORE", "sigla":"CdD", "pagine": "565", "id": ["1963-4, 1970-1", "2004-1", "2017", "2019"]
     },
     {
-      "titolo":"L'Adalgisa", "sigla":"L'A", "pagine": "509", "id": ["1941-3", "1942-6", "1942-7", "1944", "2014"]
+      "titolo":"L'Adalgisa", "sigla":"L'A", "pagine": "509", "id": ["1941-3", "1942-6", "1942-7"]
     },
     {
       "titolo":"L'ADALGISA - DISEGNI MILANESI", "sigla":"L'A", "pagine": "283", "id": ["1944", "2014"]
@@ -82,10 +82,10 @@
       "titolo":"La fidanzata di Elio", "sigla":"CdU", "pagine": "225", "id": ["1932-10"]
     },
     {
-      "titolo":"LA MADONNA DEI FILOSOFI", "sigla":"MdF", "pagine": "3", "id": ["1928-1", "1931-1"]
+      "titolo":"LA MADONNA DEI FILOSOFI", "sigla":"MdF", "pagine": "3", "id": ["1931-1"]
     },
     {
-      "titolo":"La Madonna dei Filosofi", "sigla":"MdF", "pagine": "69", "id": ["1928-1", "1931-1"]
+      "titolo":"La Madonna dei Filosofi", "sigla":"MdF", "pagine": "69", "id": ["1928-1"]
     },
     {
       "titolo":"La morte di Puck", "sigla":"MdF", "pagine": "45", "id": ["1926"]
@@ -109,7 +109,7 @@
       "titolo":"Notte di Luna", "sigla":"L'A", "pagine": "289", "id": ["1942-4"]
     },
     {
-      "titolo":"Polemiche e pace", "sigla":"CdU", "pagine": "219", "id": ["1933-2", "1933-3", "1933-4"]
+      "titolo":"Polemiche e pace", "sigla":"CdU", "pagine": "219"
     },
     {
       "titolo":"Polemiche e pace nel direttissimo", "sigla":"CdU", "pagine": "723", "id": ["1933-2", "1933-3", "1933-4"]
@@ -159,10 +159,10 @@
   ],
   "RR II": [
     {
-      "titolo":"ACCOPPIAMENTI GIUDIZIOSI", "sigla":"AG", "pagine": "591-920", "id": ["1957-1", "1957-5", "1957-7", "1958-1", "1958-2", "1963-3", "2015-1"]
+      "titolo":"ACCOPPIAMENTI GIUDIZIOSI", "sigla":"AG", "pagine": "591-920", "id": ["1957-5", "1957-7", "1958-1", "1958-2", "1963-3", "2015-1"]
     },
     {
-      "titolo":"Accoppiamenti Giudizioni", "sigla":"AG", "pagine": "891", "id": ["2015-1"]
+      "titolo":"Accoppiamenti Giudizioni", "sigla":"AG", "pagine": "891", "id": ["1957-1","1957-5", "1957-7", "1958-1", "1958-2"]
     },
     {
       "titolo":"Cugino barbiere", "sigla":"AG", "pagine": "595", "id": ["1962-2"]
@@ -204,7 +204,7 @@
       "titolo":"La mamma", "sigla":"AG", "pagine": "745", "id": ["1940-1"]
     },
     {
-      "titolo":"LA MECCANICA", "sigla":"M", "pagine": "461", "id": ["1932-12", "1970-3"]
+      "titolo":"LA MECCANICA", "sigla":"M", "pagine": "461", "id": ["1970-3"]
     },
     {
       "titolo":"La passeggiata autunnale", "sigla":"RD", "pagine": "925", "id": ["1963-1"]
@@ -231,7 +231,7 @@
       "titolo":"Prima divisione nella notte", "sigla":"AG", "pagine": "867", "id": ["1951-4", "1951-8", "1951-9"]
     },
     {
-      "titolo":"QUER PASTICCIACCIO BRUTTO DE VIA MERULANA", "sigla":"QP", "pagine": "11", "id": ["1946-2", "1946-3", "1946-5", "1946-6", "1957-6", "1985-2", "1989-1", "2018-2", "2023-6"]
+      "titolo":"QUER PASTICCIACCIO BRUTTO DE VIA MERULANA", "sigla":"QP", "pagine": "11", "id": ["1957-6", "1985-2", "1989-1", "2018-2", "2023-6"]
     },
     {
       "titolo":"QUER PASTICCIACCIO BRUTTO DE VIA MERULANA - Redazione di «Letteratura» 1946-1947", "sigla":"QPL", "pagine": "277", "id": ["1946-1, 1946-2, 1946-3"]
@@ -540,12 +540,6 @@
     },
     {
       "titolo":"La cena delle beffe", "sigla":"SD", "pagine": "885", "id": ["1945-11"]
-    },
-    {
-      "titolo":"I VIAGGI E LA MORTE", "sigla":"VM", "pagine": "419", "id": ["1927-2", "1958-3", "1977-4", "2023-2"]
-    },
-    {
-      "titolo":"I viaggi e la morte", "sigla":"VM", "pagine": "561", "id": ["1927-2", "1958-3", "1977-4", "2023-2"]
     },
     {
       "titolo":"Je meurs de seuf au près de la fontaine", "sigla":"VM", "pagine": "522", "id": ["1951-5"]
@@ -907,7 +901,7 @@
       "titolo":"IL PRIMO LIBRO DELLE FAVOLE", "sigla":"PLF", "pagine": "11", "id": ["1952-3"]
     },
     {
-      "titolo":"I LUIGI DI FRANCIA", "sigla":"LdF", "pagine": "85", "id": ["1964-1", "2021"]
+      "titolo":"I LUIGI DI FRANCIA", "sigla":"LdF", "pagine": "85", "id": ["1964-1","2021"]
     },
     {
       "titolo":"I natali di Carlo Emilio Gadda...", "sigla":"SA", "pagine": "871"
