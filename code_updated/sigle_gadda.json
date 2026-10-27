@@ -38,7 +38,7 @@
       "edizione_originale": "Torino, Einaudi, 1963 (IV ed. 1970)",
       "id_edizione_originale": "1963-4",
       "edizioni": [
-        {"edizione": "Milano, Garzanti, 1988", "id": "1988-5"},
+        {"edizione": "Milano, Garzanti, 1970", "id": "1970-1"},
         {"edizione": "A cura di Claudio Vela, Milano, Adelphi, 2017", "id": "2017"}
       ],
       "raccolta": "RR I, pp. 565-772"
@@ -68,11 +68,11 @@
     "EP": {
       "titolo_completo": "Eros e Priapo (da furore a cenere)",
       "edizione_originale": "Milano, Garzanti, 1967",
-      "id_edizione_originale": "2016-1",
+      "id_edizione_originale": "1967-2",
       "raccolta": "SGF II, pp. 213-374",
       "edizioni": [
-        {"edizione": "a cura di Paola Italia, Giorgio Pinotti, Claudio Vela, Milano, Adelphi, 2016", "id": "2016-1"}
-      ]
+        {"edizione": "a cura di Paola Italia, Giorgio Pinotti, Claudio Vela, Milano, Adelphi, 2016", "id": "2016-1"}]
+
     },
     "GASP": {
       "titolo_completo": "Il guerriero, l'amazzone, lo spirito della poesia nel verso immortale del Foscolo – Conversazione a tre voci",
@@ -108,7 +108,7 @@
       "id_edizione_originale": "1944",
       "raccolta": "RR I, pp. 283-564",
       "edizioni": [
-        {"edizione": "a cura di Claudio Vela, Milano, Adelphi, 2014", "id": ""}
+        {"edizione": "a cura di Claudio Vela, Milano, Adelphi, 2014", "id": "2014"}
       ]
     },
     "LdF": {
@@ -285,17 +285,17 @@
     "IF": {
       "titolo_completo": "L’ingegner fantasia. Lettere a Ugo Betti 1919-1930",
       "edizione_originale": "a cura di Giulio Ungarelli, Milano, Rizzoli, 1984",
-      "id_edizione_originale": ""
+      "id_edizione_originale": "1984-4"
     },
     "LS": {
       "titolo_completo": "Lettere alla sorella 1920-1924",
       "edizione_originale": "a cura di Gianfranco Colombo, Milano, Rosellina Archinto, 1987",
-      "id_edizione_originale": ""
+      "id_edizione_originale": "1987-3"
     },
     "LGC": {
       "titolo_completo": "Lettere a Gianfranco Contini a cura del destinatario 1934-1967",
       "edizione_originale": "Milano, Garzanti, 1988",
-      "id_edizione_originale": ""
+      "id_edizione_originale": "1988-3"
     },
     "CaGia": {
       "titolo_completo": "Carissimo Gianfranco. Lettere ritrovate",
@@ -320,7 +320,7 @@
     "SMVCSF": {
       "titolo_completo": "«Se mi vede Cecchi, sono fritto». Corrispondenza e scritti 1962-1973",
       "edizione_originale": "a cura di Domenico Scarpa, Milano, Adelphi, 2015",
-      "id_edizione_originale": ""
+      "id_edizione_originale": "2015-3"
     }
   },
   "sub_opere": {
@@ -328,8 +328,9 @@
     "SD__norme_radiofonico": {
       "titolo_completo": "Norme per la redazione di un testo radiofonico",
       "edizione_originale": "Torino, ERI, 1953 (pubblicato anonimo)",
+      "id_edizione_originale":"1953-5",
       "edizioni": [
-        "a cura di Mariarosa Bricchi, Milano, Adelphi, 2018"
+        {"edizione":"a cura di Mariarosa Bricchi, Milano, Adelphi, 2018","id": "2018-1"}
       ],
       "parentSigla": "SD",
       "matchTitle": "Norme per la redazione di un testo radiofonico"
