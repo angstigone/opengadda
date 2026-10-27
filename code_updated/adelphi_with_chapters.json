@@ -4,56 +4,45 @@
     "curatore": "Paola Italia",
     "anno": 2015,
     "capitoli": [
-      {"titolo": "La cognizione del dolore (Terzo tratto)", "id": ["1939-2"]},
+      {"titolo": "Una visita medica", "id": ["1939-2"]},
       {"titolo": "San Giorgio in casa Brocchi", "id": ["1931-2"]},
-      {"titolo": "La cognizione del dolore (Quinto tratto) – Parte seconda.", "id": ["1940-1"]},
-      {"titolo": "Un caro figliolo", "id": ["1948-2"]},
+      {"titolo": "L’incendio di via Keplero", "id": ["1940-1"]},
       {"titolo": "La sposa di campagna", "id": ["1954-4"]},
-      {"titolo": "Un invito al club del tre a cuori", "id": ["1948-1"]},
-      {"titolo": "Prima divisione nella notte.", "id": ["1951-4"]},
-      {"titolo": "La Meccanica: Le nuovissime armi – Papà e mamma – L’armata se ne va", "id": ["1932-12"]},
+      {"titolo": "Il club delle ombre", "id": ["1948-1", "1954-11","1960-3"]},
+      {"titolo": "Prima divisione nella notte.", "id": ["1951-4", "1951-8", "1951-9"]},
       {"titolo": "La domenica", "id": ["1941-11"]},
       {"titolo": "Dopo il silenzio", "id": ["1945-7"]},
       {"titolo": "Socer generque", "id": ["1947-2"]},
-      {"titolo": "La gazza ladra", "id": ["1948-5"]},
+      {"titolo": "La gazza ladra", "id": ["1948-5", "1954-10"]},
       {"titolo": "Il club del libro", "id": ["1948-6"]},
-      {"titolo": "Un inchino rispettoso", "id": ["1948-4"]},
-      {"titolo": "L'inchino", "id": ["1949-5"]},
+      {"titolo": "Un inchino rispettoso", "id": ["1948-4","1949-5", "1950-12"]},
       {"titolo": "Il bar", "id": ["1950-7"]},
-      {"titolo": "Un inchino rispettoso", "id": ["1950-12"]},
-      {"titolo": "Prima divisione nella notte.", "id": ["1951-8"]},
-      {"titolo": "Prima divisione nella notte.", "id": ["1951-9"]},
-      {"titolo": "Saggezza e follia", "id": ["1951-6"]},
-      {"titolo": "Club delle ombre", "id": ["1954-11"]},
-      {"titolo": "Un braccialetto di diamanti", "id": ["1954-10"]},
-      {"titolo": "Accoppiamenti giudiziosi (I)", "id": ["1957-1"]},
-      {"titolo": "Accoppiamenti giudiziosi (II)", "id": ["1957-5"]},
-      {"titolo": "Accoppiamenti giudiziosi (III)", "id": ["1957-7"]},
-      {"titolo": "Accoppiamenti giudiziosi (IV)", "id": ["1958-1"]},
-      {"titolo": "Accoppiamenti giudiziosi (V)", "id": ["1958-2"]},
+      {"titolo": "La cenere delle battaglie", "id": ["1951-6"]},
       {"titolo": "Due racconti", "id": ["1960-2"]},
-      {"titolo": "Il club delle ombre", "id": ["1960-3"]},
-      {"titolo": "Cugino Barbiere", "id": ["1962-2"]}
+      {"titolo": "Cugino Barbiere", "id": ["1962-2"]},
+      {"titolo": "Papà e mamma", "id": ["1962-2"]},
+      {"titolo": "Le novissime armi", "id": ["1962-2"]}
     ]
   },
   "Biz": {
     "titolo": "Le bizze del capitano in congedo e altri racconti",
     "curatore": "",
-    "anno": 1981,
-    "capitoli": []
+    "anno": 1981
   },
   "CdD": {
     "titolo": "La cognizione del dolore",
     "curatore": "Claudio Vela",
     "anno": 2017,
-    "capitoli": []
+    "capitoli": [
+      {"titolo": "Parte prima"},
+      {"titolo": "Parte seconda"}
+    ]
   },
   "CdU": {
     "titolo": "Il castello di Udine",
     "curatore": "Paola Italia, Giorgio Pinotti, Claudio Vela",
     "anno": 2024,
     "capitoli": [
-      {"titolo": "Tendo al mio fine", "id": ["1931-15"]},
       {"titolo": "Elogio di alcuni valentuomini", "id": ["1931-14"]},
       {"titolo": "Impossibilità di un diario di guerra", "id": ["1931-16"]},
       {"titolo": "Dal Castello di Udine verso i monti", "id": ["1931-17"]},
@@ -67,10 +56,13 @@
       {"titolo": "Della musica milanese", "id": ["1931-12"]},
       {"titolo": "La fidanzata di Elio", "id": ["1932-10"]},
       {"titolo": "La festa dell’uva a Marino", "id": ["1932-16"]},
-      {"titolo": "Polemiche e pace nel direttissimo (I)", "id": ["1933-2"]},
-      {"titolo": "Polemiche e pace nel direttissimo (II)", "id": ["1933-3"]},
-      {"titolo": "Polemiche e pace nel direttissimo (III)", "id": ["1933-4"]},
+      {"titolo": "Polemiche e pace nel direttissimo (I). La chiesa antica", "id": ["1933-2"]},
+      {"titolo": "Polemiche e pace nel direttissimo (II). Il fontanone a Montorio", "id": ["1933-3"]},
+      {"titolo": "Polemiche e pace nel direttissimo (III. Sibili dentro le valli", "id": ["1933-4"]},
       {"titolo": "La guerra di Emilio De Bono", "id": ["1935-8"]},
+      {"titolo": "Giani Stuparich, «Guerra del '15»", "id": ["1932-10"]},
+      {"titolo": "Inchiestra tra gli scrittori laureati", "id": ["1937-8"]},
+      {"titolo": "Postille a un’analisi stilistica", "id": ["1937-6"]},
       {"titolo": "Dal Carso alla sala di proiezione", "id": ["1959-5"]}
     ]
   },
@@ -149,25 +141,34 @@
     "curatore": "Paola Italia e Giorgio Pinotti",
     "anno": 2016,
     "capitoli": [
-      {"titolo": "Il libro delle furie (I)", "id": ["1955-2"]},
-      {"titolo": "Il libro delle furie (II)", "id": ["1955-3"]},
-      {"titolo": "Il libro delle furie (III)", "id": ["1955-5"]},
-      {"titolo": "Il libro delle furie (IV)", "id": ["1956-1"]},
-      {"titolo": "Le Marie Luise e la eziologia del loro patriottaggio verbale", "id": ["2003-2"]},
-      {"titolo": "Le genti", "id": ["2003-3"]}
+      {"titolo": "Capitolo I"},
+      {"titolo": "Capitolo II"},
+      {"titolo": "Capitolo III. Erotia narcistica ed autoerotia"},
+      {"titolo": "Capitolo IV. Teoremi centrali"},
+      {"titolo": "Il burgiardone"},
+      {"titolo": "Il libro delle furie", "id": ["1955-2","1955-3", "1955-5", "1955-6"]},
+      {"titolo": "I miti del somaro", "id": ["1984-1","1955-3", "1955-5", "1955-6"]},
+      {"titolo": "Le genti", "id": ["2003-3"]},
+      {"titolo": "Le Marie Luise e la eziologia del loro patriottaggio verbale", "id": ["2003-2"]}
     ]
   },
   "GASP": {
     "titolo": "Il guerriero, l'amazzone, lo spirito della poesia nel verso immortale del Foscolo – Conversazione a tre voci",
     "curatore": "Claudio Vela",
     "anno": 2015,
-    "capitoli": []
+    "capitoli": [{"titolo": "Il signore delle anime"},
+  {"titolo": "La dannazione del dottor Asfar"}]
   },
   "GGP": {
     "titolo": "Giornale di guerra e di prigionia",
     "curatore": "Paola Italia",
     "anno": 2023,
-    "capitoli": []
+    "capitoli": [{"titolo": "1915"},
+  {"titolo": "1916"},
+{"titolo": "1917"},
+{"titolo": "1918"},
+{"titolo": "1919"}  
+]
   },
   "L'A": {
     "titolo": "L'Adalgisa",
@@ -175,26 +176,15 @@
     "anno": 2014,
     "capitoli": [
       {"titolo": "Notte di luna – Paese, a guisa d’introduzione", "id": ["1942-4"]},
-      {"titolo": "Quando Girolamo ha smesso… (I)", "id": ["1943-2"]},
-      {"titolo": "Quando Girolamo ha smesso… (II)", "id": ["1943-4"]},
-      {"titolo": "La cognizione del dolore (Sesto tratto)", "id": ["1940-8"]},
+      {"titolo": "Quando Girolamo ha smesso… ", "id": ["1943-2", "1943-4"]},
+      {"titolo": "Navi approdano al Parapagàl", "id": ["1940-8"]},
       {"titolo": "Un «concerto» di 120 professori – Disegno su due fogli arancio pallido", "id": ["1942-3"]},
-      {"titolo": "L’Adalgisa (Racconto di C.E.G)", "id": ["1942-6"]},
-      {"titolo": "L’Adalgisa (Continuazione del numero precedente e fine)", "id": ["1942-7"]},
-      {"titolo": "Viaggi di Gulliver, cioè del Gaddus. Alcune battute per il progettato libro, 57-69. In Un augurio a Raffaele Mattioli.", "id": ["1970-2"]},
-      {"titolo": "Antico vigore del popolo d’Abruzzo", "id": ["1935-3"]},
-      {"titolo": "Risotto alla milanese: ricetta di C. E. Gadda", "id": ["1959-3"]},
+      {"titolo": "L’Adalgisa", "id": ["1942-6", "1942-7"]},
       {"titolo": "La nostra casa si trasforma (e l’inquilino la deve subire).", "id": ["1959-1"]},
       {"titolo": "Claudio disimpara a vivere", "id": ["1940-13"]},
       {"titolo": "Quattro figlie ebbe e ciascuna regina", "id": ["1942-9"]},
       {"titolo": "I ritagli del tempo", "id": ["1942-10"]},
-      {"titolo": "La benignità", "id": ["1943-6"]},
-      {"titolo": "Dalle mondine, in risaia", "id": ["1936-7"]},
-      {"titolo": "Per un barbiere", "id": ["1954-9"]},
-      {"titolo": "Il Petrarca a Milano", "id": ["1959-7"]},
-      {"titolo": "Risotto alla milanese", "id": ["1960-4"]},
-      {"titolo": "Il capolavoro di Figaro nacque in 12 giorni", "id": ["1961-5"]},
-      {"titolo": "Dalle mondine, in risaia", "id": ["1961-4"]}
+      {"titolo": "Al parco, in una sera di maggio", "id": ["1943-6"]}
     ]
   },
   "LdF": {
@@ -249,20 +239,24 @@
     "curatore": "Liliana Orlando",
     "anno": 2013,
     "capitoli": [
-      {"titolo": "Una mattinata alla Borsa – L’assurda cattedrale della religione capitalistica", "id": ["1935-1"]},
+      {"titolo": "Viaggi di Gulliver, cioè del Gaddus. Alcune battute per il progettato libro, 57-69. In Un augurio a Raffaele Mattioli.", "id": ["1970-2"]},
+      {"titolo": "Le rose di collemaggio", "id": ["1935-3"]},
+      {"titolo": "Risotto patrio. Recipe", "id": ["1959-3", "1960-4"]},
+      {"titolo": "Alla borsa di Milano", "id": ["1935-1"]},
       {"titolo": "Terra lombarda", "id": ["1940-9"]},
       {"titolo": "Dalle specchiere dei laghi", "id": ["1941-4"]},
-      {"titolo": "Fiera a Milano", "id": ["1940-7"]},
+      {"titolo": "Carabattole a Porta Ludovica", "id": ["1940-7"]},
       {"titolo": "L’uomo e la macchina", "id": ["1940-10"]},
-      {"titolo": "Ablazione del duodeno per ulcera", "id": ["1940-6"]},
-      {"titolo": "Casi e uomini in un mondo che dura quindici giorni", "id": ["1936-8"]},
+      {"titolo": "Anastomòsi", "id": ["1940-6"]},
+      {"titolo": "Alla fiera di Milano", "id": ["1936-8"]},
       {"titolo": "Sul Duomo di Como", "id": ["1936-6"]},
       {"titolo": "Sul neptunia - Crociera dopolavoristica", "id": ["1939-13"]},
-      {"titolo": "Il viaggio delle acque", "id": ["1940-14"]},
+      {"titolo": "Il viaggio delle acque", "id": ["1940-14", "1948-8", "1948-9"]},
       {"titolo": "Spume sotto i Piani d'Invrea", "id": ["1940-15"]},
-      {"titolo": "Il viaggio delle acque - Momenti", "id": ["1948-8"]},
-      {"titolo": "Il viaggio delle acque", "id": ["1948-9"]},
-      {"titolo": "Versilia", "id": ["1950-11"]}
+      {"titolo": "Versilia", "id": ["1950-11"]},
+      {"titolo": "Dalle mondine, in risaia", "id": ["1936-7"]},
+     {"titolo": "Per un barbiere", "id": ["1954-9", "1961-5"]},
+      {"titolo": "Il Petrarca a Milano", "id": ["1959-7"]}
     ]
   },
   "VM": {
@@ -278,9 +272,9 @@
       {"titolo": "Lingua letteraria e lingua dell’uso.", "id": ["1942-1"]},
       {"titolo": "Fatto personale… o quasi", "id": ["1947-1"]},
       {"titolo": "Intervista al microfono. Confessioni di scrittori (Interviste con se stessi)", "id": ["1951-3"]},
-      {"titolo": "Io e il Pasticciaccio. Tre anni di lavoro nel corso di undici", "id": ["1957-2"]},
+      {"titolo": "Il Pasticciaccio", "id": ["1957-2"]},
       {"titolo": "Il terrore del dàttilo", "id": ["1953-7"]},
-      {"titolo": "Il trionfo di Amleto", "id": ["1952-5"]},
+      {"titolo": "Amleto al teatro Valle", "id": ["1952-5"]},
       {"titolo": "Rappresentare la «Celestina»?", "id": ["1945-2"]},
       {"titolo": "Arte del Belli", "id": ["1945-1"]},
       {"titolo": "I viaggi, la morte", "id": ["1927-2"]},

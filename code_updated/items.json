@@ -37145,7 +37145,7 @@
     "year": 1928,
     "title": "La Madonna dei Filosofi (Novella borghese)",
     "subtitle": "Prosa in rivista",
-    "detail": "Edizioni di Solaria · Firenze",
+    "detail": "Solaria · Firenze",
     "themes": [
       "MdF"
     ],
@@ -37157,8 +37157,8 @@
     "pubblicazione in volume": [],
     "altra edizione": [],
     "ristampa articolo": [],
-    "rivista": "",
-    "editore": "Edizioni di Solaria",
+    "rivista": "Solaria",
+    "editore": "",
     "note": "",
     "corpus_lettere": "",
     "date_start": "1928-01-01"
@@ -49308,6 +49308,32 @@
     "genere": "Contatti letterari"
   },
   {
+    "id": "1932-10",
+    "category": "primary bibliography",
+    "date": "1932-01-31",
+    "year": 1932,
+    "title": "Giani Stuparich, «Guerra del '15»",
+    "subtitle": "Recensioni",
+    "detail": "Solaria · Firenze",
+    "themes": [
+      "SD"
+    ],
+    "people": [],
+    "pub_detail": "8 · 2",
+    "volume": "Opere III",
+    "pagine": "53-56",
+    "pubblicazione in volume": [
+      "2024-1"
+    ],
+    "altra edizione": [],
+    "ristampa articolo": [],
+    "rivista": "Solaria",
+    "editore": "",
+    "note": "",
+    "corpus_lettere": "",
+    "date_start": "1932-01-01"
+  },
+  {
     "id": "arc882",
     "category": "archive",
     "date": "1932-02-01",
@@ -60019,7 +60045,7 @@
     "pagine_volume": "160-166",
     "pubblicazione in volume": [
       "1939-5",
-      "2014"
+      "2013"
     ],
     "altra edizione": [],
     "ristampa articolo": [],
@@ -66319,6 +66345,31 @@
     "stato_di_conservazione": "",
     "collana": "",
     "brief_description": "Carlo Emilio Gadda, «Quadrivio», 17 gennaio 1937, p. 2."
+  },
+  {
+    "id": "1937-8",
+    "category": "primary bibliography",
+    "date": "1937-01-17",
+    "year": 1937,
+    "title": "Inchiestra tra gli scrittori laureati",
+    "subtitle": "Articoli/saggi su rivista",
+    "detail": "Quadrivio · Roma",
+    "themes": [
+      "SD"
+    ],
+    "people": [],
+    "pub_detail": "5 · 12",
+    "volume": "Opere III",
+    "pagine_volume": "2",
+    "pubblicazione in volume": [
+      "2024-1"
+    ],
+    "altra edizione": [],
+    "ristampa articolo": [],
+    "rivista": "Quadrivio",
+    "editore": "",
+    "note": "",
+    "corpus_lettere": ""
   },
   {
     "id": "Let80",
@@ -78950,7 +79001,7 @@
     "category": "primary bibliography",
     "date": "1940-03-31",
     "year": 1940,
-    "title": "Terreno, piogge, fiumi e impianti idroelettrici nell’Atlante fisico-economico della Consociazione Turistica Italiana. In Le Vie d’Italia 46, no. 3 (March), 269-71. Then in Gadda 1986a: 189-95. Now in SVP 171-77.\n\n– 1940g. La cognizione del dolore (Quinto tratto) – Parte seconda",
+    "title": "Terreno, piogge, fiumi e impianti idroelettrici nell’Atlante fisico-economico della Consociazione Turistica Italiana",
     "subtitle": "Articoli/saggi su rivista",
     "detail": "Letteratura · Firenze",
     "themes": [
@@ -119950,8 +120001,7 @@
     "volume": "Opere II",
     "pubblicazione in volume": [
       "2015-1",
-      "1963-3",
-      "1953-3"
+      "1963-3"
     ],
     "altra edizione": [],
     "ristampa articolo": [
@@ -120264,7 +120314,7 @@
     "pagine": "3",
     "pubblicazione in volume": [
       "1964-2",
-      "2014"
+      "2013"
     ],
     "altra edizione": [],
     "ristampa articolo": [
@@ -136694,7 +136744,7 @@
     "pubblicazione in volume": [
       "1961-1",
       "1964-2",
-      "2014"
+      "2013"
     ],
     "altra edizione": [],
     "ristampa articolo": [
@@ -140536,7 +140586,7 @@
     "pubblicazione in volume": [
       "1961-1",
       "1964-2",
-      "2014"
+      "2013"
     ],
     "altra edizione": [],
     "ristampa articolo": [],
@@ -142667,7 +142717,7 @@
     "pagine": "28-30",
     "pubblicazione in volume": [
       "1939-5",
-      "2014"
+      "2013"
     ],
     "altra edizione": [],
     "ristampa articolo": [],
@@ -164850,7 +164900,7 @@
     "pagine_volume": "953-966",
     "pubblicazione in volume": [
       "1981",
-      "2014"
+      "2013"
     ],
     "altra edizione": [],
     "ristampa articolo": [],
@@ -170677,32 +170727,6 @@
     "note": "",
     "corpus_lettere": "LAlMo",
     "date_start": "1977-01-01"
-  },
-  {
-    "id": "1977-4",
-    "category": "primary bibliography",
-    "date": "1977-12-31",
-    "year": 1977,
-    "title": "I viaggi la morte",
-    "subtitle": "Libri e raccolte d'autore",
-    "detail": "Garzanti · Milano",
-    "themes": [
-      "VM"
-    ],
-    "people": [],
-    "pub_detail": "",
-    "volume": "Opere III",
-    "pubblicazione in volume": [],
-    "altra edizione": [
-      "1958-3",
-      "2023-2"
-    ],
-    "ristampa articolo": [],
-    "rivista": "",
-    "editore": "Garzanti",
-    "note": "",
-    "corpus_lettere": "",
-    "date_start": "1977-12-01"
   },
   {
     "id": "bibsec633",
