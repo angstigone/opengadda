@@ -225,6 +225,11 @@
   }
   /* Gadda's own line: never faded, whatever is selected or previewed */
   .life.gadda-life { opacity: 1 !important; }
+
+  /* sidebar removed for now: hidden (not deleted — the script still looks
+     its controls up by id), and the graph takes the whole window width */
+  :root, body.side-collapsed { --side-w: 0px; }
+  .side-panel, .side-toggle { display: none !important; }
 </style>
 </head>
 <body>
@@ -837,20 +842,8 @@
     // a background box behind each name (an outline alone leaves the line
     // showing through the spaces between words)
     const labelBoxH = labelPx * 1.35 * unitsPerPx;
-    // connections to other graphs: one small dot per other reparto this
-    // person also appears in, in that reparto's colour
     lineLabels.each(function (d) {
-      otherReparti(d.name).forEach((k, i) => {
-        d3.select(this).append("tspan")
-          .attr("class", "xref-dot")
-          .attr("fill", repartoAccents[k])
-          .attr("dx", (i ? 1 : 4) * unitsPerPx)
-          .text("●");
-      });
-    });
-    lineLabels.each(function (d) {
-      const also = otherReparti(d.name).map(k => repartoLabels[k]);
-      d3.select(this).append("title").text(d.name + (also.length ? `\nAlso in: ${also.join(", ")}` : ""));
+      d3.select(this).append("title").text(d.name);
       this.__w = this.getComputedTextLength();
       this.__box = labelLayer.insert("rect", () => this)
         .attr("class", "label-bg")
