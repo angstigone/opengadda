@@ -260,13 +260,51 @@
   .graph-tools > * { pointer-events: auto; flex-shrink: 0; }
   .graph-tools .year-zoom-bar { position: static; transform: none; }
   .graph-tools .kind-filter, .graph-tools .year-zoom-bar { background: var(--bg); }
+
+  /* research: saved views + export, a menu in the tools row */
+  .research { position: relative; }
+  .research-btn {
+    font: inherit; font-size: 0.75rem; font-weight: 600; height: 1.95rem; padding: 0 0.75rem; cursor: pointer;
+    border: 1px solid var(--grid); border-radius: 8px; background: var(--bg); color: var(--ink);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08); display: inline-flex; align-items: center; gap: 0.35rem;
+  }
+  .research-btn:hover { background: color-mix(in srgb, var(--ink) 6%, var(--bg)); }
+  .research-n { font-size: 0.68rem; padding: 0 0.4rem; border-radius: 999px; background: var(--ink); color: var(--bg); }
+  .research-panel {
+    position: absolute; top: calc(100% + 6px); right: 0; width: 320px; white-space: normal;
+    background: var(--bg); border: 1px solid var(--grid); border-radius: 8px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.12); padding: 0.5rem; font-size: 0.8rem;
+    display: flex; flex-direction: column; gap: 0.45rem;
+  }
+  .research-panel[hidden] { display: none; }
+  .research-panel button { font: inherit; color: var(--ink); cursor: pointer; }
+  .research-save {
+    font-weight: 600 !important; padding: 0.45rem; border-radius: 6px;
+    border: 1px dashed var(--grid); background: transparent;
+  }
+  .research-save:hover { background: color-mix(in srgb, var(--ink) 6%, transparent); }
+  .research-list { display: flex; flex-direction: column; max-height: 45vh; overflow-y: auto; }
+  .research-empty { opacity: 0.6; font-size: 0.75rem; padding: 0.2rem 0.3rem; line-height: 1.45; }
+  .research-item { display: flex; align-items: stretch; border-radius: 6px; }
+  .research-item:hover { background: color-mix(in srgb, var(--ink) 6%, transparent); }
+  .research-open {
+    flex: 1 1 auto; min-width: 0; text-align: left; border: none; background: transparent;
+    padding: 0.35rem 0.4rem; display: flex; flex-direction: column;
+  }
+  .ri-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ri-meta { font-size: 0.68rem; opacity: 0.6; }
+  .research-del { border: none; background: transparent; opacity: 0.45; padding: 0 0.5rem; font-size: 1rem !important; }
+  .research-del:hover { opacity: 1; }
+  .research-export { display: flex; align-items: center; gap: 0.35rem; border-top: 1px solid var(--grid); padding-top: 0.45rem; }
+  .research-export span { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.5; margin-right: auto; }
+  .research-export button { font-size: 0.72rem !important; padding: 0.25rem 0.55rem; border: 1px solid var(--grid); border-radius: 6px; background: transparent; }
+  .research-export button:disabled { opacity: 0.4; cursor: default; }
   .graph-tools .search-box { width: 320px; flex: 0 1 320px; min-width: 140px; }
-  .graph-tools .search-suggestions { width: 420px; right: auto; border-top: 1px solid var(--grid); border-radius: 6px; }
+  .graph-tools .search-suggestions { width: 480px; right: auto; border-top: 1px solid var(--grid); border-radius: 6px; }
   .graph-tools .search-box input {
     font-size: 0.95rem; padding: 0.55rem 0.85rem;
     box-shadow: 0 2px 10px rgba(0,0,0,0.08); border-radius: 8px;
   }
-  .graph-tools .search-suggestions { max-height: 280px; }
   .graph-tools .search-suggestion { font-size: 0.9rem; padding: 0.45rem 0.85rem; }
   .graph-tools .search-suggestion.first { background: var(--grid); }
   .graph-tools .pinned-chips { flex-wrap: nowrap; margin-top: 0; }
@@ -276,8 +314,16 @@
     background: color-mix(in srgb, var(--chip) 14%, var(--bg));
   }
   .graph-tools .search-suggestion { display: flex; align-items: baseline; gap: 0.6rem; }
+  .graph-tools .sg-head {
+    font-size: 0.66rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    opacity: 0.5; padding: 0.45rem 0.85rem 0.15rem;
+  }
+  .graph-tools .sg-work .sg-name { font-style: italic; }
+  .graph-tools .search-suggestions { max-height: 60vh; }
   .graph-tools .sg-name { flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .graph-tools .sg-count { flex: 0 0 auto; font-size: 0.72rem; opacity: 0.6; font-variant-numeric: tabular-nums; }
+  .graph-tools .sg-count { flex: 0 0 auto; font-size: 0.75rem; opacity: 0.75; font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: 0.6rem; }
+  .graph-tools .sg-k { display: inline-flex; align-items: center; gap: 0.2rem; }
+  .graph-tools .sg-ico { width: 15px; height: 15px; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
   .graph-tools .search-suggestion::before {
     flex: 0 0 auto; align-self: center;
     content: ""; width: 8px; height: 8px; border-radius: 50%;
@@ -487,6 +533,13 @@
   // as small coloured dots after each name, and as links in the sidebar
   // when a person is selected.
   const THIS_REPARTO = "undifferentiated";
+  // outline icons on a 24×24 grid: envelope, open book, pen (the graph's
+  // marks, and the search results)
+  const CONTACT_ICONS = {
+    letters: "M3.5 6h17v12h-17zM3.5 6.5l8.5 6.5 8.5-6.5",
+    library: "M12 7c-2.6-1.8-6-2.2-9-1.2v12.6c3-1 6.4-.6 9 1.2 2.6-1.8 6-2.2 9-1.2V5.8c-3-1-6.4-.6-9 1.2zM12 7v12.6",
+    secondaryBib: "M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4zM14.5 5.5l3 3",
+  };
   const repartoAccents = { letters: "#6d2a9e", library: "#c05727", secondaryBib: "#1d4e9e", archive: "#9e1d47", undifferentiated: "#4a5059" };
   const repartoLabels = { letters: "Letters", library: "Library", secondaryBib: "Secondary bibliography", archive: "Archive", undifferentiated: "Everyone (undifferentiated)" };
   // epistolary colours, the same as the Letters graph: each person's line
@@ -1148,11 +1201,7 @@
     // outline icons on a 24×24 grid, ICON_PX wide on screen, with a
     // background-coloured halo so they read on top of any line.
     const ICON_PX = 16;
-    const contactIcons = {
-      letters: "M3.5 6h17v12h-17zM3.5 6.5l8.5 6.5 8.5-6.5",
-      library: "M12 7c-2.6-1.8-6-2.2-9-1.2v12.6c3-1 6.4-.6 9 1.2 2.6-1.8 6-2.2 9-1.2V5.8c-3-1-6.4-.6-9 1.2zM12 7v12.6",
-      secondaryBib: "M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4zM14.5 5.5l3 3",
-    };
+    const contactIcons = CONTACT_ICONS;
     const iconAt = (sel, cx, cy) => {
       const k = ICON_PX * unitsPerPx / 24;
       sel.attr("transform", d => `translate(${cx(d)},${cy(d)}) scale(${k}) translate(-12,-12)`);
@@ -1447,8 +1496,8 @@
 
     function applyHighlight() {
       if (!previewing) {
-        // a newly selected person (clicked, searched, or arriving from
-        // another graph) brings the view to their first contact with Gadda
+        // clicking someone brings the view to their first contact with
+        // Gadda (picking someone in the search doesn't: see pickSearched)
         const newlySelected = [...selected].filter(n => !lastSelectedNames.includes(n) && n !== "Gadda Carlo Emilio");
         if (newlySelected.length) scrollToFirstContact(newlySelected);
         lastSelectedNames = [...selected];
@@ -1484,6 +1533,7 @@
           .style("pointer-events", visible ? null : "none");
       });
       lineLabels.style("font-weight", d => (selected.has(d.name) ? 800 : 600));
+      if (!previewing) pinLabels(); // the selection changes which names win a clash
 
       svg.select(".compare-link").remove();
       svg.select(".compare-label").remove();
@@ -1761,13 +1811,28 @@
       `<div style="margin-top:0.5rem">${timeFocus ? `Active ${timeFocus.start}\u2013${timeFocus.end}` : "Total"}</div><strong>${allCorrespondents.length}</strong>`
     );
 
+    // one chip per searched person (people pinned some other way get one too)
+    searchEntries = searchEntries.filter(e => e.names.some(n => pinnedNames.has(n)));
+    const covered = new Set(searchEntries.flatMap(e => e.names));
+    const chips = [...searchEntries, ...[...pinnedNames].filter(n => !covered.has(n)).map(personEntry)];
     d3.select("#pinned-chips").selectAll(".pinned-chip")
-      .data([...pinnedNames])
+      .data(chips, e => e.key)
       .join("div")
         .attr("class", "pinned-chip")
-        .style("--chip", d => personColor(d))
-        .text(d => d)
-        .on("click", (event, d) => { pinnedNames.delete(d); searchSelected.delete(d); lastSelectedNames = lastSelectedNames.filter(n => n !== d); if (!pinnedNames.size) customMode = false; applyFilter(); });
+        .style("--chip", e => e.color)
+        .text(e => e.label)
+        .on("click", (event, e) => {
+          searchEntries = searchEntries.filter(o => o.key !== e.key);
+          const still = new Set(searchEntries.flatMap(o => o.names));
+          e.names.filter(n => !still.has(n)).forEach(n => {
+            pinnedNames.delete(n); searchSelected.delete(n);
+            lastSelectedNames = lastSelectedNames.filter(m => m !== n);
+          });
+          explodedBar = null;
+          pickedLetterId = null;
+          applyKind();
+          applyFilter();
+        });
     if (selectionToggleReady) syncSelectionToggle(); // the switch is built after the first draw
   }
 
@@ -1775,39 +1840,97 @@
   const personColor = name => categoriaColors[letterCategoria[name]] || NO_LETTERS_COLOR;
   // how much each person has with Gadda, shown beside their name in the
   // suggestions (always the full counts, whatever the kind switch shows)
+  // shown as the graph's own icons with a count, not words
+  const iconSvg = (kind, title) => `<svg class="sg-ico" viewBox="0 0 24 24" aria-label="${title}"><title>${title}</title>` +
+    `<path d="${CONTACT_ICONS[kind]}" stroke="${repartoAccents[kind]}"/></svg>`;
   function recordPreview(name) {
     const n = t => ((fullTables.get(t) || t)[name] || []).length;
-    return [[n(letterDates), "letter", "letters"], [n(libraryBooks), "book", "books"], [n(secondaryWorks), "publication", "publications"]]
-      .filter(([c]) => c).map(([c, one, many]) => `${c} ${c === 1 ? one : many}`).join(" · ");
+    return [[n(letterDates), "letters"], [n(libraryBooks), "library", "books"], [n(secondaryWorks), "secondaryBib", "publications"]]
+      .map(([c, kind, title]) => [c, kind, title || kind])
+      .filter(([c]) => c).map(([c, kind, title]) => `<span class="sg-k">${iconSvg(kind, title)}${c}</span>`).join("");
   }
+  // --- search: people and works (library books, publications on Gadda, Gadda's own
+  // works). Indexes are built once, from the full data.
+  const norm = t => String(t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const plural = (c, one, many) => `${c} ${c === 1 ? one : many}`;
+  const peopleNames = new Set(allCorrespondents.map(d => d.name));
+  const workIndex = [
+    ...noPersonPrimaryBib.map(w => ({ title: w.title, year: w.year, name: null, what: "by Gadda" })), // his own first
+    ...Object.entries(libraryBooks).flatMap(([name, bs]) => bs.map(b => ({ title: b.title, year: b.year, name, what: "book", item: b }))),
+    ...Object.entries(secondaryWorks).flatMap(([name, ws]) => ws.map(w => ({ title: w.title, year: w.year, name, what: "publication", item: w }))),
+  ].filter(w => w.title && Number.isFinite(w.year) && (!w.name || peopleNames.has(w.name)));
+  const personEntry = name => ({ key: "p:" + name, label: name, names: [name], color: personColor(name) });
+  let searchEntries = [];
+
   const searchInput = d3.select("#search-input");
   const searchSuggestions = d3.select("#search-suggestions");
   searchInput.on("input", function () {
-    const q = this.value.trim().toLowerCase();
+    const q = norm(this.value.trim());
     searchSuggestions.html("");
     if (!q) return;
-    const matches = allCorrespondents
-      .filter(d => d.name.toLowerCase().includes(q) && !pinnedNames.has(d.name))
-      .slice(0, 8);
-    searchSuggestions.selectAll(".search-suggestion")
-      .data(matches)
+    const people = allCorrespondents
+      .filter(d => norm(d.name).includes(q) && !pinnedNames.has(d.name))
+      .slice(0, 5)
+      .map(d => ({ type: "person", name: d.name, color: personColor(d.name), label: d.name, count: recordPreview(d.name) }));
+    // up to 3 of Gadda's own works, then up to 5 books/publications
+    const found = workIndex.filter(w => norm(w.title).includes(q));
+    const works = [...found.filter(w => !w.name).slice(0, 3), ...found.filter(w => w.name).slice(0, 5)]
+      .map(w => ({ type: "work", ...w, color: w.name ? personColor(w.name) : "var(--ink)", label: w.title,
+        count: w.name
+          ? `<span class="sg-k">${iconSvg(w.what === "book" ? "library" : "secondaryBib", w.what)}${w.year}</span> ${esc(w.name)}`
+          : `${w.year} · by Gadda` }));
+    const rows = [
+      ...(people.length ? [{ type: "head", label: "People" }, ...people] : []),
+      ...(works.length ? [{ type: "head", label: "Works" }, ...works] : []),
+    ];
+    if (!rows.length) rows.push({ type: "head", label: "Nothing found" });
+    let firstDone = false;
+    searchSuggestions.selectAll("div")
+      .data(rows)
       .join("div")
-        .attr("class", "search-suggestion")
-        .style("--chip", d => personColor(d.name))
-        .html(d => `<span class="sg-name">${d.name}</span><span class="sg-count">${recordPreview(d.name)}</span>`)
-        .classed("first", (d, i) => i === 0)
-        .on("click", (event, d) => pickSearched(d));
+        .attr("class", d => d.type === "head" ? "sg-head" : "search-suggestion sg-" + d.type)
+        .style("--chip", d => d.color || null)
+        .html(d => d.type === "head" ? esc(d.label)
+          : `<span class="sg-name">${esc(d.label)}</span><span class="sg-count">${d.count}</span>`)
+        .classed("first", d => d.type !== "head" && !firstDone && (firstDone = true))
+        .on("click", (event, d) => { if (d.type !== "head") pickSearched(d); });
   });
-  // a searched person is shown on their own with Gadda (plus anyone else
-  // searched since); removing the last chip brings everyone back
+  // a search result is added to the graph and selected (highlighted like a
+  // clicked line) — everyone else stays drawn; its chip's × takes it off.
+  //  person -> that person; work -> its person, zoomed on its year with
+  //  that year's bricks open (a work by Gadda himself just zooms on its year)
+  function addSearchEntry(entry) {
+    if (!searchEntries.some(e => e.key === entry.key)) searchEntries.push(entry);
+    entry.names.forEach(n => { pinnedNames.add(n); searchSelected.add(n); });
+  }
+  // picking a result goes straight to the record itself: the view zooms
+  // on its year, that person-year's bricks open and its brick is pinned
+  // with its description.
   function pickSearched(d) {
-    if (!customMode) { pinnedNames.clear(); lastSelectedNames = []; searchSelected = new Set(); }
-    customMode = true;
-    pinnedNames.add(d.name);
-    searchSelected.add(d.name);
     searchInput.property("value", "");
     searchSuggestions.html("");
+    explodedBar = null; // whatever was open before closes
+    pickedLetterId = null;
+    if (d.type === "work" && !d.name) { openYear(d.year); return; }
+    const entry = personEntry(d.name);
+    addSearchEntry(entry);
+    // counted as selected already, so the redraw doesn't scroll to them
+    lastSelectedNames = [...new Set([...lastSelectedNames, ...entry.names])];
+    kindShown = "all"; // nothing hidden by the kind switch
+    applyKind();
+    let target = null;
+    if (d.type === "work") {
+      const table = d.what === "book" ? libraryBooks : secondaryWorks;
+      const i = (table[d.name] || []).filter(x => x.year === d.year).indexOf(d.item);
+      target = { name: d.name, year: d.year, key: `${d.what === "book" ? "book" : "work"}:${d.year}:${i}` };
+    }
     applyFilter();
+    if (target) {
+      explodedBar = { name: target.name, year: target.year };
+      pickedLetterId = target.key;
+      zoomOnYear(target.year);
+    }
   }
   // Enter picks the first suggestion, Esc clears the box
   searchInput.on("keydown", function (event) {
@@ -1890,8 +2013,8 @@
   let kindFor = ""; // the selection the switch was last set for
   const selectedPeople = () => lastSelectedNames.filter(n => n !== "Gadda Carlo Emilio");
   function applyKind() {
+    Object.values(kindTables).flat().forEach(t => Object.assign(t, fullTables.get(t)));
     Object.entries(kindTables).forEach(([k, tables]) => tables.forEach(t => {
-      Object.assign(t, fullTables.get(t));
       if (kindShown !== "all" && kindShown !== k) selectedPeople().forEach(n => delete t[n]);
     }));
     // only the kinds the selected people actually have are offered; with
@@ -1926,7 +2049,7 @@
   const graphTools = d3.select("body").append("div").attr("class", "graph-tools");
   graphTools.node().append(document.querySelector(".search-box"), document.getElementById("pinned-chips"));
   const kindSlot = graphTools.node();
-  d3.select("#search-input").attr("placeholder", "Search a person…");
+  d3.select("#search-input").attr("placeholder", "Search a person or work…");
   const kindCtl = graphTools.append("div").attr("class", "kind-filter").attr("hidden", "");
   kindSlot.append(document.getElementById("year-zoom-bar")); // same row, so they never overlap
   // the row sits just under the year labels' baseline, wherever a redraw puts it
@@ -1939,6 +2062,124 @@
   [["all", "All"], ["letters", "Letters"], ["books", "Books"], ["works", "Publications"]].forEach(([kind, label]) =>
     kindCtl.append("button").attr("data-kind", kind).classed("active", kind === "all").text(label)
       .on("click", function () { if (kind !== kindShown && !this.classList.contains("only")) showKind(kind); }));
+
+  // --- research: save the current view (who is selected, the year zoomed
+  // on, the kind switch, the brick open) to a list kept in this browser,
+  // reopen or delete saved views, and export them — the records of every
+  // saved view as a CSV spreadsheet, or the graph as it is now as an image.
+  const RESEARCH_KEY = "gadda-storyline-research";
+  let research = [];
+  try { research = JSON.parse(localStorage.getItem(RESEARCH_KEY) || "[]"); } catch (e) { research = []; }
+  function storeResearch() {
+    try { localStorage.setItem(RESEARCH_KEY, JSON.stringify(research)); } catch (e) { /* kept for this visit only */ }
+  }
+  const researchBox = graphTools.append("div").attr("class", "research");
+  const researchBtn = researchBox.append("button").attr("class", "research-btn")
+    .on("click", event => { event.stopPropagation(); researchPanel.attr("hidden", researchPanel.attr("hidden") == null ? "" : null); });
+  const researchPanel = researchBox.append("div").attr("class", "research-panel").attr("hidden", "")
+    .on("click", event => event.stopPropagation());
+  d3.select(document).on("click.research", () => researchPanel.attr("hidden", ""));
+
+  const surname = n => n.split(" ")[0];
+  function currentView() {
+    const selected = lastSelectedNames.filter(n => n !== "Gadda Carlo Emilio");
+    const kindLabel = { letters: "letters", books: "books", works: "publications" }[kindShown];
+    const name = [
+      selected.length ? selected.map(surname).join(", ") : "Most active",
+      activeYear != null ? activeYear : explodedBar ? explodedBar.year : "whole life",
+      kindLabel,
+    ].filter(Boolean).join(" · ");
+    return {
+      name, saved: new Date().toISOString().slice(0, 10),
+      selected, pinned: [...pinnedNames], kind: kindShown,
+      year: activeYear, pxPerYear, scrollX: Math.round(window.scrollX),
+      exploded: explodedBar, picked: pickedLetterId,
+    };
+  }
+  function restoreView(v) {
+    activeYear = null; timeFocus = null; beforeYearZoom = null;
+    yearZoomBar.attr("hidden", true).html("");
+    pinnedNames = new Set(v.pinned);
+    searchEntries = v.pinned.map(personEntry);
+    lastSelectedNames = [...v.selected];
+    searchSelected = new Set(v.selected);
+    kindShown = v.kind || "all";
+    kindFor = v.selected.join("|");
+    applyKind();
+    explodedBar = v.exploded;
+    pickedLetterId = v.picked;
+    if (v.year != null) openYear(v.year);
+    else { pxPerYear = v.pxPerYear; rerenderKeepingSelection(); }
+    window.scrollTo(v.scrollX || 0, window.scrollY);
+    pinLabels();
+    updateReadout();
+    updateZoomLabel();
+  }
+
+  // every record of a saved view: its people's letters, books and
+  // publications, within its years (a zoomed year = the years shown) and
+  // its kind; always from the full data
+  const csvCell = v => /[",\n;]/.test(String(v ?? "")) ? `"${String(v).replace(/"/g, '""')}"` : String(v ?? "");
+  function viewRecords(v) {
+    const [lo, hi] = v.year != null
+      ? [Math.max(gadda.birth, v.year - YEAR_ZOOM_REACH), Math.min(gadda.death, v.year + YEAR_ZOOM_REACH)]
+      : [-Infinity, Infinity];
+    const inRange = yr => yr >= lo && yr <= hi;
+    const want = k => !v.kind || v.kind === "all" || v.kind === k;
+    return v.selected.flatMap(n => [
+      ...(want("letters") ? fullTables.get(letterFlowDates)[n] || [] : [])
+        .filter(r => inRange(+r[0].slice(0, 4)))
+        .map(r => [n, "letter", r[0], r[1] === "in" ? `${n} \u2192 Gadda` : `Gadda \u2192 ${n}`,
+          [r[3], r[4]].some(Boolean) ? `${r[3] || "?"} \u2192 ${r[4] || "?"}` : "", r[2]]),
+      ...(want("books") ? fullTables.get(libraryBooks)[n] || [] : [])
+        .filter(b => inRange(b.year))
+        .map(b => [n, "library book", b.year, b.title, [b.publisher, b.place, b.pubYear].filter(Boolean).join(", ") + (b.note ? ` \u2014 ${b.note}` : ""), ""]),
+      ...(want("works") ? fullTables.get(secondaryWorks)[n] || [] : [])
+        .filter(w => inRange(w.year))
+        .map(w => [n, "publication on Gadda", w.year, w.title, [w.tipo, w.rivista].filter(Boolean).join(" \u00b7 "), ""]),
+    ]);
+  }
+  function exportCsv() {
+    const rows = [["saved view", "person", "type", "date", "what", "details", "record id"]];
+    research.forEach(v => {
+      const recs = viewRecords(v);
+      if (!recs.length) rows.push([v.name, "", "", "", "", "", ""]);
+      recs.forEach(r => rows.push([v.name, ...r]));
+    });
+    const csv = "\ufeff" + rows.map(r => r.map(csvCell).join(",")).join("\r\n");
+    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `gadda-research-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function drawResearch() {
+    researchBtn.html(`Research${research.length ? ` <span class="research-n">${research.length}</span>` : ""}`);
+    researchPanel.html("");
+    researchPanel.append("button").attr("class", "research-save").text("+ Save this view")
+      .on("click", () => { research.push(currentView()); storeResearch(); drawResearch(); });
+    const list = researchPanel.append("div").attr("class", "research-list");
+    if (!research.length) list.append("div").attr("class", "research-empty")
+      .text("Nothing saved yet. Select people, zoom on a year or open a brick, then save the view to come back to it.");
+    research.forEach((v, i) => {
+      const row = list.append("div").attr("class", "research-item");
+      row.append("button").attr("class", "research-open").attr("title", "Open this view")
+        .html(`<span class="ri-name"></span><span class="ri-meta">${v.saved} · ${viewRecords(v).length} records</span>`)
+        .on("click", () => { restoreView(v); researchPanel.attr("hidden", ""); })
+        .select(".ri-name").text(v.name);
+      row.append("button").attr("class", "research-del").attr("title", "Delete").attr("aria-label", "Delete").text("\u00d7")
+        .on("click", () => { research.splice(i, 1); storeResearch(); drawResearch(); });
+    });
+    const exp = researchPanel.append("div").attr("class", "research-export");
+    exp.append("span").text("Export");
+    exp.append("button").text("Records (CSV)").property("disabled", !research.length)
+      .attr("title", "Every record of the saved views, as a spreadsheet").on("click", exportCsv);
+    exp.append("button").text("Graph (PNG)")
+      .attr("title", "The graph as it is now, as an image").on("click", () => downloadSelection("png"));
+  }
+  drawResearch();
 
   applyFilter();
 
