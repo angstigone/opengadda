@@ -52,8 +52,35 @@
   .life { stroke-linecap: round; fill: none; opacity: 0.55; pointer-events: stroke; }
   .line-label { font-size: 11px; font-weight: 600; }
   .time-baseline { stroke: var(--grid); stroke-width: 1; }
+  .year-grid line { stroke: var(--grid); vector-effect: non-scaling-stroke; pointer-events: none; }
+  .year-grid .grid-major { stroke-width: 1; }
+  .year-grid .grid-minor { stroke-width: 1; opacity: 0.45; }
+  /* clickable year columns: hover tints the column, the open year stays tinted */
+  .year-hit { fill: transparent; cursor: pointer; }
+  .year-hit:hover { fill: color-mix(in srgb, var(--ink) 5%, transparent); }
+  .year-hit.active { fill: color-mix(in srgb, #6d2a9e 10%, transparent); }
+  .time-label { cursor: pointer; }
+  .time-label.active { opacity: 1; font-weight: 700; }
+
+  /* year zoom bar: shows which period is zoomed, steps, and goes back */
+  .year-zoom-bar {
+    position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 55;
+    display: flex; align-items: center; gap: 0.3rem; font-size: 0.8rem;
+    background: color-mix(in srgb, var(--bg) 92%, transparent); border: 1px solid var(--grid);
+    border-radius: 8px; padding: 0.2rem 0.3rem 0.2rem 0.7rem; box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  }
+  .year-zoom-bar[hidden] { display: none; }
+  .year-zoom-bar strong { font-variant-numeric: tabular-nums; }
+  .year-zoom-bar .span { opacity: 0.6; margin-right: 0.3rem; }
+  .year-zoom-bar button {
+    font: inherit; font-weight: 700; min-width: 1.7rem; height: 1.6rem; cursor: pointer;
+    border: none; border-radius: 6px; background: transparent; color: var(--ink);
+  }
+  .year-zoom-bar button:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); }
+  .year-zoom-bar .back { font-weight: 600; padding: 0 0.5rem; border-left: 1px solid var(--grid); border-radius: 0 6px 6px 0; }
   .time-label { font-size: 10px; fill: var(--ink); opacity: 0.6; font-family: system-ui, sans-serif; }
-  .contact-pt-gadda { fill: var(--bg); stroke-width: 2; }
+  .contact-icon-halo { fill: var(--bg); stroke: var(--bg); stroke-width: 5; stroke-linejoin: round; }
+  .contact-icon { fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
   .contact-envelope { fill: none; stroke-width: 1; opacity: 0.5; }
   .compare-link { stroke-width: 2; }
   .compare-label { font-size: 12px; font-weight: 700; }
@@ -230,6 +257,9 @@
      its controls up by id), and the graph takes the whole window width */
   :root, body.side-collapsed { --side-w: 0px; }
   .side-panel, .side-toggle { display: none !important; }
+  /* hover tooltip switched off for now (the script still fills it in, so
+     deleting this line brings it back) */
+  .tooltip { display: none !important; }
 </style>
 </head>
 <body>
@@ -265,6 +295,7 @@
   <div id="count-panel" class="count-panel"></div>
 </div>
 <div id="tooltip" class="tooltip" hidden></div>
+<div id="year-zoom-bar" class="year-zoom-bar" hidden></div>
 
 <script>
   // one entry per person, merged across letters/library/secondary-bibliography
@@ -372,6 +403,21 @@
   const THIS_REPARTO = "undifferentiated";
   const repartoAccents = { letters: "#6d2a9e", library: "#c05727", secondaryBib: "#1d4e9e", archive: "#9e1d47", undifferentiated: "#4a5059" };
   const repartoLabels = { letters: "Letters", library: "Library", secondaryBib: "Secondary bibliography", archive: "Archive", undifferentiated: "Everyone (undifferentiated)" };
+  // epistolary colours, the same as the Letters graph: each person's line
+  // takes the colour of their correspondent category (from the Letters graph,
+  // else mittenti_enriched.json's tipologia). People with no letters get
+  // NO_LETTERS_COLOR.
+  const categoriaColors = {
+    "Contatti letterari": "#6d2a9e",
+    "Familiari": "#c0392b",
+    "Amici": "#2e8b57",
+    "Editori, riviste e quotidiani": "#1f6fb4",
+    "Compagni di guerra e di prigionia": "#9a7b1c",
+    "Ingegneria e divulgazione tecnica": "#138d90",
+    "Varia": "#8a8a8a",
+  };
+  const NO_LETTERS_COLOR = "#b4b8be";
+  const letterCategoria = {"Ambrosi Paolo": "Familiari", "Amicucci Ermanno": "Contatti letterari", "Anceschi Luciano": "Contatti letterari", "Angelini Cesare": "Contatti letterari", "Angioletti Giovanni Battista": "Contatti letterari", "Antonini Giacomo": "Contatti letterari", "Antonini Gianni": "Contatti letterari", "Arbasino Alberto": "Contatti letterari", "Ardigò Fausto": "Contatti letterari", "Bacchelli Riccardo": "Contatti letterari", "Baldacci Luigi": "Contatti letterari", "Baldini Antonio": "Contatti letterari", "Ballo Ferdinando": "Editori, riviste e quotidiani", "Banti Anna": "Contatti letterari", "Bassani Giorgio": "Contatti letterari", "Benedetti Arrigo": "Contatti letterari", "Berenson Bernard": "Contatti letterari", "Bertolucci Attilio": "Contatti letterari", "Betocchi Carlo": "Contatti letterari", "Betti Ugo": "Compagni di guerra e di prigionia", "Bigongiari Piero": "Contatti letterari", "Bilenchi Romano": "Contatti letterari", "Binni Walter": "Contatti letterari", "Bo Carlo": "Contatti letterari", "Bocelli Arnaldo": "Contatti letterari", "Boggio Marzet Albino": "Compagni di guerra e di prigionia", "Bollati Giulio": "Contatti letterari", "Bompiani Valentino": "Editori, riviste e quotidiani", "Bonalumi Louis": "Contatti letterari", "Bonsanti Alessandro": "Contatti letterari", "Calvino Italo": "Varia", "Camerino Aldo": "Contatti letterari", "Caretti Lanfranco": "Contatti letterari", "Carocci Alberto": "Contatti letterari", "Cavallari Alberto": "Contatti letterari", "Cecchi Emilio": "Contatti letterari", "Cecchi Pieraccini Leonetta": "Varia", "Chiara Piero": "Contatti letterari", "Citati Pietro": "Contatti letterari", "Contini Gianfranco": "Amici", "Dal Fabbro Beniamino": "Contatti letterari", "De Giorgi Elsa": "Contatti letterari", "De Grada Raffaele": "Contatti letterari", "De Robertis Giuseppe": "Contatti letterari", "Debenedetti Giacomo": "Contatti letterari", "Dell'Arco Mario": "Contatti letterari", "Devoto Giacomo": "Contatti letterari", "Einaudi Giulio": "Contatti letterari", "Falqui Enrico": "Contatti letterari", "Ferretti Gian Carlo": "Contatti letterari", "Filippini Felice": "Contatti letterari", "Fiorentini Felice": "Ingegneria e divulgazione tecnica", "Flores Enrico": "Contatti letterari", "Fornasini Emilio": "Familiari", "Fornasini Gandolfi Anita": "Familiari", "Franchi Raffaello": "Contatti letterari", "Fratelli Armando": "Contatti letterari", "Fruttero Carlo": "Varia", "Gadda Ambrosi Clara": "Familiari", "Gadda Belloni Luisa": "Familiari", "Gadda Conti Piero": "Familiari", "Gadda Enrico": "Familiari", "Gadda Fornasini Emilia": "Familiari", "Gargiulo Alfredo": "Contatti letterari", "Garzanti Livio": "Editori, riviste e quotidiani", "Gobbi Ambrogio": "Amici", "Gorni Guglielmo": "Contatti letterari", "Guarnieri Silvio": "Contatti letterari", "Guglielmi Angelo": "Contatti letterari", "Landolfi Tommaso": "Contatti letterari", "Lehr Adele": "Familiari", "Lehr Carlo": "Familiari", "Lehr luigia": "Familiari", "Linati Carlo": "Contatti letterari", "Longhi Roberto": "Contatti letterari", "Loria Arturo": "Contatti letterari", "Lucia Rodocanachi": "Contatti letterari", "Lunetta Mario": "Varia", "Luzi Mario": "Contatti letterari", "Manzini Gianna": "Contatti letterari", "Martinetti Piero": "Contatti letterari", "Martini Quinto": "Contatti letterari", "Mattioli Raffaele": "Varia", "Messina Francesco": "Contatti letterari", "Mondadori Alberto": "Editori, riviste e quotidiani", "Montale Eugenio": "Contatti letterari", "Natoli Glauco": "Contatti letterari", "Notari Umberto": "Contatti letterari", "Pancrazi Pietro": "Contatti letterari", "Parise Goffredo": "Contatti letterari", "Parronchi Alessandro": "Contatti letterari", "Pasolini Pier Paolo": "Contatti letterari", "Pasquali Giorgio": "Contatti letterari", "Penna Sandro": "Amici", "Pestelli Leo": "Contatti letterari", "Petrocchi Giorgio": "Contatti letterari", "Picchi Mario": "Varia", "Piccioni Leone": "Contatti letterari", "Piovene Guido": "Contatti letterari", "Pratolini Vasco": "Contatti letterari", "Punzo Giorgio": "Varia", "Ramat Silvio": "Contatti letterari", "Rigoni Stern Mario": "Contatti letterari", "Rodocanachi Lucia": "Contatti letterari", "Rodocanachi Paolo": "Varia", "Roscioni Gian Carlo": "Contatti letterari", "Rosina Tito": "Varia", "Rossi Franco": "Ingegneria e divulgazione tecnica", "Russo Luigi": "Contatti letterari", "Santi Piero": "Contatti letterari", "Sassella Stefano": "Compagni di guerra e di prigionia", "Semenza Carlo": "Amici", "Sereni Vittorio": "Varia", "Seroni Adriano": "Contatti letterari", "Siciliano Enzo": "Contatti letterari", "Solmi Sergio": "Contatti letterari", "Squarcia Francesco": "Contatti letterari", "Tecchi Bonaventura": "Compagni di guerra e di prigionia", "Traverso Leone": "Contatti letterari", "Ulivi Ferruccio": "Contatti letterari", "Ungaretti Giuseppe": "Contatti letterari", "Valeri Diego": "Contatti letterari", "Valeri Manera Mario": "Contatti letterari", "Valgimigli Manara": "Contatti letterari", "Veronesi Giulia": "Contatti letterari", "Vicari Giambattista": "Contatti letterari", "Vigevani Alberto": "Contatti letterari", "Vigolo Giorgio": "Contatti letterari", "Vigorelli Giancarlo": "Contatti letterari", "Vita Finzi Paolo": "Contatti letterari", "Vittorini Elio": "Contatti letterari", "Weaver William": "Contatti letterari", "Zampa Giorgio": "Contatti letterari"};
   const repartoMembership = {"Accrocca Elio Filippo":["secondaryBib","undifferentiated"],"Ambrosi Paolo":["letters","undifferentiated"],"Amicucci Ermanno":["letters","undifferentiated"],"Amoruso Vito":["secondaryBib","undifferentiated"],"Anceschi Luciano":["secondaryBib","undifferentiated"],"Angelini Cesare":["letters","undifferentiated"],"Angioletti Giovanni Battista":["letters","library","undifferentiated"],"Antonielli Sergio":["secondaryBib","undifferentiated"],"Antonini Giacomo":["secondaryBib","undifferentiated"],"Antonini Gianni":["letters","undifferentiated"],"Arbasino Alberto":["secondaryBib","undifferentiated"],"Ardigò Fausto":["letters","undifferentiated"],"Asor Rosa Alberto":["secondaryBib","undifferentiated"],"Bacchelli Riccardo":["letters","library","undifferentiated"],"Baldacci Luigi":["secondaryBib","undifferentiated"],"Baldini Antonio":["letters","undifferentiated"],"Ballo Ferdinando":["letters","undifferentiated"],"Banti Anna":["library","undifferentiated"],"Barilli Renato":["secondaryBib","undifferentiated"],"Bartolucci Giuseppe":["secondaryBib","undifferentiated"],"Bassani Giorgio":["letters","library","undifferentiated"],"Bellonci Goffredo":["library","secondaryBib","undifferentiated"],"Benedetti Arrigo":["secondaryBib","undifferentiated"],"Berenson Bernard":["letters","undifferentiated"],"Beretta Alberto":["secondaryBib","undifferentiated"],"Bertacchini Renato":["secondaryBib","undifferentiated"],"Berto Giuseppe":["library","undifferentiated"],"Bertolucci Attilio":["library","secondaryBib","undifferentiated"],"Betocchi Carlo":["letters","library","undifferentiated"],"Betti Ugo":["letters","undifferentiated"],"Bezzola Guido":["secondaryBib","undifferentiated"],"Bianconi Piero":["secondaryBib","undifferentiated"],"Bigongiari Piero":["letters","library","secondaryBib","undifferentiated"],"Bilenchi Romano":["letters","library","undifferentiated"],"Binni Walter":["letters","secondaryBib","undifferentiated"],"Bo Carlo":["letters","library","secondaryBib","undifferentiated"],"Bocelli Arnaldo":["secondaryBib","undifferentiated"],"Bodei Remo":["secondaryBib","undifferentiated"],"Boggio Marzet Albino":["letters","undifferentiated"],"Bollati Giulio":["letters","undifferentiated"],"Bompiani Valentino":["letters","undifferentiated"],"Bonalumi Louis":["letters","undifferentiated"],"Boneschi Francesco":["library","undifferentiated"],"Bongiovanni Giannetto":["library","undifferentiated"],"Bonsanti Alessandro":["letters","library","secondaryBib","undifferentiated"],"Boselli Mario":["secondaryBib","undifferentiated"],"Brignetti Raffaello":["library","undifferentiated"],"Butor Michel":["secondaryBib","undifferentiated"],"Bàrberi Squarotti Giorgio":["secondaryBib","undifferentiated"],"Caccia Dominioni Paolo":["library","undifferentiated"],"Cajumi Arrigo":["secondaryBib","undifferentiated"],"Calvino Italo":["letters","secondaryBib","undifferentiated"],"Camerino Aldo":["secondaryBib","undifferentiated"],"Camilucci Marcello":["secondaryBib","undifferentiated"],"Caretti Lanfranco":["letters","library","undifferentiated"],"Carocci Alberto":["letters","undifferentiated"],"Cases Cesare":["secondaryBib","undifferentiated"],"Castellaneta Carlo":["library","undifferentiated"],"Cattaneo Giulio":["library","secondaryBib","undifferentiated"],"Cavallari Alberto":["secondaryBib","undifferentiated"],"Cecchi Emilio":["letters","library","secondaryBib","undifferentiated"],"Cecchi Pieraccini Leonetta":["letters","undifferentiated"],"Chiara Piero":["library","undifferentiated"],"Chiarini Paolo":["secondaryBib","undifferentiated"],"Chiesura Giorgio":["library","undifferentiated"],"Chilanti Felice":["library","undifferentiated"],"Cialente Fausta":["library","undifferentiated"],"Cibotto Gian Antonio":["secondaryBib","undifferentiated"],"Cione Edmondo":["secondaryBib","undifferentiated"],"Citati Pietro":["letters","secondaryBib","archive","undifferentiated"],"Colombi Guidotti Mario":["secondaryBib","undifferentiated"],"Compagnone Luigi":["secondaryBib","undifferentiated"],"Conti Gian Carlo":["library","undifferentiated"],"Contini Gianfranco":["letters","secondaryBib","undifferentiated"],"Crovi Raffaele":["secondaryBib","undifferentiated"],"Curi Fausto":["secondaryBib","undifferentiated"],"Cusatelli Giorgio":["secondaryBib","undifferentiated"],"Dal Fabbro Beniamino":["letters","secondaryBib","undifferentiated"],"Dallamano Piero":["secondaryBib","undifferentiated"],"David Michel":["secondaryBib","undifferentiated"],"De Feo Sandro":["library","secondaryBib","undifferentiated"],"De Giorgi Elsa":["library","undifferentiated"],"De Grada Raffaele":["letters","undifferentiated"],"De Robertis Giuseppe":["letters","library","secondaryBib","undifferentiated"],"Debenedetti Giacomo":["letters","undifferentiated"],"Dell'Arco Mario":["letters","undifferentiated"],"Dell’Arco Mario":["library","undifferentiated"],"Devoto Giacomo":["secondaryBib","undifferentiated"],"Di Pino Guido":["secondaryBib","undifferentiated"],"Doniselli Casimiro":["library","undifferentiated"],"Dossena Giampaolo":["secondaryBib","undifferentiated"],"Einaudi Giulio":["letters","library","undifferentiated"],"Enzensberger Hans Magnus":["secondaryBib","undifferentiated"],"Falqui Enrico":["letters","library","secondaryBib","undifferentiated"],"Ferrero Ernesto":["secondaryBib","undifferentiated"],"Ferretti Gian Carlo":["letters","secondaryBib","undifferentiated"],"Filippini Felice":["letters","undifferentiated"],"Fiore Elio":["library","undifferentiated"],"Fiorentini Felice":["letters","undifferentiated"],"Flores Enrico":["secondaryBib","undifferentiated"],"Fornasini Emilio":["letters","undifferentiated"],"Fornasini Gandolfi Anita":["letters","undifferentiated"],"Franchi Raffaello":["library","secondaryBib","undifferentiated"],"Franciosa Massimo":["secondaryBib","undifferentiated"],"Frassineti Augusto":["library","undifferentiated"],"Fratelli Armando":["letters","undifferentiated"],"Frattarolo Renzo":["secondaryBib","undifferentiated"],"Fruttero Carlo":["letters","undifferentiated"],"Frénaud André":["library","undifferentiated"],"Fusco Mario":["secondaryBib","undifferentiated"],"Fuscà Franco":["secondaryBib","undifferentiated"],"Gadda Ambrosi Clara":["letters","library","undifferentiated"],"Gadda Belloni Luisa":["letters","undifferentiated"],"Gadda Conti Piero":["letters","library","secondaryBib","undifferentiated"],"Gadda Enrico":["letters","library","undifferentiated"],"Gadda Fornasini Emilia":["letters","undifferentiated"],"Gallo Niccolò":["secondaryBib","undifferentiated"],"Garboli Cesare":["secondaryBib","undifferentiated"],"Gargiulo Alfredo":["library","secondaryBib","undifferentiated"],"Garzanti Livio":["letters","undifferentiated"],"Gelli Piero":["secondaryBib","undifferentiated"],"Gessi Leone":["library","undifferentiated"],"Ghirotti Gigi":["secondaryBib","undifferentiated"],"Gigli Lorenzo":["secondaryBib","undifferentiated"],"Giusso Lorenzo":["secondaryBib","undifferentiated"],"Gobbi Ambrogio":["letters","undifferentiated"],"Gorni Guglielmo":["letters","secondaryBib","undifferentiated"],"Govoni Corrado":["library","undifferentiated"],"Gramigna Giuliano":["secondaryBib","undifferentiated"],"Guarnieri Silvio":["letters","secondaryBib","archive","undifferentiated"],"Guglielmi Angelo":["secondaryBib","undifferentiated"],"Guglielmi Guido":["secondaryBib","undifferentiated"],"Innamorati Giuliano":["secondaryBib","undifferentiated"],"Isnenghi Mario":["secondaryBib","undifferentiated"],"Landolfi Tommaso":["letters","library","undifferentiated"],"Lasky Melvin J.":["secondaryBib","undifferentiated"],"Lehr Adele":["letters","library","undifferentiated"],"Lehr Carlo":["letters","undifferentiated"],"Lehr luigia":["letters","undifferentiated"],"Limentani Ludovico":["library","undifferentiated"],"Linati Carlo":["letters","library","secondaryBib","undifferentiated"],"Longhi Roberto":["letters","undifferentiated"],"Loria Arturo":["library","undifferentiated"],"Lucia Rodocanachi":["letters","undifferentiated"],"Luisi Luciano":["library","undifferentiated"],"Lunetta Mario":["letters","undifferentiated"],"Luzi Mario":["letters","library","secondaryBib","undifferentiated"],"Magnani Luigi":["library","undifferentiated"],"Maier Bruno":["library","undifferentiated"],"Malipiero Gian Francesco":["library","undifferentiated"],"Manzini Gianna":["letters","library","secondaryBib","undifferentiated"],"Marabini Claudio":["secondaryBib","undifferentiated"],"Martinetti Piero":["letters","library","undifferentiated"],"Martini Quinto":["letters","undifferentiated"],"Masciotta Michelangelo":["secondaryBib","undifferentiated"],"Mattioli Raffaele":["letters","undifferentiated"],"Mauro Walter":["secondaryBib","undifferentiated"],"Mele Antonio":["secondaryBib","undifferentiated"],"Messina Francesco":["letters","undifferentiated"],"Micheli Silvio":["secondaryBib","undifferentiated"],"Milanese Cesare":["secondaryBib","undifferentiated"],"Milani Milena":["library","undifferentiated"],"Milano Paolo":["library","secondaryBib","undifferentiated"],"Miller Henry":["library","undifferentiated"],"Mondadori Alberto":["letters","undifferentiated"],"Montale Eugenio":["letters","library","secondaryBib","undifferentiated"],"Moravia Alberto":["secondaryBib","undifferentiated"],"Natoli Glauco":["letters","undifferentiated"],"Nava Giuseppe":["secondaryBib","undifferentiated"],"Negro Silvio":["library","undifferentiated"],"Notari Umberto":["letters","undifferentiated"],"Pampaloni Geno":["secondaryBib","undifferentiated"],"Pancrazi Pietro":["secondaryBib","undifferentiated"],"Pandini Giancarlo":["secondaryBib","undifferentiated"],"Paoli Ugo Enrico":["library","undifferentiated"],"Parise Goffredo":["letters","undifferentiated"],"Parronchi Alessandro":["letters","library","undifferentiated"],"Pasolini Pier Paolo":["library","secondaryBib","undifferentiated"],"Pasquali Giorgio":["letters","undifferentiated"],"Pea Enrico":["library","undifferentiated"],"Pedullà Walter":["secondaryBib","undifferentiated"],"Pellegrini Silvio":["secondaryBib","undifferentiated"],"Pellizzi Camillo":["secondaryBib","undifferentiated"],"Penna Sandro":["letters","library","undifferentiated"],"Pestelli Leo":["library","undifferentiated"],"Petrocchi Giorgio":["letters","undifferentiated"],"Piazzolla Marino":["library","undifferentiated"],"Picchi Mario":["letters","secondaryBib","undifferentiated"],"Piccioni Leone":["letters","library","secondaryBib","undifferentiated"],"Piovene Guido":["secondaryBib","undifferentiated"],"Piroué Georges":["secondaryBib","undifferentiated"],"Pomilio Mario":["secondaryBib","undifferentiated"],"Pozza Neri":["library","archive","undifferentiated"],"Pratolini Vasco":["library","undifferentiated"],"Pullini Giorgio":["secondaryBib","undifferentiated"],"Punzo Giorgio":["letters","undifferentiated"],"Quasimodo Salvatore":["library","undifferentiated"],"Raboni Giovanni":["secondaryBib","undifferentiated"],"Radice Raul":["secondaryBib","undifferentiated"],"Rago Michele":["secondaryBib","undifferentiated"],"Ramat Raffaello":["library","undifferentiated"],"Ramat Silvio":["library","undifferentiated"],"Ravegnani Giuseppe":["secondaryBib","undifferentiated"],"Raya Gino":["secondaryBib","undifferentiated"],"Rigoni Stern Mario":["letters","undifferentiated"],"Rodocanachi Lucia":["letters","undifferentiated"],"Rodocanachi Paolo":["letters","undifferentiated"],"Romanò Angelo":["secondaryBib","undifferentiated"],"Roscioni Gian Carlo":["letters","secondaryBib","archive","undifferentiated"],"Rosina Tito":["letters","undifferentiated"],"Rossi Franco":["letters","undifferentiated"],"Rougemont Denis de":["library","undifferentiated"],"Russo Luigi":["secondaryBib","undifferentiated"],"Salinari Carlo":["secondaryBib","undifferentiated"],"Santi Piero":["letters","library","undifferentiated"],"Sassella Stefano":["letters","undifferentiated"],"Scalia Gianni":["secondaryBib","undifferentiated"],"Sciascia Leonardo":["library","undifferentiated"],"Scrivano Riccardo":["secondaryBib","undifferentiated"],"Semenza Carlo":["letters","undifferentiated"],"Sereni Vittorio":["letters","library","undifferentiated"],"Sermonti Vittorio":["library","undifferentiated"],"Seroni Adriano":["secondaryBib","undifferentiated"],"Siciliano Enzo":["letters","library","secondaryBib","undifferentiated"],"Soavi Giorgio":["library","undifferentiated"],"Sobrero Ornella":["secondaryBib","undifferentiated"],"Soldati Mario":["library","undifferentiated"],"Solmi Sergio":["library","undifferentiated"],"Spagnoletti Giacinto":["secondaryBib","undifferentiated"],"Squarcia Francesco":["secondaryBib","undifferentiated"],"Tecchi Bonaventura":["letters","library","secondaryBib","undifferentiated"],"Titta Rosa Giovanni":["secondaryBib","undifferentiated"],"Tobino Mario":["library","undifferentiated"],"Tondo Michele":["secondaryBib","undifferentiated"],"Traverso Leone":["letters","library","secondaryBib","undifferentiated"],"Trombatore Gaetano":["secondaryBib","undifferentiated"],"Ulivi Ferruccio":["letters","secondaryBib","undifferentiated"],"Ungaretti Giuseppe":["library","secondaryBib","undifferentiated"],"Valeri Diego":["library","undifferentiated"],"Valeri Manera Mario":["letters","undifferentiated"],"Valgimigli Manara":["letters","undifferentiated"],"Varese Claudio":["secondaryBib","undifferentiated"],"Veronesi Giulia":["letters","undifferentiated"],"Vicari Giambattista":["letters","secondaryBib","undifferentiated"],"Vigevani Alberto":["letters","undifferentiated"],"Vigolo Giorgio":["library","undifferentiated"],"Vigorelli Giancarlo":["secondaryBib","undifferentiated"],"Vita Finzi Paolo":["letters","undifferentiated"],"Vittorini Elio":["letters","library","secondaryBib","undifferentiated"],"Volpini Valerio":["secondaryBib","undifferentiated"],"Wahl François":["secondaryBib","undifferentiated"],"Weaver William":["letters","undifferentiated"],"Zampa Giorgio":["secondaryBib","undifferentiated"],"Zolla Elémire":["secondaryBib","undifferentiated"],"Zorzi Ludovico":["secondaryBib","undifferentiated"]};
   // the reparti (other than this one) a person also appears in; the
   // undifferentiated graph holds nearly everyone, so it isn't marked
@@ -652,19 +698,11 @@
     const maxGap = Math.min(rowStep * 0.4, rowStep / 2 - 2);
 
     const correspondentNames = people.filter(d => d.name !== "Gadda Carlo Emilio").map(d => d.name);
-    // a neutral slate-grey spread instead of any one reparto's hue — this
-    // graph is explicitly about NOT distinguishing where someone's record
-    // comes from, so it shouldn't borrow a color that implies one.
-    const palette = d3.quantize(
-      t => d3.interpolateHcl("#d7dade", "#2b2f36")(t),
-      Math.max(correspondentNames.length, 2)
-    );
     const colorMap = new Map();
-    correspondentNames.forEach((name, i) => colorMap.set(name, palette[i % palette.length]));
+    correspondentNames.forEach(name => colorMap.set(name,
+      categoriaColors[letterCategoria[name]] || NO_LETTERS_COLOR));
     const colorScale = name => colorMap.get(name);
     const gaddaColor = "var(--ink)";
-    // a selected person's line: dark slate, distinct from Gadda's black
-    const SELECTED_COLOR = "#3d4a5c";
     const colorFor = name => (name === "Gadda Carlo Emilio" ? gaddaColor : colorScale(name));
 
     const minStrokeWidth = 2, maxStrokeWidth = 7;
@@ -692,12 +730,39 @@
       .attr("x1", margin.left).attr("x2", width - margin.right)
       .attr("y1", margin.top).attr("y2", margin.top);
 
+    // year grid behind the lines: a faint line for every year, a stronger
+    // one for each labelled year
+    const yearTicks = x.ticks(Math.max(10, Math.round(width / unitsPerPx / 110))).filter(Number.isInteger); // whole years only, even zoomed in
+    const labelled = new Set(yearTicks);
+    svg.append("g")
+      .attr("class", "year-grid")
+      .selectAll("line")
+      .data(d3.range(Math.ceil(x.domain()[0]), Math.floor(x.domain()[1]) + 1))
+      .join("line")
+        .attr("class", d => (labelled.has(d) ? "grid-major" : "grid-minor"))
+        .attr("x1", d => x(d)).attr("x2", d => x(d))
+        .attr("y1", margin.top).attr("y2", height - margin.bottom);
+    // one clickable column per year, centred on its grid line (that's where
+    // the year's contacts are drawn); it sits behind the lines, so clicking
+    // a line still selects the person
+    svg.select(".year-grid").selectAll("rect")
+      .data(d3.range(Math.ceil(x.domain()[0]), Math.floor(x.domain()[1]) + 1))
+      .join("rect")
+        .attr("class", "year-hit")
+        .classed("active", d => d === activeYear)
+        .attr("x", d => x(d - 0.5)).attr("width", d => x(d + 0.5) - x(d - 0.5))
+        .attr("y", margin.top).attr("height", height - margin.bottom - margin.top)
+        .on("click", (event, d) => { event.stopPropagation(); openYear(d === activeYear ? null : d); })
+      .append("title").text(d => `${d} — click to zoom on this period`);
+
     svg.append("g")
       .selectAll("text")
       // about one year label per 110px on screen, so zooming in adds labels
-      .data(x.ticks(Math.max(10, Math.round(width / unitsPerPx / 110))))
+      .data(yearTicks)
       .join("text")
         .attr("class", "time-label")
+        .classed("active", d => d === activeYear)
+        .on("click", (event, d) => openYear(d === activeYear ? null : d))
         .attr("x", d => x(d))
         .attr("y", margin.top - 10)
         .attr("text-anchor", "middle")
@@ -967,7 +1032,7 @@
       ["library", (libraryBooks[name] || []).some(b => b.year === year)],
       ["secondaryBib", (secondaryWorks[name] || []).some(w => w.year === year)],
     ].filter(([, has]) => has).map(([k]) => k);
-    const KIND_GAP = 7;
+    const KIND_GAP = 17;
     const yearMarks = contacts.flatMap(c =>
       c.years.flatMap(year => {
         const kinds = kindsIn(c.name, year);
@@ -975,7 +1040,7 @@
         // or last year from mittenti_enriched), but no point is drawn
         if (!kinds.length) return [];
         return kinds.map((k, i) => ({
-          year, dipY: c.dipY, color: repartoAccents[k], name: c.name, cluster: c,
+          year, dipY: c.dipY, color: repartoAccents[k], kind: k, name: c.name, cluster: c,
           dx: (i - (kinds.length - 1) / 2) * KIND_GAP * unitsPerPx,
         }));
       })
@@ -986,21 +1051,28 @@
         .attr("class", "year-mark")
         .style("cursor", "pointer");
 
-    yearMarkG.append("circle")
-      .attr("class", "contact-pt")
-      .attr("fill", d => d.color)
-      .attr("cx", d => x(d.year) + d.dx)
-      .attr("cy", d => d.dipY)
-      .attr("r", Math.max(3, 4 * unitsPerPx));
-
-    yearMarkG.append("rect")
-      .attr("class", "contact-pt contact-pt-gadda")
-      .attr("stroke", d => d.color)
-      .attr("x", d => x(d.year) + d.dx - 3)
-      .attr("y", gaddaY - 3)
-      .attr("width", 6)
-      .attr("height", 6)
-      .attr("transform", d => `rotate(45 ${x(d.year) + d.dx} ${gaddaY})`);
+    // each mark is an icon for its kind of contact — an envelope for
+    // letters, a book for library books, a pen for publications on Gadda —
+    // drawn once on the person's line and once on Gadda's. They're thin
+    // outline icons on a 24×24 grid, ICON_PX wide on screen, with a
+    // background-coloured halo so they read on top of any line.
+    const ICON_PX = 16;
+    const contactIcons = {
+      letters: "M3.5 6h17v12h-17zM3.5 6.5l8.5 6.5 8.5-6.5",
+      library: "M12 7c-2.6-1.8-6-2.2-9-1.2v12.6c3-1 6.4-.6 9 1.2 2.6-1.8 6-2.2 9-1.2V5.8c-3-1-6.4-.6-9 1.2zM12 7v12.6",
+      secondaryBib: "M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4zM14.5 5.5l3 3",
+    };
+    const iconAt = (sel, cx, cy) => {
+      const k = ICON_PX * unitsPerPx / 24;
+      sel.attr("transform", d => `translate(${cx(d)},${cy(d)}) scale(${k}) translate(-12,-12)`);
+      sel.append("path").attr("class", "contact-icon-halo").attr("d", d => contactIcons[d.kind]);
+      sel.append("path").attr("class", "contact-icon").attr("d", d => contactIcons[d.kind])
+        .attr("stroke", d => d.color);
+    };
+    yearMarkG.append("g").attr("class", "contact-pt")
+      .call(iconAt, d => x(d.year) + d.dx, d => d.dipY);
+    yearMarkG.append("g").attr("class", "contact-pt contact-pt-gadda")
+      .call(iconAt, d => x(d.year) + d.dx, () => gaddaY);
 
     let selected = new Set(initialSelected);
     let selectedContact = null;
@@ -1051,11 +1123,11 @@
         updateReadout();
       }
       rows.selectAll(".life, .life-halo").style("opacity", d => (isRelevant(d.name) ? null : 0.08));
-      // a selected line is drawn dark, opaque and thicker so it reads clearly
-      // against the grey ones (Gadda's own line keeps its style)
+      // a selected line keeps its category colour, drawn at full strength,
+      // opaque and thicker so it reads clearly (Gadda's own line keeps its style)
       const emphasised = d => d.name !== "Gadda Carlo Emilio" && (selected.has(d.name) || (selectedContact && selectedContact.name === d.name));
       rows.selectAll(".life")
-        .style("stroke", d => (emphasised(d) ? SELECTED_COLOR : null))
+        .style("stroke", d => (emphasised(d) ? colorFor(d.name) : null))
         .style("stroke-width", d => (emphasised(d) ? strokeWidthFor(d) + Math.max(2, 2 * unitsPerPx) : null))
         .style("opacity", d => (emphasised(d) ? 1 : isRelevant(d.name) ? null : 0.08));
       rows.selectAll(".pt").style("opacity", d => (isRelevant(d.name) ? 1 : 0.08));
@@ -1278,6 +1350,50 @@
       .forEach(n => n.setAttribute("clip-path", "url(#timeline-clip)"));
     svg.select(".label-layer").raise();
   }
+
+  // --- year zoom: click a year column (or its label) to zoom the graph on
+  // the years around it, using the time focus (people active in that period,
+  // strength and order recalculated for it). A bar at the top steps to the
+  // next/previous year or goes back to the whole life, where the view was.
+  const YEAR_ZOOM_REACH = 2; // years either side of the clicked one
+  let activeYear = null;
+  let beforeYearZoom = null;  // zoom and scroll to return to
+  const yearZoomBar = d3.select("#year-zoom-bar");
+  function openYear(year) {
+    if (year == null) {
+      if (activeYear == null) return;
+      activeYear = null;
+      timeFocus = null;
+      yearZoomBar.attr("hidden", true).html("");
+      const back = beforeYearZoom;
+      beforeYearZoom = null;
+      pxPerYear = back ? back.pxPerYear : BASE_PX_PER_YEAR;
+      rerenderKeepingSelection();
+      window.scrollTo(back ? back.scrollX : 0, window.scrollY);
+    } else {
+      if (activeYear == null) beforeYearZoom = { pxPerYear, scrollX: window.scrollX };
+      activeYear = year;
+      timeFocus = { start: Math.max(gadda.birth, year - YEAR_ZOOM_REACH), end: Math.min(gadda.death, year + YEAR_ZOOM_REACH) };
+      yearZoomBar.attr("hidden", null).html(
+        `<span>Zoomed on <strong>${year}</strong></span>` +
+        `<span class="span">${timeFocus.start}–${timeFocus.end}</span>` +
+        `<button data-step="-1" title="Previous year" aria-label="Previous year">‹</button>` +
+        `<button data-step="1" title="Next year" aria-label="Next year">›</button>` +
+        `<button class="back" title="Back to Gadda's whole life (Esc)">Whole life</button>`);
+      pxPerYear = 1; // fit the period to the window
+      rerenderKeepingSelection();
+      window.scrollTo(0, window.scrollY);
+    }
+    pinLabels();
+    updateReadout();
+    updateZoomLabel();
+  }
+  yearZoomBar.on("click", event => {
+    const step = event.target.closest("[data-step]");
+    if (step) return openYear(Math.min(gadda.death, Math.max(gadda.birth, activeYear + +step.dataset.step)));
+    if (event.target.closest(".back")) openYear(null);
+  });
+  d3.select(window).on("keydown.yearzoom", event => { if (event.key === "Escape") openYear(null); });
 
   let pinnedNames = new Set();
   let customMode = false; // My selection: only pinned people (plus Gadda)
