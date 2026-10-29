@@ -50,6 +50,18 @@
 
   .life-halo { stroke: var(--bg); stroke-linecap: round; fill: none; pointer-events: stroke; }
   .life { stroke-linecap: round; fill: none; opacity: 0.55; pointer-events: stroke; }
+  .life-hit { fill: none; stroke: transparent; stroke-linecap: round; pointer-events: stroke; }
+  /* selecting / deselecting fades instead of jumping */
+  .life, .life-halo, .line-label, .label-bg, .pt, .contact-pt, .year-mark > g, .contact {
+    transition: opacity 0.25s ease, stroke-width 0.25s ease;
+  }
+  .graph-tools .sel-clear {
+    font: inherit; font-size: 0.75rem; font-weight: 600; height: 1.95rem; padding: 0 0.7rem; cursor: pointer;
+    border: 1px solid var(--chip); border-radius: 8px; color: var(--chip);
+    background: color-mix(in srgb, var(--chip) 10%, var(--bg)); box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  }
+  .graph-tools .sel-clear:hover { background: color-mix(in srgb, var(--chip) 20%, var(--bg)); }
+  .graph-tools .sel-clear[hidden] { display: none; }
   .line-label { font-size: 11px; font-weight: 600; }
   .time-baseline { stroke: var(--grid); stroke-width: 1; }
   .year-grid line { stroke: var(--grid); vector-effect: non-scaling-stroke; pointer-events: none; }
@@ -319,6 +331,28 @@
     opacity: 0.5; padding: 0.45rem 0.85rem 0.15rem;
   }
   .graph-tools .sg-work .sg-name { font-style: italic; }
+  /* a searched person's records, listed under their name */
+  .graph-tools .sg-open {
+    flex: 0 0 auto; align-self: center; border: none; background: transparent; cursor: pointer;
+    color: var(--ink); opacity: 0.55; font-size: 0.8rem; padding: 0 0.15rem; margin-left: -0.3rem;
+  }
+  .graph-tools .sg-open:hover { opacity: 1; }
+  .graph-tools .sg-entries {
+    max-height: 210px; overflow-y: auto; margin: 0 0.85rem 0.35rem 1.35rem;
+    border-left: 2px solid var(--chip); padding-left: 0.2rem;
+  }
+  .graph-tools .sg-entry {
+    display: flex; align-items: center; gap: 0.45rem; padding: 0.22rem 0.4rem; cursor: pointer;
+    font-size: 0.78rem; border-radius: 4px;
+  }
+  .graph-tools .sg-entry:hover { background: var(--grid); }
+  .graph-tools .sg-entry .sg-ico { flex: 0 0 auto; width: 13px; height: 13px; }
+  .graph-tools .sge-text { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .graph-tools .sge-extra { opacity: 0.55; font-size: 0.72rem; }
+  .graph-tools .sge-date { flex: 0 0 auto; opacity: 0.6; font-size: 0.72rem; font-variant-numeric: tabular-nums; }
+  .graph-tools .sge-dot { flex: 0 0 auto; width: 7px; height: 7px; border-radius: 50%; background: var(--chip); }
+  .graph-tools .sg-year .sg-name { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .graph-tools .sge-none { opacity: 0.55; font-size: 0.75rem; padding: 0.25rem 0.4rem; }
   .graph-tools .search-suggestions { max-height: 60vh; }
   .graph-tools .sg-name { flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .graph-tools .sg-count { flex: 0 0 auto; font-size: 0.75rem; opacity: 0.75; font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: 0.6rem; }
@@ -581,6 +615,7 @@
   window.addEventListener("wheel", () => { lastScrollAt = Date.now(); }, { passive: true });
   window.addEventListener("scroll", () => { lastScrollAt = Date.now(); }, { passive: true });
   let pinLabels = () => {};
+  let clearSelection = () => false; // set by render(): deselects, true if anything was selected
   let width = 1400;
   const margin = { top: 40, right: 40, bottom: 30, left: 170 }; // axis sits on top
   const minHeight = 420;
@@ -982,6 +1017,12 @@
 
     const rows = svg.selectAll(".row").data(people).join("g").attr("class", "row");
 
+    // an invisible, wider strip along each line, so it's easy to click
+    // (select / deselect) without hitting the thin stroke exactly
+    rows.append("path")
+      .attr("class", "life-hit")
+      .attr("stroke-width", d => Math.max(strokeWidthFor(d), 14 * unitsPerPx))
+      .attr("d", lifePath);
     rows.append("path")
       .attr("class", "life-halo")
       .attr("stroke-width", d => strokeWidthFor(d) + haloExtra)
@@ -1224,16 +1265,26 @@
     // the record kinds of a person-year, in stacking order: [count, fill, class]
     // DIVERGING version: the letter bars hold letters only; books and
     // publications get a bar of their own beside them (see recordSegments)
+    // the letters the person sent are always the letters' purple (not the
+    // person's line colour, which made the bars hard to read)
+    const LETTER_IN_COLOR = repartoAccents.letters;
     const recordParts = d => [
-      [d.records.them, colorFor(d.name), "letter-bar-in"],
+      [d.records.them, LETTER_IN_COLOR, "letter-bar-in"],
       [d.records.gadda, null, "letter-bar-out"],
     ];
     const sideParts = d => [
       [d.records.books, BOOK_COLOR, "record-book"],
       [d.records.works, WORK_COLOR, "record-work"],
     ];
-    const SIDE_DX = (LETTER_BAR_W + 3); // the books/publications bar, right of the letters (px)
-    const sideRecords = d => d.records.books + d.records.works;
+    // each bar (and brick tower) stands under its own icon: letters under
+    // the envelope (Gadda's letters too, on his line), books under the
+    // book, publications under the pen — the x offsets of that year's icons
+    const markDx = new Map(yearMarks.map(m => [`${m.name}|${m.year}|${m.kind}`, m.dx]));
+    const dxOf = (d, kind) => markDx.get(`${d.name}|${d.year}|${kind}`) ?? 0;
+    const dxSpan = d => {
+      const dxs = ["letters", "library", "secondaryBib"].filter(k => markDx.has(`${d.name}|${d.year}|${k}`)).map(k => dxOf(d, k));
+      return dxs.length ? [Math.min(...dxs), Math.max(...dxs)] : [0, 0];
+    };
     const totalRecords = d => d.records.them + d.records.gadda + d.records.books + d.records.works;
     // DIVERGING version: two bars going opposite ways. The letters the
     // person sent Gadda grow from their line, away from Gadda; the letters
@@ -1245,24 +1296,21 @@
       let from = 0;
       const own = recordParts(d).filter(([n, , cls]) => n && cls !== "letter-bar-out").map(([n, fill, cls]) => {
         const h = n * LETTER_BAR_PX * unitsPerPx;
-        const seg = { d, y: dir < 0 ? base - from - h : base + from, h, fill, cls };
+        const seg = { d, y: dir < 0 ? base - from - h : base + from, h, fill, cls, dx: dxOf(d, "letters") };
         from += h;
         return seg;
       });
-      // books and publications: their own bar beside the letters, from the
+      // books and publications: a bar each, under their icon, from the
       // person's line, same direction
-      let sfrom = 0;
       const side = sideParts(d).filter(([n]) => n).map(([n, fill, cls]) => {
         const h = n * LETTER_BAR_PX * unitsPerPx;
-        const seg = { d, y: dir < 0 ? base - sfrom - h : base + sfrom, h, fill, cls, dx: SIDE_DX * unitsPerPx };
-        sfrom += h;
-        return seg;
+        return { d, y: dir < 0 ? base - h : base, h, fill, cls, dx: dxOf(d, cls === "record-book" ? "library" : "secondaryBib") };
       });
       if (!d.records.gadda) return [...own, ...side];
       const gh = d.records.gadda * LETTER_BAR_PX * unitsPerPx, gb = gaddaBarBase(d);
-      return [...own, ...side, { d, y: gaddaBarDir(d) < 0 ? gb - gh : gb, h: gh, fill: null, cls: "letter-bar-out" }];
+      return [...own, ...side, { d, y: gaddaBarDir(d) < 0 ? gb - gh : gb, h: gh, fill: null, cls: "letter-bar-out", dx: dxOf(d, "letters") }];
     };
-    const ownRecords = d => Math.max(d.records.them, d.records.books + d.records.works);
+    const ownRecords = d => Math.max(d.records.them, d.records.books, d.records.works);
 
     // every record of a person-year as one item, in date order: letters by
     // their date, library books by the date in their note when it has one
@@ -1366,13 +1414,13 @@
     // an invisible strip the full width of the bar's reach, so even a
     // one-record sliver is easy to click
     letterMarks.append("rect").attr("class", "letter-bar-hit")
-      .attr("x", d => x(d.year) - (LETTER_BAR_W / 2 + 2) * unitsPerPx)
-      .attr("width", (LETTER_BAR_W + 4 + SIDE_DX) * unitsPerPx)
+      .attr("x", d => x(d.year) + dxSpan(d)[0] - (LETTER_BAR_W / 2 + 2) * unitsPerPx)
+      .attr("width", d => dxSpan(d)[1] - dxSpan(d)[0] + (LETTER_BAR_W + 4) * unitsPerPx)
       .attr("y", d => barDir(d) < 0 ? barBase(d) - Math.max(10, ownRecords(d) * LETTER_BAR_PX) * unitsPerPx : barBase(d))
       .attr("height", d => Math.max(10, ownRecords(d) * LETTER_BAR_PX) * unitsPerPx);
     // and one over Gadda's bar, on the other side of his line
     letterMarks.filter(d => d.records.gadda).append("rect").attr("class", "letter-bar-hit")
-      .attr("x", d => x(d.year) - (LETTER_BAR_W / 2 + 2) * unitsPerPx)
+      .attr("x", d => x(d.year) + dxOf(d, "letters") - (LETTER_BAR_W / 2 + 2) * unitsPerPx)
       .attr("width", (LETTER_BAR_W + 4) * unitsPerPx)
       .attr("y", d => gaddaBarDir(d) < 0 ? gaddaBarBase(d) - Math.max(10, d.records.gadda * LETTER_BAR_PX) * unitsPerPx : gaddaBarBase(d))
       .attr("height", d => Math.max(10, d.records.gadda * LETTER_BAR_PX) * unitsPerPx);
@@ -1398,7 +1446,7 @@
     // brick by brick.
     const MONTH_INITIALS = "GFMAMGLASOND";
     const BRICK_H = 8, BRICK_GAP = 2, BRICK_W = 16;
-    const brickFill = (d, kind) => ({ in: colorFor(d.name), out: null, book: BOOK_COLOR, work: WORK_COLOR })[kind];
+    const brickFill = (d, kind) => ({ in: LETTER_IN_COLOR, out: null, book: BOOK_COLOR, work: WORK_COLOR })[kind];
     const brickClass = kind => ({ in: "letter-bar-in", out: "letter-bar-out", book: "record-book", work: "record-work" })[kind];
     // DIVERGING version: the bricks are kept apart like the bars — the
     // letters the person sent grow from their line, the letters Gadda sent
@@ -1409,11 +1457,14 @@
       d3.select(this.parentNode).raise(); // the stacks and their note sit above other marks
       const all = recordsOf(d.name, d.year);
       const towers = [
-        { items: all.filter(it => it.kind === "in"), dir: barDir(d), base: barBase(d), cx: x(d.year) },
-        { items: all.filter(it => it.kind === "out"), dir: gaddaBarDir(d), base: gaddaBarBase(d), cx: x(d.year) },
-        { items: all.filter(it => it.kind === "book" || it.kind === "work"), dir: barDir(d), base: barBase(d),
-          cx: x(d.year) + (BRICK_W + 16) * unitsPerPx },
+        { items: all.filter(it => it.kind === "in"), dir: barDir(d), base: barBase(d), cx: x(d.year) + dxOf(d, "letters") },
+        { items: all.filter(it => it.kind === "out"), dir: gaddaBarDir(d), base: gaddaBarBase(d), cx: x(d.year) + dxOf(d, "letters") },
+        { items: all.filter(it => it.kind === "book"), dir: barDir(d), base: barBase(d), cx: x(d.year) + dxOf(d, "library") },
+        { items: all.filter(it => it.kind === "work"), dir: barDir(d), base: barBase(d), cx: x(d.year) + dxOf(d, "secondaryBib") },
       ].filter(t => t.items.length);
+      // towers sit side by side under their icons, so the month initials
+      // and the description go to the right of the rightmost one
+      const rightCx = Math.max(...towers.map(t => t.cx));
       // where each item's brick is, for its description
       const placed = new Map();
       towers.forEach(t => {
@@ -1422,7 +1473,7 @@
         t.step = Math.min((BRICK_H + BRICK_GAP) * unitsPerPx, room / Math.max(1, t.items.length));
         t.h = t.step * BRICK_H / (BRICK_H + BRICK_GAP);
         t.brickY = i => (t.dir < 0 ? t.base - i * t.step - t.h : t.base + i * t.step);
-        t.items.forEach((item, i) => placed.set(item.key, { cx: t.cx, cy: t.brickY(i) + t.h / 2 }));
+        t.items.forEach((item, i) => placed.set(item.key, { cx: rightCx, cy: t.brickY(i) + t.h / 2 }));
       });
       // the description shown: the hovered brick's, else the pinned one's
       const pinned = () => all.find(it => it.key === pickedLetterId) || null;
@@ -1432,10 +1483,11 @@
       };
       towers.forEach(t => {
         let lastMonth = null, lastLabelY = -Infinity;
+        const brickW = Math.min(BRICK_W, KIND_GAP - 3); // neighbouring towers don't touch
         t.items.forEach((item, i) => {
           g.append("rect").attr("class", "letter-brick " + brickClass(item.kind))
             .classed("picked", item.key === pickedLetterId)
-            .attr("x", t.cx - BRICK_W / 2 * unitsPerPx).attr("width", BRICK_W * unitsPerPx)
+            .attr("x", t.cx - brickW / 2 * unitsPerPx).attr("width", brickW * unitsPerPx)
             .attr("y", t.brickY(i)).attr("height", t.h)
             .attr("rx", 1.5 * unitsPerPx)
             .attr("fill", brickFill(d, item.kind))
@@ -1456,7 +1508,7 @@
           if (month && month !== lastMonth && Math.abs(t.brickY(i) - lastLabelY) >= 9 * unitsPerPx) {
             lastLabelY = t.brickY(i);
             g.append("text").attr("class", "month-initial")
-              .attr("x", t.cx + (BRICK_W / 2 + 4) * unitsPerPx)
+              .attr("x", rightCx + (BRICK_W / 2 + 4) * unitsPerPx)
               .attr("y", t.brickY(i) + t.h / 2)
               .attr("dominant-baseline", "central")
               .attr("text-anchor", "start")
@@ -1472,7 +1524,8 @@
       const towerH = Math.max(1, ...own.map(t => t.items.length * t.step));
       g.selectAll(".letter-bar-hit").filter((_, i) => i > 0).remove();
       g.select(".letter-bar-hit")
-        .attr("x", x(d.year) - (BRICK_W / 2 + 2) * unitsPerPx).attr("width", (2 * BRICK_W + 32) * unitsPerPx)
+        .attr("x", x(d.year) + dxSpan(d)[0] - (BRICK_W / 2 + 2) * unitsPerPx)
+        .attr("width", dxSpan(d)[1] - dxSpan(d)[0] + (BRICK_W + 16) * unitsPerPx)
         .attr("y", barDir(d) < 0 ? barBase(d) - towerH : barBase(d))
         .attr("height", towerH);
     });
@@ -1483,7 +1536,7 @@
     const COUNTS_MIN_PX = 150;
     if (activeYear != null || (x(yearMin + 1) - x(yearMin)) / unitsPerPx >= COUNTS_MIN_PX) {
       letterMarks.filter(d => !isExploded(d)).append("text").attr("class", "letter-count")
-        .attr("x", d => x(d.year) + (LETTER_BAR_W / 2 + 3 + (sideRecords(d) ? SIDE_DX : 0)) * unitsPerPx)
+        .attr("x", d => x(d.year) + dxSpan(d)[1] + (LETTER_BAR_W / 2 + 3) * unitsPerPx)
         .attr("y", d => barBase(d) + barDir(d) * 1 * unitsPerPx)
         .attr("dominant-baseline", d => (barDir(d) < 0 ? "auto" : "hanging"))
         .attr("font-size", 10 * unitsPerPx)
@@ -1626,6 +1679,20 @@
     }
 
     rows.style("cursor", "pointer").on("click", (event, d) => toggleSelection(d.name));
+    // deselecting: one click on any empty part of the graph, Esc, or the
+    // "✕ name" button in the tools row (see clearSelection's callers)
+    clearSelection = () => {
+      if (!selected.size && !selectedContact && !gaddaOnlyMode) return false;
+      gaddaOnlyMode = false;
+      selectedContact = null;
+      selected = new Set();
+      applyHighlight();
+      return true;
+    };
+    svg.on("click.deselect", event => {
+      if (event.target.closest(".row, .year-mark, .contact, .time-label, .label-layer, .no-person-pt, .letter-bars")) return;
+      clearSelection();
+    });
     contactG.on("click", (event, d) => {
       event.stopPropagation();
       if (!selected.has(d.name) && d !== selectedContact) return;
@@ -1819,12 +1886,31 @@
     updateReadout();
     updateZoomLabel();
   }
+  // like openYear, for any span of years (from the search: "1950-1955")
+  function openRange(lo, hi) {
+    if (activeYear == null) beforeYearZoom = { pxPerYear, scrollX: window.scrollX };
+    activeYear = lo; // so Esc / Whole life come back as from a year zoom
+    timeFocus = { start: Math.max(gadda.birth, lo), end: Math.min(gadda.death, hi) };
+    yearZoomBar.attr("hidden", null).html(
+      `<span>Zoomed on <strong>${timeFocus.start}\u2013${timeFocus.end}</strong></span>` +
+      `<button class="back" title="Back to Gadda's whole life (Esc)">Whole life</button>`);
+    pxPerYear = 1; // fit the span to the window
+    rerenderKeepingSelection();
+    window.scrollTo(0, window.scrollY);
+    pinLabels();
+    updateReadout();
+    updateZoomLabel();
+  }
   yearZoomBar.on("click", event => {
     const step = event.target.closest("[data-step]");
     if (step) return openYear(Math.min(gadda.death, Math.max(gadda.birth, activeYear + +step.dataset.step)));
     if (event.target.closest(".back")) openYear(null);
   });
-  d3.select(window).on("keydown.yearzoom", event => { if (event.key === "Escape") openYear(null); });
+  // Esc: first deselects; with nothing selected, leaves the year zoom
+  d3.select(window).on("keydown.yearzoom", event => {
+    if (event.key !== "Escape") return;
+    if (!clearSelection()) openYear(null);
+  });
 
   let pinnedNames = new Set();
   let customMode = false; // My selection: only pinned people (plus Gadda)
@@ -1909,14 +1995,73 @@
 
   const searchInput = d3.select("#search-input");
   const searchSuggestions = d3.select("#search-suggestions");
+  // a person's actual records, in date order, for the list under their
+  // name in the suggestions; each carries the key of its brick, so picking
+  // it goes straight to that record (same keys as recordsOf in render)
+  function personRecords(name) {
+    const full = t => fullTables.get(t) || t;
+    const short = name.split(" ")[0];
+    const byYearKey = (list, prefix) => list.map(it => ({
+      it, key: `${prefix}:${it.year}:${list.filter(o => o.year === it.year).indexOf(it)}`,
+    }));
+    return [
+      ...(full(letterFlowDates)[name] || []).map(r => ({
+        name, kind: r[1] === "in" ? "in" : "out", date: r[0], year: +r[0].slice(0, 4), key: r[2],
+        text: r[1] === "in" ? `${short} \u2192 Gadda` : `Gadda \u2192 ${short}`,
+        extra: [r[3], r[4]].some(Boolean) ? `${r[3] || "?"} \u2192 ${r[4] || "?"}` : "",
+      })),
+      ...byYearKey(full(libraryBooks)[name] || [], "book").map(({ it, key }) => ({
+        name, kind: "book", date: String(it.year), year: it.year, key, text: it.title, extra: "",
+      })),
+      ...byYearKey(full(secondaryWorks)[name] || [], "work").map(({ it, key }) => ({
+        name, kind: "work", date: String(it.year), year: it.year, key, text: it.title, extra: it.rivista || "",
+      })),
+    ].filter(e => Number.isFinite(e.year)).sort((a, b) => a.date.localeCompare(b.date));
+  }
+  const shortDate = iso => iso.length > 4 ? iso.split("-").reverse().map(Number).filter(Boolean).join(".") : iso;
+  const entryIcon = kind => kind === "book" ? iconSvg("library", "book")
+    : kind === "work" ? iconSvg("secondaryBib", "publication")
+    : `<svg class="sg-ico" viewBox="0 0 24 24"><path d="${CONTACT_ICONS.letters}" stroke="${kind === "out" ? "var(--ink)" : repartoAccents.letters}"/></svg>`;
+  // --- searching through the ages: a year ("1953") or a span
+  // ("1950-1955") previews that time — totals, and who was in contact,
+  // most active first — straight from the full data
+  function yearPreview(lo, hi) {
+    const full = t => fullTables.get(t) || t;
+    const inR = yr => yr >= lo && yr <= hi;
+    const people = allCorrespondents.map(d => {
+      const ls = (full(letterFlowDates)[d.name] || []).filter(r => inR(+r[0].slice(0, 4)));
+      const c = {
+        name: d.name,
+        them: ls.filter(r => r[1] === "in").length,
+        gadda: ls.filter(r => r[1] !== "in").length,
+        books: (full(libraryBooks)[d.name] || []).filter(b => inR(b.year)).length,
+        works: (full(secondaryWorks)[d.name] || []).filter(w => inR(w.year)).length,
+      };
+      c.total = c.them + c.gadda + c.books + c.works;
+      // the first year of the span they have a record in, to go to
+      c.year = [...ls.map(r => +r[0].slice(0, 4)),
+        ...(full(libraryBooks)[d.name] || []).map(b => b.year),
+        ...(full(secondaryWorks)[d.name] || []).map(w => w.year)].filter(inR).sort((a, b) => a - b)[0];
+      return c;
+    }).filter(c => c.total).sort((a, b) => b.total - a.total);
+    const sum = k => d3.sum(people, c => c[k]);
+    return { people, letters: sum("them") + sum("gadda"), books: sum("books"), works: sum("works"),
+      own: noPersonPrimaryBib.filter(w => inR(w.year)).length };
+  }
+  const countIcons = (letters, books, works) => [[letters, "letters"], [books, "library", "books"], [works, "secondaryBib", "publications"]]
+    .filter(([n]) => n).map(([n, kind, title]) => `<span class="sg-k">${iconSvg(kind, title || kind)}${n}</span>`).join("");
+  // which people's lists are open: by default only when one person matches
+  const searchOpen = new Map();
   searchInput.on("input", function () {
     const q = norm(this.value.trim());
     searchSuggestions.html("");
     if (!q) return;
-    const people = allCorrespondents
-      .filter(d => norm(d.name).includes(q) && !pinnedNames.has(d.name))
-      .slice(0, 5)
-      .map(d => ({ type: "person", name: d.name, color: personColor(d.name), label: d.name, count: recordPreview(d.name) }));
+    const matched = allCorrespondents.filter(d => norm(d.name).includes(q)).slice(0, 5);
+    const people = matched.flatMap(d => {
+      const open = searchOpen.get(d.name) ?? matched.length === 1;
+      const person = { type: "person", name: d.name, color: personColor(d.name), label: d.name, count: recordPreview(d.name), open };
+      return open ? [person, { type: "entries", name: d.name, color: person.color, items: personRecords(d.name) }] : [person];
+    });
     // up to 3 of Gadda's own works, then up to 5 books/publications
     const found = workIndex.filter(w => norm(w.title).includes(q));
     const works = [...found.filter(w => !w.name).slice(0, 3), ...found.filter(w => w.name).slice(0, 5)]
@@ -1924,7 +2069,23 @@
         count: w.name
           ? `<span class="sg-k">${iconSvg(w.what === "book" ? "library" : "secondaryBib", w.what)}${w.year}</span> ${esc(w.name)}`
           : `${w.year} · by Gadda` }));
+    const ym = q.match(/^(\d{4})(?:\s*[-\u2013]\s*(\d{4}))?$/);
+    const years = [];
+    if (ym) {
+      let lo = +ym[1], hi = ym[2] ? +ym[2] : lo;
+      if (lo > hi) [lo, hi] = [hi, lo];
+      lo = Math.max(lo, gadda.birth); hi = Math.min(hi, gadda.death);
+      if (lo <= hi) {
+        const pv = yearPreview(lo, hi);
+        years.push({ type: "year", lo, hi, color: "var(--ink)", label: lo === hi ? `${lo}` : `${lo}\u2013${hi}`,
+          count: countIcons(pv.letters, pv.books, pv.works) +
+            `<span class="sg-k">${pv.people.length} ${pv.people.length === 1 ? "person" : "people"}</span>` +
+            (pv.own ? `<span class="sg-k">${pv.own} by Gadda</span>` : "") });
+        years.push({ type: "yearPeople", color: "var(--ink)", items: pv.people });
+      }
+    }
     const rows = [
+      ...(years.length ? [{ type: "head", label: "Years" }, ...years] : []),
       ...(people.length ? [{ type: "head", label: "People" }, ...people] : []),
       ...(works.length ? [{ type: "head", label: "Works" }, ...works] : []),
     ];
@@ -1933,12 +2094,41 @@
     searchSuggestions.selectAll("div")
       .data(rows)
       .join("div")
-        .attr("class", d => d.type === "head" ? "sg-head" : "search-suggestion sg-" + d.type)
+        .attr("class", d => d.type === "head" ? "sg-head" : d.type === "entries" || d.type === "yearPeople" ? "sg-entries" : "search-suggestion sg-" + d.type)
         .style("--chip", d => d.color || null)
         .html(d => d.type === "head" ? esc(d.label)
-          : `<span class="sg-name">${esc(d.label)}</span><span class="sg-count">${d.count}</span>`)
-        .classed("first", d => d.type !== "head" && !firstDone && (firstDone = true))
-        .on("click", (event, d) => { if (d.type !== "head") pickSearched(d); });
+          : d.type === "yearPeople" ? d.items.map((c, i) =>
+              `<div class="sg-entry" data-i="${i}" style="--chip:${personColor(c.name)}"><span class="sge-dot"></span>` +
+              `<span class="sge-text">${esc(c.name)}</span><span class="sge-date sg-count">${countIcons(c.them + c.gadda, c.books, c.works)}</span></div>`).join("")
+              || `<div class="sge-none">Nobody on record</div>`
+          : d.type === "entries" ? d.items.map((e, i) =>
+              `<div class="sg-entry" data-i="${i}" title="${esc(e.text)}">${entryIcon(e.kind)}` +
+              `<span class="sge-text">${esc(e.text)}${e.extra ? ` <span class="sge-extra">${esc(e.extra)}</span>` : ""}</span>` +
+              `<span class="sge-date">${shortDate(e.date)}</span></div>`).join("") || `<div class="sge-none">No records</div>`
+          : `<span class="sg-name">${esc(d.label)}</span><span class="sg-count">${d.count}</span>` +
+            (d.type === "person" ? `<button class="sg-open" title="${d.open ? "Hide" : "Show"} their records">${d.open ? "\u25be" : "\u25b8"}</button>` : ""))
+        .classed("first", d => d.type !== "head" && d.type !== "entries" && !firstDone && (firstDone = true))
+        .on("click", (event, d) => {
+          if (d.type === "head") return;
+          if (d.type === "entries") {
+            const row = event.target.closest(".sg-entry");
+            if (row) pickSearched({ type: "entry", ...d.items[+row.dataset.i] });
+            return;
+          }
+          if (d.type === "yearPeople") {
+            const row = event.target.closest(".sg-entry");
+            if (row) { const c = d.items[+row.dataset.i]; pickSearched({ type: "entry", name: c.name, year: c.year, key: null }); }
+            return;
+          }
+          if (event.target.closest(".sg-open")) {
+            event.stopPropagation();
+            searchOpen.set(d.name, !d.open);
+            searchInput.dispatch("input");
+            searchInput.node().focus();
+            return;
+          }
+          pickSearched(d);
+        });
   });
   // a search result is added to the graph and selected (highlighted like a
   // clicked line) — everyone else stays drawn; its chip's × takes it off.
@@ -1956,6 +2146,7 @@
     searchSuggestions.html("");
     explodedBar = null; // whatever was open before closes
     pickedLetterId = null;
+    if (d.type === "year") { d.lo === d.hi ? openYear(d.lo) : openRange(d.lo, d.hi); return; }
     if (d.type === "work" && !d.name) { openYear(d.year); return; }
     const entry = personEntry(d.name);
     addSearchEntry(entry);
@@ -1964,6 +2155,7 @@
     kindShown = "all"; // nothing hidden by the kind switch
     applyKind();
     let target = null;
+    if (d.type === "entry") target = { name: d.name, year: d.year, key: d.key };
     if (d.type === "work") {
       const table = d.what === "book" ? libraryBooks : secondaryWorks;
       const i = (table[d.name] || []).filter(x => x.year === d.year).indexOf(d.item);
@@ -2080,6 +2272,13 @@
   function syncKindCtl() {
     const names = selectedPeople();
     kindCtl.attr("hidden", names.length ? null : "");
+    // "✕ name": deselect in one click, in the selected person's colour —
+    // not shown when everyone selected already has a search chip (that
+    // would be the same name twice)
+    selClear.attr("hidden", names.length && !names.every(n => pinnedNames.has(n)) ? null : "")
+      .style("--chip", names.length === 1 ? personColor(names[0]) : "var(--ink)")
+      .attr("title", "Deselect (Esc, or click an empty part of the graph)")
+      .text(`\u2715 ${names.length === 1 ? names[0] : `${names.length} selected`}`);
     if (names.join("|") === kindFor) return;
     kindFor = names.join("|");
     if (kindShown === "all") return applyKind();
@@ -2093,7 +2292,9 @@
   const graphTools = d3.select("body").append("div").attr("class", "graph-tools");
   graphTools.node().append(document.querySelector(".search-box"), document.getElementById("pinned-chips"));
   const kindSlot = graphTools.node();
-  d3.select("#search-input").attr("placeholder", "Search a person or work…");
+  d3.select("#search-input").attr("placeholder", "Search a person, work or year…");
+  const selClear = graphTools.append("button").attr("class", "sel-clear").attr("hidden", "")
+    .on("click", () => clearSelection());
   const kindCtl = graphTools.append("div").attr("class", "kind-filter").attr("hidden", "");
   kindSlot.append(document.getElementById("year-zoom-bar")); // same row, so they never overlap
   // the row sits just under the year labels' baseline, wherever a redraw puts it
