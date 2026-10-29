@@ -164,8 +164,8 @@
      become the scroller and window.scrollX (which pins the names) would
      stay at 0. The graph's width follows the timeline (see pxPerYear). */
   html { overflow-x: auto; overflow-y: hidden; }
-  .graph-wrap { max-width: none; width: max-content; height: 100vh; margin-left: var(--side-w); }
-  svg { max-width: none; height: 100vh; flex: 0 0 auto; }
+  .graph-wrap { max-width: none; width: max-content; height: calc(100vh - var(--legend-h, 0px)); margin-left: var(--side-w); }
+  svg { max-width: none; height: calc(100vh - var(--legend-h, 0px)); flex: 0 0 auto; }
 
   .side-panel {
     position: fixed; left: 0; top: 0; bottom: 0; width: var(--side-w); z-index: 60;
@@ -272,6 +272,41 @@
   .graph-tools > * { pointer-events: auto; flex-shrink: 0; }
   .graph-tools .year-zoom-bar { position: static; transform: none; }
   .graph-tools .kind-filter, .graph-tools .year-zoom-bar { background: var(--bg); }
+
+  /* legend: a flat strip along the bottom, in the space under the lines */
+  .legend-box {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 55;
+    display: flex; align-items: flex-start; justify-content: center;
+    background: var(--bg); border-top: 1px solid var(--grid); font-size: 0.72rem; line-height: 1.35;
+  }
+  .lg-row.lg-cat {
+    font: inherit; color: var(--ink); background: transparent; border: none; cursor: pointer;
+    display: flex; align-items: center; gap: 0.45rem; padding: 0.06rem 0.3rem; margin: 0 -0.3rem;
+    border-radius: 4px; text-align: left; transition: opacity 0.2s;
+  }
+  .lg-row.lg-cat:hover { background: color-mix(in srgb, var(--ink) 7%, transparent); }
+  .lg-row.lg-cat.on { font-weight: 700; background: color-mix(in srgb, var(--ink) 9%, transparent); }
+  .lg-row.lg-cat.off { opacity: 0.4; }
+  .lg-title {
+    font: inherit; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    background: transparent; border: none; color: var(--ink); cursor: pointer; padding: 0.45rem 0.65rem;
+    text-align: left; display: flex; gap: 0.3rem; opacity: 0.75; white-space: nowrap;
+  }
+  .lg-caret::after { content: "\25be"; }
+  .legend-box.folded .lg-caret::after { content: "\25b8"; }
+  .legend-box.folded .lg-body { display: none; }
+  .legend-box.folded .lg-caret::after { content: "\25b8"; }
+  .lg-body { display: flex; gap: 1.3rem; padding: 0.45rem 0.75rem 0.45rem 0; overflow-x: auto; }
+  .lg-sec { font-weight: 700; opacity: 0.6; margin-bottom: 0.15rem; white-space: nowrap; }
+  .lg-grid { display: grid; grid-auto-flow: column; grid-template-rows: repeat(3, auto); column-gap: 0.9rem; }
+  .lg-grid.lg-cols2 { grid-template-rows: repeat(2, auto); }
+  .lg-row { white-space: nowrap; }
+  .lg-row { display: flex; align-items: center; gap: 0.45rem; padding: 0.06rem 0; }
+  .lg-line { flex: 0 0 auto; width: 18px; height: 4px; border-radius: 2px; }
+  .lg-bar { flex: 0 0 auto; width: 7px; height: 12px; border-radius: 1px; margin: 0 5.5px; }
+  .lg-ico { flex: 0 0 auto; width: 15px; height: 15px; margin: 0 1.5px; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .lg-mark { font-weight: 700; opacity: 0.7; }
+  .lg-row .lg-mark:first-child { width: 18px; text-align: center; flex: 0 0 auto; }
 
   /* research: saved views + export, a menu in the tools row */
   .research { position: relative; }
@@ -615,6 +650,12 @@
   window.addEventListener("wheel", () => { lastScrollAt = Date.now(); }, { passive: true });
   window.addEventListener("scroll", () => { lastScrollAt = Date.now(); }, { passive: true });
   let pinLabels = () => {};
+  // the legend's band at the bottom of the page (the graph ends above it)
+  const legendSpace = () => document.querySelector(".legend-box")?.offsetHeight || 0;
+  // sender types picked in the legend: only people of these letter
+  // categories are drawn ("__none" = no letters); empty = everyone
+  const activeCats = new Set();
+  const catOf = name => (categoriaColors[letterCategoria[name]] ? letterCategoria[name] : "__none");
   let clearSelection = () => false; // set by render(): deselects, true if anything was selected
   let width = 1400;
   const margin = { top: 40, right: 40, bottom: 30, left: 170 }; // axis sits on top
@@ -672,7 +713,7 @@
 
     const yearMin = timeFocus ? timeFocus.start : gadda.birth; // timeline starts at Gadda's birth
     const yearMax = timeFocus ? timeFocus.end : gadda.death;
-    const unitsPerPx = height / window.innerHeight;
+    const unitsPerPx = height / (window.innerHeight - legendSpace()); // the legend band is below the graph
     margin.left = 16 * unitsPerPx; // names sit on the lines, so only a small gutter
     width = Math.max(
       (window.innerWidth - document.getElementById("side-panel").offsetWidth) * unitsPerPx,
@@ -1923,9 +1964,9 @@
   let noPersonVisible = new Set();
 
   function applyFilter() {
-    const matching = customMode ? [] : timeFocus
+    const matching = (customMode ? [] : timeFocus
       ? allCorrespondents.filter(d => (d.interactions || []).some(yr => yr >= timeFocus.start && yr <= timeFocus.end))
-      : allCorrespondents;
+      : allCorrespondents).filter(d => !activeCats.size || activeCats.has(catOf(d.name)));
     const matchingNames = new Set(matching.map(d => d.name));
     const pinnedExtra = allCorrespondents.filter(d => pinnedNames.has(d.name) && !matchingNames.has(d.name));
     const shown = [...matching, ...pinnedExtra];
@@ -2425,6 +2466,66 @@
       .attr("title", "The graph as it is now, as an image").on("click", () => downloadSelection("png"));
   }
   drawResearch();
+
+  // --- legend: what the colours and marks mean, bottom left; click its
+  // title to fold it away (remembered in this browser)
+  const LEGEND_KEY = "gadda-storyline-legend-folded";
+  const legend = d3.select("body").append("div").attr("class", "legend-box");
+  let legendFolded = false;
+  try { legendFolded = localStorage.getItem(LEGEND_KEY) === "1"; } catch (e) { /* no storage */ }
+  const lgIcon = (kind, color) => `<svg class="lg-ico" viewBox="0 0 24 24"><path d="${CONTACT_ICONS[kind]}" stroke="${color}"/></svg>`;
+  const lgBar = color => `<span class="lg-bar" style="background:${color}"></span>`;
+  const lgLine = color => `<span class="lg-line" style="background:${color}"></span>`;
+  legend.html(
+    `<button class="lg-title" title="Show / hide the legend">Legend <span class="lg-caret"></span></button>` +
+    `<div class="lg-body">` +
+      `<div class="lg-group"><div class="lg-sec">Lines: who they are \u2014 click to show only them</div><div class="lg-grid lg-cols3">` +
+        Object.entries(categoriaColors).map(([k, c]) => `<button class="lg-row lg-cat" data-cat="${k}">${lgLine(c)}${k}</button>`).join("") +
+        `<button class="lg-row lg-cat" data-cat="__none">${lgLine(NO_LETTERS_COLOR)}no letters</button>` +
+        `<div class="lg-row"><span class="lg-mark">\u25cf</span>birth \u00b7 \u00d7 death</div>` +
+      `</div></div>` +
+      `<div class="lg-group"><div class="lg-sec">Marks</div><div class="lg-grid">` +
+        `<div class="lg-row">${lgIcon("letters", repartoAccents.letters)}letters</div>` +
+        `<div class="lg-row">${lgIcon("library", repartoAccents.library)}book in his library</div>` +
+        `<div class="lg-row">${lgIcon("secondaryBib", repartoAccents.secondaryBib)}publication on Gadda</div>` +
+      `</div></div>` +
+      `<div class="lg-group"><div class="lg-sec">Bars and bricks (one per record)</div><div class="lg-grid lg-cols2">` +
+        `<div class="lg-row">${lgBar(repartoAccents.letters)}letters they sent Gadda</div>` +
+        `<div class="lg-row">${lgBar(repartoAccents.library)}books</div>` +
+        `<div class="lg-row">${lgBar("var(--ink)")}letters Gadda sent them</div>` +
+        `<div class="lg-row">${lgBar(repartoAccents.secondaryBib)}publications</div>` +
+      `</div></div>` +
+    `</div>`);
+  // the graph is drawn above the legend's band: when the band changes
+  // height (folding, resizing) the graph is redrawn to fit
+  let legendH = -1;
+  function fitLegend() {
+    const h = legendSpace();
+    document.documentElement.style.setProperty("--legend-h", h + "px");
+    if (legendH >= 0 && h !== legendH) { legendH = h; rerenderKeepingSelection(); pinLabels(); }
+    legendH = h;
+  }
+  const syncLegend = () => {
+    legend.classed("folded", legendFolded);
+    legend.selectAll(".lg-cat")
+      .classed("on", function () { return activeCats.has(this.dataset.cat); })
+      .classed("off", function () { return activeCats.size > 0 && !activeCats.has(this.dataset.cat); })
+      .attr("title", function () { return activeCats.has(this.dataset.cat) ? "Click to show everyone again" : "Show only this type of sender"; });
+    fitLegend();
+  };
+  legend.select(".lg-title").on("click", () => {
+    legendFolded = !legendFolded;
+    try { localStorage.setItem(LEGEND_KEY, legendFolded ? "1" : "0"); } catch (e) { /* no storage */ }
+    syncLegend();
+  });
+  legend.selectAll(".lg-cat").on("click", function () {
+    const cat = this.dataset.cat;
+    activeCats.has(cat) ? activeCats.delete(cat) : activeCats.add(cat);
+    syncLegend();
+    rerenderKeepingSelection();
+  });
+  window.addEventListener("resize", fitLegend);
+  syncLegend();
 
   applyFilter();
 
