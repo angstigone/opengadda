@@ -1137,19 +1137,31 @@
         .attr("rx", 2 * unitsPerPx)
         .node();
     });
+    // the y of a person's line at x (it runs left to right, so a binary
+    // search along the path finds it), for a name sitting on a dip or curve
+    function lineYAt(d, xAt) {
+      const path = rows.filter(r => r.name === d.name).select(".life").node();
+      if (!path) return null;
+      let lo = 0, hi = path.getTotalLength();
+      for (let i = 0; i < 24; i++) {
+        const mid = (lo + hi) / 2;
+        if (path.getPointAtLength(mid).x < xAt) lo = mid; else hi = mid;
+      }
+      return path.getPointAtLength((lo + hi) / 2).y;
+    }
     pinLabels = () => {
       const pad = 6 * unitsPerPx;
       const startGap = 2 * pad; // clear of the birth dot at the line's start
       const leftEdge = Math.max(margin.left, window.scrollX * unitsPerPx) + pad;
+      const rightEdge = (window.scrollX + window.innerWidth) * unitsPerPx - pad;
       lineLabels.each(function (d) {
         const segs = lineShapes.get(d.name) || [];
         this.__spot = null;
+        this.__fallback = false;
         if (!segs.length) return;
         const need = this.__w + 2 * pad;
-        // names only ever sit on the person's own row — never on the bottom
-        // of a dip, which runs right next to Gadda's line where many lines
-        // (and names) would meet. If the line is dipping at the window's
-        // edge, the name waits just after the dip, where it comes back.
+        // where the original rule would put it (on the person's own row,
+        // waiting after a dip): used only when the line is off-screen
         const rowY = y(d.name);
         const rowSegs = segs.filter(s => Math.abs(s.y - rowY) < 1e-6);
         const pool = rowSegs.length ? rowSegs : segs;
@@ -1157,30 +1169,53 @@
         let spot;
         if (seg) spot = { x: Math.max(seg.x0 + startGap, leftEdge), y: seg.y };
         else {
-          // the line has no room left ahead: the name rests where it ended
           const last = pool[pool.length - 1];
           spot = { x: Math.max(last.x0 + startGap, last.x1 - need), y: last.y };
         }
-        this.setAttribute("x", spot.x);
-        this.setAttribute("y", spot.y);
-        this.__box.setAttribute("x", spot.x - 3 * unitsPerPx);
-        this.__box.setAttribute("y", spot.y - labelBoxH / 2);
+        // every name whose line is on screen sits at the window's left edge,
+        // on the line wherever it is there (a dip too); a line that only
+        // starts further right has its name at the left edge too, on the
+        // row it will run along — so names are always found on that side
+        const lineX0 = x(d.frameBirth) + startGap, lineX1 = x(d.frameDeath);
+        if (lineX1 > leftEdge && lineX0 < rightEdge) {
+          spot = lineX0 > leftEdge
+            ? { x: leftEdge, y: rowY }
+            : { x: leftEdge, y: lineYAt(d, leftEdge + this.__w / 2) ?? spot.y };
+          this.__fallback = true;
+        }
         this.__spot = spot;
       });
-      // no two names may overlap: Gadda's always shows, then the stronger
-      // tie wins; a hidden name comes back as soon as it has room again
+      // no two names may overlap: Gadda's first, then the stronger tie. A
+      // name at the left edge isn't hidden when it meets another: it steps
+      // up or down (away from Gadda first) into the nearest free place
       const priority = n => (n.__data__.name === "Gadda Carlo Emilio" ? Infinity : (n.__data__.weight ?? 0));
       const kept = [];
+      const boxOf = (n, sy) => ({
+        x0: n.__spot.x - 3 * unitsPerPx, x1: n.__spot.x + n.__w + 3 * unitsPerPx,
+        y0: sy - labelBoxH / 2, y1: sy + labelBoxH / 2,
+      });
+      const clashes = box => kept.some(k => box.x0 < k.x1 && box.x1 > k.x0 && box.y0 < k.y1 && box.y1 > k.y0);
       lineLabels.nodes().slice().sort((a, b) => priority(b) - priority(a)).forEach(n => {
         if (!n.__spot) return;
-        const box = {
-          x0: n.__spot.x - 3 * unitsPerPx, x1: n.__spot.x + n.__w + 3 * unitsPerPx,
-          y0: n.__spot.y - labelBoxH / 2, y1: n.__spot.y + labelBoxH / 2,
-        };
-        const clash = kept.some(k => box.x0 < k.x1 && box.x1 > k.x0 && box.y0 < k.y1 && box.y1 > k.y0);
-        n.setAttribute("visibility", clash ? "hidden" : "visible");
-        n.__box.setAttribute("visibility", clash ? "hidden" : "visible");
-        if (!clash) kept.push(box);
+        let sy = n.__spot.y, box = boxOf(n, sy), ok = !clashes(box);
+        if (!ok && n.__fallback) {
+          const away = n.__spot.y < gaddaY ? -1 : 1;
+          for (let k = 1; k <= 12 && !ok; k++) {
+            for (const dir of [away, -away]) {
+              const ty = n.__spot.y + dir * k * labelBoxH * 1.05;
+              if (ty < margin.top || ty > height - margin.bottom) continue;
+              const tb = boxOf(n, ty);
+              if (!clashes(tb)) { sy = ty; box = tb; ok = true; break; }
+            }
+          }
+        }
+        n.setAttribute("x", n.__spot.x);
+        n.setAttribute("y", sy);
+        n.__box.setAttribute("x", n.__spot.x - 3 * unitsPerPx);
+        n.__box.setAttribute("y", sy - labelBoxH / 2);
+        n.setAttribute("visibility", ok ? "visible" : "hidden");
+        n.__box.setAttribute("visibility", ok ? "visible" : "hidden");
+        if (ok) kept.push(box);
       });
     };
     pinLabels();
