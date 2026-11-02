@@ -1343,7 +1343,12 @@
     const barPx = n => (n ? BAR_MIN_PX + n * LETTER_BAR_PX : 0);
     const BOOK_COLOR = repartoAccents.library, WORK_COLOR = repartoAccents.secondaryBib;
     const barDir = d => (d.dipY < gaddaY ? -1 : 1); // -1 up, 1 down
-    const barBase = d => d.dipY + barDir(d) * (ICON_PX / 2 + 1) * unitsPerPx; // just past the icons
+    // bars start clear of both the icon and the line itself (a thick line
+    // is wider than its icons), with a small gap so the first brick never
+    // sits on the line
+    const BAR_GAP_PX = 3;
+    const lineWidthOf = name => strokeWidthFor(rawPeople.find(p => p.name === name) || { name });
+    const barBase = d => d.dipY + barDir(d) * (Math.max(lineWidthOf(d.name) / 2, ICON_PX / 2 * unitsPerPx) + BAR_GAP_PX * unitsPerPx);
     // the record kinds of a person-year, in stacking order: [count, fill, class]
     // DIVERGING version: the letter bars hold letters only; books and
     // publications get a bar of their own beside them (see recordSegments)
@@ -1373,7 +1378,7 @@
     // Gadda sent them grow from Gadda's own line, out the other side of it.
     const gaddaBarDir = d => -barDir(d);
     // (just past the envelope of Gadda's letters, which sits on his line)
-    const gaddaBarBase = d => gaddaY + gaddaBarDir(d) * (Math.max(strokeWidthFor(gadda) / 2, ICON_PX / 2 * unitsPerPx) + 1 * unitsPerPx);
+    const gaddaBarBase = d => gaddaY + gaddaBarDir(d) * (Math.max(strokeWidthFor(gadda) / 2, ICON_PX / 2 * unitsPerPx) + BAR_GAP_PX * unitsPerPx);
     const recordSegments = d => {
       const dir = barDir(d), base = barBase(d);
       let from = 0;
@@ -1425,32 +1430,35 @@
 
     // an item's description beside its brick: the date (in full when
     // known), then what it is; letters get a link to their record
-    function drawBrickNote(g, d, item, cx, cy) {
+    // (dir: which way the tower grows; the note's second line goes that
+    // way too, so it never lands on the line the tower starts from)
+    function drawBrickNote(g, d, item, cx, cy, dir = 1) {
       const nx = cx + (BRICK_W / 2 + 18) * unitsPerPx;
+      const y2 = cy + Math.sign(dir || 1) * 14 * unitsPerPx;
       const note = g.append("text").attr("class", "brick-note")
         .attr("x", nx).attr("y", cy)
         .attr("dominant-baseline", "central")
         .attr("font-size", 11 * unitsPerPx)
         .attr("stroke-width", 4 * unitsPerPx);
       const second = (text, cls) => g.append("text").attr("class", "brick-note " + cls)
-        .attr("x", nx).attr("y", cy + 14 * unitsPerPx)
+        .attr("x", nx).attr("y", y2)
         .attr("dominant-baseline", "central")
         .attr("font-size", 10 * unitsPerPx)
         .attr("stroke-width", 4 * unitsPerPx)
         .text(text);
       const short = (t, n) => (t && t.length > n ? t.slice(0, n - 1) + "…" : t || "");
       if (item.letter) {
-        const [date, way, id, from, to, raw] = item.letter;
+        const [date, , id, from, , raw] = item.letter;
+        // just the date and where it was written: who sent it is already
+        // told by the bar's side and colour
         note.append("tspan").attr("class", "bn-date").text(fullDate(date, raw));
-        note.append("tspan").text("  " + (way === "in" ? `${d.name} → Gadda` : `Gadda → ${d.name}`));
-        const places = [from, to].some(Boolean) ? `${from || "?"} → ${to || "?"}` : "";
-        if (places) note.append("tspan").attr("class", "bn-places").text("  · " + places);
+        if (from) note.append("tspan").attr("class", "bn-places").text("  · " + from);
         const link = g.append("a").attr("class", "brick-note")
           .attr("href", "../code_updated/detail.html?id=" + encodeURIComponent(id))
           .attr("target", "_blank").attr("rel", "noopener")
           .on("click", event => event.stopPropagation());
         link.append("text").attr("class", "bn-link")
-          .attr("x", nx).attr("y", cy + 14 * unitsPerPx)
+          .attr("x", nx).attr("y", y2)
           .attr("dominant-baseline", "central")
           .attr("font-size", 10 * unitsPerPx)
           .attr("stroke-width", 4 * unitsPerPx)
@@ -1458,18 +1466,13 @@
       } else if (item.book) {
         const b = item.book;
         note.append("tspan").attr("class", "bn-date").text(fullDate(item.date));
-        note.append("tspan").attr("fill", BOOK_COLOR).text("  Library book: ");
-        note.append("tspan").text(short(b.title, 60));
-        const pub = [b.publisher, b.place, b.pubYear].filter(Boolean).join(", ");
-        if (pub) note.append("tspan").attr("class", "bn-places").text("  · " + pub);
+        note.append("tspan").text("  " + short(b.title, 60));
         if (b.note) second(short(b.note, 90), "bn-sub");
       } else {
         const w = item.work;
         note.append("tspan").attr("class", "bn-date").text(item.date);
-        note.append("tspan").attr("fill", WORK_COLOR).text("  On Gadda: ");
-        note.append("tspan").text(short(w.title, 60));
-        const where = [w.tipo, w.rivista || w.editore].filter(Boolean).join(" · ");
-        if (where) second(short(where, 90), "bn-sub");
+        note.append("tspan").text("  " + short(w.title, 60));
+        if (w.rivista || w.editore) second(short(w.rivista || w.editore, 90), "bn-sub");
       }
     }
 
@@ -1556,13 +1559,13 @@
         t.step = Math.min((BRICK_H + BRICK_GAP) * unitsPerPx, room / Math.max(1, t.items.length));
         t.h = t.step * BRICK_H / (BRICK_H + BRICK_GAP);
         t.brickY = i => (t.dir < 0 ? t.base - i * t.step - t.h : t.base + i * t.step);
-        t.items.forEach((item, i) => placed.set(item.key, { cx: rightCx, cy: t.brickY(i) + t.h / 2 }));
+        t.items.forEach((item, i) => placed.set(item.key, { cx: rightCx, cy: t.brickY(i) + t.h / 2, dir: t.dir }));
       });
       // the description shown: the hovered brick's, else the pinned one's
       const pinned = () => all.find(it => it.key === pickedLetterId) || null;
       const showNote = item => {
         g.selectAll(".brick-note").remove();
-        if (item) { const at = placed.get(item.key); drawBrickNote(g, d, item, at.cx, at.cy); }
+        if (item) { const at = placed.get(item.key); drawBrickNote(g, d, item, at.cx, at.cy, at.dir); }
       };
       towers.forEach(t => {
         let lastMonth = null, lastLabelY = -Infinity;
