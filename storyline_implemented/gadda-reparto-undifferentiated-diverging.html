@@ -618,10 +618,10 @@
   // else mittenti_enriched.json's tipologia). People with no letters get
   // NO_LETTERS_COLOR.
   const categoriaColors = {
-    "Contatti letterari": "#6d2a9e",
-    "Familiari": "#c0392b",
+    "Contatti letterari": "#612013",
+    "Familiari": "#B53190",
     "Amici": "#2e8b57",
-    "Editori, riviste e quotidiani": "#1f6fb4",
+    "Editori, riviste e quotidiani": "#31B5B5",
     "Compagni di guerra e di prigionia": "#9a7b1c",
     "Ingegneria e divulgazione tecnica": "#138d90",
     "Varia": "#8a8a8a",
@@ -1302,6 +1302,10 @@
     // When zoomed in enough the counts are written beside the bar. Clicking
     // the bar or any of that year's icons breaks it into bricks.
     const LETTER_BAR_W = 7, LETTER_BAR_PX = 2;
+    // every bar starts from BAR_MIN_PX, so a single record still reads as
+    // a bar (1 record = 10 px, 2 = 12, 10 = 28 on screen)
+    const BAR_MIN_PX = 8;
+    const barPx = n => (n ? BAR_MIN_PX + n * LETTER_BAR_PX : 0);
     const BOOK_COLOR = repartoAccents.library, WORK_COLOR = repartoAccents.secondaryBib;
     const barDir = d => (d.dipY < gaddaY ? -1 : 1); // -1 up, 1 down
     const barBase = d => d.dipY + barDir(d) * (ICON_PX / 2 + 1) * unitsPerPx; // just past the icons
@@ -1339,7 +1343,7 @@
       const dir = barDir(d), base = barBase(d);
       let from = 0;
       const own = recordParts(d).filter(([n, , cls]) => n && cls !== "letter-bar-out").map(([n, fill, cls]) => {
-        const h = n * LETTER_BAR_PX * unitsPerPx;
+        const h = barPx(n) * unitsPerPx;
         const seg = { d, y: dir < 0 ? base - from - h : base + from, h, fill, cls, dx: dxOf(d, "letters") };
         from += h;
         return seg;
@@ -1347,11 +1351,11 @@
       // books and publications: a bar each, under their icon, from the
       // person's line, same direction
       const side = sideParts(d).filter(([n]) => n).map(([n, fill, cls]) => {
-        const h = n * LETTER_BAR_PX * unitsPerPx;
+        const h = barPx(n) * unitsPerPx;
         return { d, y: dir < 0 ? base - h : base, h, fill, cls, dx: dxOf(d, cls === "record-book" ? "library" : "secondaryBib") };
       });
       if (!d.records.gadda) return [...own, ...side];
-      const gh = d.records.gadda * LETTER_BAR_PX * unitsPerPx, gb = gaddaBarBase(d);
+      const gh = barPx(d.records.gadda) * unitsPerPx, gb = gaddaBarBase(d);
       return [...own, ...side, { d, y: gaddaBarDir(d) < 0 ? gb - gh : gb, h: gh, fill: null, cls: "letter-bar-out", dx: dxOf(d, "letters") }];
     };
     const ownRecords = d => Math.max(d.records.them, d.records.books, d.records.works);
@@ -1460,14 +1464,14 @@
     letterMarks.append("rect").attr("class", "letter-bar-hit")
       .attr("x", d => x(d.year) + dxSpan(d)[0] - (LETTER_BAR_W / 2 + 2) * unitsPerPx)
       .attr("width", d => dxSpan(d)[1] - dxSpan(d)[0] + (LETTER_BAR_W + 4) * unitsPerPx)
-      .attr("y", d => barDir(d) < 0 ? barBase(d) - Math.max(10, ownRecords(d) * LETTER_BAR_PX) * unitsPerPx : barBase(d))
-      .attr("height", d => Math.max(10, ownRecords(d) * LETTER_BAR_PX) * unitsPerPx);
+      .attr("y", d => barDir(d) < 0 ? barBase(d) - Math.max(10, barPx(ownRecords(d))) * unitsPerPx : barBase(d))
+      .attr("height", d => Math.max(10, barPx(ownRecords(d))) * unitsPerPx);
     // and one over Gadda's bar, on the other side of his line
     letterMarks.filter(d => d.records.gadda).append("rect").attr("class", "letter-bar-hit")
       .attr("x", d => x(d.year) + dxOf(d, "letters") - (LETTER_BAR_W / 2 + 2) * unitsPerPx)
       .attr("width", (LETTER_BAR_W + 4) * unitsPerPx)
-      .attr("y", d => gaddaBarDir(d) < 0 ? gaddaBarBase(d) - Math.max(10, d.records.gadda * LETTER_BAR_PX) * unitsPerPx : gaddaBarBase(d))
-      .attr("height", d => Math.max(10, d.records.gadda * LETTER_BAR_PX) * unitsPerPx);
+      .attr("y", d => gaddaBarDir(d) < 0 ? gaddaBarBase(d) - Math.max(10, barPx(d.records.gadda)) * unitsPerPx : gaddaBarBase(d))
+      .attr("height", d => Math.max(10, barPx(d.records.gadda)) * unitsPerPx);
     // the bar that was clicked, broken into bricks (see explodedBar)
     const EXPLODE_MIN_PX = 200; // on-screen px per year needed to show the bricks
     const pxPerYearNow = (x(yearMin + 1) - x(yearMin)) / unitsPerPx;
