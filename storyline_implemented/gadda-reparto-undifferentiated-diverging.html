@@ -1449,10 +1449,10 @@
       const short = (t, n) => (t && t.length > n ? t.slice(0, n - 1) + "…" : t || "");
       if (item.letter) {
         const [date, , id, from, , raw] = item.letter;
-        // just the date and where it was written: who sent it is already
-        // told by the bar's side and colour
+        // just the date and the place it was sent from: who sent it is
+        // already told by the bar's side and colour
         note.append("tspan").attr("class", "bn-date").text(fullDate(date, raw));
-        if (from) note.append("tspan").attr("class", "bn-places").text("  · " + from);
+        if (from) note.append("tspan").attr("class", "bn-places").text("  · sent from " + from);
         const link = g.append("a").attr("class", "brick-note")
           .attr("href", "../code_updated/detail.html?id=" + encodeURIComponent(id))
           .attr("target", "_blank").attr("rel", "noopener")
