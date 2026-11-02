@@ -1149,6 +1149,9 @@
       }
       return path.getPointAtLength((lo + hi) / 2).y;
     }
+    let labelBoost = null; // the hovered line, whose name wins a clash
+    // (the first placement runs before the selection exists)
+    const isSelectedName = name => { try { return selected.has(name); } catch (e) { return false; } };
     pinLabels = () => {
       const pad = 6 * unitsPerPx;
       const startGap = 2 * pad; // clear of the birth dot at the line's start
@@ -1172,15 +1175,13 @@
           const last = pool[pool.length - 1];
           spot = { x: Math.max(last.x0 + startGap, last.x1 - need), y: last.y };
         }
-        // every name whose line is on screen sits at the window's left edge,
-        // on the line wherever it is there (a dip too); a line that only
-        // starts further right has its name at the left edge too, on the
-        // row it will run along — so names are always found on that side
+        // every name whose line is on screen sits ON its line: at the
+        // window's left edge, or where the line starts if that's further
+        // right — following the line there (a dip too)
         const lineX0 = x(d.frameBirth) + startGap, lineX1 = x(d.frameDeath);
         if (lineX1 > leftEdge && lineX0 < rightEdge) {
-          spot = lineX0 > leftEdge
-            ? { x: leftEdge, y: rowY }
-            : { x: leftEdge, y: lineYAt(d, leftEdge + this.__w / 2) ?? spot.y };
+          const sx = Math.max(leftEdge, lineX0);
+          spot = { x: sx, y: lineYAt(d, sx + this.__w / 2) ?? spot.y };
           this.__fallback = true;
         }
         this.__spot = spot;
@@ -1188,7 +1189,9 @@
       // no two names may overlap: Gadda's first, then the stronger tie. A
       // name at the left edge isn't hidden when it meets another: it steps
       // up or down (away from Gadda first) into the nearest free place
-      const priority = n => (n.__data__.name === "Gadda Carlo Emilio" ? Infinity : (n.__data__.weight ?? 0));
+      // (the hovered line's name, then selected people's, beat the rest)
+      const priority = n => (n.__data__.name === "Gadda Carlo Emilio" ? Infinity
+        : n.__data__.name === labelBoost ? 1e9 : isSelectedName(n.__data__.name) ? 1e8 : (n.__data__.weight ?? 0));
       const kept = [];
       const boxOf = (n, sy) => ({
         x0: n.__spot.x - 3 * unitsPerPx, x1: n.__spot.x + n.__w + 3 * unitsPerPx,
@@ -1198,17 +1201,11 @@
       lineLabels.nodes().slice().sort((a, b) => priority(b) - priority(a)).forEach(n => {
         if (!n.__spot) return;
         let sy = n.__spot.y, box = boxOf(n, sy), ok = !clashes(box);
-        if (!ok && n.__fallback) {
-          const away = n.__spot.y < gaddaY ? -1 : 1;
-          for (let k = 1; k <= 12 && !ok; k++) {
-            for (const dir of [away, -away]) {
-              const ty = n.__spot.y + dir * k * labelBoxH * 1.05;
-              if (ty < margin.top || ty > height - margin.bottom) continue;
-              const tb = boxOf(n, ty);
-              if (!clashes(tb)) { sy = ty; box = tb; ok = true; break; }
-            }
-          }
-        }
+        // a name that meets another waits where its line comes back from
+        // the dip (a fixed spot on the line, so it doesn't jump around while
+        // scrolling); only if that's taken too does it slide along the line
+        // a name that meets another isn't moved (so names never slide
+        // sideways): it's hidden, and shows when its line is hovered or selected
         n.setAttribute("x", n.__spot.x);
         n.setAttribute("y", sy);
         n.__box.setAttribute("x", n.__spot.x - 3 * unitsPerPx);
@@ -1828,10 +1825,12 @@
         hoverTimer = setTimeout(() => {
           if (selected.size > 0 || Date.now() - lastScrollAt < HOVER_DELAY) return;
           previewHighlight(d.name);
+          labelBoost = d.name; pinLabels();
         }, HOVER_DELAY);
       })
       .on("mouseleave", () => {
         clearTimeout(hoverTimer);
+        if (labelBoost) { labelBoost = null; pinLabels(); }
         if (selected.size > 0) return;
         applyHighlight();
       });

@@ -50,6 +50,19 @@
 
   .life-halo { stroke: var(--bg); stroke-linecap: round; fill: none; pointer-events: stroke; }
   .life { stroke-linecap: round; fill: none; opacity: 0.55; pointer-events: stroke; }
+  .life-hit { fill: none; stroke: transparent; stroke-linecap: round; pointer-events: stroke; }
+  .mark-link { stroke: var(--ink); stroke-opacity: 0.5; stroke-width: 1.2; stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; pointer-events: none; }
+  /* selecting / deselecting fades instead of jumping */
+  .life, .life-halo, .line-label, .label-bg, .pt, .contact-pt, .year-mark > g, .contact {
+    transition: opacity 0.25s ease, stroke-width 0.25s ease;
+  }
+  .graph-tools .sel-clear {
+    font: inherit; font-size: 0.75rem; font-weight: 600; height: 1.95rem; padding: 0 0.7rem; cursor: pointer;
+    border: 1px solid var(--chip); border-radius: 8px; color: var(--chip);
+    background: color-mix(in srgb, var(--chip) 10%, var(--bg)); box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  }
+  .graph-tools .sel-clear:hover { background: color-mix(in srgb, var(--chip) 20%, var(--bg)); }
+  .graph-tools .sel-clear[hidden] { display: none; }
   .line-label { font-size: 11px; font-weight: 600; }
   .time-baseline { stroke: var(--grid); stroke-width: 1; }
   .year-grid line { stroke: var(--grid); vector-effect: non-scaling-stroke; pointer-events: none; }
@@ -152,8 +165,8 @@
      become the scroller and window.scrollX (which pins the names) would
      stay at 0. The graph's width follows the timeline (see pxPerYear). */
   html { overflow-x: auto; overflow-y: hidden; }
-  .graph-wrap { max-width: none; width: max-content; height: 100vh; margin-left: var(--side-w); }
-  svg { max-width: none; height: 100vh; flex: 0 0 auto; }
+  .graph-wrap { max-width: none; width: max-content; height: calc(100vh - var(--legend-h, 0px)); margin-left: var(--side-w); }
+  svg { max-width: none; height: calc(100vh - var(--legend-h, 0px)); flex: 0 0 auto; }
 
   .side-panel {
     position: fixed; left: 0; top: 0; bottom: 0; width: var(--side-w); z-index: 60;
@@ -261,6 +274,42 @@
   .graph-tools .year-zoom-bar { position: static; transform: none; }
   .graph-tools .kind-filter, .graph-tools .year-zoom-bar { background: var(--bg); }
 
+  /* legend: a flat strip along the bottom, in the space under the lines */
+  .legend-box {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 55;
+    display: flex; align-items: flex-start; justify-content: center;
+    background: var(--bg); border-top: 1px solid var(--grid); font-size: 0.72rem; line-height: 1.35;
+  }
+  .lg-row.lg-cat {
+    font: inherit; color: var(--ink); background: transparent; border: none; cursor: pointer;
+    display: flex; align-items: center; gap: 0.45rem; padding: 0.06rem 0.3rem; margin: 0 -0.3rem;
+    border-radius: 4px; text-align: left; transition: opacity 0.2s;
+  }
+  .lg-row.lg-cat:hover { background: color-mix(in srgb, var(--ink) 7%, transparent); }
+  .lg-row.lg-cat.on { font-weight: 700; background: color-mix(in srgb, var(--ink) 9%, transparent); }
+  .lg-row.lg-cat.off { opacity: 0.4; }
+  .lg-title {
+    font: inherit; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    background: transparent; border: none; color: var(--ink); cursor: pointer; padding: 0.45rem 0.65rem;
+    text-align: left; display: flex; gap: 0.3rem; opacity: 0.75; white-space: nowrap;
+  }
+  .lg-caret::after { content: "\25be"; }
+  .legend-box.folded .lg-caret::after { content: "\25b8"; }
+  .legend-box.folded .lg-body { display: none; }
+  .legend-box.folded .lg-caret::after { content: "\25b8"; }
+  .lg-body { display: flex; gap: 1.3rem; padding: 0.45rem 0.75rem 0.45rem 0; overflow-x: auto; }
+  .lg-sec { font-weight: 700; opacity: 0.6; margin-bottom: 0.15rem; white-space: nowrap; }
+  .lg-grid { display: grid; grid-auto-flow: column; grid-template-rows: repeat(3, auto); column-gap: 0.9rem; }
+  .lg-grid.lg-cols2 { grid-template-rows: repeat(2, auto); }
+  .lg-row { white-space: nowrap; }
+  .lg-row { display: flex; align-items: center; gap: 0.45rem; padding: 0.06rem 0; }
+  .lg-line { flex: 0 0 auto; width: 18px; height: 4px; border-radius: 2px; }
+  .lg-bar { flex: 0 0 auto; width: 7px; height: 12px; border-radius: 1px; margin: 0 5.5px; }
+  .lg-ico { flex: 0 0 auto; width: 15px; height: 15px; margin: 0 1.5px; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .lg-mark { font-weight: 700; opacity: 0.7; }
+  .lg-link { flex: 0 0 auto; width: 2px; height: 14px; margin: 0 8px; border-left: 1.5px dashed color-mix(in srgb, var(--ink) 55%, transparent); }
+  .lg-row .lg-mark:first-child { width: 18px; text-align: center; flex: 0 0 auto; }
+
   /* research: saved views + export, a menu in the tools row */
   .research { position: relative; }
   .research-btn {
@@ -319,6 +368,28 @@
     opacity: 0.5; padding: 0.45rem 0.85rem 0.15rem;
   }
   .graph-tools .sg-work .sg-name { font-style: italic; }
+  /* a searched person's records, listed under their name */
+  .graph-tools .sg-open {
+    flex: 0 0 auto; align-self: center; border: none; background: transparent; cursor: pointer;
+    color: var(--ink); opacity: 0.55; font-size: 0.8rem; padding: 0 0.15rem; margin-left: -0.3rem;
+  }
+  .graph-tools .sg-open:hover { opacity: 1; }
+  .graph-tools .sg-entries {
+    max-height: 210px; overflow-y: auto; margin: 0 0.85rem 0.35rem 1.35rem;
+    border-left: 2px solid var(--chip); padding-left: 0.2rem;
+  }
+  .graph-tools .sg-entry {
+    display: flex; align-items: center; gap: 0.45rem; padding: 0.22rem 0.4rem; cursor: pointer;
+    font-size: 0.78rem; border-radius: 4px;
+  }
+  .graph-tools .sg-entry:hover { background: var(--grid); }
+  .graph-tools .sg-entry .sg-ico { flex: 0 0 auto; width: 13px; height: 13px; }
+  .graph-tools .sge-text { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .graph-tools .sge-extra { opacity: 0.55; font-size: 0.72rem; }
+  .graph-tools .sge-date { flex: 0 0 auto; opacity: 0.6; font-size: 0.72rem; font-variant-numeric: tabular-nums; }
+  .graph-tools .sge-dot { flex: 0 0 auto; width: 7px; height: 7px; border-radius: 50%; background: var(--chip); }
+  .graph-tools .sg-year .sg-name { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .graph-tools .sge-none { opacity: 0.55; font-size: 0.75rem; padding: 0.25rem 0.4rem; }
   .graph-tools .search-suggestions { max-height: 60vh; }
   .graph-tools .sg-name { flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .graph-tools .sg-count { flex: 0 0 auto; font-size: 0.75rem; opacity: 0.75; font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: 0.6rem; }
@@ -547,10 +618,10 @@
   // else mittenti_enriched.json's tipologia). People with no letters get
   // NO_LETTERS_COLOR.
   const categoriaColors = {
-    "Contatti letterari": "#6d2a9e",
-    "Familiari": "#c0392b",
+    "Contatti letterari": "#612013",
+    "Familiari": "#B53190",
     "Amici": "#2e8b57",
-    "Editori, riviste e quotidiani": "#1f6fb4",
+    "Editori, riviste e quotidiani": "#31B5B5",
     "Compagni di guerra e di prigionia": "#9a7b1c",
     "Ingegneria e divulgazione tecnica": "#138d90",
     "Varia": "#8a8a8a",
@@ -581,6 +652,13 @@
   window.addEventListener("wheel", () => { lastScrollAt = Date.now(); }, { passive: true });
   window.addEventListener("scroll", () => { lastScrollAt = Date.now(); }, { passive: true });
   let pinLabels = () => {};
+  // the legend's band at the bottom of the page (the graph ends above it)
+  const legendSpace = () => document.querySelector(".legend-box")?.offsetHeight || 0;
+  // sender types picked in the legend: only people of these letter
+  // categories are drawn ("__none" = no letters); empty = everyone
+  const activeCats = new Set();
+  const catOf = name => (categoriaColors[letterCategoria[name]] ? letterCategoria[name] : "__none");
+  let clearSelection = () => false; // set by render(): deselects, true if anything was selected
   let width = 1400;
   const margin = { top: 40, right: 40, bottom: 30, left: 170 }; // axis sits on top
   const minHeight = 420;
@@ -637,7 +715,7 @@
 
     const yearMin = timeFocus ? timeFocus.start : gadda.birth; // timeline starts at Gadda's birth
     const yearMax = timeFocus ? timeFocus.end : gadda.death;
-    const unitsPerPx = height / window.innerHeight;
+    const unitsPerPx = height / (window.innerHeight - legendSpace()); // the legend band is below the graph
     margin.left = 16 * unitsPerPx; // names sit on the lines, so only a small gutter
     width = Math.max(
       (window.innerWidth - document.getElementById("side-panel").offsetWidth) * unitsPerPx,
@@ -982,6 +1060,12 @@
 
     const rows = svg.selectAll(".row").data(people).join("g").attr("class", "row");
 
+    // an invisible, wider strip along each line, so it's easy to click
+    // (select / deselect) without hitting the thin stroke exactly
+    rows.append("path")
+      .attr("class", "life-hit")
+      .attr("stroke-width", d => Math.max(strokeWidthFor(d), 14 * unitsPerPx))
+      .attr("d", lifePath);
     rows.append("path")
       .attr("class", "life-halo")
       .attr("stroke-width", d => strokeWidthFor(d) + haloExtra)
@@ -1053,19 +1137,34 @@
         .attr("rx", 2 * unitsPerPx)
         .node();
     });
+    // the y of a person's line at x (it runs left to right, so a binary
+    // search along the path finds it), for a name sitting on a dip or curve
+    function lineYAt(d, xAt) {
+      const path = rows.filter(r => r.name === d.name).select(".life").node();
+      if (!path) return null;
+      let lo = 0, hi = path.getTotalLength();
+      for (let i = 0; i < 24; i++) {
+        const mid = (lo + hi) / 2;
+        if (path.getPointAtLength(mid).x < xAt) lo = mid; else hi = mid;
+      }
+      return path.getPointAtLength((lo + hi) / 2).y;
+    }
+    let labelBoost = null; // the hovered line, whose name wins a clash
+    // (the first placement runs before the selection exists)
+    const isSelectedName = name => { try { return selected.has(name); } catch (e) { return false; } };
     pinLabels = () => {
       const pad = 6 * unitsPerPx;
       const startGap = 2 * pad; // clear of the birth dot at the line's start
       const leftEdge = Math.max(margin.left, window.scrollX * unitsPerPx) + pad;
+      const rightEdge = (window.scrollX + window.innerWidth) * unitsPerPx - pad;
       lineLabels.each(function (d) {
         const segs = lineShapes.get(d.name) || [];
         this.__spot = null;
+        this.__fallback = false;
         if (!segs.length) return;
         const need = this.__w + 2 * pad;
-        // names only ever sit on the person's own row — never on the bottom
-        // of a dip, which runs right next to Gadda's line where many lines
-        // (and names) would meet. If the line is dipping at the window's
-        // edge, the name waits just after the dip, where it comes back.
+        // where the original rule would put it (on the person's own row,
+        // waiting after a dip): used only when the line is off-screen
         const rowY = y(d.name);
         const rowSegs = segs.filter(s => Math.abs(s.y - rowY) < 1e-6);
         const pool = rowSegs.length ? rowSegs : segs;
@@ -1073,30 +1172,47 @@
         let spot;
         if (seg) spot = { x: Math.max(seg.x0 + startGap, leftEdge), y: seg.y };
         else {
-          // the line has no room left ahead: the name rests where it ended
           const last = pool[pool.length - 1];
           spot = { x: Math.max(last.x0 + startGap, last.x1 - need), y: last.y };
         }
-        this.setAttribute("x", spot.x);
-        this.setAttribute("y", spot.y);
-        this.__box.setAttribute("x", spot.x - 3 * unitsPerPx);
-        this.__box.setAttribute("y", spot.y - labelBoxH / 2);
+        // every name whose line is on screen sits ON its line: at the
+        // window's left edge, or where the line starts if that's further
+        // right — following the line there (a dip too)
+        const lineX0 = x(d.frameBirth) + startGap, lineX1 = x(d.frameDeath);
+        if (lineX1 > leftEdge && lineX0 < rightEdge) {
+          const sx = Math.max(leftEdge, lineX0);
+          spot = { x: sx, y: lineYAt(d, sx + this.__w / 2) ?? spot.y };
+          this.__fallback = true;
+        }
         this.__spot = spot;
       });
-      // no two names may overlap: Gadda's always shows, then the stronger
-      // tie wins; a hidden name comes back as soon as it has room again
-      const priority = n => (n.__data__.name === "Gadda Carlo Emilio" ? Infinity : (n.__data__.weight ?? 0));
+      // no two names may overlap: Gadda's first, then the stronger tie. A
+      // name at the left edge isn't hidden when it meets another: it steps
+      // up or down (away from Gadda first) into the nearest free place
+      // (the hovered line's name, then selected people's, beat the rest)
+      const priority = n => (n.__data__.name === "Gadda Carlo Emilio" ? Infinity
+        : n.__data__.name === labelBoost ? 1e9 : isSelectedName(n.__data__.name) ? 1e8 : (n.__data__.weight ?? 0));
       const kept = [];
+      const boxOf = (n, sy) => ({
+        x0: n.__spot.x - 3 * unitsPerPx, x1: n.__spot.x + n.__w + 3 * unitsPerPx,
+        y0: sy - labelBoxH / 2, y1: sy + labelBoxH / 2,
+      });
+      const clashes = box => kept.some(k => box.x0 < k.x1 && box.x1 > k.x0 && box.y0 < k.y1 && box.y1 > k.y0);
       lineLabels.nodes().slice().sort((a, b) => priority(b) - priority(a)).forEach(n => {
         if (!n.__spot) return;
-        const box = {
-          x0: n.__spot.x - 3 * unitsPerPx, x1: n.__spot.x + n.__w + 3 * unitsPerPx,
-          y0: n.__spot.y - labelBoxH / 2, y1: n.__spot.y + labelBoxH / 2,
-        };
-        const clash = kept.some(k => box.x0 < k.x1 && box.x1 > k.x0 && box.y0 < k.y1 && box.y1 > k.y0);
-        n.setAttribute("visibility", clash ? "hidden" : "visible");
-        n.__box.setAttribute("visibility", clash ? "hidden" : "visible");
-        if (!clash) kept.push(box);
+        let sy = n.__spot.y, box = boxOf(n, sy), ok = !clashes(box);
+        // a name that meets another waits where its line comes back from
+        // the dip (a fixed spot on the line, so it doesn't jump around while
+        // scrolling); only if that's taken too does it slide along the line
+        // a name that meets another isn't moved (so names never slide
+        // sideways): it's hidden, and shows when its line is hovered or selected
+        n.setAttribute("x", n.__spot.x);
+        n.setAttribute("y", sy);
+        n.__box.setAttribute("x", n.__spot.x - 3 * unitsPerPx);
+        n.__box.setAttribute("y", sy - labelBoxH / 2);
+        n.setAttribute("visibility", ok ? "visible" : "hidden");
+        n.__box.setAttribute("visibility", ok ? "visible" : "hidden");
+        if (ok) kept.push(box);
       });
     };
     pinLabels();
@@ -1213,27 +1329,42 @@
     // on the person's line, on the same side of Gadda's line as the person's
     // line (above it: the bar goes up; below it: down). Height is
     // proportional to the number of records, LETTER_BAR_PX each. From the
-    // person's line outwards: letters they sent (their colour), letters Gadda
+    // person's line outwards: letters they sent (purple), letters Gadda
     // sent them (ink), library books (orange), publications on Gadda (blue).
     // When zoomed in enough the counts are written beside the bar. Clicking
     // the bar or any of that year's icons breaks it into bricks.
     const LETTER_BAR_W = 7, LETTER_BAR_PX = 2;
+    // every bar starts from BAR_MIN_PX, so a single record still reads as
+    // a bar (1 record = 10 px, 2 = 12, 10 = 28 on screen)
+    const BAR_MIN_PX = 8;
+    const barPx = n => (n ? BAR_MIN_PX + n * LETTER_BAR_PX : 0);
     const BOOK_COLOR = repartoAccents.library, WORK_COLOR = repartoAccents.secondaryBib;
     const barDir = d => (d.dipY < gaddaY ? -1 : 1); // -1 up, 1 down
-    const barBase = d => d.dipY + barDir(d) * (ICON_PX / 2 + 1) * unitsPerPx; // just past the icons
+    // bars start clear of both the icon and the line itself (a thick line
+    // is wider than its icons), with a small gap so the first brick never
+    // sits on the line
+    const BAR_GAP_PX = 3;
+    const lineWidthOf = name => strokeWidthFor(rawPeople.find(p => p.name === name) || { name });
+    const barBase = d => d.dipY + barDir(d) * (Math.max(lineWidthOf(d.name) / 2, ICON_PX / 2 * unitsPerPx) + BAR_GAP_PX * unitsPerPx);
     // the record kinds of a person-year, in stacking order: [count, fill, class]
+    // the letters the person sent are always the letters' purple (not the
+    // person's line colour, which made the bars hard to read)
+    const LETTER_IN_COLOR = repartoAccents.letters;
     const recordParts = d => [
-      [d.records.them, colorFor(d.name), "letter-bar-in"],
+      [d.records.them, LETTER_IN_COLOR, "letter-bar-in"],
       [d.records.gadda, null, "letter-bar-out"],
       [d.records.books, BOOK_COLOR, "record-book"],
       [d.records.works, WORK_COLOR, "record-work"],
     ];
     const totalRecords = d => d.records.them + d.records.gadda + d.records.books + d.records.works;
+    // the whole stack is barPx(total) tall (so a single record still reads
+    // as a bar), each part in proportion to its count
     const recordSegments = d => {
-      const dir = barDir(d), base = barBase(d);
+      const dir = barDir(d), base = barBase(d), total = totalRecords(d);
+      const unit = total ? barPx(total) / total * unitsPerPx : 0;
       let from = 0;
       return recordParts(d).filter(([n]) => n).map(([n, fill, cls]) => {
-        const h = n * LETTER_BAR_PX * unitsPerPx;
+        const h = n * unit;
         const seg = { d, y: dir < 0 ? base - from - h : base + from, h, fill, cls };
         from += h;
         return seg;
@@ -1270,32 +1401,35 @@
 
     // an item's description beside its brick: the date (in full when
     // known), then what it is; letters get a link to their record
-    function drawBrickNote(g, d, item, cx, cy) {
+    // (dir: which way the tower grows; the note's second line goes that
+    // way too, so it never lands on the line the tower starts from)
+    function drawBrickNote(g, d, item, cx, cy, dir = 1) {
       const nx = cx + (BRICK_W / 2 + 18) * unitsPerPx;
+      const y2 = cy + Math.sign(dir || 1) * 14 * unitsPerPx;
       const note = g.append("text").attr("class", "brick-note")
         .attr("x", nx).attr("y", cy)
         .attr("dominant-baseline", "central")
         .attr("font-size", 11 * unitsPerPx)
         .attr("stroke-width", 4 * unitsPerPx);
       const second = (text, cls) => g.append("text").attr("class", "brick-note " + cls)
-        .attr("x", nx).attr("y", cy + 14 * unitsPerPx)
+        .attr("x", nx).attr("y", y2)
         .attr("dominant-baseline", "central")
         .attr("font-size", 10 * unitsPerPx)
         .attr("stroke-width", 4 * unitsPerPx)
         .text(text);
       const short = (t, n) => (t && t.length > n ? t.slice(0, n - 1) + "…" : t || "");
       if (item.letter) {
-        const [date, way, id, from, to, raw] = item.letter;
+        const [date, , id, from, , raw] = item.letter;
+        // just the date and the place it was sent from: who sent it is
+        // already told by the brick's colour
         note.append("tspan").attr("class", "bn-date").text(fullDate(date, raw));
-        note.append("tspan").text("  " + (way === "in" ? `${d.name} → Gadda` : `Gadda → ${d.name}`));
-        const places = [from, to].some(Boolean) ? `${from || "?"} → ${to || "?"}` : "";
-        if (places) note.append("tspan").attr("class", "bn-places").text("  · " + places);
+        if (from) note.append("tspan").attr("class", "bn-places").text("  · sent from " + from);
         const link = g.append("a").attr("class", "brick-note")
           .attr("href", "../code_updated/detail.html?id=" + encodeURIComponent(id))
           .attr("target", "_blank").attr("rel", "noopener")
           .on("click", event => event.stopPropagation());
         link.append("text").attr("class", "bn-link")
-          .attr("x", nx).attr("y", cy + 14 * unitsPerPx)
+          .attr("x", nx).attr("y", y2)
           .attr("dominant-baseline", "central")
           .attr("font-size", 10 * unitsPerPx)
           .attr("stroke-width", 4 * unitsPerPx)
@@ -1303,18 +1437,13 @@
       } else if (item.book) {
         const b = item.book;
         note.append("tspan").attr("class", "bn-date").text(fullDate(item.date));
-        note.append("tspan").attr("fill", BOOK_COLOR).text("  Library book: ");
-        note.append("tspan").text(short(b.title, 60));
-        const pub = [b.publisher, b.place, b.pubYear].filter(Boolean).join(", ");
-        if (pub) note.append("tspan").attr("class", "bn-places").text("  · " + pub);
+        note.append("tspan").text("  " + short(b.title, 60));
         if (b.note) second(short(b.note, 90), "bn-sub");
       } else {
         const w = item.work;
         note.append("tspan").attr("class", "bn-date").text(item.date);
-        note.append("tspan").attr("fill", WORK_COLOR).text("  On Gadda: ");
-        note.append("tspan").text(short(w.title, 60));
-        const where = [w.tipo, w.rivista || w.editore].filter(Boolean).join(" · ");
-        if (where) second(short(where, 90), "bn-sub");
+        note.append("tspan").text("  " + short(w.title, 60));
+        if (w.rivista || w.editore) second(short(w.rivista || w.editore, 90), "bn-sub");
       }
     }
 
@@ -1344,8 +1473,8 @@
     letterMarks.append("rect").attr("class", "letter-bar-hit")
       .attr("x", d => x(d.year) - (LETTER_BAR_W / 2 + 2) * unitsPerPx)
       .attr("width", (LETTER_BAR_W + 4) * unitsPerPx)
-      .attr("y", d => barDir(d) < 0 ? barBase(d) - Math.max(10, totalRecords(d) * LETTER_BAR_PX) * unitsPerPx : barBase(d))
-      .attr("height", d => Math.max(10, totalRecords(d) * LETTER_BAR_PX) * unitsPerPx);
+      .attr("y", d => barDir(d) < 0 ? barBase(d) - Math.max(10, barPx(totalRecords(d))) * unitsPerPx : barBase(d))
+      .attr("height", d => Math.max(10, barPx(totalRecords(d))) * unitsPerPx);
     // the bar that was clicked, broken into bricks (see explodedBar)
     const EXPLODE_MIN_PX = 200; // on-screen px per year needed to show the bricks
     const pxPerYearNow = (x(yearMin + 1) - x(yearMin)) / unitsPerPx;
@@ -1368,7 +1497,7 @@
     // brick by brick.
     const MONTH_INITIALS = "GFMAMGLASOND";
     const BRICK_H = 8, BRICK_GAP = 2, BRICK_W = 16;
-    const brickFill = (d, kind) => ({ in: colorFor(d.name), out: null, book: BOOK_COLOR, work: WORK_COLOR })[kind];
+    const brickFill = (d, kind) => ({ in: LETTER_IN_COLOR, out: null, book: BOOK_COLOR, work: WORK_COLOR })[kind];
     const brickClass = kind => ({ in: "letter-bar-in", out: "letter-bar-out", book: "record-book", work: "record-work" })[kind];
     letterMarks.filter(isExploded).each(function (d) {
       const g = d3.select(this);
@@ -1389,7 +1518,7 @@
       };
       const showNote = (item, i) => {
         g.selectAll(".brick-note").remove();
-        if (item) drawBrickNote(g, d, item, cx, brickY(i) + h / 2);
+        if (item) drawBrickNote(g, d, item, cx, brickY(i) + h / 2, dir);
       };
       items.forEach((item, i) => {
         g.append("rect").attr("class", "letter-brick " + brickClass(item.kind))
@@ -1582,6 +1711,20 @@
     }
 
     rows.style("cursor", "pointer").on("click", (event, d) => toggleSelection(d.name));
+    // deselecting: one click on any empty part of the graph, Esc, or the
+    // "✕ name" button in the tools row (see clearSelection's callers)
+    clearSelection = () => {
+      if (!selected.size && !selectedContact && !gaddaOnlyMode) return false;
+      gaddaOnlyMode = false;
+      selectedContact = null;
+      selected = new Set();
+      applyHighlight();
+      return true;
+    };
+    svg.on("click.deselect", event => {
+      if (event.target.closest(".row, .year-mark, .contact, .time-label, .label-layer, .no-person-pt, .letter-bars")) return;
+      clearSelection();
+    });
     contactG.on("click", (event, d) => {
       event.stopPropagation();
       if (!selected.has(d.name) && d !== selectedContact) return;
@@ -1613,10 +1756,12 @@
         hoverTimer = setTimeout(() => {
           if (selected.size > 0 || Date.now() - lastScrollAt < HOVER_DELAY) return;
           previewHighlight(d.name);
+          labelBoost = d.name; pinLabels();
         }, HOVER_DELAY);
       })
       .on("mouseleave", () => {
         clearTimeout(hoverTimer);
+        if (labelBoost) { labelBoost = null; pinLabels(); }
         if (selected.size > 0) return;
         applyHighlight();
       });
@@ -1775,12 +1920,31 @@
     updateReadout();
     updateZoomLabel();
   }
+  // like openYear, for any span of years (from the search: "1950-1955")
+  function openRange(lo, hi) {
+    if (activeYear == null) beforeYearZoom = { pxPerYear, scrollX: window.scrollX };
+    activeYear = lo; // so Esc / Whole life come back as from a year zoom
+    timeFocus = { start: Math.max(gadda.birth, lo), end: Math.min(gadda.death, hi) };
+    yearZoomBar.attr("hidden", null).html(
+      `<span>Zoomed on <strong>${timeFocus.start}\u2013${timeFocus.end}</strong></span>` +
+      `<button class="back" title="Back to Gadda's whole life (Esc)">Whole life</button>`);
+    pxPerYear = 1; // fit the span to the window
+    rerenderKeepingSelection();
+    window.scrollTo(0, window.scrollY);
+    pinLabels();
+    updateReadout();
+    updateZoomLabel();
+  }
   yearZoomBar.on("click", event => {
     const step = event.target.closest("[data-step]");
     if (step) return openYear(Math.min(gadda.death, Math.max(gadda.birth, activeYear + +step.dataset.step)));
     if (event.target.closest(".back")) openYear(null);
   });
-  d3.select(window).on("keydown.yearzoom", event => { if (event.key === "Escape") openYear(null); });
+  // Esc: first deselects; with nothing selected, leaves the year zoom
+  d3.select(window).on("keydown.yearzoom", event => {
+    if (event.key !== "Escape") return;
+    if (!clearSelection()) openYear(null);
+  });
 
   let pinnedNames = new Set();
   let customMode = false; // My selection: only pinned people (plus Gadda)
@@ -1793,9 +1957,9 @@
   let noPersonVisible = new Set();
 
   function applyFilter() {
-    const matching = customMode ? [] : timeFocus
+    const matching = (customMode ? [] : timeFocus
       ? allCorrespondents.filter(d => (d.interactions || []).some(yr => yr >= timeFocus.start && yr <= timeFocus.end))
-      : allCorrespondents;
+      : allCorrespondents).filter(d => !activeCats.size || activeCats.has(catOf(d.name)));
     const matchingNames = new Set(matching.map(d => d.name));
     const pinnedExtra = allCorrespondents.filter(d => pinnedNames.has(d.name) && !matchingNames.has(d.name));
     const shown = [...matching, ...pinnedExtra];
@@ -1865,14 +2029,73 @@
 
   const searchInput = d3.select("#search-input");
   const searchSuggestions = d3.select("#search-suggestions");
+  // a person's actual records, in date order, for the list under their
+  // name in the suggestions; each carries the key of its brick, so picking
+  // it goes straight to that record (same keys as recordsOf in render)
+  function personRecords(name) {
+    const full = t => fullTables.get(t) || t;
+    const short = name.split(" ")[0];
+    const byYearKey = (list, prefix) => list.map(it => ({
+      it, key: `${prefix}:${it.year}:${list.filter(o => o.year === it.year).indexOf(it)}`,
+    }));
+    return [
+      ...(full(letterFlowDates)[name] || []).map(r => ({
+        name, kind: r[1] === "in" ? "in" : "out", date: r[0], year: +r[0].slice(0, 4), key: r[2],
+        text: r[1] === "in" ? `${short} \u2192 Gadda` : `Gadda \u2192 ${short}`,
+        extra: [r[3], r[4]].some(Boolean) ? `${r[3] || "?"} \u2192 ${r[4] || "?"}` : "",
+      })),
+      ...byYearKey(full(libraryBooks)[name] || [], "book").map(({ it, key }) => ({
+        name, kind: "book", date: String(it.year), year: it.year, key, text: it.title, extra: "",
+      })),
+      ...byYearKey(full(secondaryWorks)[name] || [], "work").map(({ it, key }) => ({
+        name, kind: "work", date: String(it.year), year: it.year, key, text: it.title, extra: it.rivista || "",
+      })),
+    ].filter(e => Number.isFinite(e.year)).sort((a, b) => a.date.localeCompare(b.date));
+  }
+  const shortDate = iso => iso.length > 4 ? iso.split("-").reverse().map(Number).filter(Boolean).join(".") : iso;
+  const entryIcon = kind => kind === "book" ? iconSvg("library", "book")
+    : kind === "work" ? iconSvg("secondaryBib", "publication")
+    : `<svg class="sg-ico" viewBox="0 0 24 24"><path d="${CONTACT_ICONS.letters}" stroke="${kind === "out" ? "var(--ink)" : repartoAccents.letters}"/></svg>`;
+  // --- searching through the ages: a year ("1953") or a span
+  // ("1950-1955") previews that time — totals, and who was in contact,
+  // most active first — straight from the full data
+  function yearPreview(lo, hi) {
+    const full = t => fullTables.get(t) || t;
+    const inR = yr => yr >= lo && yr <= hi;
+    const people = allCorrespondents.map(d => {
+      const ls = (full(letterFlowDates)[d.name] || []).filter(r => inR(+r[0].slice(0, 4)));
+      const c = {
+        name: d.name,
+        them: ls.filter(r => r[1] === "in").length,
+        gadda: ls.filter(r => r[1] !== "in").length,
+        books: (full(libraryBooks)[d.name] || []).filter(b => inR(b.year)).length,
+        works: (full(secondaryWorks)[d.name] || []).filter(w => inR(w.year)).length,
+      };
+      c.total = c.them + c.gadda + c.books + c.works;
+      // the first year of the span they have a record in, to go to
+      c.year = [...ls.map(r => +r[0].slice(0, 4)),
+        ...(full(libraryBooks)[d.name] || []).map(b => b.year),
+        ...(full(secondaryWorks)[d.name] || []).map(w => w.year)].filter(inR).sort((a, b) => a - b)[0];
+      return c;
+    }).filter(c => c.total).sort((a, b) => b.total - a.total);
+    const sum = k => d3.sum(people, c => c[k]);
+    return { people, letters: sum("them") + sum("gadda"), books: sum("books"), works: sum("works"),
+      own: noPersonPrimaryBib.filter(w => inR(w.year)).length };
+  }
+  const countIcons = (letters, books, works) => [[letters, "letters"], [books, "library", "books"], [works, "secondaryBib", "publications"]]
+    .filter(([n]) => n).map(([n, kind, title]) => `<span class="sg-k">${iconSvg(kind, title || kind)}${n}</span>`).join("");
+  // which people's lists are open: by default only when one person matches
+  const searchOpen = new Map();
   searchInput.on("input", function () {
     const q = norm(this.value.trim());
     searchSuggestions.html("");
     if (!q) return;
-    const people = allCorrespondents
-      .filter(d => norm(d.name).includes(q) && !pinnedNames.has(d.name))
-      .slice(0, 5)
-      .map(d => ({ type: "person", name: d.name, color: personColor(d.name), label: d.name, count: recordPreview(d.name) }));
+    const matched = allCorrespondents.filter(d => norm(d.name).includes(q)).slice(0, 5);
+    const people = matched.flatMap(d => {
+      const open = searchOpen.get(d.name) ?? matched.length === 1;
+      const person = { type: "person", name: d.name, color: personColor(d.name), label: d.name, count: recordPreview(d.name), open };
+      return open ? [person, { type: "entries", name: d.name, color: person.color, items: personRecords(d.name) }] : [person];
+    });
     // up to 3 of Gadda's own works, then up to 5 books/publications
     const found = workIndex.filter(w => norm(w.title).includes(q));
     const works = [...found.filter(w => !w.name).slice(0, 3), ...found.filter(w => w.name).slice(0, 5)]
@@ -1880,7 +2103,23 @@
         count: w.name
           ? `<span class="sg-k">${iconSvg(w.what === "book" ? "library" : "secondaryBib", w.what)}${w.year}</span> ${esc(w.name)}`
           : `${w.year} · by Gadda` }));
+    const ym = q.match(/^(\d{4})(?:\s*[-\u2013]\s*(\d{4}))?$/);
+    const years = [];
+    if (ym) {
+      let lo = +ym[1], hi = ym[2] ? +ym[2] : lo;
+      if (lo > hi) [lo, hi] = [hi, lo];
+      lo = Math.max(lo, gadda.birth); hi = Math.min(hi, gadda.death);
+      if (lo <= hi) {
+        const pv = yearPreview(lo, hi);
+        years.push({ type: "year", lo, hi, color: "var(--ink)", label: lo === hi ? `${lo}` : `${lo}\u2013${hi}`,
+          count: countIcons(pv.letters, pv.books, pv.works) +
+            `<span class="sg-k">${pv.people.length} ${pv.people.length === 1 ? "person" : "people"}</span>` +
+            (pv.own ? `<span class="sg-k">${pv.own} by Gadda</span>` : "") });
+        years.push({ type: "yearPeople", color: "var(--ink)", items: pv.people });
+      }
+    }
     const rows = [
+      ...(years.length ? [{ type: "head", label: "Years" }, ...years] : []),
       ...(people.length ? [{ type: "head", label: "People" }, ...people] : []),
       ...(works.length ? [{ type: "head", label: "Works" }, ...works] : []),
     ];
@@ -1889,12 +2128,41 @@
     searchSuggestions.selectAll("div")
       .data(rows)
       .join("div")
-        .attr("class", d => d.type === "head" ? "sg-head" : "search-suggestion sg-" + d.type)
+        .attr("class", d => d.type === "head" ? "sg-head" : d.type === "entries" || d.type === "yearPeople" ? "sg-entries" : "search-suggestion sg-" + d.type)
         .style("--chip", d => d.color || null)
         .html(d => d.type === "head" ? esc(d.label)
-          : `<span class="sg-name">${esc(d.label)}</span><span class="sg-count">${d.count}</span>`)
-        .classed("first", d => d.type !== "head" && !firstDone && (firstDone = true))
-        .on("click", (event, d) => { if (d.type !== "head") pickSearched(d); });
+          : d.type === "yearPeople" ? d.items.map((c, i) =>
+              `<div class="sg-entry" data-i="${i}" style="--chip:${personColor(c.name)}"><span class="sge-dot"></span>` +
+              `<span class="sge-text">${esc(c.name)}</span><span class="sge-date sg-count">${countIcons(c.them + c.gadda, c.books, c.works)}</span></div>`).join("")
+              || `<div class="sge-none">Nobody on record</div>`
+          : d.type === "entries" ? d.items.map((e, i) =>
+              `<div class="sg-entry" data-i="${i}" title="${esc(e.text)}">${entryIcon(e.kind)}` +
+              `<span class="sge-text">${esc(e.text)}${e.extra ? ` <span class="sge-extra">${esc(e.extra)}</span>` : ""}</span>` +
+              `<span class="sge-date">${shortDate(e.date)}</span></div>`).join("") || `<div class="sge-none">No records</div>`
+          : `<span class="sg-name">${esc(d.label)}</span><span class="sg-count">${d.count}</span>` +
+            (d.type === "person" ? `<button class="sg-open" title="${d.open ? "Hide" : "Show"} their records">${d.open ? "\u25be" : "\u25b8"}</button>` : ""))
+        .classed("first", d => d.type !== "head" && d.type !== "entries" && !firstDone && (firstDone = true))
+        .on("click", (event, d) => {
+          if (d.type === "head") return;
+          if (d.type === "entries") {
+            const row = event.target.closest(".sg-entry");
+            if (row) pickSearched({ type: "entry", ...d.items[+row.dataset.i] });
+            return;
+          }
+          if (d.type === "yearPeople") {
+            const row = event.target.closest(".sg-entry");
+            if (row) { const c = d.items[+row.dataset.i]; pickSearched({ type: "entry", name: c.name, year: c.year, key: null }); }
+            return;
+          }
+          if (event.target.closest(".sg-open")) {
+            event.stopPropagation();
+            searchOpen.set(d.name, !d.open);
+            searchInput.dispatch("input");
+            searchInput.node().focus();
+            return;
+          }
+          pickSearched(d);
+        });
   });
   // a search result is added to the graph and selected (highlighted like a
   // clicked line) — everyone else stays drawn; its chip's × takes it off.
@@ -1912,6 +2180,7 @@
     searchSuggestions.html("");
     explodedBar = null; // whatever was open before closes
     pickedLetterId = null;
+    if (d.type === "year") { d.lo === d.hi ? openYear(d.lo) : openRange(d.lo, d.hi); return; }
     if (d.type === "work" && !d.name) { openYear(d.year); return; }
     const entry = personEntry(d.name);
     addSearchEntry(entry);
@@ -1920,6 +2189,7 @@
     kindShown = "all"; // nothing hidden by the kind switch
     applyKind();
     let target = null;
+    if (d.type === "entry") target = { name: d.name, year: d.year, key: d.key };
     if (d.type === "work") {
       const table = d.what === "book" ? libraryBooks : secondaryWorks;
       const i = (table[d.name] || []).filter(x => x.year === d.year).indexOf(d.item);
@@ -2036,6 +2306,13 @@
   function syncKindCtl() {
     const names = selectedPeople();
     kindCtl.attr("hidden", names.length ? null : "");
+    // "✕ name": deselect in one click, in the selected person's colour —
+    // not shown when everyone selected already has a search chip (that
+    // would be the same name twice)
+    selClear.attr("hidden", names.length && !names.every(n => pinnedNames.has(n)) ? null : "")
+      .style("--chip", names.length === 1 ? personColor(names[0]) : "var(--ink)")
+      .attr("title", "Deselect (Esc, or click an empty part of the graph)")
+      .text(`\u2715 ${names.length === 1 ? names[0] : `${names.length} selected`}`);
     if (names.join("|") === kindFor) return;
     kindFor = names.join("|");
     if (kindShown === "all") return applyKind();
@@ -2049,7 +2326,9 @@
   const graphTools = d3.select("body").append("div").attr("class", "graph-tools");
   graphTools.node().append(document.querySelector(".search-box"), document.getElementById("pinned-chips"));
   const kindSlot = graphTools.node();
-  d3.select("#search-input").attr("placeholder", "Search a person or work…");
+  d3.select("#search-input").attr("placeholder", "Search a person, work or year…");
+  const selClear = graphTools.append("button").attr("class", "sel-clear").attr("hidden", "")
+    .on("click", () => clearSelection());
   const kindCtl = graphTools.append("div").attr("class", "kind-filter").attr("hidden", "");
   kindSlot.append(document.getElementById("year-zoom-bar")); // same row, so they never overlap
   // the row sits just under the year labels' baseline, wherever a redraw puts it
@@ -2180,6 +2459,66 @@
       .attr("title", "The graph as it is now, as an image").on("click", () => downloadSelection("png"));
   }
   drawResearch();
+
+  // --- legend: what the colours and marks mean, bottom left; click its
+  // title to fold it away (remembered in this browser)
+  const LEGEND_KEY = "gadda-storyline-legend-folded";
+  const legend = d3.select("body").append("div").attr("class", "legend-box");
+  let legendFolded = false;
+  try { legendFolded = localStorage.getItem(LEGEND_KEY) === "1"; } catch (e) { /* no storage */ }
+  const lgIcon = (kind, color) => `<svg class="lg-ico" viewBox="0 0 24 24"><path d="${CONTACT_ICONS[kind]}" stroke="${color}"/></svg>`;
+  const lgBar = color => `<span class="lg-bar" style="background:${color}"></span>`;
+  const lgLine = color => `<span class="lg-line" style="background:${color}"></span>`;
+  legend.html(
+    `<button class="lg-title" title="Show / hide the legend">Legend <span class="lg-caret"></span></button>` +
+    `<div class="lg-body">` +
+      `<div class="lg-group"><div class="lg-sec">Lines: who they are \u2014 click to show only them</div><div class="lg-grid lg-cols3">` +
+        Object.entries(categoriaColors).map(([k, c]) => `<button class="lg-row lg-cat" data-cat="${k}">${lgLine(c)}${k}</button>`).join("") +
+        `<button class="lg-row lg-cat" data-cat="__none">${lgLine(NO_LETTERS_COLOR)}no letters</button>` +
+        `<div class="lg-row"><span class="lg-mark">\u25cf</span>birth \u00b7 \u00d7 death</div>` +
+      `</div></div>` +
+      `<div class="lg-group"><div class="lg-sec">Marks (on the person's line)</div><div class="lg-grid lg-cols3">` +
+        `<div class="lg-row">${lgIcon("letters", repartoAccents.letters)}letters</div>` +
+        `<div class="lg-row">${lgIcon("library", repartoAccents.library)}book in his library</div>` +
+        `<div class="lg-row">${lgIcon("secondaryBib", repartoAccents.secondaryBib)}publication on Gadda</div>` +
+      `</div></div>` +
+      `<div class="lg-group"><div class="lg-sec">Bars and bricks (stacked, one per record)</div><div class="lg-grid lg-cols2">` +
+        `<div class="lg-row">${lgBar(repartoAccents.letters)}letters they sent Gadda</div>` +
+        `<div class="lg-row">${lgBar(repartoAccents.library)}books</div>` +
+        `<div class="lg-row">${lgBar("var(--ink)")}letters Gadda sent them</div>` +
+        `<div class="lg-row">${lgBar(repartoAccents.secondaryBib)}publications</div>` +
+      `</div></div>` +
+    `</div>`);
+  // the graph is drawn above the legend's band: when the band changes
+  // height (folding, resizing) the graph is redrawn to fit
+  let legendH = -1;
+  function fitLegend() {
+    const h = legendSpace();
+    document.documentElement.style.setProperty("--legend-h", h + "px");
+    if (legendH >= 0 && h !== legendH) { legendH = h; rerenderKeepingSelection(); pinLabels(); }
+    legendH = h;
+  }
+  const syncLegend = () => {
+    legend.classed("folded", legendFolded);
+    legend.selectAll(".lg-cat")
+      .classed("on", function () { return activeCats.has(this.dataset.cat); })
+      .classed("off", function () { return activeCats.size > 0 && !activeCats.has(this.dataset.cat); })
+      .attr("title", function () { return activeCats.has(this.dataset.cat) ? "Click to show everyone again" : "Show only this type of sender"; });
+    fitLegend();
+  };
+  legend.select(".lg-title").on("click", () => {
+    legendFolded = !legendFolded;
+    try { localStorage.setItem(LEGEND_KEY, legendFolded ? "1" : "0"); } catch (e) { /* no storage */ }
+    syncLegend();
+  });
+  legend.selectAll(".lg-cat").on("click", function () {
+    const cat = this.dataset.cat;
+    activeCats.has(cat) ? activeCats.delete(cat) : activeCats.add(cat);
+    syncLegend();
+    rerenderKeepingSelection();
+  });
+  window.addEventListener("resize", fitLegend);
+  syncLegend();
 
   applyFilter();
 
