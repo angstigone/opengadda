@@ -51,6 +51,7 @@
   .life-halo { stroke: var(--bg); stroke-linecap: round; fill: none; pointer-events: stroke; }
   .life { stroke-linecap: round; fill: none; opacity: 0.55; pointer-events: stroke; }
   .life-hit { fill: none; stroke: transparent; stroke-linecap: round; pointer-events: stroke; }
+  .mark-link { stroke: var(--ink); stroke-opacity: 0.5; stroke-width: 1.2; stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; pointer-events: none; }
   /* selecting / deselecting fades instead of jumping */
   .life, .life-halo, .line-label, .label-bg, .pt, .contact-pt, .year-mark > g, .contact {
     transition: opacity 0.25s ease, stroke-width 0.25s ease;
@@ -306,6 +307,7 @@
   .lg-bar { flex: 0 0 auto; width: 7px; height: 12px; border-radius: 1px; margin: 0 5.5px; }
   .lg-ico { flex: 0 0 auto; width: 15px; height: 15px; margin: 0 1.5px; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
   .lg-mark { font-weight: 700; opacity: 0.7; }
+  .lg-link { flex: 0 0 auto; width: 2px; height: 14px; margin: 0 8px; border-left: 1.5px dashed color-mix(in srgb, var(--ink) 55%, transparent); }
   .lg-row .lg-mark:first-child { width: 18px; text-align: center; flex: 0 0 auto; }
 
   /* research: saved views + export, a menu in the tools row */
@@ -1331,7 +1333,8 @@
     // person sent Gadda grow from their line, away from Gadda; the letters
     // Gadda sent them grow from Gadda's own line, out the other side of it.
     const gaddaBarDir = d => -barDir(d);
-    const gaddaBarBase = d => gaddaY + gaddaBarDir(d) * (strokeWidthFor(gadda) / 2 + 1 * unitsPerPx);
+    // (just past the envelope of Gadda's letters, which sits on his line)
+    const gaddaBarBase = d => gaddaY + gaddaBarDir(d) * (Math.max(strokeWidthFor(gadda) / 2, ICON_PX / 2 * unitsPerPx) + 1 * unitsPerPx);
     const recordSegments = d => {
       const dir = barDir(d), base = barBase(d);
       let from = 0;
@@ -1590,9 +1593,27 @@
           });
         });
     }
-    yearMarkG.append("g").attr("class", "contact-pt contact-icon-g")
+    // each icon sits on the line of whoever sent or made the record: the
+    // letters a person sent (purple envelope), their books and publications
+    // on their line; the letters Gadda sent them (black envelope) on his
+    yearMarkG.filter(d => d.kind !== "letters" || d.records.them > 0 || !d.records.gadda)
+      .append("g").attr("class", "contact-pt contact-icon-g")
       .call(iconAt, d => x(d.year) + d.dx, d => d.dipY)
       .on("click", toggleBricks);
+    yearMarkG.filter(d => d.kind === "letters" && d.records.gadda > 0)
+      .append("g").attr("class", "contact-pt contact-icon-g gadda-sent")
+      .call(iconAt, d => x(d.year) + d.dx, () => gaddaY)
+      .on("click", toggleBricks)
+      .select(".contact-icon").attr("stroke", "var(--ink)");
+    // the link between the two: a thin dashed line from the person's line
+    // to Gadda's, under that year's envelope (or its first mark), behind
+    // the icons and bars
+    yearMarkG.filter(d => d.first).insert("line", ":first-child")
+      .attr("class", "mark-link")
+      .attr("x1", d => x(d.year) + (markDx.has(`${d.name}|${d.year}|letters`) ? dxOf(d, "letters") : d.dx))
+      .attr("x2", d => x(d.year) + (markDx.has(`${d.name}|${d.year}|letters`) ? dxOf(d, "letters") : d.dx))
+      .attr("y1", d => d.dipY)
+      .attr("y2", gaddaY);
 
     let selected = new Set(initialSelected);
     let selectedContact = null;
@@ -2484,8 +2505,10 @@
         `<button class="lg-row lg-cat" data-cat="__none">${lgLine(NO_LETTERS_COLOR)}no letters</button>` +
         `<div class="lg-row"><span class="lg-mark">\u25cf</span>birth \u00b7 \u00d7 death</div>` +
       `</div></div>` +
-      `<div class="lg-group"><div class="lg-sec">Marks</div><div class="lg-grid">` +
-        `<div class="lg-row">${lgIcon("letters", repartoAccents.letters)}letters</div>` +
+      `<div class="lg-group"><div class="lg-sec">Marks (on the line of whoever sent or wrote it)</div><div class="lg-grid lg-cols3">` +
+        `<div class="lg-row">${lgIcon("letters", repartoAccents.letters)}letters they sent</div>` +
+        `<div class="lg-row">${lgIcon("letters", "var(--ink)")}letters Gadda sent</div>` +
+        `<div class="lg-row"><span class="lg-link"></span>link between them that year</div>` +
         `<div class="lg-row">${lgIcon("library", repartoAccents.library)}book in his library</div>` +
         `<div class="lg-row">${lgIcon("secondaryBib", repartoAccents.secondaryBib)}publication on Gadda</div>` +
       `</div></div>` +
