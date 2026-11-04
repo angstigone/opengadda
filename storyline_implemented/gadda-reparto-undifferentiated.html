@@ -274,12 +274,16 @@
   .graph-tools .year-zoom-bar { position: static; transform: none; }
   .graph-tools .kind-filter, .graph-tools .year-zoom-bar { background: var(--bg); }
 
-  /* legend: a flat strip along the bottom, in the space under the lines */
+  /* legend: a framed card stuck to the bottom of the window (it stays put
+     while the graph scrolls); the graph ends above it. Closed (as it
+     starts), it shrinks to a small "Legend" tab in the bottom-right corner and the graph takes the space */
   .legend-box {
-    position: fixed; left: 0; right: 0; bottom: 0; z-index: 55;
+    position: fixed; left: calc(var(--side-w) + 12px); right: 12px; bottom: 10px; z-index: 55;
     display: flex; align-items: flex-start; justify-content: center;
-    background: var(--bg); border-top: 1px solid var(--grid); font-size: 0.72rem; line-height: 1.35;
+    background: var(--bg); border: 1px solid var(--grid); border-radius: 10px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.08); font-size: 0.72rem; line-height: 1.35;
   }
+  .legend-box.folded { left: auto; }
   .lg-row.lg-cat {
     font: inherit; color: var(--ink); background: transparent; border: none; cursor: pointer;
     display: flex; align-items: center; gap: 0.45rem; padding: 0.06rem 0.3rem; margin: 0 -0.3rem;
@@ -611,6 +615,9 @@
     library: "M12 7c-2.6-1.8-6-2.2-9-1.2v12.6c3-1 6.4-.6 9 1.2 2.6-1.8 6-2.2 9-1.2V5.8c-3-1-6.4-.6-9 1.2zM12 7v12.6",
     secondaryBib: "M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4zM14.5 5.5l3 3",
   };
+  // Gadda's own works (his primary bibliography): green, with a page icon
+  const GADDA_WORK_COLOR = "#2f8a4c";
+  const GADDA_WORK_ICON = "M6.5 3.5h8l3 3v14h-11zM14.5 3.5v3h3M9 11h6M9 14h6M9 17h4";
   const repartoAccents = { letters: "#6d2a9e", library: "#c05727", secondaryBib: "#1d4e9e", archive: "#9e1d47", undifferentiated: "#4a5059" };
   const repartoLabels = { letters: "Letters", library: "Library", secondaryBib: "Secondary bibliography", archive: "Archive", undifferentiated: "Everyone (undifferentiated)" };
   // epistolary colours, the same as the Letters graph: each person's line
@@ -653,7 +660,12 @@
   window.addEventListener("scroll", () => { lastScrollAt = Date.now(); }, { passive: true });
   let pinLabels = () => {};
   // the legend's band at the bottom of the page (the graph ends above it)
-  const legendSpace = () => document.querySelector(".legend-box")?.offsetHeight || 0;
+  // (from the card's top edge down to the window's bottom; nothing when closed)
+  const legendSpace = () => {
+    const box = document.querySelector(".legend-box");
+    if (!box || box.classList.contains("folded")) return 0;
+    return Math.max(0, window.innerHeight - box.getBoundingClientRect().top + 6);
+  };
   // sender types picked in the legend: only people of these letter
   // categories are drawn ("__none" = no letters); empty = everyone
   const activeCats = new Set();
@@ -1333,11 +1345,12 @@
     // sent them (ink), library books (orange), publications on Gadda (blue).
     // When zoomed in enough the counts are written beside the bar. Clicking
     // the bar or any of that year's icons breaks it into bricks.
-    const LETTER_BAR_W = 7, LETTER_BAR_PX = 2;
-    // every bar starts from BAR_MIN_PX, so a single record still reads as
-    // a bar (1 record = 10 px, 2 = 12, 10 = 28 on screen)
+    const LETTER_BAR_W = 7, LETTER_BAR_PX = 3;
+    // bars are exactly proportional to their records (LETTER_BAR_PX each),
+    // but never shorter than BAR_MIN_PX, so a single record still shows
+    // (1 record = 8 px, 3 = 9, 6 = 18, 10 = 30 on screen)
     const BAR_MIN_PX = 8;
-    const barPx = n => (n ? BAR_MIN_PX + n * LETTER_BAR_PX : 0);
+    const barPx = n => (n ? Math.max(BAR_MIN_PX, n * LETTER_BAR_PX) : 0);
     const BOOK_COLOR = repartoAccents.library, WORK_COLOR = repartoAccents.secondaryBib;
     const barDir = d => (d.dipY < gaddaY ? -1 : 1); // -1 up, 1 down
     // bars start clear of both the icon and the line itself (a thick line
@@ -1567,19 +1580,27 @@
     // other): each non-zero part's count, in its colour
     const COUNTS_MIN_PX = 150;
     if (activeYear != null || (x(yearMin + 1) - x(yearMin)) / unitsPerPx >= COUNTS_MIN_PX) {
-      letterMarks.filter(d => !isExploded(d)).append("text").attr("class", "letter-count")
-        .attr("x", d => x(d.year) + (LETTER_BAR_W / 2 + 3) * unitsPerPx)
-        .attr("y", d => barBase(d) + barDir(d) * 1 * unitsPerPx)
-        .attr("dominant-baseline", d => (barDir(d) < 0 ? "auto" : "hanging"))
-        .attr("font-size", 10 * unitsPerPx)
-        .attr("stroke-width", 3 * unitsPerPx)
-        .each(function (d) {
-          const t = d3.select(this);
-          recordParts(d).filter(([n]) => n).forEach(([n, fill], i) => {
-            if (i) t.append("tspan").attr("class", "letter-count-sep").text(" · ");
-            t.append("tspan").attr("fill", fill || "var(--ink)").text(n);
-          });
+      const countOf = seg => ({ "letter-bar-in": seg.d.records.them, "letter-bar-out": seg.d.records.gadda,
+        "record-book": seg.d.records.books, "record-work": seg.d.records.works })[seg.cls];
+      // each part's count beside its own part of the stack, in its colour
+      // (pushed outwards when parts are too thin for their numbers)
+      letterMarks.filter(d => !isExploded(d)).each(function (d) {
+        const dir = barDir(d), gap = 11 * unitsPerPx;
+        let last = null;
+        recordSegments(d).forEach(seg => {
+          let cy = seg.y + seg.h / 2;
+          if (last != null && Math.abs(cy - last) < gap) cy = last + dir * gap;
+          last = cy;
+          d3.select(this).append("text").attr("class", "letter-count")
+            .attr("x", x(d.year) + (LETTER_BAR_W / 2 + 3) * unitsPerPx)
+            .attr("y", cy)
+            .attr("dominant-baseline", "central")
+            .attr("font-size", 10 * unitsPerPx)
+            .attr("stroke-width", 3 * unitsPerPx)
+            .attr("fill", seg.fill || "var(--ink)")
+            .text(countOf(seg));
         });
+      });
     }
     yearMarkG.append("g").attr("class", "contact-pt contact-icon-g")
       .call(iconAt, d => x(d.year) + d.dx, d => d.dipY)
@@ -1656,11 +1677,12 @@
           .style("pointer-events", visible ? null : "none");
       });
       svg.selectAll(".no-person-pt").each(function (d) {
-        const visible = gaddaOnlyMode ? true : noPersonVisible.has(d.layerKey);
+        const visible = noPersonVisible.has(d.layerKey);
         d3.select(this)
           .style("opacity", visible ? 0.85 : 0)
           .style("pointer-events", visible ? null : "none");
       });
+      svg.select(".gadda-own").style("opacity", gaddaOnlyMode ? 1 : 0);
       lineLabels.style("font-weight", d => (selected.has(d.name) ? 800 : 600));
       if (!previewing) pinLabels(); // the selection changes which names win a clash
 
@@ -1808,6 +1830,42 @@
       })
       .on("mousemove", moveTooltip)
       .on("mouseleave", () => tooltip.attr("hidden", true));
+
+    // --- Gadda's own line (shown when his line is clicked): his own works
+    // (his primary bibliography), drawn like everyone else's records — per
+    // year a green page icon on his line and a bar growing up from it ---
+    const gaddaWorksByYear = d3.rollup(noPersonPrimaryBib, v => v.length, w => w.year);
+    const gaddaOwn = [...gaddaWorksByYear]
+      .map(([year, n]) => ({ year, n, kind: "works", color: GADDA_WORK_COLOR, dx: 0 }))
+      .filter(m => m.year >= yearMin && m.year <= yearMax);
+    const ownBase = gaddaY - (Math.max(strokeWidthFor(gadda) / 2, ICON_PX / 2 * unitsPerPx) + BAR_GAP_PX * unitsPerPx);
+    const ownG = svg.append("g").attr("class", "gadda-own")
+      .style("opacity", 0).style("pointer-events", "none")
+      .selectAll("g").data(gaddaOwn).join("g");
+    ownG.append("rect").attr("class", "gadda-own-bar")
+      .attr("x", m => x(m.year) + m.dx * unitsPerPx - LETTER_BAR_W / 2 * unitsPerPx)
+      .attr("width", LETTER_BAR_W * unitsPerPx)
+      .attr("y", m => ownBase - barPx(m.n) * unitsPerPx)
+      .attr("height", m => barPx(m.n) * unitsPerPx)
+      .attr("fill", m => m.color);
+    ownG.append("g")
+      .attr("transform", m => `translate(${x(m.year) + m.dx * unitsPerPx},${gaddaY}) scale(${ICON_PX * unitsPerPx / 24}) translate(-12,-12)`)
+      .call(g => {
+        g.append("path").attr("class", "contact-icon-halo").attr("d", GADDA_WORK_ICON);
+        g.append("path").attr("class", "contact-icon").attr("d", GADDA_WORK_ICON)
+          .attr("stroke", m => m.color);
+      });
+    // the counts, at the bars' tips, when zoomed in enough to read them
+    if (activeYear != null || (x(yearMin + 1) - x(yearMin)) / unitsPerPx >= COUNTS_MIN_PX) {
+      ownG.append("text").attr("class", "letter-count")
+        .attr("x", m => x(m.year) + m.dx * unitsPerPx)
+        .attr("y", m => ownBase - barPx(m.n) * unitsPerPx - 2 * unitsPerPx)
+        .attr("text-anchor", "middle")
+        .attr("font-size", 10 * unitsPerPx)
+        .attr("stroke-width", 3 * unitsPerPx)
+        .attr("fill", m => m.color)
+        .text(m => m.n);
+    }
 
     // --- no-person items, scattered along Gadda's own line ---
     // each category gets its own color and its own on/off toggle (see
@@ -2462,10 +2520,8 @@
 
   // --- legend: what the colours and marks mean, bottom left; click its
   // title to fold it away (remembered in this browser)
-  const LEGEND_KEY = "gadda-storyline-legend-folded";
   const legend = d3.select("body").append("div").attr("class", "legend-box");
-  let legendFolded = false;
-  try { legendFolded = localStorage.getItem(LEGEND_KEY) === "1"; } catch (e) { /* no storage */ }
+  let legendFolded = true; // always starts closed, as a tab on the right
   const lgIcon = (kind, color) => `<svg class="lg-ico" viewBox="0 0 24 24"><path d="${CONTACT_ICONS[kind]}" stroke="${color}"/></svg>`;
   const lgBar = color => `<span class="lg-bar" style="background:${color}"></span>`;
   const lgLine = color => `<span class="lg-line" style="background:${color}"></span>`;
@@ -2481,6 +2537,7 @@
         `<div class="lg-row">${lgIcon("letters", repartoAccents.letters)}letters</div>` +
         `<div class="lg-row">${lgIcon("library", repartoAccents.library)}book in his library</div>` +
         `<div class="lg-row">${lgIcon("secondaryBib", repartoAccents.secondaryBib)}publication on Gadda</div>` +
+        `<div class="lg-row"><svg class="lg-ico" viewBox="0 0 24 24"><path d="${GADDA_WORK_ICON}" stroke="${GADDA_WORK_COLOR}"/></svg>Gadda's works (click his line)</div>` +
       `</div></div>` +
       `<div class="lg-group"><div class="lg-sec">Bars and bricks (stacked, one per record)</div><div class="lg-grid lg-cols2">` +
         `<div class="lg-row">${lgBar(repartoAccents.letters)}letters they sent Gadda</div>` +
@@ -2508,7 +2565,6 @@
   };
   legend.select(".lg-title").on("click", () => {
     legendFolded = !legendFolded;
-    try { localStorage.setItem(LEGEND_KEY, legendFolded ? "1" : "0"); } catch (e) { /* no storage */ }
     syncLegend();
   });
   legend.selectAll(".lg-cat").on("click", function () {
