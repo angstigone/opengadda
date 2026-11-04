@@ -348,6 +348,12 @@
   .ri-meta { font-size: 0.68rem; opacity: 0.6; }
   .research-del { border: none; background: transparent; opacity: 0.45; padding: 0 0.5rem; font-size: 1rem !important; }
   .research-del:hover { opacity: 1; }
+  .snap-panel { width: auto; min-width: 230px; gap: 0.2rem; padding: 0.35rem; }
+  .snap-opt {
+    font: inherit; font-size: 0.78rem; text-align: left; padding: 0.4rem 0.55rem; cursor: pointer;
+    border: none; border-radius: 6px; background: transparent; color: var(--ink); white-space: nowrap;
+  }
+  .snap-opt:hover { background: color-mix(in srgb, var(--ink) 7%, transparent); }
   .research-export { display: flex; align-items: center; gap: 0.35rem; border-top: 1px solid var(--grid); padding-top: 0.45rem; }
   .research-export span { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.5; margin-right: auto; }
   .research-export button { font-size: 0.72rem !important; padding: 0.25rem 0.55rem; border: 1px solid var(--grid); border-radius: 6px; background: transparent; }
@@ -671,6 +677,7 @@
   const activeCats = new Set();
   const catOf = name => (categoriaColors[letterCategoria[name]] ? letterCategoria[name] : "__none");
   let clearSelection = () => false; // set by render(): deselects, true if anything was selected
+  let gaddaViewKept = false; // Gadda's works view (his line clicked), kept across redraws
   let width = 1400;
   const margin = { top: 40, right: 40, bottom: 30, left: 170 }; // axis sits on top
   const minHeight = 420;
@@ -1679,7 +1686,7 @@
     // so the no-person dots — easy to lose against 87 correspondents —
     // stand out clearly. It force-shows all three no-person categories
     // while active, regardless of their individual filter-bar toggles.
-    let gaddaOnlyMode = false;
+    let gaddaOnlyMode = gaddaViewKept;
 
     function isRelevant(name) {
       if (gaddaOnlyMode) return name === "Gadda Carlo Emilio";
@@ -1710,6 +1717,7 @@
     }
 
     function applyHighlight() {
+      gaddaViewKept = gaddaOnlyMode;
       if (!previewing) {
         // clicking someone brings the view to their first contact with
         // Gadda (picking someone in the search doesn't: see pickSearched)
@@ -1747,7 +1755,7 @@
           .style("opacity", visible ? 0.85 : 0)
           .style("pointer-events", visible ? null : "none");
       });
-      svg.select(".gadda-own").style("opacity", gaddaOnlyMode ? 1 : 0);
+      svg.select(".gadda-own").style("opacity", gaddaOnlyMode ? 1 : 0).style("pointer-events", gaddaOnlyMode ? null : "none");
       lineLabels.style("font-weight", d => (selected.has(d.name) ? 800 : 600));
       if (!previewing) pinLabels(); // the selection changes which names win a clash
 
@@ -1809,7 +1817,7 @@
       return true;
     };
     svg.on("click.deselect", event => {
-      if (event.target.closest(".row, .year-mark, .contact, .time-label, .label-layer, .no-person-pt, .letter-bars")) return;
+      if (event.target.closest(".row, .year-mark, .contact, .time-label, .label-layer, .no-person-pt, .letter-bars, .gadda-own")) return;
       clearSelection();
     });
     contactG.on("click", (event, d) => {
@@ -1904,10 +1912,28 @@
       .map(([year, n]) => ({ year, n, kind: "works", color: GADDA_WORK_COLOR, dx: 0 }))
       .filter(m => m.year >= yearMin && m.year <= yearMax);
     const ownBase = gaddaY - (Math.max(strokeWidthFor(gadda) / 2, ICON_PX / 2 * unitsPerPx) + BAR_GAP_PX * unitsPerPx);
+    // clicking a year's bar or icon breaks it into bricks, one per work (as
+    // for everyone else); clicking it again closes it
+    const GADDA_NAME = "Gadda Carlo Emilio";
+    const ownExploded = m => explodedBar && explodedBar.name === GADDA_NAME && explodedBar.year === m.year && pxPerYearNow >= EXPLODE_MIN_PX;
+    function toggleGaddaBricks(event, m) {
+      event.stopPropagation();
+      pickedLetterId = null;
+      if (explodedBar && explodedBar.name === GADDA_NAME && explodedBar.year === m.year) {
+        explodedBar = null;
+        rerenderKeepingSelection();
+        pinLabels();
+        return;
+      }
+      explodedBar = { name: GADDA_NAME, year: m.year };
+      zoomOnYear(m.year);
+    }
     const ownG = svg.append("g").attr("class", "gadda-own")
       .style("opacity", 0).style("pointer-events", "none")
-      .selectAll("g").data(gaddaOwn).join("g");
-    ownG.append("rect").attr("class", "gadda-own-bar")
+      .selectAll("g").data(gaddaOwn).join("g")
+        .style("cursor", "pointer")
+        .on("click", toggleGaddaBricks);
+    ownG.filter(m => !ownExploded(m)).append("rect").attr("class", "gadda-own-bar")
       .attr("x", m => x(m.year) + m.dx * unitsPerPx - LETTER_BAR_W / 2 * unitsPerPx)
       .attr("width", LETTER_BAR_W * unitsPerPx)
       .attr("y", m => ownBase - barPx(m.n) * unitsPerPx)
@@ -1920,9 +1946,45 @@
         g.append("path").attr("class", "contact-icon").attr("d", GADDA_WORK_ICON)
           .attr("stroke", m => m.color);
       });
+    // the opened year: a green tower of bricks up from his line, one per
+    // work (in the order of his bibliography); hovering one shows its title
+    // and where it appeared, clicking pins it (the search pins it too)
+    ownG.filter(ownExploded).each(function (m) {
+      const g = d3.select(this);
+      d3.select(this.parentNode).raise();
+      const works = noPersonPrimaryBib.filter(w => w.year === m.year);
+      const items = works.map((w, i) => ({ key: `gwork:${m.year}:${i}`, kind: "work", date: String(m.year), work: { title: w.title, rivista: w.detail } }));
+      const room = ownBase - margin.top;
+      const step = Math.min((BRICK_H + BRICK_GAP) * unitsPerPx, room / Math.max(1, items.length));
+      const h = step * BRICK_H / (BRICK_H + BRICK_GAP);
+      const brickY = i => ownBase - i * step - h;
+      const cx = x(m.year);
+      const pinned = () => items.findIndex(it => it.key === pickedLetterId);
+      const showNote = i => {
+        g.selectAll(".brick-note").remove();
+        if (i >= 0) drawBrickNote(g, { name: GADDA_NAME }, items[i], cx, brickY(i) + h / 2, -1);
+      };
+      items.forEach((item, i) => {
+        g.append("rect").attr("class", "letter-brick")
+          .classed("picked", item.key === pickedLetterId)
+          .attr("x", cx - BRICK_W / 2 * unitsPerPx).attr("width", BRICK_W * unitsPerPx)
+          .attr("y", brickY(i)).attr("height", h)
+          .attr("rx", 1.5 * unitsPerPx)
+          .attr("fill", GADDA_WORK_COLOR)
+          .on("mouseenter", () => showNote(i))
+          .on("mouseleave", () => showNote(pinned()))
+          .on("click", event => {
+            event.stopPropagation();
+            pickedLetterId = pickedLetterId === item.key ? null : item.key;
+            g.selectAll(".letter-brick").classed("picked", function () { return this === event.currentTarget && pickedLetterId === item.key; });
+            showNote(i);
+          });
+      });
+      showNote(pinned());
+    });
     // the counts, at the bars' tips, when zoomed in enough to read them
     if (activeYear != null || (x(yearMin + 1) - x(yearMin)) / unitsPerPx >= COUNTS_MIN_PX) {
-      ownG.append("text").attr("class", "letter-count")
+      ownG.filter(m => !ownExploded(m)).append("text").attr("class", "letter-count")
         .attr("x", m => x(m.year) + m.dx * unitsPerPx)
         .attr("y", m => ownBase - barPx(m.n) * unitsPerPx - 2 * unitsPerPx)
         .attr("text-anchor", "middle")
@@ -2142,8 +2204,10 @@
   const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
   const plural = (c, one, many) => `${c} ${c === 1 ? one : many}`;
   const peopleNames = new Set(allCorrespondents.map(d => d.name));
+  // the key of a work's brick on Gadda's line (its place among that year's works)
+  const gaddaWorkKey = w => `gwork:${w.year}:${noPersonPrimaryBib.filter(o => o.year === w.year).indexOf(w)}`;
   const workIndex = [
-    ...noPersonPrimaryBib.map(w => ({ title: w.title, year: w.year, name: null, what: "by Gadda" })), // his own first
+    ...noPersonPrimaryBib.map(w => ({ title: w.title, year: w.year, name: null, what: "by Gadda", key: gaddaWorkKey(w) })), // his own first
     ...Object.entries(libraryBooks).flatMap(([name, bs]) => bs.map(b => ({ title: b.title, year: b.year, name, what: "book", item: b }))),
     ...Object.entries(secondaryWorks).flatMap(([name, ws]) => ws.map(w => ({ title: w.title, year: w.year, name, what: "publication", item: w }))),
   ].filter(w => w.title && Number.isFinite(w.year) && (!w.name || peopleNames.has(w.name)));
@@ -2176,7 +2240,13 @@
     ].filter(e => Number.isFinite(e.year)).sort((a, b) => a.date.localeCompare(b.date));
   }
   const shortDate = iso => iso.length > 4 ? iso.split("-").reverse().map(Number).filter(Boolean).join(".") : iso;
-  const entryIcon = kind => kind === "book" ? iconSvg("library", "book")
+  const gaddaWorkSvg = `<svg class="sg-ico" viewBox="0 0 24 24" aria-label="work by Gadda"><title>work by Gadda</title><path d="${GADDA_WORK_ICON}" stroke="${GADDA_WORK_COLOR}"/></svg>`;
+  const GADDA = "Gadda Carlo Emilio";
+  // Gadda himself in the search: his works, listed like a person's records
+  const gaddaRecords = () => noPersonPrimaryBib.filter(w => Number.isFinite(w.year))
+    .map(w => ({ name: GADDA, kind: "gwork", date: String(w.year), year: w.year, key: gaddaWorkKey(w), text: w.title, extra: "" }))
+    .sort((a, b) => a.year - b.year);
+  const entryIcon = kind => kind === "gwork" ? gaddaWorkSvg : kind === "book" ? iconSvg("library", "book")
     : kind === "work" ? iconSvg("secondaryBib", "publication")
     : `<svg class="sg-ico" viewBox="0 0 24 24"><path d="${CONTACT_ICONS.letters}" stroke="${kind === "out" ? "var(--ink)" : repartoAccents.letters}"/></svg>`;
   // --- searching through the ages: a year ("1953") or a span
@@ -2214,18 +2284,25 @@
     searchSuggestions.html("");
     if (!q) return;
     const matched = allCorrespondents.filter(d => norm(d.name).includes(q)).slice(0, 5);
-    const people = matched.flatMap(d => {
+    const gaddaMatch = norm(GADDA).includes(q) || norm("Carlo Emilio Gadda").includes(q);
+    const gaddaOpen = searchOpen.get(GADDA) ?? (gaddaMatch && !matched.length);
+    const gaddaRows = !gaddaMatch ? [] : [
+      { type: "person", name: GADDA, color: "var(--ink)", label: GADDA, open: gaddaOpen,
+        count: `<span class="sg-k">${gaddaWorkSvg}${noPersonPrimaryBib.length}</span>` },
+      ...(gaddaOpen ? [{ type: "entries", name: GADDA, color: "var(--ink)", items: gaddaRecords() }] : []),
+    ];
+    const people = [...gaddaRows, ...matched.flatMap(d => {
       const open = searchOpen.get(d.name) ?? matched.length === 1;
       const person = { type: "person", name: d.name, color: personColor(d.name), label: d.name, count: recordPreview(d.name), open };
       return open ? [person, { type: "entries", name: d.name, color: person.color, items: personRecords(d.name) }] : [person];
-    });
+    })];
     // up to 3 of Gadda's own works, then up to 5 books/publications
     const found = workIndex.filter(w => norm(w.title).includes(q));
     const works = [...found.filter(w => !w.name).slice(0, 3), ...found.filter(w => w.name).slice(0, 5)]
       .map(w => ({ type: "work", ...w, color: w.name ? personColor(w.name) : "var(--ink)", label: w.title,
         count: w.name
           ? `<span class="sg-k">${iconSvg(w.what === "book" ? "library" : "secondaryBib", w.what)}${w.year}</span> ${esc(w.name)}`
-          : `${w.year} · by Gadda` }));
+          : `<span class="sg-k">${gaddaWorkSvg}${w.year}</span> by Gadda` }));
     const ym = q.match(/^(\d{4})(?:\s*[-\u2013]\s*(\d{4}))?$/);
     const years = [];
     if (ym) {
@@ -2304,7 +2381,20 @@
     explodedBar = null; // whatever was open before closes
     pickedLetterId = null;
     if (d.type === "year") { d.lo === d.hi ? openYear(d.lo) : openRange(d.lo, d.hi); return; }
-    if (d.type === "work" && !d.name) { openYear(d.year); return; }
+    // Gadda, or one of his works: his works view (as if his line was
+    // clicked), zoomed on the work's year
+    if ((d.type === "work" && !d.name) || d.name === GADDA) {
+      gaddaViewKept = true;
+      lastSelectedNames = [];
+      searchSelected = new Set();
+      if (d.year) {
+        // straight to the work: its year's bricks open, its brick pinned
+        explodedBar = { name: GADDA, year: d.year };
+        pickedLetterId = d.key || null;
+        zoomOnYear(d.year);
+      } else { rerenderKeepingSelection(); pinLabels(); }
+      return;
+    }
     const entry = personEntry(d.name);
     addSearchEntry(entry);
     // counted as selected already, so the redraw doesn't scroll to them
@@ -2481,6 +2571,25 @@
   const researchPanel = researchBox.append("div").attr("class", "research-panel").attr("hidden", "")
     .on("click", event => event.stopPropagation());
   d3.select(document).on("click.research", () => researchPanel.attr("hidden", ""));
+  // snapshot: its own button beside Research, a small menu of ways to
+  // save what's on screen — the graph as an image (PNG, JPG) or as a
+  // vector file (SVG), or its records as a spreadsheet (CSV, opens in Excel)
+  const snapBox = graphTools.append("div").attr("class", "research");
+  snapBox.append("button").attr("class", "research-btn snapshot-btn")
+    .attr("title", "Save the graph as it is now")
+    .attr("aria-label", "Snapshot of the graph")
+    .html(`<svg class="snap-ico" viewBox="0 0 24 24" style="width:15px;height:15px;flex:0 0 auto" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.3"/></svg>Snapshot`)
+    .on("click", event => { event.stopPropagation(); snapPanel.attr("hidden", snapPanel.attr("hidden") == null ? "" : null); });
+  const snapPanel = snapBox.append("div").attr("class", "research-panel snap-panel").attr("hidden", "")
+    .on("click", event => event.stopPropagation());
+  d3.select(document).on("click.snapshot", () => snapPanel.attr("hidden", ""));
+  [
+    ["Image (PNG)", "The graph as it is now, as an image", () => downloadSelection("png")],
+    ["Image (JPG)", "The graph as it is now, as a smaller image", () => downloadSelection("jpg")],
+    ["Vector (SVG)", "The graph as it is now, as a vector file you can edit (Illustrator, Inkscape…)", () => downloadSelection("svg")],
+    ["Spreadsheet (CSV, opens in Excel)", "Every record of what's shown now: the selected people, the zoomed years", exportViewCsv],
+  ].forEach(([label, title, act]) => snapPanel.append("button").attr("class", "snap-opt").attr("title", title).text(label)
+    .on("click", () => { snapPanel.attr("hidden", ""); act(); }));
 
   const surname = n => n.split(" ")[0];
   function currentView() {
@@ -2541,6 +2650,16 @@
         .map(w => [n, "publication on Gadda", w.year, w.title, [w.tipo, w.rivista].filter(Boolean).join(" \u00b7 "), ""]),
     ]);
   }
+  function exportViewCsv() {
+    const rows = [["person", "type", "date", "what", "details", "record id"], ...viewRecords(currentView())];
+    const csv = "\ufeff" + rows.map(r => r.map(csvCell).join(",")).join("\r\n");
+    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `gadda-view-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
   function exportCsv() {
     const rows = [["saved view", "person", "type", "date", "what", "details", "record id"]];
     research.forEach(v => {
@@ -2578,8 +2697,6 @@
     exp.append("span").text("Export");
     exp.append("button").text("Records (CSV)").property("disabled", !research.length)
       .attr("title", "Every record of the saved views, as a spreadsheet").on("click", exportCsv);
-    exp.append("button").text("Graph (PNG)")
-      .attr("title", "The graph as it is now, as an image").on("click", () => downloadSelection("png"));
   }
   drawResearch();
 
@@ -2815,6 +2932,14 @@
     const source = new XMLSerializer().serializeToString(clone);
     const svgUrl = URL.createObjectURL(new Blob([source], { type: "image/svg+xml;charset=utf-8" }));
     const key = (reparti.find(r => r.file === thisFile) || { key: "graph" }).key;
+    if (format === "svg") {
+      const a = document.createElement("a");
+      a.href = svgUrl;
+      a.download = `gadda-${key}-my-selection.svg`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(svgUrl), 1000);
+      return;
+    }
     // the styled copy is drawn onto a canvas and saved from there; it's
     // rendered at twice its size so the image stays sharp, unless that
     // would go past what browsers allow for one canvas
