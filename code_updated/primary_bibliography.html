@@ -29,7 +29,9 @@ html { font-size: calc(16px * var(--font-scale)); }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'EB Garamond', Georgia, serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
 nav { background:var(--ink); border-bottom:2px solid var(--accent); display:flex; align-items:center; padding:0 2.5rem; gap:2rem; height:52px; position:sticky; top:0; z-index:100; }
-.nav-brand { font-family:'DM Mono',monospace; font-size:13px; letter-spacing:0.18em; color:var(--white); text-decoration:none; margin-right:auto; }
+.nav-brand { font-family:'EB Garamond',Georgia,serif; font-size:22px; font-style:italic; text-transform:none; font-weight:400; letter-spacing:-0.02em; color:#fdfaf5; text-decoration:none; margin-right:auto; }
+.nav-brand em { color:#c8794a; font-style:normal; }
+nav a.nav-brand:hover { color:#fdfaf5; }
 nav a { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#9a9080; text-decoration:none; transition:color 0.2s; }
 nav a:hover, nav a.active { color:#e8c89a; }
 nav a.nav-cat:hover { color: var(--cat-color); }
@@ -348,7 +350,7 @@ header p { color:#9a9080; font-size:1rem; }
 <body>
 
 <nav>
-  <a href="index.html" class="nav-brand">OpenGadda</a>
+  <a href="index.html" class="nav-brand">Open<em>Gadda</em></a>
   <a href="opere.html">Opere</a>
   <a href="archive.html" class="nav-cat" style="--cat-color:#c98a55">Archivi</a>
   <a href="primary_bibliography.html" class="nav-cat active" style="--cat-color:#4fbf85">Bib. primaria</a>
