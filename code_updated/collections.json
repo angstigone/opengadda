@@ -871,6 +871,9 @@
      {
       "titolo":"VERSO LA CERTOSA", "sigla":"VlC"
     },
+      {
+      "titolo":"Verso la Certosa", "sigla":"VlC", "id": ["1961-1"]
+    },
     {
       "titolo":"Verso Teramo", "sigla":"A", "pagine": "235"
     },
@@ -911,6 +914,9 @@
     },
     {
       "titolo":"I LUIGI DI FRANCIA", "sigla":"LdF", "pagine": "85", "id": ["1964-1","2021"]
+    },
+    {
+      "titolo":"I Luigi di Francia", "sigla":"LdF", "pagine": "85", "id": ["1952-7","1952-8", "1952-9"]
     },
     {
       "titolo":"I natali di Carlo Emilio Gadda...", "sigla":"SA", "pagine": "871"
