@@ -154,6 +154,15 @@ body.no-sigla-panel .viz-static-panel { display:none; }
 .coll-tab .coll-text { display:flex; flex-direction:column; gap:2px; min-width:0; }
 .coll-tab .coll-sub { font-size:0.85rem; opacity:0.7; }
 .coll-tree { border-top:1px solid var(--border); margin:-8px 0 0.5rem 1.25rem; }
+.coll-grid-wrap { margin-bottom:0.75rem; }
+/* All volumes on one row; scrolls sideways only if the screen is too narrow. */
+.coll-grid { grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:minmax(120px,1fr); overflow-x:auto; }
+.coll-vol-tile { flex-direction:column; align-items:flex-start; gap:0.5rem; }
+.coll-vol-tile .coll-text { display:flex; flex-direction:column; gap:2px; min-width:0; }
+.coll-vol-tile.active { background:var(--ink); border-color:var(--ink); }
+.coll-vol-tile.active .sig-code { color:#e8c89a; }
+.coll-vol-tile.active .sig-title { color:rgba(255,255,255,0.7); }
+.coll-tree-panel { margin:0.75rem 0 0.5rem; border-top:2px solid var(--ink); }
 .coll-work, .coll-chapter { display:grid; grid-template-columns:18px 1fr auto auto; gap:0.75rem; align-items:baseline; padding:0.6rem 0.25rem; border-bottom:1px solid var(--border); }
 .coll-work { cursor:pointer; }
 .coll-work.leaf { cursor:default; }
@@ -872,8 +881,8 @@ function render() {
   const more = document.getElementById('sigla-more');
   more.style.display = works.length > SIGLA_TILES_COLLAPSED ? 'flex' : 'none';
   more.innerHTML = siglaTilesExpanded
-    ? '<span class="plus">−</span>Mostra meno'
-    : `<span class="plus">+</span>Mostra tutte (${works.length})`;
+    ? '<span class="plus">−</span>'
+    : `<span class="plus">+</span>`;
   more.setAttribute('aria-expanded', siglaTilesExpanded);
 }
 
@@ -1047,11 +1056,13 @@ function toggleTreeWork(key) {
 function renderCollectionTree() {
   const el = document.getElementById('coll-tabs');
   if (!el) return;
-  // Volumes stacked vertically; the open one shows its works right below it.
-  el.innerHTML = COLLECTIONS.map(c =>
-    `<button type="button" class="coll-tab${openColl === c.id ? ' active' : ''}" onclick="toggleTreeColl(${jsAttr(c.id)})">${thumbImgTag(c.numero.replace(/\s+/g, ''), 'coll-cover')}<span class="coll-text"><span class="coll-id">${c.id}</span><span class="coll-sub">${c.numero} · ${c.titolo}</span></span></button>` +
-    (openColl === c.id ? `<div class="coll-tree">${collectionTreeHtml(c.id)}</div>` : '')
-  ).join('');
+  // Volumes as tiles, like the sigla tiles; the open one's works show below
+  // the whole grid, so clicking another tile switches the contents in place.
+  el.className = 'coll-grid-wrap';
+  el.innerHTML = '<div class="sigla-tiles coll-grid">' + COLLECTIONS.map(c =>
+    `<button type="button" class="sig-tile coll-vol-tile${openColl === c.id ? ' active' : ''}" aria-expanded="${openColl === c.id}" onclick="toggleTreeColl(${jsAttr(c.id)})">${thumbImgTag(c.numero.replace(/\s+/g, ''), 'coll-cover')}<span class="coll-text"><span class="sig-code">${c.id}</span><span class="sig-title">${c.numero} · ${c.titolo}</span></span></button>`
+  ).join('') + '</div>' +
+    (openColl ? `<div class="coll-tree coll-tree-panel">${collectionTreeHtml(openColl)}</div>` : '');
 }
 
 function collectionTreeHtml(collId) {
@@ -1108,14 +1119,18 @@ function renderAdelphi() {
   if (!el) return;
   const eds = adelphiEditions();
   if (!eds.length) { el.innerHTML = '<div class="no-results">Nessuna edizione in adelphi.json.</div>'; return; }
-  el.innerHTML = eds.map(e => {
+  // Same tiles-in-a-row layout as the Garzanti volumes; the open edition's
+  // contents show below the row.
+  el.className = 'coll-grid-wrap';
+  el.innerHTML = '<div class="sigla-tiles coll-grid">' + eds.map(e => {
     const open = openAdelphi === e.sigla;
     const meta = [e.cura && 'a cura di ' + e.cura, e.year].filter(Boolean).join(' · ');
-    return `<button type="button" class="coll-tab${open ? ' active' : ''}" onclick="toggleAdelphi(${jsAttr(e.sigla)})">${e.year ? thumbImgTag([`${e.sigla}-${e.year}-adelphi`, `${e.sigla}-${e.year}`], 'coll-cover') : ''}<span class="coll-text"><span class="coll-id">${e.sigla}</span><span class="coll-sub"><em>${e.titolo}</em>${meta ? ' · ' + meta : ''}</span></span></button>` +
-      (open ? `<div class="coll-tree">${e.capitoli.length
-        ? [...e.capitoli].sort((a, b) => firstPage(a.pagine) - firstPage(b.pagine)).map(c => chapterHtml(c, e.sigla)).join('')
-        : '<div class="coll-chapter coll-empty"><span>Indice non ancora inserito.</span></div>'}</div>` : '');
-  }).join('');
+    return `<button type="button" class="sig-tile coll-vol-tile${open ? ' active' : ''}" aria-expanded="${open}" onclick="toggleAdelphi(${jsAttr(e.sigla)})">${e.year ? thumbImgTag([`${e.sigla}-${e.year}-adelphi`, `${e.sigla}-${e.year}`], 'coll-cover') : ''}<span class="coll-text"><span class="sig-code">${e.sigla}</span><span class="sig-title"><em>${e.titolo}</em>${meta ? ' · ' + meta : ''}</span></span></button>`;
+  }).join('') + '</div>';
+  const e = eds.find(x => x.sigla === openAdelphi);
+  if (e) el.innerHTML += `<div class="coll-tree coll-tree-panel">${e.capitoli.length
+    ? [...e.capitoli].sort((a, b) => firstPage(a.pagine) - firstPage(b.pagine)).map(c => chapterHtml(c, e.sigla)).join('')
+    : '<div class="coll-chapter coll-empty"><span>Indice non ancora inserito.</span></div>'}</div>`;
 }
 
 // ── Collection detail view — every work contained in one Garzanti volume ──────
