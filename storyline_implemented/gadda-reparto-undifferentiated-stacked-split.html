@@ -1217,7 +1217,7 @@
     // sent them (ink), library books (orange), publications on Gadda (blue).
     // When zoomed in enough the counts are written beside the bar. Clicking
     // the bar or any of that year's icons breaks it into bricks.
-    const LETTER_BAR_W = 7, LETTER_BAR_PX = 4;
+    const LETTER_BAR_W = 7, LETTER_BAR_PX = 2;
     const BOOK_COLOR = repartoAccents.library, WORK_COLOR = repartoAccents.secondaryBib;
     const barDir = d => (d.dipY < gaddaY ? -1 : 1); // -1 up, 1 down
     const barBase = d => d.dipY + barDir(d) * (ICON_PX / 2 + 1) * unitsPerPx; // just past the icons
