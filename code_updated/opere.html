@@ -135,10 +135,6 @@ header p { color:#9a9080; font-size:1rem; }
 .sigla-tiles { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px; margin-top:0.25rem; }
 .sig-tile { display:flex; flex-direction:column; gap:4px; text-align:left; padding:0.6rem 0.75rem; border:1px solid var(--border); border-radius:3px; background:var(--white); color:var(--ink); cursor:pointer; font:inherit; transition:border-color 0.15s; }
 .sig-tile:hover { border-color:var(--accent); }
-.sigla-more { display:flex; flex-direction:column; align-items:center; gap:6px; margin:1rem auto 0; background:none; border:none; padding:0; cursor:pointer; font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); }
-.sigla-more .plus { width:36px; height:36px; border-radius:50%; border:1px solid var(--accent); color:var(--accent); background:var(--white); font-size:22px; line-height:34px; text-align:center; transition:background 0.15s, color 0.15s; }
-.sigla-more:hover .plus { background:var(--accent); color:var(--white); }
-.sigla-more:hover { color:var(--accent); }
 .sig-tile .sig-code { font-size:14px; }
 .sig-code { font-family:'DM Mono',monospace; letter-spacing:0.04em; color:var(--accent); }
 .sig-title { font-family:'EB Garamond',serif; font-style:italic; line-height:1.3; }
@@ -156,13 +152,15 @@ body.no-sigla-panel .viz-static-panel { display:none; }
 .coll-tree { border-top:1px solid var(--border); margin:-8px 0 0.5rem 1.25rem; }
 .coll-grid-wrap { margin-bottom:0.75rem; }
 /* All volumes on one row; scrolls sideways only if the screen is too narrow. */
-.coll-grid { grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:minmax(120px,1fr); overflow-x:auto; }
+.coll-grid { grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:minmax(120px,1fr); overflow-x:auto; padding-bottom:6px; }
+.sigla-row { grid-auto-columns:160px; }
 .coll-vol-tile { flex-direction:column; align-items:flex-start; gap:0.5rem; }
 .coll-vol-tile .coll-text { display:flex; flex-direction:column; gap:2px; min-width:0; }
 .coll-vol-tile.active { background:var(--ink); border-color:var(--ink); }
 .coll-vol-tile.active .sig-code { color:#e8c89a; }
 .coll-vol-tile.active .sig-title { color:rgba(255,255,255,0.7); }
-.coll-tree-panel { margin:0.75rem 0 0.5rem; border-top:2px solid var(--ink); }
+/* Indented under the tile row so the contents read as belonging to the open volume. */
+.coll-tree-panel { margin:1rem 0 0.5rem 3rem; border-top:2px solid var(--ink); }
 .coll-work, .coll-chapter { display:grid; grid-template-columns:18px 1fr auto auto; gap:0.75rem; align-items:baseline; padding:0.6rem 0.25rem; border-bottom:1px solid var(--border); }
 .coll-work { cursor:pointer; }
 .coll-work.leaf { cursor:default; }
@@ -174,7 +172,7 @@ body.no-sigla-panel .viz-static-panel { display:none; }
 .coll-sigla { font-family:'DM Mono',monospace; font-size:10px; padding:2px 7px; border-radius:2px; background:var(--tag-bg); color:var(--tag-text); }
 .coll-sigla.link { cursor:pointer; }
 .coll-sigla.link:hover { text-decoration:underline; }
-.coll-chapters { display:none; padding-left:1.75rem; background:var(--white); }
+.coll-chapters { display:none; padding-left:3rem; background:var(--white); }
 .coll-work.open + .coll-chapters { display:block; }
 .coll-chapter { grid-template-columns:1fr auto; padding:0.4rem 0.5rem; font-size:0.95rem; }
 .coll-chapter:last-child { border-bottom:none; }
@@ -409,7 +407,6 @@ body.no-sigla-panel .viz-static-panel { display:none; }
         <button onclick="clearAllFilters()">× Mostra tutte le opere</button>
       </div>
       <div class="sigla-chips" id="sigla-chips"><div style="padding:3rem 1rem;text-align:center;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted)">Caricamento…</div></div>
-      <button type="button" class="sigla-more" id="sigla-more" style="display:none" onclick="toggleSiglaTiles()"></button>
 
       <span class="section-label" style="margin-top:2rem">Edizioni Garzanti, «i libri della Spiga», a cura di Dante Isella (1988–1993)</span>
       <div class="coll-tabs" id="coll-tabs"></div>
@@ -869,29 +866,14 @@ function render() {
   const works = primaryOnly(filtered); // other editions open from the work's own page
   if (!works.length) {
     el.innerHTML = '<div class="no-results">Nessuna opera trovata.</div>';
-    document.getElementById('sigla-more').style.display = 'none';
     return;
   }
   // Always alphabetical by sigla, whatever order `filtered` is in.
   const label = o => o.displaySigla || o.sigla;
   works.sort((a,b) => label(a).localeCompare(label(b), 'it', {sensitivity:'base'}) || (a.titolo_completo||'').localeCompare(b.titolo_completo||'', 'it'));
-  el.className = 'sigla-tiles';
-  const shown = siglaTilesExpanded ? works : works.slice(0, SIGLA_TILES_COLLAPSED);
-  el.innerHTML = shown.map(o => `<button type="button" class="sig-tile" onclick="showWorkDetail(${jsAttr(o.realSigla || o.sigla)})"><span class="sig-code">${label(o)}</span><span class="sig-title">${o.titolo_completo || ''}</span></button>`).join('');
-  const more = document.getElementById('sigla-more');
-  more.style.display = works.length > SIGLA_TILES_COLLAPSED ? 'flex' : 'none';
-  more.innerHTML = siglaTilesExpanded
-    ? '<span class="plus">−</span>'
-    : `<span class="plus">+</span>`;
-  more.setAttribute('aria-expanded', siglaTilesExpanded);
-}
-
-// Only the first few sigla tiles show until the reader asks for the rest.
-const SIGLA_TILES_COLLAPSED = 4;
-let siglaTilesExpanded = false;
-function toggleSiglaTiles() {
-  siglaTilesExpanded = !siglaTilesExpanded;
-  render();
+  // One row of tiles, scrolling sideways, like the Garzanti and Adelphi rows.
+  el.className = 'sigla-tiles coll-grid sigla-row';
+  el.innerHTML = works.map(o => `<button type="button" class="sig-tile" onclick="showWorkDetail(${jsAttr(o.realSigla || o.sigla)})"><span class="sig-code">${label(o)}</span><span class="sig-title">${o.titolo_completo || ''}</span></button>`).join('');
 }
 
 // TEMP: layout comparison switch (?panel=0 to start without the right panel)

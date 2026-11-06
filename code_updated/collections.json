@@ -75,6 +75,9 @@
     {
       "titolo":"L'ADALGISA - DISEGNI MILANESI", "sigla":"L'A", "pagine": "283", "id": ["1944", "2014"]
     },
+     {
+      "titolo":"La cognizione del dolore", "sigla":"CdD", "pagine": "233", "id": ["1938-1", "1938-4", "1939-2", "1939-4", "1940-1","1940-8", "1941-2"]
+    },
     {
       "titolo":"La festa dell'uva a Marino", "sigla":"CdU", "pagine": "233", "id": ["1932-16"]
     },
@@ -436,6 +439,9 @@
     {
       "titolo":"GLI ANNI", "sigla":"A", "pagine": "201", "id": ["1943-5"]
     },
+     {
+      "titolo":"Gli anni", "sigla":"A", "pagine": "201", "id": ["1943-5"]
+    },
     {
       "titolo":"Grandezza e biografia", "sigla":"SD", "pagine": "825", "id": ["1938-6"]
     },
@@ -606,6 +612,9 @@
     },
     {
       "titolo":"LE MERAVIGLIE D'ITALIA", "sigla":"MdI", "pagine": "11", "id": ["1939-5", "1964-2"]
+    },
+    {
+      "titolo":"Le meraviglie d'Italia", "sigla":"MdI", "pagine": "11", "id": ["1939-5", "1964-2"]
     },
     {
       "titolo":"Le stravaganze di Pasquali", "sigla":"SD", "pagine": "1017", "id": ["1952-2"]
