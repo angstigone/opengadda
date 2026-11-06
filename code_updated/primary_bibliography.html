@@ -295,6 +295,9 @@ header p { color:#9a9080; font-size:1rem; }
 .s-title { font-size: 0.9rem; font-weight: 500; color: var(--ink); line-height: 1.3; }
 .s-sub { font-size: 0.82rem; color: var(--muted); }
 .s-hint { padding: 0.5rem 1rem; font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); border-top: 1px solid var(--border); background: var(--paper2, var(--paper)); }
+.s-hint { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.s-all { color: var(--accent); text-decoration: none; }
+.s-all:hover { text-decoration: underline; }
 .s-empty, .s-loading { padding: 1rem; text-align: center; color: var(--muted); font-size: 0.9rem; font-style: italic; }
 
 /* ── ADVANCED SEARCH PANEL ── */
@@ -1310,6 +1313,11 @@ function exportData(fmt) {
     var hint = document.createElement('div');
     hint.className = 's-hint';
     hint.textContent = hits.length === 30 ? 'Primi 30 risultati — affina la ricerca' : hits.length + ' risultati';
+    var all = document.createElement('a');
+    all.className = 's-all';
+    all.href = 'search.html?q=' + encodeURIComponent(q);
+    all.textContent = 'Vedi tutti i risultati →';
+    hint.appendChild(all);
     container.appendChild(hint);
     container.classList.add('open');
   }
@@ -1329,7 +1337,10 @@ function exportData(fmt) {
       return;
     }
     var ql = q.toLowerCase();
+    // A bare 4-digit query is a year: return everything dated that year.
+    var yr = /^\d{4}$/.test(q.trim()) ? parseInt(q.trim(), 10) : null;
     var hits = ALL_DATA.filter(function(d) {
+      if (yr) return d.year === yr;
       return (d.title||'').toLowerCase().includes(ql) ||
              (d.subtitle||'').toLowerCase().includes(ql) ||
              (d.detail||'').toLowerCase().includes(ql);
@@ -1348,6 +1359,7 @@ function exportData(fmt) {
     });
     inputEl.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') { resultsEl.classList.remove('open'); inputEl.value = ''; }
+      if (e.key === 'Enter' && inputEl.value.trim()) window.location.href = 'search.html?q=' + encodeURIComponent(inputEl.value.trim());
     });
   }
 
