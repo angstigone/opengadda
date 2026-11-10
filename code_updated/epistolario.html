@@ -569,6 +569,7 @@ header p { color:#9a9080; font-size:1rem; }
   </div>
 </div>
 
+<script src="people_suggest.js"></script>
 <script>
 const PER_PAGE = 50;
 let MITTENTI = [];
@@ -1781,6 +1782,8 @@ window.addEventListener('pageshow', function(e) {
 
   function renderResults(hits, q, container) {
     container.innerHTML = '';
+    var people = window.ogPeopleSuggest ? window.ogPeopleSuggest(q, ALL_DATA) : null;
+    if (people) container.appendChild(people);
     if (!hits.length) {
       var empty = document.createElement('div');
       empty.className = 's-empty';
