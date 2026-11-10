@@ -303,6 +303,8 @@ header p { color:#9a9080; font-size:1rem; }
   white-space: normal; max-width: 240px; margin-top: 6px; font-style: italic;
 }
 .conn-badges { display:flex; flex-direction:column; gap:4px; margin-top:4px; align-items:flex-start; }
+.entry-tags { flex-direction:row; flex-wrap:wrap; align-items:center; gap:6px; }
+.entry-tags .type-tag { margin-top:0; }
 .conn-badge { font-family:'DM Mono',monospace; font-size:9px; padding:1px 6px; border-radius:2px; font-weight:600; letter-spacing:0.05em; white-space:nowrap; cursor:pointer; }
 .filter-banner { display:none; background:#dff0e8; border:1px solid #c8bfaa; border-radius:3px; padding:0.55rem 1rem; margin-bottom:1rem; align-items:center; justify-content:space-between; font-family:'DM Mono',monospace; font-size:11px; }
 .filter-banner.active { display:flex; }
@@ -406,15 +408,6 @@ header p { color:#9a9080; font-size:1rem; }
 .opera-bubble.active { background:var(--accent); border-color:var(--accent); color:var(--white); }
 .opera-bubble .n { opacity:0.65; margin-left:4px; }
 
-/* ── NAV SEARCH BUTTON ── */
-.nav-search-btn {
-  margin-left: auto; background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12); border-radius: 4px;
-  padding: 4px 10px; cursor: pointer; color: rgba(255,255,255,0.4);
-  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em;
-  display: flex; align-items: center; gap: 6px; transition: all 0.2s;
-}
-.nav-search-btn:hover { border-color: var(--accent-light); color: var(--accent-light); }
 
 /* ── SEARCH OVERLAY ── */
 .search-overlay {
@@ -512,6 +505,9 @@ header p { color:#9a9080; font-size:1rem; }
 }
 /* a filter option that would show nothing with the other filters set */
 .filter-btn.empty { opacity: 0.35; }
+
+/* Sigla (work) tags on each record — change the size of all of them here. */
+.sigla-tag { font-size: 13px; padding: 4px 10px; }
 </style>
 </head>
 <body>
@@ -525,7 +521,6 @@ header p { color:#9a9080; font-size:1rem; }
   <a href="library.html" class="nav-cat active" style="--cat-color:#e0955a">Biblioteca</a>
   <a href="epistolario.html" class="nav-cat" style="--cat-color:#a875cf">Epistolario</a>
   <a href="translations.html" class="nav-cat" style="--cat-color:#cdb85a">Traduzioni</a>
-  <button class="nav-search-btn" id="overlay-open-btn" aria-label="Apri ricerca">⌕ Cerca</button>
 </nav>
 <header>
   <div class="eyebrow">OpenGadda</div>
@@ -547,14 +542,16 @@ header p { color:#9a9080; font-size:1rem; }
         <span>—</span>
         <input type="number" id="yearTo" placeholder="al" oninput="applyFilters()">
       </div>
+    </div>
     
     <div class="sidebar-section">
       <span class="sidebar-label">Ordinamento</span>
       <div class="filter-group">
-        <button class="filter-btn active" onclick="setSort('year')" id="s-year">Cronologico <span class="count">↑</span></button>
+        <button class="filter-btn active" onclick="setSort('year')" id="s-year">Cronologico</button>
         <button class="filter-btn" onclick="setSort('author')" id="s-author">Autore</button>
         <button class="filter-btn" onclick="setSort('title')" id="s-title">Titolo</button>
       </div>
+    </div>
 
 
     <div class="sidebar-section">
@@ -1051,8 +1048,12 @@ function entryHtml(d) {
   const titleHtml = '<span class="entry-title-inline">' + (d.title||'') + '</span>';
   const lineParts = [author, titleHtml, editore, luogo].filter(Boolean);
   const typeTag = genere ? '<span class="type-tag" style="cursor:pointer" data-genere="' + genere.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();activeGenere=activeGenere===this.dataset.genere?null:this.dataset.genere;applyFilters()">' + genere + (GENERE_LABELS[genere] ? '<span class="tag-full">' + GENERE_LABELS[genere] + '</span>' : '') + '</span>' : '';
+  // Holding library (fondo) on the right; click to filter by it, hover for the full name.
+  const fondoTags = getFondi(d).map(f => '<span class="type-tag" style="cursor:pointer" data-fondo="' + f.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();activeFondo=activeFondo===this.dataset.fondo?null:this.dataset.fondo;applyFilters()">' + f + (FONDO_LABELS[f] ? '<span class="tag-full">' + FONDO_LABELS[f] + '</span>' : '') + '</span>').join('');
   const badges = connBadges(d.id, 'library');
-  const operaTags = (d.themes||[]).length ? '<div class="conn-badges" style="margin-top:4px">' + (d.themes||[]).map(t => '<span class="type-tag" style="cursor:pointer" data-opera="' + t.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();setOperaFilter(this.dataset.opera)">' + t + ((SIGLE[t]&&SIGLE[t].titolo_completo) ? '<span class="tag-full">' + SIGLE[t].titolo_completo + '</span>' : '') + '</span>').join(' ') + '</div>' : '';
+  const siglaTags = (d.themes||[]).map(t => '<span class="type-tag sigla-tag" style="cursor:pointer" data-opera="' + t.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();setOperaFilter(this.dataset.opera)">' + t + ((SIGLE[t]&&SIGLE[t].titolo_completo) ? '<span class="tag-full">' + SIGLE[t].titolo_completo + '</span>' : '') + '</span>').join(' ');
+  // Genre sits in the record line, before the sigla tags.
+  const operaTags = (typeTag || siglaTags) ? '<div class="conn-badges entry-tags" style="margin-top:4px">' + typeTag + (typeTag && siglaTags ? ' ' : '') + siglaTags + '</div>' : '';
   return '<div class="entry" onclick="openDetail(\'' + d.id + '\')">' +
     '<div class="entry-year">' + (d.year !== null ? d.year : 's.d.') + '</div>' +
     '<div>' +
@@ -1060,7 +1061,7 @@ function entryHtml(d) {
       operaTags +
     '</div>' +
     '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">' +
-      typeTag +
+      fondoTags +
       badges +
     '</div>' +
   '</div>';
@@ -1532,7 +1533,7 @@ function exportData(fmt) {
     advToggle.textContent = 'Ricerca avanzata ▾';
   }
 
-  openBtn.addEventListener('click', openOverlay);
+  if (openBtn) openBtn.addEventListener('click', openOverlay);
   closeBtn.addEventListener('click', closeOverlay);
   overlay.addEventListener('click', function(e) { if (e.target === overlay) closeOverlay(); });
   bindInput(overlayInput, overlayResults);

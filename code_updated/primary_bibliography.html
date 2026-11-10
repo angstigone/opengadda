@@ -244,15 +244,6 @@ header p { color:#9a9080; font-size:1rem; }
 .report-sent { display:none; font-size:0.85rem; color:var(--accent); margin-top:8px; line-height:1.5; }
 .report-sent.show { display:block; }
 
-/* ── NAV SEARCH BUTTON ── */
-.nav-search-btn {
-  margin-left: auto; background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12); border-radius: 4px;
-  padding: 4px 10px; cursor: pointer; color: rgba(255,255,255,0.4);
-  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em;
-  display: flex; align-items: center; gap: 6px; transition: all 0.2s;
-}
-.nav-search-btn:hover { border-color: var(--accent-light); color: var(--accent-light); }
 
 /* ── SEARCH OVERLAY ── */
 .search-overlay {
@@ -348,6 +339,9 @@ header p { color:#9a9080; font-size:1rem; }
   text-transform: uppercase; background: none; color: var(--muted);
   border: 1px solid var(--border); padding: 5px 14px; border-radius: 2px; cursor: pointer;
 }
+
+/* Sigla (work) tags on each record — change the size of all of them here. */
+.sigla-tag { font-size: 13px; padding: 4px 10px; }
 </style>
 </head>
 <body>
@@ -361,7 +355,6 @@ header p { color:#9a9080; font-size:1rem; }
   <a href="library.html" class="nav-cat" style="--cat-color:#e0955a">Biblioteca</a>
   <a href="epistolario.html" class="nav-cat" style="--cat-color:#a875cf">Epistolario</a>
   <a href="translations.html" class="nav-cat" style="--cat-color:#cdb85a">Traduzioni</a>
-  <button class="nav-search-btn" id="overlay-open-btn" aria-label="Apri ricerca">⌕ Cerca</button>
 </nav>
 <header>
   <div class="eyebrow">OpenGadda</div>
@@ -955,7 +948,7 @@ function entryHtml(d) {
     ? '<a href="' + _catPage + '" onclick="event.stopPropagation()" style="display:inline-block;text-decoration:none;font-family:\'DM Mono\',monospace;font-size:9px;padding:2px 6px;border-radius:2px;background:' + (BADGE_COLORS[d.category]||'#888') + '18;color:' + (BADGE_COLORS[d.category]||'#888') + ';border:1px solid ' + (BADGE_COLORS[d.category]||'#888') + '40">' + (BADGE_SHORT[d.category]||d.category) + '</a>'
     : typeTag;
   const dThemes = [...toThemesArray(d.themes)].sort((a,b) => a.localeCompare(b, 'it', {sensitivity:'base'}));
-  const operaTags = (!crossMode && dThemes.length) ? '<div class="conn-badges" style="margin-top:4px">' + dThemes.map(t => '<span class="type-tag" style="cursor:pointer" data-opera="' + t.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();setOperaFilter(this.dataset.opera)">' + t + ((SIGLE[t]&&SIGLE[t].titolo_completo) ? '<span class="tag-full">' + SIGLE[t].titolo_completo + '</span>' : '') + '</span>').join(' ') + '</div>' : '';
+  const operaTags = (!crossMode && dThemes.length) ? '<div class="conn-badges" style="margin-top:4px">' + dThemes.map(t => '<span class="type-tag sigla-tag" style="cursor:pointer" data-opera="' + t.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();setOperaFilter(this.dataset.opera)">' + t + ((SIGLE[t]&&SIGLE[t].titolo_completo) ? '<span class="tag-full">' + SIGLE[t].titolo_completo + '</span>' : '') + '</span>').join(' ') + '</div>' : '';
   const titleHtml = '<span class="entry-title-inline">' + (d.title||'') + '</span>';
   const venue = d.rivista || d.editore || '';
   const venueHtml = venue ? '<span class="person-link" data-venue="' + venue.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();setVenueFilter(this.dataset.venue)" style="color:var(--muted)" title="' + authorityTitle(venue, VENUE_AUTHORITY) + '">' + venue + '</span>' + authorityIcon(venue, VENUE_AUTHORITY) : '';
@@ -1431,7 +1424,7 @@ function exportData(fmt) {
     advToggle.textContent = 'Ricerca avanzata ▾';
   }
 
-  openBtn.addEventListener('click', openOverlay);
+  if (openBtn) openBtn.addEventListener('click', openOverlay);
   closeBtn.addEventListener('click', closeOverlay);
   overlay.addEventListener('click', function(e) { if (e.target === overlay) closeOverlay(); });
   bindInput(overlayInput, overlayResults);

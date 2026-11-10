@@ -184,15 +184,6 @@ header p { color:#9a9080; font-size:1rem; }
 .opera-bubble.active { background:var(--accent); border-color:var(--accent); color:var(--white); }
 .opera-bubble .n { opacity:0.65; margin-left:4px; }
 
-/* ── NAV SEARCH BUTTON ── */
-.nav-search-btn {
-  margin-left: auto; background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12); border-radius: 4px;
-  padding: 4px 10px; cursor: pointer; color: rgba(255,255,255,0.4);
-  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em;
-  display: flex; align-items: center; gap: 6px; transition: all 0.2s;
-}
-.nav-search-btn:hover { border-color: var(--accent-light); color: var(--accent-light); }
 
 /* ── SEARCH OVERLAY ── */
 .search-overlay {
@@ -290,6 +281,9 @@ header p { color:#9a9080; font-size:1rem; }
 }
 /* a filter option that would show nothing with the other filters set */
 .filter-btn.empty { opacity: 0.35; }
+
+/* Sigla (work) tags on each record — change the size of all of them here. */
+.sigla-tag { font-size: 13px; padding: 4px 10px; }
 </style>
 </head>
 <body>
@@ -303,7 +297,6 @@ header p { color:#9a9080; font-size:1rem; }
   <a href="library.html" class="nav-cat" style="--cat-color:#e0955a">Biblioteca</a>
   <a href="epistolario.html" class="nav-cat" style="--cat-color:#a875cf">Epistolario</a>
   <a href="translations.html" class="nav-cat" style="--cat-color:#cdb85a">Traduzioni</a>
-  <button class="nav-search-btn" id="overlay-open-btn" aria-label="Apri ricerca">⌕ Cerca</button>
 </nav>
 
 <header>
@@ -325,6 +318,7 @@ header p { color:#9a9080; font-size:1rem; }
         <span>—</span>
         <input type="number" id="yearTo" placeholder="al" oninput="applyFilters()">
       </div>
+    </div>
     
     <div class="sidebar-section">
       <span class="sidebar-label">Ordinamento</span>
@@ -333,6 +327,7 @@ header p { color:#9a9080; font-size:1rem; }
         <button class="filter-btn" onclick="setSort('title')" id="s-title">Titolo</button>
         <button class="filter-btn" onclick="setSort('inst')" id="s-inst">Archivio</button>
       </div>
+    </div>
 
     <div class="sidebar-section">
       <span class="sidebar-label">Tipologia</span>
@@ -763,7 +758,7 @@ function entryHtml(d) {
   const operaTags = (d.themes||[]).map(t => {
     const safe = t.replace(/'/g, "\\'");
     const fullTitle = (SIGLE[t] && SIGLE[t].titolo_completo) ? SIGLE[t].titolo_completo : '';
-    return `<span class="opera-tag" onclick="event.stopPropagation();setOperaFilter('${safe}')">${t}${fullTitle ? '<span class=\"tag-full\">'+fullTitle+'</span>' : ''}</span>`;
+    return `<span class="opera-tag sigla-tag" onclick="event.stopPropagation();setOperaFilter('${safe}')">${t}${fullTitle ? '<span class=\"tag-full\">'+fullTitle+'</span>' : ''}</span>`;
   }).join('');
   const schedaTag = '';
   const rawTitle = (d.title||'').replace(/\n/g,' ');
@@ -1358,7 +1353,7 @@ function exportData(fmt) {
     advToggle.textContent = 'Ricerca avanzata ▾';
   }
 
-  openBtn.addEventListener('click', openOverlay);
+  if (openBtn) openBtn.addEventListener('click', openOverlay);
   closeBtn.addEventListener('click', closeOverlay);
   overlay.addEventListener('click', function(e) { if (e.target === overlay) closeOverlay(); });
   bindInput(overlayInput, overlayResults);

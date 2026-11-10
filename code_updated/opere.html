@@ -251,15 +251,6 @@ header p { color:#9a9080; font-size:1rem; }
 
 @media(max-width:700px) { .layout { grid-template-columns:1fr; } .sidebar { position:static; height:auto; border-right:none; border-bottom:1px solid var(--border); } }
 
-/* ── NAV SEARCH BUTTON ── */
-.nav-search-btn {
-  margin-left: auto; background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12); border-radius: 4px;
-  padding: 4px 10px; cursor: pointer; color: rgba(255,255,255,0.4);
-  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em;
-  display: flex; align-items: center; gap: 6px; transition: all 0.2s;
-}
-.nav-search-btn:hover { border-color: var(--accent-light); color: var(--accent-light); }
 
 /* ── SEARCH OVERLAY ── */
 .search-overlay {
@@ -368,7 +359,6 @@ header p { color:#9a9080; font-size:1rem; }
   <a href="library.html" class="nav-cat" style="--cat-color:#e0955a">Biblioteca</a>
   <a href="epistolario.html" class="nav-cat" style="--cat-color:#a875cf">Epistolario</a>
   <a href="translations.html" class="nav-cat" style="--cat-color:#cdb85a">Traduzioni</a>
-  <button class="nav-search-btn" id="overlay-open-btn" aria-label="Apri ricerca">⌕ Cerca</button>
 </nav>
 
 <header>
@@ -1752,7 +1742,7 @@ Promise.all([
     advToggle.textContent = 'Ricerca avanzata ▾';
   }
 
-  openBtn.addEventListener('click', openOverlay);
+  if (openBtn) openBtn.addEventListener('click', openOverlay);
   closeBtn.addEventListener('click', closeOverlay);
   overlay.addEventListener('click', function(e) { if (e.target === overlay) closeOverlay(); });
   bindInput(overlayInput, overlayResults);

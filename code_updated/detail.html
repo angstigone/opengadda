@@ -87,7 +87,7 @@ nav a.nav-cat:hover { color: var(--cat-color); }
 .meta-table tr td:first-child {
   font-family: 'DM Mono', monospace; font-size: 10px;
   letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--muted); width: 130px; padding: 0.45rem 0;
+  color: var(--muted); width: 160px; padding: 0.45rem 1.25rem 0.45rem 0;
   vertical-align: top;
 }
 .meta-table tr td:last-child {
@@ -778,27 +778,62 @@ function buildGenealogyPanel(item) {
   return html;
 }
 
-// Cover of the work a record belongs to. For each linked sigla, tries the
-// edition's own cover first (img/<sigla>-<year>.png|.jpg, e.g. CdD-1963.png),
-// then the work's general one (img/<sigla>.png|.jpg); if none exists the
-// <img> removes itself, so rows without a cover show nothing.
-// Only books carry a cover: a story or article printed in a magazine shares
-// its work's sigla but isn't that book, so it gets no image.
+// Cover shown on a record's page, when that record *is* (or sits in) a book
+// we have an image of. Each section has its own rule:
+//  - primary bibliography (books only): img/<sigla>-<year>[-<publisher>], then img/<sigla>
+//  - letter: the volume it was published in, img/<sigla>-<year of the volume>, then img/<sigla>
+//  - translation: img_tr/<sigla>_<year>[a|b…], same key as the Traduzioni list
+//  - library: one of Gadda's own books, only for that exact edition, img/<sigla>-<year>
+//  - archive / secondary bibliography: none (the record isn't that book)
+// Each candidate is tried in turn; if none exists the <img> removes itself.
 const COVER_TYPES = ["Libri e raccolte d'autore"];
+const IMG_EXTS = ['jpg', 'png', 'jpeg'];
+const withExts = bases => bases.flatMap(b => IMG_EXTS.map(e => b + '.' + e));
+
+// Translation cover keys, built exactly like translations.html's EDITION_KEY.
+const TR_KEY = {};
+(() => {
+  const groups = {};
+  data.filter(d => d.category === 'translation').forEach(d => {
+    const sigla = (d.themes || [])[0];
+    if (!sigla || d.year === null || d.year === undefined) return;
+    (groups[sigla + '|' + d.year] = groups[sigla + '|' + d.year] || []).push(d);
+  });
+  Object.values(groups).forEach(same => {
+    same.sort((a, b) => a.id.localeCompare(b.id));
+    same.forEach((d, i) => { TR_KEY[d.id] = d.themes[0] + '_' + d.year + (same.length > 1 ? String.fromCharCode(97 + i) : ''); });
+  });
+})();
+
 function coverCandidates(d) {
-  if (!COVER_TYPES.includes(d.subtitle)) return [];
   const siglas = [].concat(d.themes || []).filter(Boolean);
-  const out = [];
-  siglas.forEach(s => {
-    const base = 'img/' + encodeURIComponent(s);
+  const img = s => 'img/' + encodeURIComponent(s);
+  if (d.category === 'primary bibliography') {
+    if (!COVER_TYPES.includes(d.subtitle)) return [];
     // <sigla>-<year>-<publisher> only matters when two editions share a year
     // (Biz 1981: All'insegna del pesce d'oro and Adelphi → Biz-1981-adelphi.jpg).
     const pub = (d.editore || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
-    if (d.year && pub) out.push(base + '-' + d.year + '-' + pub + '.png', base + '-' + d.year + '-' + pub + '.jpg');
-    if (d.year) out.push(base + '-' + d.year + '.png', base + '-' + d.year + '.jpg');
-    out.push(base + '.png', base + '.jpg');
-  });
-  return out;
+    return withExts(siglas.flatMap(s => [
+      d.year && pub && img(s) + '-' + d.year + '-' + pub,
+      d.year && img(s) + '-' + d.year,
+      img(s),
+    ].filter(Boolean)));
+  }
+  if (d.category === 'letter') {
+    return withExts(siglas.filter(s => DEST_BY_SIGLA[s]).flatMap(s => {
+      const y = DEST_BY_SIGLA[s].year;
+      return [y && img(s) + '-' + y, img(s)].filter(Boolean);
+    }));
+  }
+  if (d.category === 'translation') {
+    return TR_KEY[d.id] ? ['img_tr/' + encodeURIComponent(TR_KEY[d.id]) + '.jpg', 'img_tr/' + encodeURIComponent(TR_KEY[d.id]) + '.png'] : [];
+  }
+  if (d.category === 'library') {
+    const byGadda = (d.people || []).some(p => p.role === 'autore' && /^Gadda,? Carlo Emilio$/.test(p.name));
+    if (!d.year || !byGadda) return [];
+    return withExts(siglas.map(s => img(s) + '-' + d.year));
+  }
+  return [];
 }
 function coverImgTag(d, cssClass) {
   const srcs = coverCandidates(d);
@@ -1183,7 +1218,7 @@ if (!item) {
     <div class="page-wrap">
       <div class="main-card">
         <a href="${backLink(item.category)}" class="cat-tag ${catClass(item.category)}" style="text-decoration:none;display:inline-block">${catLabel(item.category)}</a>
-        ${item.category === 'primary bibliography' ? coverImgTag(item, 'record-cover') : ''}
+        ${coverImgTag(item, 'record-cover')}
         <h1 class="record-title">${item.title}</h1>
         ${author ? `<div class="record-author">${author}</div>` : ''}
         <hr class="divider">

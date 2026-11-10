@@ -247,15 +247,6 @@ header p { color:#9a9080; font-size:1rem; }
 
 @media(max-width:700px) { .layout { grid-template-columns:1fr; } .sidebar { position:static; height:auto; border-right:none; border-bottom:1px solid var(--border); } .sender-grid { grid-template-columns:1fr; } }
 
-/* ── NAV SEARCH BUTTON ── */
-.nav-search-btn {
-  margin-left: auto; background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12); border-radius: 4px;
-  padding: 4px 10px; cursor: pointer; color: rgba(255,255,255,0.4);
-  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em;
-  display: flex; align-items: center; gap: 6px; transition: all 0.2s;
-}
-.nav-search-btn:hover { border-color: var(--accent-light); color: var(--accent-light); }
 
 /* ── SEARCH OVERLAY ── */
 .search-overlay {
@@ -351,6 +342,9 @@ header p { color:#9a9080; font-size:1rem; }
   text-transform: uppercase; background: none; color: var(--muted);
   border: 1px solid var(--border); padding: 5px 14px; border-radius: 2px; cursor: pointer;
 }
+
+/* Sigla (work) tags on each record — change the size of all of them here. */
+.sigla-tag { font-size: 13px; padding: 4px 10px; }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -366,7 +360,6 @@ header p { color:#9a9080; font-size:1rem; }
   <a href="library.html" class="nav-cat" style="--cat-color:#e0955a">Biblioteca</a>
   <a href="epistolario.html" class="nav-cat active" style="--cat-color:#a875cf">Epistolario</a>
   <a href="translations.html" class="nav-cat" style="--cat-color:#cdb85a">Traduzioni</a>
-  <button class="nav-search-btn" id="overlay-open-btn" aria-label="Apri ricerca">⌕ Cerca</button>
 </nav>
 
 <header>
@@ -1015,7 +1008,7 @@ function renderLetters() {
     const typeTag = (d.subtitle || d.genere) ? `<span class="type-tag">${d.subtitle || d.genere}</span>` : '';
     const sigla = (d.themes||[])[0];
     const pubName = sigla ? (SIGLA_TO_NAME[sigla] || d.sigla_sciolta || sigla) : '';
-    const pubTag = pubName ? `<div style="margin-top:3px"><span class="corpus-tag" onclick="event.stopPropagation();setThemeFilter(${JSON.stringify(sigla)})">✉ ${pubName}</span></div>` : '';
+    const pubTag = pubName ? `<div style="margin-top:3px"><span class="corpus-tag sigla-tag" onclick="event.stopPropagation();setThemeFilter(${JSON.stringify(sigla)})">✉ ${pubName}</span></div>` : '';
     return `<div class="entry" onclick="goDetail('${d.id}')">
       <div class="entry-year">${d.year !== null ? d.year : 's.d.'}</div>
       <div>
@@ -1929,7 +1922,7 @@ window.addEventListener('pageshow', function(e) {
     advToggle.textContent = 'Ricerca avanzata ▾';
   }
 
-  openBtn.addEventListener('click', openOverlay);
+  if (openBtn) openBtn.addEventListener('click', openOverlay);
   closeBtn.addEventListener('click', closeOverlay);
   overlay.addEventListener('click', function(e) { if (e.target === overlay) closeOverlay(); });
   bindInput(overlayInput, overlayResults);

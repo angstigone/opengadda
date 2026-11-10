@@ -272,15 +272,6 @@ header p { color:#9a9080; font-size:1rem; }
 }
 .repub-link:hover { border-bottom-style: solid; color: var(--accent); }
 
-/* ── NAV SEARCH BUTTON ── */
-.nav-search-btn {
-  margin-left: auto; background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12); border-radius: 4px;
-  padding: 4px 10px; cursor: pointer; color: rgba(255,255,255,0.4);
-  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em;
-  display: flex; align-items: center; gap: 6px; transition: all 0.2s;
-}
-.nav-search-btn:hover { border-color: var(--accent-light); color: var(--accent-light); }
 
 /* ── SEARCH OVERLAY ── */
 .search-overlay {
@@ -378,6 +369,9 @@ header p { color:#9a9080; font-size:1rem; }
 }
 /* a filter option that would show nothing with the other filters set */
 .filter-btn.empty { opacity: 0.35; }
+
+/* Sigla (work) tags on each record — change the size of all of them here. */
+.sigla-tag { font-size: 13px; padding: 4px 10px; }
 </style>
 </head>
 <body>
@@ -391,7 +385,6 @@ header p { color:#9a9080; font-size:1rem; }
   <a href="library.html" class="nav-cat" style="--cat-color:#e0955a">Biblioteca</a>
   <a href="epistolario.html" class="nav-cat" style="--cat-color:#a875cf">Epistolario</a>
   <a href="translations.html" class="nav-cat" style="--cat-color:#cdb85a">Traduzioni</a>
-  <button class="nav-search-btn" id="overlay-open-btn" aria-label="Apri ricerca">⌕ Cerca</button>
 </nav>
 <header>
   <div class="eyebrow">OpenGadda</div>
@@ -414,6 +407,7 @@ header p { color:#9a9080; font-size:1rem; }
         <span>—</span>
         <input type="number" id="yearTo" placeholder="al" oninput="applyFilters()">
       </div>
+    </div>
     
 
     <div class="sidebar-section">
@@ -423,6 +417,7 @@ header p { color:#9a9080; font-size:1rem; }
         <button class="filter-btn" onclick="setSort('author')" id="s-author">Autore</button>
         <button class="filter-btn" onclick="setSort('title')" id="s-title">Titolo</button>
       </div>
+    </div>
 
 
     <div class="sidebar-section">
@@ -973,7 +968,7 @@ function render() {
     const titleHtml = '<span class="entry-title-inline">' + (d.title||'') + '</span>';
     const lineParts = [author, titleHtml, venueHtml, place].filter(Boolean);
     const lineHtml = '<div class="entry-line">' + lineParts.join(' · ') + '</div>';
-    const operaTags = (d.themes||[]).length ? '<div class="conn-badges" style="margin-top:4px">' + (d.themes||[]).map(t => '<span class="type-tag" style="cursor:pointer" data-opera="' + t.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();setOperaFilter(this.dataset.opera)">' + t + ((SIGLE[t]&&SIGLE[t].titolo_completo) ? '<span class="tag-full">' + SIGLE[t].titolo_completo + '</span>' : '') + '</span>').join(' ') + '</div>' : '';
+    const operaTags = (d.themes||[]).length ? '<div class="conn-badges" style="margin-top:4px">' + (d.themes||[]).map(t => '<span class="type-tag sigla-tag" style="cursor:pointer" data-opera="' + t.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();setOperaFilter(this.dataset.opera)">' + t + ((SIGLE[t]&&SIGLE[t].titolo_completo) ? '<span class="tag-full">' + SIGLE[t].titolo_completo + '</span>' : '') + '</span>').join(' ') + '</div>' : '';
     // "poi in:" links — use repub_ids if available, else fall back to plain text
     let repubHtml = '';
     if (d.repub_ids && d.repub_ids.length) {
@@ -1454,7 +1449,7 @@ function exportData(fmt) {
     advToggle.textContent = 'Ricerca avanzata ▾';
   }
 
-  openBtn.addEventListener('click', openOverlay);
+  if (openBtn) openBtn.addEventListener('click', openOverlay);
   closeBtn.addEventListener('click', closeOverlay);
   overlay.addEventListener('click', function(e) { if (e.target === overlay) closeOverlay(); });
   bindInput(overlayInput, overlayResults);
