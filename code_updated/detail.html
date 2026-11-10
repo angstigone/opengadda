@@ -72,6 +72,9 @@ nav a.nav-cat:hover { color: var(--cat-color); }
 .cat-translation { background: #f0ecdc; color: #6a5a1a; }
 
 .record-cover { float: right; width: 110px; height: 165px; object-fit: cover; border-radius: 3px; border: 1px solid var(--border); margin: 0 0 1rem 1.25rem; }
+/* Hidden until the image has loaded, so no empty frame shows while it downloads or while a missing file is being looked for. */
+.record-cover { opacity: 0; transition: opacity 0.2s; }
+.record-cover.is-loaded { opacity: 1; }
 .record-title {
   font-size: 1.9rem; font-weight: 400; line-height: 1.25;
   margin-bottom: 0.5rem; font-style: italic;
@@ -838,7 +841,7 @@ function coverCandidates(d) {
 function coverImgTag(d, cssClass) {
   const srcs = coverCandidates(d);
   if (!srcs.length) return '';
-  return '<img class="' + cssClass + '" src="' + srcs[0] + '" data-srcs="' + srcs.slice(1).join('|').replace(/"/g, '&quot;') + '" alt="" loading="lazy" onerror="nextCover(this)">';
+  return '<img class="' + cssClass + '" src="' + srcs[0] + '" data-srcs="' + srcs.slice(1).join('|').replace(/"/g, '&quot;') + '" alt="" loading="lazy" onload="this.classList.add(\'is-loaded\')" onerror="nextCover(this)">';
 }
 // The <img onerror> handler runs in global scope, but this code lives inside
 // the data-loading callback — expose it, or the fallback chain stops at the

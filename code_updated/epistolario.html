@@ -629,6 +629,7 @@ function authorityIcon(name, lookup) {
 }
 let activeTipo = null;
 let senderSort = 'alpha';
+let senderSortDir = 1; // 1 = A→Z, -1 = Z→A; clicking the active sort again flips it
 let currentSender = null;
 let currentTab = 'riceve'; // 'riceve' | 'scrive'
 
@@ -721,7 +722,7 @@ function yearSpan(m) {
 }
 
 function setSenderSort(key) {
-  senderSort = key;
+  if (senderSort === key) senderSortDir *= -1; else { senderSort = key; senderSortDir = 1; }
   document.getElementById('ss-alpha').classList.toggle('active', key === 'alpha');
   renderSenders();
 }
@@ -757,9 +758,9 @@ function renderSenders() {
     }
     return true;
   });
-  if (senderSort === 'alpha') shown.sort((a,b) => alphaSortKey(a.name).localeCompare(alphaSortKey(b.name), 'it'));
-  else if (senderSort === 'chrono') shown.sort((a,b) => firstYear(a) - firstYear(b));
-  else shown.sort((a,b) => b.count - a.count);
+  if (senderSort === 'alpha') shown.sort((a,b) => senderSortDir * alphaSortKey(a.name).localeCompare(alphaSortKey(b.name), 'it'));
+  else if (senderSort === 'chrono') shown.sort((a,b) => senderSortDir * (firstYear(a) - firstYear(b)));
+  else shown.sort((a,b) => senderSortDir * (b.count - a.count));
 
   const publishedLetters = tabLetters.filter(d => (d.themes||[]).some(t => SIGLA_SET.has(t)));
   // For 'riceve', the true total includes letters only tallied in the

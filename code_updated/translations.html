@@ -94,6 +94,9 @@ header p { color:#9a9080; font-size:1rem; }
    later siblings (translator, title, badges) into the wrong column. */
 .entry-year { grid-column:1; }
 .entry-thumb { grid-column:2; width:40px; height:56px; object-fit:cover; border-radius:2px; border:1px solid var(--border); flex-shrink:0; }
+/* Covers stay invisible until the image has loaded, so no empty frame flashes while it downloads or while a missing file is being looked for. */
+.entry-thumb { opacity:0; transition:opacity 0.2s; }
+.entry-thumb.is-loaded { opacity:1; }
 .entry-body { grid-column:3; min-width:0; }
 .entry-side { grid-column:4; }
 .entry:hover { background:var(--white); padding-left:0.5rem; padding-right:0.5rem; margin:0 -0.25rem; }
@@ -857,7 +860,7 @@ function connBadges(id, ownCat) {
 // (no broken-image icon) rather than hardcoding one extension.
 function thumbImgTag(key, cssClass) {
   const base = 'img_tr/' + encodeURIComponent(key);
-  return `<img class="${cssClass}" src="${base}.jpg" data-fallback="${base}.png" alt="" onerror="handleThumbErr(this)">`;
+  return `<img class="${cssClass}" src="${base}.jpg" data-fallback="${base}.png" alt="" onload="this.classList.add('is-loaded')" onerror="handleThumbErr(this)">`;
 }
 function handleThumbErr(img) {
   if (!img.dataset.tried) { img.dataset.tried = '1'; img.src = img.dataset.fallback; return; }
