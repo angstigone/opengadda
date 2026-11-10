@@ -330,10 +330,11 @@ function applyFilters() {
     if (activeCat && d.category !== activeCat) return false;
     return matchesQuery(d, q);
   });
-  // People whose name matches the search, as in the search dropdowns
+  // People whose name matches the search — or, for a year, the people of that year — as in the search dropdowns
   const box = document.getElementById('people-box');
   box.innerHTML = '';
-  const people = window.ogPeopleSuggest ? window.ogPeopleSuggest(document.getElementById('search').value || activeQuery, ALL_DATA, { inPage: true }) : null;
+  const typed = document.getElementById('search').value || activeQuery;
+  const people = window.ogPeopleSuggest ? (window.ogPeopleSuggest(typed, ALL_DATA, { inPage: true }) || window.ogYearSuggest(typed, ALL_DATA, { inPage: true })) : null;
   if (people) box.appendChild(people);
   doSort(); currentPage = 1; buildCatBtns(); render();
 }
@@ -486,7 +487,7 @@ Promise.all([
 (function() {
   function renderOverlayResults(hits, q, container) {
     container.innerHTML = '';
-    var people = window.ogPeopleSuggest ? window.ogPeopleSuggest(q, ALL_DATA) : null;
+    var people = window.ogPeopleSuggest ? (window.ogPeopleSuggest(q, ALL_DATA) || window.ogYearSuggest(q, ALL_DATA)) : null;
     if (people) container.appendChild(people);
     if (!hits.length) {
       var empty = document.createElement('div');

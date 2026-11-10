@@ -1308,7 +1308,7 @@ function exportData(fmt) {
 
   function renderResults(hits, q, container) {
     container.innerHTML = '';
-    var people = window.ogPeopleSuggest ? window.ogPeopleSuggest(q, ALL_DATA) : null;
+    var people = window.ogPeopleSuggest ? (window.ogPeopleSuggest(q, ALL_DATA) || window.ogYearSuggest(q, ALL_DATA)) : null;
     if (people) container.appendChild(people);
     if (!hits.length) {
       var empty = document.createElement('div');
