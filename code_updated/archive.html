@@ -907,6 +907,23 @@ function goPage(n) { currentPage=n; render(); window.scrollTo(0,0); }
 function goDetail(id) { sessionStorage.setItem('og_list_'+location.pathname, JSON.stringify({page:currentPage,scrollY:window.scrollY})); window.location.href='detail.html?id='+id; }
 
 let CONN_SUMMARY = {};
+// For each record, the other sections holding a record with one of its sigle
+// (themes) — drives the small section badges under each entry. Built from
+// items.json on load so it always matches the current data.
+function buildConnSummary(data) {
+  const catsByTheme = {};
+  data.forEach(d => (d.themes || []).forEach(t => {
+    (catsByTheme[t] = catsByTheme[t] || new Set()).add(d.category);
+  }));
+  const summary = {};
+  data.forEach(d => {
+    const cats = new Set();
+    (d.themes || []).forEach(t => catsByTheme[t].forEach(c => cats.add(c)));
+    cats.delete(d.category);
+    if (cats.size) summary[d.id] = Array.from(cats);
+  });
+  return summary;
+}
 const BADGE_COLORS = {"library":"#7a3b1e","secondary bibliography":"#1e4a7a","primary bibliography":"#1a6a40","archive":"#6a3a1a","letter":"#5a1e7a","translation":"#6a5a1a"};
 const BADGE_SHORT = {"library":"Bib.","secondary bibliography":"Bib. sec.","primary bibliography":"Bib. prim.","archive":"Arc.","letter":"Ep.","translation":"Trad."};
 function connBadges(id, ownCat) {
@@ -924,15 +941,14 @@ function connBadges(id, ownCat) {
 let SIGLE = {};
 Promise.all([
   fetch('items.json').then(r => r.json()),
-  fetch('conn_summary.json').then(r => r.json()),
   fetch('sigle_gadda.json').then(r => r.json()).catch(() => ({})),
   fetch('venues_authority.json').then(r => r.json()).catch(() => ({}))
-]).then(([allData, summary, sigleData, venueAuthority]) => {
+]).then(([allData, sigleData, venueAuthority]) => {
   SIGLE = sigleData.sigle || {};
   VENUE_AUTHORITY = venueAuthority;
   ALL_DATA = allData;
   DATA = allData.filter(d => d.category === 'archive');
-  CONN_SUMMARY = summary;
+  CONN_SUMMARY = buildConnSummary(allData);
   buildTypeFilters();
   const urlP = new URLSearchParams(window.location.search);
   if (urlP.get('theme')) setThemeFilter(decodeURIComponent(urlP.get('theme')));

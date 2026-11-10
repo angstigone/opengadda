@@ -574,6 +574,23 @@ let MITTENTI = [];
 let DESTINATARI = [];
 let ALL_DATA = [];
 let CONN_SUMMARY = {};
+// For each record, the other sections holding a record with one of its sigle
+// (themes) — drives the small section badges under each entry. Built from
+// items.json on load so it always matches the current data.
+function buildConnSummary(data) {
+  const catsByTheme = {};
+  data.forEach(d => (d.themes || []).forEach(t => {
+    (catsByTheme[t] = catsByTheme[t] || new Set()).add(d.category);
+  }));
+  const summary = {};
+  data.forEach(d => {
+    const cats = new Set();
+    (d.themes || []).forEach(t => catsByTheme[t].forEach(c => cats.add(c)));
+    cats.delete(d.category);
+    if (cats.size) summary[d.id] = Array.from(cats);
+  });
+  return summary;
+}
 let PEOPLE_AUTHORITY = {};
 
 // Wikidata label + description for a person, as an HTML-attribute-safe
@@ -1584,16 +1601,15 @@ let SIGLA_SET = new Set();
 Promise.all([
   fetch('items.json').then(r => r.json()),
   fetch('mittenti.json').then(r => r.json()),
-  fetch('conn_summary.json').then(r => r.json()),
   fetch('destinatari.json').then(r => r.json()).catch(() => []),
   fetch('sigle_gadda.json').then(r => r.json()).catch(() => ({})),
   fetch('people_authority.json').then(r => r.json()).catch(() => ({}))
-]).then(([allData, mittenti, summary, destinatari, sigleData, peopleAuthority]) => {
+]).then(([allData, mittenti, destinatari, sigleData, peopleAuthority]) => {
   SIGLE = sigleData.sigle || {};
   PEOPLE_AUTHORITY = peopleAuthority;
   destinatari.forEach(d => { if (d.sigla && d.titolo && !SIGLA_TO_NAME[d.sigla]) SIGLA_TO_NAME[d.sigla] = d.titolo; });
   ALL_DATA = allData;
-  CONN_SUMMARY = summary;
+  CONN_SUMMARY = buildConnSummary(allData);
 
   // Letters published in an opera: those whose theme sigla matches a
   // destinatari.json entry (i.e. belongs to a published edition/reference).
