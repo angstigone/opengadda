@@ -6,6 +6,9 @@
 //
 // Used by each page's renderResults(): window.ogPeopleSuggest(q, ALL_DATA)
 // returns a ready-made block of elements, or null when nobody matches.
+// search.html also shows it above its results: ogPeopleSuggest(q, ALL_DATA,
+// {inPage: true}) leaves out the "Schede" heading and the person whose name
+// is exactly the search (their Wikidata card is already shown there).
 (function () {
   var CATS = [
     ['letter', 'Ep.', '#5a1e7a', 'Epistolario'],
@@ -54,12 +57,13 @@
     return cache.people;
   }
 
-  window.ogPeopleSuggest = function (q, data) {
+  window.ogPeopleSuggest = function (q, data, opts) {
+    var inPage = opts && opts.inPage;
     var qk = key(q);
     if (!data || !data.length || qk.length < 3 || /^\d{4}$/.test(qk)) return null;
     var tokens = qk.split(' ');
     var hits = peopleOf(data)
-      .filter(function (e) { return tokens.every(function (t) { return e.key.indexOf(t) !== -1; }); })
+      .filter(function (e) { return !(inPage && e.key === qk) && tokens.every(function (t) { return e.key.indexOf(t) !== -1; }); })
       .sort(function (a, b) { return b.total - a.total; })
       .slice(0, MAX_PEOPLE);
     if (!hits.length) return null;
@@ -97,6 +101,7 @@
       a.appendChild(total);
       frag.appendChild(a);
     });
+    if (inPage) return frag;
     var head2 = document.createElement('div');
     head2.className = 'ps-head';
     head2.textContent = 'Schede';

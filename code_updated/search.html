@@ -134,6 +134,11 @@ header p { color:#9a9080; font-size:1rem; }
 .adv-btn-run { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; background: var(--accent); color: #fff; border: none; padding: 6px 18px; border-radius: 2px; cursor: pointer; }
 .adv-btn-clear { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; background: none; color: var(--muted); border: 1px solid var(--border); padding: 5px 14px; border-radius: 2px; cursor: pointer; }
 
+
+/* People matching the search, above the results (rows come from people_suggest.js) */
+.people-box { background:var(--white); border:1px solid var(--border); border-radius:3px; margin-bottom:1.25rem; overflow:hidden; }
+.people-box:empty { display:none; }
+.people-box .ps-person:last-child { border-bottom:none; }
 </style>
 </head>
 <body>
@@ -177,6 +182,7 @@ header p { color:#9a9080; font-size:1rem; }
   </aside>
 
   <main class="main">
+    <div class="people-box" id="people-box"></div>
     <div class="stats-bar">
       <div class="stat"><span class="stat-n" id="sn-total">0</span><span class="stat-l">risultati</span></div>
       <div class="stat"><span class="stat-n" id="sn-cats">0</span><span class="stat-l">sezioni</span></div>
@@ -324,6 +330,11 @@ function applyFilters() {
     if (activeCat && d.category !== activeCat) return false;
     return matchesQuery(d, q);
   });
+  // People whose name matches the search, as in the search dropdowns
+  const box = document.getElementById('people-box');
+  box.innerHTML = '';
+  const people = window.ogPeopleSuggest ? window.ogPeopleSuggest(document.getElementById('search').value || activeQuery, ALL_DATA, { inPage: true }) : null;
+  if (people) box.appendChild(people);
   doSort(); currentPage = 1; buildCatBtns(); render();
 }
 
