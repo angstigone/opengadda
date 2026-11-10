@@ -50,12 +50,12 @@ header .eyebrow { font-family:'DM Mono',monospace; font-size:10px; letter-spacin
 header h1 { font-size:2.4rem; font-weight:400; font-style:italic; margin-bottom:0.4rem; }
 header p { color:#9a9080; font-size:1rem; }
 
-.layout { display: grid; grid-template-columns: 240px 1fr 220px; min-height: calc(100vh - 52px); }
+.layout { display: grid; grid-template-columns: 260px 1fr 220px; min-height: calc(100vh - 52px); }
 
 .sidebar {
   background: var(--white);
   border-right: 1px solid var(--border);
-  padding: 1.5rem 1.25rem;
+  padding: 1.75rem 1.75rem;
   position: sticky;
   top: 52px;
   height: calc(100vh - 52px);
@@ -396,7 +396,7 @@ header p { color:#9a9080; font-size:1rem; }
   height: calc(100vh - 52px);
   overflow-y: auto;
 }
-@media(max-width:900px) { .layout { grid-template-columns:240px 1fr; } .viz-static-panel { display:none; } }
+@media(max-width:900px) { .layout { grid-template-columns:260px 1fr; } .viz-static-panel { display:none; } }
 @media(max-width:700px) { .layout { grid-template-columns:1fr; } }
 .opera-map { background:var(--tag-bg); border-bottom:1px solid var(--border); padding:0.85rem 2rem; margin:-1.5rem -2rem 1.25rem; position:sticky; top:52px; z-index:10; }
 .opera-bubbles { display:flex; flex-wrap:wrap; gap:8px; }

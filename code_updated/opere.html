@@ -33,7 +33,7 @@ header .eyebrow { font-family:'DM Mono',monospace; font-size:10px; letter-spacin
 header h1 { font-size:2.4rem; font-weight:400; font-style:italic; margin-bottom:0.4rem; }
 header p { color:#9a9080; font-size:1rem; }
 
-.layout { display:grid; grid-template-columns:240px 1fr 220px; min-height:calc(100vh - 140px); }
+.layout { display:grid; grid-template-columns:260px 1fr 220px; min-height:calc(100vh - 140px); }
 .viz-static-panel { background:var(--white); border-left:1px solid var(--border); padding:1.25rem 1rem; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; }
 .viz-section { margin-bottom:2rem; }
 .viz-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:0.9rem; display:block; }
@@ -108,8 +108,8 @@ header p { color:#9a9080; font-size:1rem; }
 .scatter-label { font-family:'EB Garamond',serif; font-size:10.5px; fill:var(--ink); }
 .scatter-g:hover .scatter-label { fill:var(--accent); }
 .scatter-g:hover .scatter-count { fill:var(--ink); }
-@media(max-width:900px) { .layout { grid-template-columns:240px 1fr; } .viz-static-panel { display:none; } }
-.sidebar { background:var(--white); border-right:1px solid var(--border); padding:1.5rem 1.25rem; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; }
+@media(max-width:900px) { .layout { grid-template-columns:260px 1fr; } .viz-static-panel { display:none; } }
+.sidebar { background:var(--white); border-right:1px solid var(--border); padding:1.75rem 1.75rem; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; }
 .sidebar-section { margin-bottom:1.75rem; }
 .sidebar-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:0.6rem; display:block; }
 .sidebar input[type=text] { width:100%; padding:0.5rem 0.6rem; font-family:'EB Garamond',serif; font-size:1rem; border:1px solid var(--border); background:var(--paper); color:var(--ink); border-radius:2px; outline:none; }

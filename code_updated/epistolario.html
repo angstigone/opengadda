@@ -32,7 +32,7 @@ header .eyebrow { font-family:'DM Mono',monospace; font-size:10px; letter-spacin
 header h1 { font-size:2.4rem; font-weight:400; font-style:italic; margin-bottom:0.4rem; }
 header p { color:#9a9080; font-size:1rem; }
 
-.layout { display:grid; grid-template-columns:240px 1fr 220px; min-height:calc(100vh - 140px); }
+.layout { display:grid; grid-template-columns:260px 1fr 220px; min-height:calc(100vh - 140px); }
 .viz-static-panel { background:var(--white); border-left:1px solid var(--border); padding:1.25rem 1rem; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; }
 .bar-row { display:flex; align-items:center; gap:6px; margin-bottom:5px; font-size:0.8rem; }
 .bar-row-label { flex:1; min-width:0; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--ink); font-family:'EB Garamond',serif; cursor:pointer; }
@@ -48,8 +48,8 @@ header p { color:#9a9080; font-size:1rem; }
 .viz-label-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.9rem; }
 .viz-sort-btn { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); background:none; border:1px solid var(--border); border-radius:2px; cursor:pointer; padding:2px 6px; }
 .viz-sort-btn:hover, .viz-sort-btn.active { color:var(--accent); border-color:var(--accent); }
-@media(max-width:900px) { .layout { grid-template-columns:240px 1fr; } .viz-static-panel { display:none; } }
-.sidebar { background:var(--white); border-right:1px solid var(--border); padding:1.5rem 1.25rem; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; }
+@media(max-width:900px) { .layout { grid-template-columns:260px 1fr; } .viz-static-panel { display:none; } }
+.sidebar { background:var(--white); border-right:1px solid var(--border); padding:1.75rem 1.75rem; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; }
 .sidebar-section { margin-bottom:1.75rem; }
 .sidebar-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:0.6rem; display:block; }
 .sidebar input[type=text] { width:100%; padding:0.5rem 0.6rem; font-family:'EB Garamond',serif; font-size:1rem; border:1px solid var(--border); background:var(--paper); color:var(--ink); border-radius:2px; outline:none; }
@@ -148,7 +148,8 @@ header p { color:#9a9080; font-size:1rem; }
 .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:500; }
 
 /* Sender cards grid */
-.sender-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:12px; }
+/* grid-auto-rows:1fr gives every row the height of the tallest card, so cards with and without published letters line up. */
+.sender-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); grid-auto-rows:1fr; gap:12px; }
 .sender-card {
   background:var(--white); border:1px solid var(--border); border-radius:4px;
   padding:1rem 1.1rem; cursor:pointer; transition:border-color 0.15s, box-shadow 0.15s;
@@ -221,6 +222,15 @@ header p { color:#9a9080; font-size:1rem; }
 .type-tag:hover .tag-full { display:inline; }
 .corpus-tag { font-family:'DM Mono',monospace; font-size:9px; padding:2px 7px; border-radius:2px; white-space:nowrap; background:#5a1e7a18; color:#5a1e7a; border:1px solid #5a1e7a40; cursor:pointer; display:inline-block; }
 .corpus-tag:hover { background:#5a1e7a28; }
+
+/* Published letters: volume covers on the cards and in the letter list */
+.sender-pub { display:flex; align-items:center; gap:6px; flex-wrap:nowrap; overflow:hidden; margin-top:auto; padding-top:6px; border-top:1px dashed var(--border); }
+.sender-pub-label { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); margin-right:2px; }
+.pub-cover:empty { display:none; }
+.pub-cover img { display:block; width:28px; height:42px; object-fit:cover; border-radius:2px; border:1px solid var(--border); box-shadow:0 1px 3px rgba(0,0,0,0.12); }
+.entry .pub-cover img { width:40px; height:60px; }
+.pub-more { font-family:'DM Mono',monospace; font-size:9px; color:var(--muted); white-space:nowrap; }
+.pub-sigla { white-space:nowrap; font-family:'DM Mono',monospace; font-size:9px; padding:1px 5px; border-radius:2px; background:var(--tag-bg); color:var(--tag-text); }
 
 .no-results { text-align:center; padding:4rem 1rem; color:var(--muted); font-style:italic; font-size:1.1rem; }
 .pagination { display:flex; gap:6px; justify-content:center; margin-top:2rem; flex-wrap:wrap; }
@@ -386,8 +396,6 @@ header p { color:#9a9080; font-size:1rem; }
         <span class="sidebar-label">Ordinamento</span>
         <div class="filter-group">
           <button class="filter-btn active" id="ss-alpha" onclick="setSenderSort('alpha')">Alfabetico</button>
-          <button class="filter-btn" id="ss-count" onclick="setSenderSort('count')">Per n. lettere</button>
-          <button class="filter-btn" id="ss-chrono" onclick="setSenderSort('chrono')">Cronologico</button>
         </div>
       </div>
       <div class="sidebar-section">
@@ -722,8 +730,6 @@ function yearSpan(m) {
 function setSenderSort(key) {
   senderSort = key;
   document.getElementById('ss-alpha').classList.toggle('active', key === 'alpha');
-  document.getElementById('ss-count').classList.toggle('active', key === 'count');
-  document.getElementById('ss-chrono').classList.toggle('active', key === 'chrono');
   renderSenders();
 }
 
@@ -788,6 +794,18 @@ function renderSenders() {
     'Varia': 'Varia',
   };
 
+  // Per correspondent: how many of their letters (in this tab) are published,
+  // and in which volumes (sigle), most letters first.
+  const pubByPerson = {};
+  publishedLetters.forEach(d => {
+    const role = currentTab === 'riceve' ? 'mittente' : 'destinatario';
+    (d.people||[]).filter(p => p.role === role && p.name !== 'Gadda Carlo Emilio').forEach(p => {
+      const e = pubByPerson[p.name] = pubByPerson[p.name] || { n: 0, sigle: {} };
+      e.n++;
+      (d.themes||[]).filter(t => SIGLA_SET.has(t)).forEach(t => { e.sigle[t] = (e.sigle[t] || 0) + 1; });
+    });
+  });
+
   const grid = document.getElementById('sender-grid');
   grid.onclick = e => {
     const card = e.target.closest('.sender-card');
@@ -813,8 +831,20 @@ function renderSenders() {
         <span class="sender-count">${m.count} lett.</span>
       </div>
       ${bottomLine}
+      ${pubLine(pubByPerson[m.name])}
     </div>`;
   }).join('');
+}
+
+function pubLine(pub) {
+  if (!pub) return '';
+  const all = Object.keys(pub.sigle).sort((a, b) => pub.sigle[b] - pub.sigle[a]);
+  const MAX = 4; // keep the line to one row so every card has the same height
+  const sigle = all.slice(0, MAX);
+  const more = all.length > MAX ? `<span class="pub-more" title="${all.slice(MAX).join(', ')}">+${all.length - MAX}</span>` : '';
+  return `<div class="sender-pub"><span class="sender-pub-label">✉ ${pub.n} pubblicat${pub.n === 1 ? 'a' : 'e'}</span>` +
+    sigle.map(t => coverSlot(t) + (COVER_SRC[t] ? '' : `<span class="pub-sigla" data-fallback-for="${t.replace(/"/g, '&quot;')}" title="${(SIGLA_TO_NAME[t] || t).replace(/"/g, '&quot;')}">${t}</span>`)).join('') +
+    more + `</div>`;
 }
 
 // ── Letters view ─────────────────────────────────────────────────────────────
@@ -994,6 +1024,7 @@ function renderLetters() {
         ${pubTag}
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+        ${sigla && SIGLA_SET.has(sigla) ? coverSlot(sigla) : ''}
         ${typeTag}
         ${connBadges(d.id, 'letter')}
       </div>
@@ -1597,6 +1628,39 @@ function connBadges(id, ownCat) {
 let SIGLA_TO_NAME = {};
 let SIGLE = {};
 let SIGLA_SET = new Set();
+let SIGLA_YEAR = {}; // sigla → year the volume came out (destinatari.json)
+
+// Covers of the volumes letters were published in: img/<sigla>-<year> or
+// img/<sigla>, as .jpg/.png/.jpeg. Each sigla is looked up once; until (and
+// unless) a file is found its slot stays empty, so no broken images show.
+const COVER_SRC = {};   // sigla → url, or null when no file exists
+const COVER_PENDING = new Set();
+function coverSlot(sigla) {
+  const title = (SIGLA_TO_NAME[sigla] || sigla).replace(/"/g, '&quot;');
+  const src = COVER_SRC[sigla];
+  if (src === undefined) probeCover(sigla);
+  return `<span class="pub-cover" data-cover-sigla="${sigla.replace(/"/g, '&quot;')}" title="${title}">${src ? `<img src="${src}" alt="">` : ''}</span>`;
+}
+function probeCover(sigla) {
+  if (COVER_PENDING.has(sigla)) return;
+  COVER_PENDING.add(sigla);
+  const year = SIGLA_YEAR[sigla];
+  const keys = [year && `${sigla}-${year}`, sigla].filter(Boolean);
+  const srcs = keys.flatMap(k => ['jpg', 'png', 'jpeg'].map(ext => 'img/' + encodeURIComponent(k) + '.' + ext));
+  (function tryNext(i) {
+    if (i >= srcs.length) { COVER_SRC[sigla] = null; return; }
+    const img = new Image();
+    img.onload = () => {
+      COVER_SRC[sigla] = srcs[i];
+      document.querySelectorAll('.pub-cover').forEach(el => {
+        if (el.dataset.coverSigla === sigla && !el.firstChild) el.innerHTML = `<img src="${srcs[i]}" alt="">`;
+      });
+      document.querySelectorAll('.pub-sigla').forEach(el => { if (el.dataset.fallbackFor === sigla) el.remove(); });
+    };
+    img.onerror = () => tryNext(i + 1);
+    img.src = srcs[i];
+  })(0);
+}
 
 Promise.all([
   fetch('items.json').then(r => r.json()),
@@ -1614,6 +1678,7 @@ Promise.all([
   // Letters published in an opera: those whose theme sigla matches a
   // destinatari.json entry (i.e. belongs to a published edition/reference).
   SIGLA_SET = new Set(destinatari.map(d => d.sigla).filter(Boolean));
+  destinatari.forEach(d => { if (d.sigla && d.year && !SIGLA_YEAR[d.sigla]) SIGLA_YEAR[d.sigla] = d.year; });
 
   // Compute has_letters for mittenti: only those who sent to Gadda
   const senderPeople = new Set(
