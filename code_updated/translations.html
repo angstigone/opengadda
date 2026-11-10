@@ -40,7 +40,7 @@ header p { color:#9a9080; font-size:1rem; }
 .lang-bubble:hover { border-color:var(--accent); color:var(--accent); }
 .lang-bubble.active { background:var(--accent); border-color:var(--accent); color:var(--white); }
 .lang-bubble .n { opacity:0.65; margin-left:4px; }
-.layout { display:grid; grid-template-columns:260px 1fr 220px; min-height:calc(100vh - 180px); }
+.layout { display:grid; grid-template-columns:240px 1fr 220px; min-height:calc(100vh - 180px); }
 .viz-static-panel { background:var(--white); border-left:1px solid var(--border); padding:1.25rem 1rem; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; }
 .bar-row { display:flex; align-items:center; gap:6px; margin-bottom:5px; font-size:0.8rem; }
 .bar-row-label { flex:1; min-width:0; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--ink); font-family:'EB Garamond',serif; cursor:pointer; }
@@ -57,7 +57,7 @@ header p { color:#9a9080; font-size:1rem; }
 .range-wrap { display:flex; gap:6px; align-items:center; font-size:0.85rem; color:var(--muted); }
 .range-wrap input[type=number] { width:68px; padding:0.3rem 0.4rem; font-family:'DM Mono',monospace; font-size:12px; border:1px solid var(--border); background:var(--paper); color:var(--ink); border-radius:2px; outline:none; }
 #lang-filters .filter-btn { align-items:flex-start; gap:8px; padding:0.4rem 0.5rem; }
-.sidebar { background:var(--white); border-right:1px solid var(--border); padding:1.75rem 1.75rem; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; }
+.sidebar { background:var(--white); border-right:1px solid var(--border); padding:1.5rem 1.25rem; position:sticky; top:52px; height:calc(100vh - 52px); overflow-y:auto; }
 .sidebar-section { margin-bottom:1.75rem; }
 .sidebar-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:0.6rem; display:block; }
 .sidebar input[type=text] { width:100%; padding:0.5rem 0.6rem; font-family:'EB Garamond',serif; font-size:1rem; border:1px solid var(--border); background:var(--paper); color:var(--ink); border-radius:2px; outline:none; }
@@ -182,8 +182,17 @@ header p { color:#9a9080; font-size:1rem; }
 .report-submit:hover { background:var(--accent-light); border-color:var(--accent-light); }
 .report-sent { display:none; font-size:0.85rem; color:var(--accent); margin-top:8px; line-height:1.5; }
 .report-sent.show { display:block; }
-@media(max-width:900px) { .layout { grid-template-columns:260px 1fr; } .viz-static-panel { display:none; } }
+@media(max-width:900px) { .layout { grid-template-columns:240px 1fr; } .viz-static-panel { display:none; } }
 
+/* ── NAV SEARCH BUTTON ── */
+.nav-search-btn {
+  margin-left: auto; background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 4px;
+  padding: 4px 10px; cursor: pointer; color: rgba(255,255,255,0.4);
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em;
+  display: flex; align-items: center; gap: 6px; transition: all 0.2s;
+}
+.nav-search-btn:hover { border-color: var(--accent-light); color: var(--accent-light); }
 
 /* ── SEARCH OVERLAY ── */
 .search-overlay {
@@ -281,9 +290,6 @@ header p { color:#9a9080; font-size:1rem; }
 }
 /* a filter option that would show nothing with the other filters set */
 .filter-btn.empty { opacity: 0.35; }
-
-/* Sigla (work) tags on each record — change the size of all of them here. */
-.sigla-tag { font-size: 13px; padding: 4px 10px; }
 </style>
 </head>
 <body>
@@ -297,6 +303,7 @@ header p { color:#9a9080; font-size:1rem; }
   <a href="library.html" class="nav-cat" style="--cat-color:#e0955a">Biblioteca</a>
   <a href="epistolario.html" class="nav-cat" style="--cat-color:#a875cf">Epistolario</a>
   <a href="translations.html" class="nav-cat active" style="--cat-color:#cdb85a">Traduzioni</a>
+  <button class="nav-search-btn" id="overlay-open-btn" aria-label="Apri ricerca">⌕ Cerca</button>
 </nav>
 
 <header>
@@ -424,7 +431,7 @@ header p { color:#9a9080; font-size:1rem; }
         <div class="adv-field">
           <label>Titolo</label>
           <input id="adv-title" type="text" placeholder="es. Pasticciaccio">
-        </div>
+        </div> 
         <div class="adv-field">
           <label>Traduttore / Persona</label>
           <input id="adv-author" type="text" placeholder="es. Contini, Gianfranco">
@@ -800,7 +807,7 @@ function render() {
     const titleHtml = `<span class="entry-title-inline">${d.title||''}</span>`;
     const lineParts = [tradLink, titleHtml, pub, city].filter(Boolean);
     const typeTag = d.subtitle ? '<span class="type-tag" style="cursor:pointer" data-lang="' + d.subtitle.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();activeLang=activeLang===this.dataset.lang?\'\':this.dataset.lang;applyFilters()">' + d.subtitle + '</span>' : '';
-    const operaTags = (d.themes||[]).length ? '<div class="conn-badges" style="margin-top:4px">' + (d.themes||[]).map(t => '<span class="type-tag sigla-tag" style="cursor:pointer" data-opera="' + t.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();setThemeFilter(this.dataset.opera)">' + t + ((SIGLE[t]&&SIGLE[t].titolo_completo) ? '<span class="tag-full">' + SIGLE[t].titolo_completo + '</span>' : '') + '</span>').join(' ') + '</div>' : '';
+    const operaTags = (d.themes||[]).length ? '<div class="conn-badges" style="margin-top:4px">' + (d.themes||[]).map(t => '<span class="type-tag" style="cursor:pointer" data-opera="' + t.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();setThemeFilter(this.dataset.opera)">' + t + ((SIGLE[t]&&SIGLE[t].titolo_completo) ? '<span class="tag-full">' + SIGLE[t].titolo_completo + '</span>' : '') + '</span>').join(' ') + '</div>' : '';
     const editionKey = EDITION_KEY[d.id];
     const thumbHtml = editionKey ? thumbImgTag(editionKey, 'entry-thumb') : '';
     return `<div class="entry" onclick="goDetail('${d.id}')">
@@ -1266,7 +1273,7 @@ function exportData(fmt) {
     advToggle.textContent = 'Ricerca avanzata ▾';
   }
 
-  if (openBtn) openBtn.addEventListener('click', openOverlay);
+  openBtn.addEventListener('click', openOverlay);
   closeBtn.addEventListener('click', closeOverlay);
   overlay.addEventListener('click', function(e) { if (e.target === overlay) closeOverlay(); });
   bindInput(overlayInput, overlayResults);
