@@ -606,7 +606,6 @@
   // counted over EVERYONE matching the current filters — not just the people
   // drawn — so the reduced view never hides the real numbers.
   let topNStats = { shown: 0, total: 0 };
-  let stackZoomBack = null; // the zoom to return to once nobody is selected (see zoomToStacks)
   let updateDiscover = () => {}; // set once the tools row is built
   let lastEligible = [], lastDrawn = new Set(); // for the "Discover more people" list
   let updateReadout = () => {};
@@ -1560,10 +1559,8 @@
     // the bar that was clicked, broken into bricks (see explodedBar)
     const EXPLODE_MIN_PX = 200; // on-screen px per year needed to show the bricks
     const pxPerYearNow = (x(yearMin + 1) - x(yearMin)) / unitsPerPx;
-    // a clicked bar, or any year of a selected person, shows its stack
-    const stackedPeople = new Set(lastSelectedNames);
-    const isExploded = d => pxPerYearNow >= EXPLODE_MIN_PX &&
-      ((explodedBar && explodedBar.name === d.name && explodedBar.year === d.year) || stackedPeople.has(d.name));
+    const isExploded = d => explodedBar && pxPerYearNow >= EXPLODE_MIN_PX &&
+      explodedBar.name === d.name && explodedBar.year === d.year;
     letterMarks.classed("exploded", isExploded);
     letterMarks.filter(d => !isExploded(d)).selectAll(".letter-bar")
       .data(recordSegments)
@@ -1759,7 +1756,6 @@
         // Gadda (picking someone in the search doesn't: see pickSearched)
         const newlySelected = [...selected].filter(n => !lastSelectedNames.includes(n) && n !== "Gadda Carlo Emilio");
         if (newlySelected.length) scrollToFirstContact(newlySelected);
-        if (!selected.size && !selectedContact && stackZoomBack) setTimeout(leaveStacks);
         lastSelectedNames = [...selected];
         if (typeof syncKindCtl === "function") syncKindCtl();
         updateCrossLinks(lastSelectedNames);
@@ -1829,14 +1825,7 @@
       if (selected.has(name)) {
         selected.delete(name);
         if (pinnedNames.has(name)) return forgetSearched([name]);
-      } else {
-        selected.add(name);
-        applyHighlight();
-        // straight to their stacks: zoomed in at their first contact
-        const first = firstContactYear(name);
-        if (first != null) setTimeout(() => zoomToStacks(first));
-        return;
-      }
+      } else selected.add(name);
       applyHighlight();
     }
     // a searched person who is deselected stops being searched: their chip
@@ -2230,7 +2219,6 @@
     pinnedNames = back.pinned; searchEntries = back.entries; lastSelectedNames = back.selected;
   }
   function openYear(year, opts = {}) {
-    stackZoomBack = null;
     if (year != null && (opts.cast || yearCast)) enterCast(year, year, opts.keepSelection);
     if (year == null) {
       if (activeYear == null) return;
@@ -2279,7 +2267,6 @@
   }
   // like openYear, for any span of years (from the search: "1950-1955")
   function openRange(lo, hi, opts = {}) {
-    stackZoomBack = null;
     if (opts.cast) enterCast(lo, hi, opts.keepSelection);
     if (activeYear == null) beforeYearZoom = { pxPerYear, scrollX: window.scrollX };
     if (yearCast) {
@@ -3290,29 +3277,6 @@
     if (!zoomState) return;
     const centre = zoomState.x(year) / zoomState.unitsPerPx - (sidebarW() + (window.innerWidth - sidebarW()) / 2);
     window.scrollTo(Math.max(0, centre), window.scrollY);
-  }
-  // clicking a person zooms in to stack level (one brick per record), their
-  // first contact near the left; with nobody selected any more the view goes
-  // back to the zoom and place it had before (stackZoomBack, declared above)
-  function zoomToStacks(year) {
-    if (!stackZoomBack) stackZoomBack = { pxPerYear, scrollX: window.scrollX };
-    pxPerYear = Math.min(MAX_PX_PER_YEAR, Math.max(pxPerYear, BAR_ZOOM_PX));
-    rerenderKeepingSelection();
-    window.scrollTo(Math.max(0, zoomState.x(year) / zoomState.unitsPerPx - 140), window.scrollY);
-    pinLabels();
-    updateReadout();
-    updateZoomLabel();
-  }
-  function leaveStacks() {
-    const back = stackZoomBack;
-    stackZoomBack = null;
-    if (!back) return;
-    pxPerYear = back.pxPerYear;
-    rerenderKeepingSelection();
-    window.scrollTo(back.scrollX, window.scrollY);
-    pinLabels();
-    updateReadout();
-    updateZoomLabel();
   }
   function zoomOnYear(year) {
     pxPerYear = Math.min(MAX_PX_PER_YEAR, Math.max(pxPerYear, fitPxPerYear(), BAR_ZOOM_PX));
