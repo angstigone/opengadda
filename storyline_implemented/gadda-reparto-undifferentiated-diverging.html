@@ -86,7 +86,7 @@
     border: none; border-radius: 6px; background: transparent; color: var(--ink);
   }
   .year-zoom-bar button:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); }
-  .year-zoom-bar .back { font-weight: 600; padding: 0 0.5rem; border-left: 1px solid var(--grid); border-radius: 0 6px 6px 0; }
+  .year-zoom-bar .back { font-weight: 600; padding: 0 0.5rem; display: inline-flex; align-items: center; border-left: 1px solid var(--grid); border-radius: 0 6px 6px 0; }
   .time-label { font-size: 10px; fill: var(--ink); opacity: 0.6; font-family: system-ui, sans-serif; }
   .contact-icon-halo { fill: var(--bg); stroke: var(--bg); stroke-width: 5; stroke-linejoin: round; }
   .letter-bar { stroke: var(--bg); stroke-width: 1; vector-effect: non-scaling-stroke; }
@@ -317,7 +317,7 @@
   /* research: saved views + export, a menu in the tools row */
   .research { position: relative; }
   .research-btn {
-    font: inherit; font-size: 0.75rem; font-weight: 600; height: 1.95rem; padding: 0 0.75rem; cursor: pointer;
+    font: inherit; font-size: 0.75rem; font-weight: 600; height: 1.95rem; padding: 0 0.6rem; cursor: pointer;
     border: 1px solid var(--grid); border-radius: 8px; background: var(--bg); color: var(--ink);
     box-shadow: 0 2px 10px rgba(0,0,0,0.08); display: inline-flex; align-items: center; gap: 0.35rem;
   }
@@ -419,7 +419,7 @@
   .kind-filter[hidden], .kind-filter button[hidden] { display: none; }
   .kind-filter button.only { cursor: default; }
   .kind-filter button {
-    font: inherit; font-weight: 600; height: 1.6rem; padding: 0 0.55rem; cursor: pointer;
+    font: inherit; font-weight: 600; height: 1.6rem; padding: 0 0.45rem; cursor: pointer; display: inline-flex; align-items: center;
     border: none; border-radius: 6px; background: transparent; color: var(--ink); opacity: 0.6;
   }
   .kind-filter button:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); }
@@ -1521,7 +1521,7 @@
       }
       explodedBar = { name: d.name, year: d.year };
       pickedLetterId = null;
-      lastSelectedNames = [d.name];
+      if (!lastSelectedNames.includes(d.name)) lastSelectedNames = [...lastSelectedNames, d.name];
       zoomOnYear(d.year);
     }
     // the bar hangs off the year's first mark, centred on the year
@@ -1702,8 +1702,11 @@
     // while active, regardless of their individual filter-bar toggles.
     let gaddaOnlyMode = gaddaViewKept;
 
+    // several people can be compared at once: clicking a line adds it to
+    // the selection (clicking again takes it out); Gadda's line adds his
+    // works to whatever is selected instead of replacing it
     function isRelevant(name) {
-      if (gaddaOnlyMode) return name === "Gadda Carlo Emilio";
+      if (gaddaOnlyMode && !selected.size) return name === "Gadda Carlo Emilio";
       if (selectedContact) return name === "Gadda Carlo Emilio" || name === selectedContact.name;
       return selected.size === 0 || name === "Gadda Carlo Emilio" || selected.has(name);
     }
@@ -1752,13 +1755,13 @@
         .style("opacity", d => (emphasised(d) ? 1 : isRelevant(d.name) ? null : 0.08));
       rows.selectAll(".pt").style("opacity", d => (isRelevant(d.name) ? 1 : 0.08));
       svg.selectAll(".contact").each(function (d) {
-        const visible = gaddaOnlyMode ? false : selectedContact ? d === selectedContact : selected.has(d.name);
+        const visible = selectedContact ? d === selectedContact : selected.has(d.name);
         d3.select(this)
           .style("opacity", visible ? 1 : 0)
           .style("pointer-events", visible ? null : "none");
       });
       svg.selectAll(".year-mark").each(function (d) {
-        const visible = gaddaOnlyMode ? false : selectedContact ? d.cluster === selectedContact : selected.has(d.name);
+        const visible = selectedContact ? d.cluster === selectedContact : selected.has(d.name);
         d3.select(this)
           .style("opacity", visible ? 1 : 0)
           .style("pointer-events", visible ? null : "none");
@@ -1796,20 +1799,14 @@
     }
 
     function toggleSelection(name) {
+      selectedContact = null;
       if (name === "Gadda Carlo Emilio") {
-        gaddaOnlyMode = !gaddaOnlyMode;
-        selected = new Set();
-        selectedContact = null;
+        gaddaOnlyMode = !gaddaOnlyMode; // his works, alongside whoever is selected
         applyHighlight();
         return;
       }
-      gaddaOnlyMode = false;
-      selectedContact = null;
-      if (selected.size === 1 && selected.has(name)) {
-        selected = new Set();
-      } else {
-        selected = new Set([name]);
-      }
+      selected = new Set(selected);
+      if (selected.has(name)) selected.delete(name); else selected.add(name);
       applyHighlight();
     }
     function toggleContact(contact) {
@@ -2217,7 +2214,7 @@
         `<span>Storyline of <strong>${year}</strong></span>` +
         `<button data-step="-1" title="Previous year" aria-label="Previous year">‹</button>` +
         `<button data-step="1" title="Next year" aria-label="Next year">›</button>` +
-        `<button class="back" title="Back to the usual graph (Esc)">Back</button>`);
+        `<button class="back" title="Back to the usual graph (Esc)" aria-label="Back"><svg viewBox="0 0 24 24" width="15" height="15" style="width:15px;height:15px;flex:0 0 auto;display:block" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>`);
       pxPerYear = 1; // the twelve months fit the window
       rerenderKeepingSelection();
       window.scrollTo(0, window.scrollY);
@@ -2230,7 +2227,7 @@
         `<span class="span">${timeFocus.start}–${timeFocus.end}</span>` +
         `<button data-step="-1" title="Previous year" aria-label="Previous year">‹</button>` +
         `<button data-step="1" title="Next year" aria-label="Next year">›</button>` +
-        `<button class="back" title="Back to Gadda's whole life (Esc)">Whole life</button>`);
+        `<button class="back" title="Back to Gadda's whole life (Esc)" aria-label="Back to Gadda's whole life"><svg viewBox="0 0 24 24" width="15" height="15" style="width:15px;height:15px;flex:0 0 auto;display:block" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>`);
       pxPerYear = 1; // fit the period to the window
       rerenderKeepingSelection();
       window.scrollTo(0, window.scrollY);
@@ -2248,7 +2245,7 @@
       timeFocus = null;
       yearZoomBar.attr("hidden", null).html(
         `<span>Most present in <strong>${lo}\u2013${hi}</strong></span>` +
-        `<button class="back" title="Back to the usual graph (Esc)">Back</button>`);
+        `<button class="back" title="Back to the usual graph (Esc)" aria-label="Back"><svg viewBox="0 0 24 24" width="15" height="15" style="width:15px;height:15px;flex:0 0 auto;display:block" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>`);
       pxPerYear = BASE_PX_PER_YEAR;
       rerenderKeepingSelection();
       scrollToYear((lo + hi) / 2);
@@ -2261,7 +2258,7 @@
     timeFocus = { start: Math.max(gadda.birth, lo), end: Math.min(gadda.death, hi) };
     yearZoomBar.attr("hidden", null).html(
       `<span>${yearCast ? "Most present in" : "Zoomed on"} <strong>${timeFocus.start}\u2013${timeFocus.end}</strong></span>` +
-      `<button class="back" title="Back to Gadda's whole life (Esc)">Whole life</button>`);
+      `<button class="back" title="Back to Gadda's whole life (Esc)" aria-label="Back to Gadda's whole life"><svg viewBox="0 0 24 24" width="15" height="15" style="width:15px;height:15px;flex:0 0 auto;display:block" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>`);
     pxPerYear = 1; // fit the span to the window
     rerenderKeepingSelection();
     window.scrollTo(0, window.scrollY);
@@ -2538,9 +2535,7 @@
     // Gadda, or one of his works: his works view (as if his line was
     // clicked), zoomed on the work's year
     if ((d.type === "work" && !d.name) || d.name === GADDA) {
-      gaddaViewKept = true;
-      lastSelectedNames = [];
-      searchSelected = new Set();
+      gaddaViewKept = true; // his works join whoever is already selected
       if (d.year) {
         // straight to the work: its year's bricks open, its brick pinned
         explodedBar = { name: GADDA, year: d.year };
@@ -2694,8 +2689,16 @@
   }
   new MutationObserver(placeGraphTools).observe(svg.node(), { childList: true });
   window.addEventListener("resize", placeGraphTools);
-  [["all", "All"], ["letters", "Letters"], ["books", "Books"], ["works", "Publications"]].forEach(([kind, label]) =>
-    kindCtl.append("button").attr("data-kind", kind).classed("active", kind === "all").text(label)
+  // icons, not words: the graph's own marks (envelope, book, pen), plus a
+  // stack for All; the name is in the tooltip
+  const KIND_ALL_ICON = "M12 3.5 3 8l9 4.5L21 8zM3 12l9 4.5 9-4.5M3 16l9 4.5 9-4.5";
+  [["all", "All records", KIND_ALL_ICON, "var(--ink)"],
+   ["letters", "Letters", CONTACT_ICONS.letters, repartoAccents.letters],
+   ["books", "Books (library)", CONTACT_ICONS.library, repartoAccents.library],
+   ["works", "Publications on Gadda", CONTACT_ICONS.secondaryBib, repartoAccents.secondaryBib]].forEach(([kind, label, icon, color]) =>
+    kindCtl.append("button").attr("data-kind", kind).classed("active", kind === "all")
+      .attr("title", label).attr("aria-label", label)
+      .html(`<svg viewBox="0 0 24 24" width="16" height="16" style="width:16px;height:16px;display:block" fill="none" stroke="${color}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="${icon}"/></svg>`)
       .on("click", function () { if (kind !== kindShown) showKind(kind); }));
 
   // --- research: save the current view (who is selected, the year zoomed
@@ -2710,10 +2713,12 @@
   }
   const researchBox = graphTools.append("div").attr("class", "research");
   const researchBtn = researchBox.append("button").attr("class", "research-btn")
+    .attr("title", "Research: save this view, reopen saved views, export them").attr("aria-label", "Research")
     .on("click", event => { event.stopPropagation(); researchPanel.attr("hidden", researchPanel.attr("hidden") == null ? "" : null); });
   const researchPanel = researchBox.append("div").attr("class", "research-panel").attr("hidden", "")
     .on("click", event => event.stopPropagation());
   d3.select(document).on("click.research", () => researchPanel.attr("hidden", ""));
+  researchBox.node().after(kindCtl.node()); // the kind filter sits right after Research
   // snapshot: its own button beside Research, a small menu of ways to
   // save what's on screen — the graph as an image (PNG, JPG) or as a
   // vector file (SVG), or its records as a spreadsheet (CSV, opens in Excel)
@@ -2721,7 +2726,7 @@
   snapBox.append("button").attr("class", "research-btn snapshot-btn")
     .attr("title", "Save the graph as it is now")
     .attr("aria-label", "Snapshot of the graph")
-    .html(`<svg class="snap-ico" viewBox="0 0 24 24" style="width:15px;height:15px;flex:0 0 auto" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.3"/></svg>Snapshot`)
+    .html(`<svg class="snap-ico" viewBox="0 0 24 24" style="width:15px;height:15px;flex:0 0 auto" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.3"/></svg>`)
     .on("click", event => { event.stopPropagation(); snapPanel.attr("hidden", snapPanel.attr("hidden") == null ? "" : null); });
   const snapPanel = snapBox.append("div").attr("class", "research-panel snap-panel").attr("hidden", "")
     .on("click", event => event.stopPropagation());
@@ -2822,7 +2827,7 @@
   }
 
   function drawResearch() {
-    researchBtn.html(`Research${research.length ? ` <span class="research-n">${research.length}</span>` : ""}`);
+    researchBtn.html(`<svg viewBox="0 0 24 24" width="15" height="15" style="width:15px;height:15px;flex:0 0 auto;display:block" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></svg>${research.length ? ` <span class="research-n">${research.length}</span>` : ""}`);
     researchPanel.html("");
     researchPanel.append("button").attr("class", "research-save").text("+ Save this view")
       .on("click", () => { research.push(currentView()); storeResearch(); drawResearch(); });

@@ -86,7 +86,7 @@
     border: none; border-radius: 6px; background: transparent; color: var(--ink);
   }
   .year-zoom-bar button:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); }
-  .year-zoom-bar .back { font-weight: 600; padding: 0 0.5rem; border-left: 1px solid var(--grid); border-radius: 0 6px 6px 0; }
+  .year-zoom-bar .back { font-weight: 600; padding: 0 0.5rem; display: inline-flex; align-items: center; border-left: 1px solid var(--grid); border-radius: 0 6px 6px 0; }
   .time-label { font-size: 10px; fill: var(--ink); opacity: 0.6; font-family: system-ui, sans-serif; }
   .contact-icon-halo { fill: var(--bg); stroke: var(--bg); stroke-width: 5; stroke-linejoin: round; }
   .letter-bar { stroke: var(--bg); stroke-width: 1; vector-effect: non-scaling-stroke; }
@@ -317,7 +317,7 @@
   /* research: saved views + export, a menu in the tools row */
   .research { position: relative; }
   .research-btn {
-    font: inherit; font-size: 0.75rem; font-weight: 600; height: 1.95rem; padding: 0 0.75rem; cursor: pointer;
+    font: inherit; font-size: 0.75rem; font-weight: 600; height: 1.95rem; padding: 0 0.6rem; cursor: pointer;
     border: 1px solid var(--grid); border-radius: 8px; background: var(--bg); color: var(--ink);
     box-shadow: 0 2px 10px rgba(0,0,0,0.08); display: inline-flex; align-items: center; gap: 0.35rem;
   }
@@ -419,7 +419,7 @@
   .kind-filter[hidden], .kind-filter button[hidden] { display: none; }
   .kind-filter button.only { cursor: default; }
   .kind-filter button {
-    font: inherit; font-weight: 600; height: 1.6rem; padding: 0 0.55rem; cursor: pointer;
+    font: inherit; font-weight: 600; height: 1.6rem; padding: 0 0.45rem; cursor: pointer; display: inline-flex; align-items: center;
     border: none; border-radius: 6px; background: transparent; color: var(--ink); opacity: 0.6;
   }
   .kind-filter button:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); }
@@ -556,6 +556,12 @@
   // whoever is shown, so the strongest line is the strongest tie OF THAT
   // PERIOD.
   function focusWindow(d) {
+    // year view (month by month): only that year's records exist — contact
+    // months, and strength = how many records the person has that year
+    if (monthYear != null) {
+      const m = monthStats.get(d.name);
+      return { ...d, interactions: m ? m.units : [], weight: m ? Math.log1p(m.count) : 0 };
+    }
     if (!timeFocus) return d;
     const all = d.interactions || [];
     const inside = all.filter(yr => yr >= timeFocus.start && yr <= timeFocus.end);
@@ -594,7 +600,7 @@
   let updateReadout = () => {};
   const readout = d3.select("body").append("div").attr("class", "year-readout");
   const contactKinds = [
-    { noun: "letters", yearsOf: name => (letterDates[name] || []).map(s => +String(s).slice(0, 4)).filter(Number.isFinite) },
+    { noun: "letters", yearsOf: name => (letterDates[name] || []).map(dateUnit).filter(Number.isFinite) },
     { noun: "books", yearsOf: name => (libraryBooks[name] || []).map(b => b.year).filter(Number.isFinite) },
     { noun: "publications on Gadda", yearsOf: name => (secondaryWorks[name] || []).map(w => w.year).filter(Number.isFinite) },
   ];
@@ -995,11 +1001,11 @@
       .join("text")
         .attr("class", "time-label")
         .classed("active", d => d === activeYear)
-        .on("click", (event, d) => openYear(d === activeYear ? null : d))
+        .on("click", (event, d) => { if (monthYear == null) openYear(d === activeYear ? null : d); })
         .attr("x", d => x(d))
         .attr("y", margin.top - 10)
         .attr("text-anchor", "middle")
-        .text(d3.format("d"));
+        .text(d => monthYear != null ? (MONTH_LABELS[d] || "") : d3.format("d")(d));
 
     // where a line goes while it's in contact with Gadda — two styles,
     // picked in the sidebar ("Dips"):
@@ -1035,6 +1041,13 @@
     }
 
     people.forEach(d => {
+      if (monthYear != null) {
+        // year view: everyone drawn shares that year, January to the end
+        d.frameBirth = timeFocus.start;
+        d.frameDeath = timeFocus.end;
+        d.diedBeforeGadda = false;
+        return;
+      }
       d.frameBirth = d.birth;
       d.frameDeath = Math.min(d.death, gadda.death);
       d.diedBeforeGadda = d.death < gadda.death;
@@ -1406,14 +1419,15 @@
       const m = /(\d{1,2})[./](\d{1,2})[./](\d{4})/.exec(note || "");
       return m && +m[3] === year ? `${m[3]}-${pad2(m[2])}-${pad2(m[1])}` : String(year);
     };
+    // in the year view a book's/work's "year" is its month; its real year is kept aside
     function recordsOf(name, year) {
       const items = [
-        ...(letterFlowDates[name] || []).filter(([date]) => +date.slice(0, 4) === year)
+        ...(letterFlowDates[name] || []).filter(l => letterUnit(l) === year)
           .map(l => ({ kind: l[1], date: l[0], key: l[2], letter: l })),
         ...(libraryBooks[name] || []).filter(b => b.year === year)
-          .map((b, i) => ({ kind: "book", date: noteDate(b.note, year), key: `book:${year}:${i}`, book: b })),
+          .map((b, i) => ({ kind: "book", date: noteDate(b.note, b.realYear ?? year), key: `book:${year}:${i}`, book: b })),
         ...(secondaryWorks[name] || []).filter(w => w.year === year)
-          .map((w, i) => ({ kind: "work", date: String(year), key: `work:${year}:${i}`, work: w })),
+          .map((w, i) => ({ kind: "work", date: String(w.realYear ?? year), key: `work:${year}:${i}`, work: w })),
       ];
       const sortKey = it => (it.date.length > 4 ? it.date : it.date + "-99");
       return items.sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
@@ -1481,7 +1495,7 @@
       }
       explodedBar = { name: d.name, year: d.year };
       pickedLetterId = null;
-      lastSelectedNames = [d.name];
+      if (!lastSelectedNames.includes(d.name)) lastSelectedNames = [...lastSelectedNames, d.name];
       zoomOnYear(d.year);
     }
     // the bar hangs off the year's first mark, centred on the year
@@ -1623,8 +1637,11 @@
     // while active, regardless of their individual filter-bar toggles.
     let gaddaOnlyMode = gaddaViewKept;
 
+    // several people can be compared at once: clicking a line adds it to
+    // the selection (clicking again takes it out); Gadda's line adds his
+    // works to whatever is selected instead of replacing it
     function isRelevant(name) {
-      if (gaddaOnlyMode) return name === "Gadda Carlo Emilio";
+      if (gaddaOnlyMode && !selected.size) return name === "Gadda Carlo Emilio";
       if (selectedContact) return name === "Gadda Carlo Emilio" || name === selectedContact.name;
       return selected.size === 0 || name === "Gadda Carlo Emilio" || selected.has(name);
     }
@@ -1673,13 +1690,13 @@
         .style("opacity", d => (emphasised(d) ? 1 : isRelevant(d.name) ? null : 0.08));
       rows.selectAll(".pt").style("opacity", d => (isRelevant(d.name) ? 1 : 0.08));
       svg.selectAll(".contact").each(function (d) {
-        const visible = gaddaOnlyMode ? false : selectedContact ? d === selectedContact : selected.has(d.name);
+        const visible = selectedContact ? d === selectedContact : selected.has(d.name);
         d3.select(this)
           .style("opacity", visible ? 1 : 0)
           .style("pointer-events", visible ? null : "none");
       });
       svg.selectAll(".year-mark").each(function (d) {
-        const visible = gaddaOnlyMode ? false : selectedContact ? d.cluster === selectedContact : selected.has(d.name);
+        const visible = selectedContact ? d.cluster === selectedContact : selected.has(d.name);
         d3.select(this)
           .style("opacity", visible ? 1 : 0)
           .style("pointer-events", visible ? null : "none");
@@ -1717,20 +1734,14 @@
     }
 
     function toggleSelection(name) {
+      selectedContact = null;
       if (name === "Gadda Carlo Emilio") {
-        gaddaOnlyMode = !gaddaOnlyMode;
-        selected = new Set();
-        selectedContact = null;
+        gaddaOnlyMode = !gaddaOnlyMode; // his works, alongside whoever is selected
         applyHighlight();
         return;
       }
-      gaddaOnlyMode = false;
-      selectedContact = null;
-      if (selected.size === 1 && selected.has(name)) {
-        selected = new Set();
-      } else {
-        selected = new Set([name]);
-      }
+      selected = new Set(selected);
+      if (selected.has(name)) selected.delete(name); else selected.add(name);
       applyHighlight();
     }
     function toggleContact(contact) {
@@ -2011,9 +2022,113 @@
   let pickedLetterId = null; // the brick whose description is shown
   let beforeYearZoom = null;  // zoom and scroll to return to
   const yearZoomBar = d3.select("#year-zoom-bar");
-  function openYear(year) {
+  // --- year cast: a year (or span) picked in the search builds the graph
+  // anew for that year: the people most present IN that year — ranked by
+  // their records there (letters both ways, books, publications), top
+  // TOP_N_DEFAULT — drawn as the usual storyline (Gadda's whole life, usual
+  // scale, strength, dips and names), scrolled to that year. Not a zoom. Whoever was selected or searched before
+  // is set aside and comes back with "Whole life". While the cast is on,
+  // the ‹ › steps (and year labels) recast for the new year.
+  let yearCast = null;       // { lo, hi, names: Set, count: Map name → records }
+  let beforeYearCast = null; // the selection set aside on entering a cast
+  // --- year view, month by month: while it's open the data tables hold
+  // only that year's records, keyed by month (1-12; NO_MONTH for records
+  // dated by year alone), so the usual storyline drawing — rows, dips,
+  // strength, icons, bars, bricks — runs on that year alone. Dates in the
+  // records stay real (the notes show them); books/works keep realYear.
+  const NO_MONTH = 13;
+  const MONTH_LABELS = { 1: "Jan", 2: "Feb", 3: "Mar", 4: "Apr", 5: "May", 6: "Jun", 7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec", 13: "no month" };
+  let monthYear = null;          // the real year shown month by month, or null
+  let monthTables = null;        // table → its month version for monthYear
+  let monthStats = new Map();    // name → { units: [months], count }
+  // a letter's time unit: its year, or in the year view its month
+  // (approximate dates — a raw date was kept — have no month)
+  function letterUnit(l) {
+    if (monthYear == null) return +l[0].slice(0, 4);
+    return l[5] ? NO_MONTH : +l[0].slice(5, 7) || NO_MONTH;
+  }
+  function dateUnit(s) {
+    s = String(s);
+    if (monthYear == null) return +s.slice(0, 4);
+    return +s.slice(5, 7) || NO_MONTH;
+  }
+  // month of a book from its dedication note ("in data 28.4.1952", "8.1931")
+  function bookMonth(b, y) {
+    const m = /(\d{1,2})[./](\d{1,2})[./](\d{4})/.exec(b.note || "") || /(?:^|\D)(\d{1,2})[./](\d{4})/.exec(b.note || "");
+    if (!m) return NO_MONTH;
+    const [mo, yr] = m.length === 4 ? [+m[2], +m[3]] : [+m[1], +m[2]];
+    return yr === y && mo >= 1 && mo <= 12 ? mo : NO_MONTH;
+  }
+  function fillTable(t, src) {
+    Object.keys(t).forEach(k => delete t[k]);
+    Object.assign(t, src);
+  }
+  const tableSource = t => (monthTables && monthTables.get(t)) || fullTables.get(t);
+  function buildMonthTables(y) {
+    const full = t => fullTables.get(t);
+    monthYear = y;
+    const flow = {}, dates = {}, years = {}, yearFlow = {}, books = {}, works = {};
+    Object.entries(full(letterFlowDates)).forEach(([n, ls]) => {
+      const inY = ls.filter(l => +l[0].slice(0, 4) === y);
+      if (!inY.length) return;
+      flow[n] = inY;
+      dates[n] = inY.map(l => l[0]);
+      years[n] = [...new Set(inY.map(letterUnit))].sort((a, b) => a - b);
+      yearFlow[n] = {};
+      inY.forEach(l => {
+        const u = letterUnit(l), c = yearFlow[n][u] || (yearFlow[n][u] = [0, 0]);
+        c[l[1] === "in" ? 0 : 1]++;
+      });
+    });
+    Object.entries(full(libraryBooks)).forEach(([n, bs]) => {
+      const inY = bs.filter(b => b.year === y).map(b => ({ ...b, year: bookMonth(b, y), realYear: y }));
+      if (inY.length) books[n] = inY;
+    });
+    Object.entries(full(secondaryWorks)).forEach(([n, ws]) => {
+      const inY = ws.filter(w => w.year === y).map(w => ({ ...w, year: NO_MONTH, realYear: y }));
+      if (inY.length) works[n] = inY;
+    });
+    monthTables = new Map([[letterFlowDates, flow], [letterDates, dates], [letterYears, years],
+      [letterYearFlow, yearFlow], [libraryBooks, books], [secondaryWorks, works]]);
+    monthStats = new Map();
+    allCorrespondents.forEach(d => {
+      const units = [...(years[d.name] || []), ...(books[d.name] || []).map(b => b.year), ...(works[d.name] || []).map(w => w.year)];
+      const count = (flow[d.name] || []).length + (books[d.name] || []).length + (works[d.name] || []).length;
+      if (count) monthStats.set(d.name, { units: [...new Set(units)].sort((a, b) => a - b), count });
+    });
+    applyKind();
+  }
+  function leaveMonthTables() {
+    if (monthYear == null) return;
+    monthYear = null; monthTables = null; monthStats = new Map();
+    applyKind();
+  }
+  function castFor(lo, hi) {
+    const top = yearPreview(lo, hi).people.slice(0, TOP_N_DEFAULT);
+    return { lo, hi, names: new Set(top.map(c => c.name)), count: new Map(top.map(c => [c.name, c.total])) };
+  }
+  function enterCast(lo, hi, keepSelection) {
+    if (!yearCast && !keepSelection) {
+      beforeYearCast = { pinned: new Set(pinnedNames), entries: [...searchEntries], selected: [...lastSelectedNames] };
+      pinnedNames = new Set(); searchEntries = []; lastSelectedNames = []; searchSelected = new Set();
+      explodedBar = null; pickedLetterId = null;
+    }
+    yearCast = castFor(lo, hi);
+  }
+  function leaveCast() {
+    if (!yearCast) return;
+    yearCast = null;
+    leaveMonthTables();
+    const back = beforeYearCast;
+    beforeYearCast = null;
+    if (!back) return;
+    pinnedNames = back.pinned; searchEntries = back.entries; lastSelectedNames = back.selected;
+  }
+  function openYear(year, opts = {}) {
+    if (year != null && (opts.cast || yearCast)) enterCast(year, year, opts.keepSelection);
     if (year == null) {
       if (activeYear == null) return;
+      leaveCast();
       activeYear = null;
       timeFocus = null;
       yearZoomBar.attr("hidden", true).html("");
@@ -2022,16 +2137,32 @@
       pxPerYear = back ? back.pxPerYear : BASE_PX_PER_YEAR;
       rerenderKeepingSelection();
       window.scrollTo(back ? back.scrollX : 0, window.scrollY);
+    } else if (yearCast) {
+      // the storyline OF that year: its top people, month by month, drawn
+      // from that year's records only
+      if (activeYear == null) beforeYearZoom = { pxPerYear, scrollX: window.scrollX };
+      activeYear = year;
+      explodedBar = null; pickedLetterId = null;
+      buildMonthTables(year);
+      timeFocus = { start: 0.5, end: NO_MONTH + 0.5 };
+      yearZoomBar.attr("hidden", null).html(
+        `<span>Storyline of <strong>${year}</strong></span>` +
+        `<button data-step="-1" title="Previous year" aria-label="Previous year">‹</button>` +
+        `<button data-step="1" title="Next year" aria-label="Next year">›</button>` +
+        `<button class="back" title="Back to the usual graph (Esc)" aria-label="Back"><svg viewBox="0 0 24 24" width="15" height="15" style="width:15px;height:15px;flex:0 0 auto;display:block" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>`);
+      pxPerYear = 1; // the twelve months fit the window
+      rerenderKeepingSelection();
+      window.scrollTo(0, window.scrollY);
     } else {
       if (activeYear == null) beforeYearZoom = { pxPerYear, scrollX: window.scrollX };
       activeYear = year;
       timeFocus = { start: Math.max(gadda.birth, year - YEAR_ZOOM_REACH), end: Math.min(gadda.death, year + YEAR_ZOOM_REACH) };
       yearZoomBar.attr("hidden", null).html(
-        `<span>Zoomed on <strong>${year}</strong></span>` +
+        (yearCast ? `<span>Most present in <strong>${year}</strong></span>` : `<span>Zoomed on <strong>${year}</strong></span>`) +
         `<span class="span">${timeFocus.start}–${timeFocus.end}</span>` +
         `<button data-step="-1" title="Previous year" aria-label="Previous year">‹</button>` +
         `<button data-step="1" title="Next year" aria-label="Next year">›</button>` +
-        `<button class="back" title="Back to Gadda's whole life (Esc)">Whole life</button>`);
+        `<button class="back" title="Back to Gadda's whole life (Esc)" aria-label="Back to Gadda's whole life"><svg viewBox="0 0 24 24" width="15" height="15" style="width:15px;height:15px;flex:0 0 auto;display:block" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>`);
       pxPerYear = 1; // fit the period to the window
       rerenderKeepingSelection();
       window.scrollTo(0, window.scrollY);
@@ -2041,13 +2172,28 @@
     updateZoomLabel();
   }
   // like openYear, for any span of years (from the search: "1950-1955")
-  function openRange(lo, hi) {
+  function openRange(lo, hi, opts = {}) {
+    if (opts.cast) enterCast(lo, hi, opts.keepSelection);
     if (activeYear == null) beforeYearZoom = { pxPerYear, scrollX: window.scrollX };
+    if (yearCast) {
+      activeYear = lo; // so Esc / Back come back as from a year view
+      timeFocus = null;
+      yearZoomBar.attr("hidden", null).html(
+        `<span>Most present in <strong>${lo}\u2013${hi}</strong></span>` +
+        `<button class="back" title="Back to the usual graph (Esc)" aria-label="Back"><svg viewBox="0 0 24 24" width="15" height="15" style="width:15px;height:15px;flex:0 0 auto;display:block" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>`);
+      pxPerYear = BASE_PX_PER_YEAR;
+      rerenderKeepingSelection();
+      scrollToYear((lo + hi) / 2);
+      pinLabels();
+      updateReadout();
+      updateZoomLabel();
+      return;
+    }
     activeYear = lo; // so Esc / Whole life come back as from a year zoom
     timeFocus = { start: Math.max(gadda.birth, lo), end: Math.min(gadda.death, hi) };
     yearZoomBar.attr("hidden", null).html(
-      `<span>Zoomed on <strong>${timeFocus.start}\u2013${timeFocus.end}</strong></span>` +
-      `<button class="back" title="Back to Gadda's whole life (Esc)">Whole life</button>`);
+      `<span>${yearCast ? "Most present in" : "Zoomed on"} <strong>${timeFocus.start}\u2013${timeFocus.end}</strong></span>` +
+      `<button class="back" title="Back to Gadda's whole life (Esc)" aria-label="Back to Gadda's whole life"><svg viewBox="0 0 24 24" width="15" height="15" style="width:15px;height:15px;flex:0 0 auto;display:block" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>`);
     pxPerYear = 1; // fit the span to the window
     rerenderKeepingSelection();
     window.scrollTo(0, window.scrollY);
@@ -2077,7 +2223,9 @@
   let noPersonVisible = new Set();
 
   function applyFilter() {
-    const matching = (customMode ? [] : timeFocus
+    const matching = (customMode ? [] : yearCast
+      ? allCorrespondents.filter(d => yearCast.names.has(d.name))
+      : timeFocus
       ? allCorrespondents.filter(d => (d.interactions || []).some(yr => yr >= timeFocus.start && yr <= timeFocus.end))
       : allCorrespondents).filter(d => !activeCats.size || activeCats.has(catOf(d.name)));
     const matchingNames = new Set(matching.map(d => d.name));
@@ -2088,7 +2236,10 @@
     const keepSelected = new Set([...searchSelected, ...lastSelectedNames]);
     const keptNames = new Set(shown.map(d => d.name));
     const selectedExtra = allCorrespondents.filter(d => keepSelected.has(d.name) && !keptNames.has(d.name));
-    render([...shown, ...selectedExtra], keepSelected);
+    // a year's storyline only has people alive that year (a searched person
+    // who was not yet born or already dead gets no line there)
+    const aliveThen = d => monthYear == null || (d.birth <= monthYear && d.death >= monthYear);
+    render([...shown, ...selectedExtra].filter(aliveThen), keepSelected);
 
     d3.select("#count-panel").html(
       `<div>Shown</div><strong>${shown.length}</strong>` +
@@ -2315,13 +2466,11 @@
     searchSuggestions.html("");
     explodedBar = null; // whatever was open before closes
     pickedLetterId = null;
-    if (d.type === "year") { d.lo === d.hi ? openYear(d.lo) : openRange(d.lo, d.hi); return; }
+    if (d.type === "year") { d.lo === d.hi ? openYear(d.lo, { cast: true }) : openRange(d.lo, d.hi, { cast: true }); return; }
     // Gadda, or one of his works: his works view (as if his line was
     // clicked), zoomed on the work's year
     if ((d.type === "work" && !d.name) || d.name === GADDA) {
-      gaddaViewKept = true;
-      lastSelectedNames = [];
-      searchSelected = new Set();
+      gaddaViewKept = true; // his works join whoever is already selected
       if (d.year) {
         // straight to the work: its year's bricks open, its brick pinned
         explodedBar = { name: GADDA, year: d.year };
@@ -2334,8 +2483,10 @@
     addSearchEntry(entry);
     // counted as selected already, so the redraw doesn't scroll to them
     lastSelectedNames = [...new Set([...lastSelectedNames, ...entry.names])];
-    kindShown = "all"; // nothing hidden by the kind switch
-    applyKind();
+    // the record picked must show: if the kind switch hides its kind, back to All
+    const pickedKind = d.type === "work" ? (d.what === "book" ? "books" : "works")
+      : d.type === "entry" ? (d.kind === "book" ? "books" : d.kind === "work" ? "works" : "letters") : null;
+    if (pickedKind && kindShown !== "all" && kindShown !== pickedKind) { kindShown = "all"; applyKind(); }
     let target = null;
     if (d.type === "entry") target = { name: d.name, year: d.year, key: d.key };
     if (d.type === "work") {
@@ -2418,9 +2569,11 @@
   // one kind (letters / books / publications on Gadda). Only the selected
   // people's marks change — everyone else keeps theirs, and who is drawn,
   // line strength and contact years stay as they are. The selected
-  // people's entries of the hidden kinds are taken out of the tables, so
-  // icons, bars and bricks all leave them out. The switch is hidden while
-  // nobody is selected, and goes back to All when the selection changes.
+  // the hidden kinds are taken out of the tables, so icons, bars and
+  // bricks all leave them out. The switch is always on the graph and works
+  // for everyone drawn, and it stays as set when the selection changes — so
+  // two people's letters (say) can be compared side by side. People, line
+  // strength and dips don't change with it.
   const kindTables = {
     letters: [letterYears, letterDates, letterYearFlow, letterFlowDates],
     books: [libraryBooks],
@@ -2431,19 +2584,11 @@
   let kindFor = ""; // the selection the switch was last set for
   const selectedPeople = () => lastSelectedNames.filter(n => n !== "Gadda Carlo Emilio");
   function applyKind() {
-    Object.values(kindTables).flat().forEach(t => Object.assign(t, fullTables.get(t)));
+    Object.values(kindTables).flat().forEach(t => fillTable(t, tableSource(t)));
     Object.entries(kindTables).forEach(([k, tables]) => tables.forEach(t => {
-      if (kindShown !== "all" && kindShown !== k) selectedPeople().forEach(n => delete t[n]);
+      if (kindShown !== "all" && kindShown !== k) Object.keys(t).forEach(n => delete t[n]);
     }));
-    // only the kinds the selected people actually have are offered; with
-    // just one there's nothing to switch, so it stands alone, lit, and All goes
-    const has = Object.keys(kindTables).filter(k =>
-      selectedPeople().some(n => kindTables[k].some(t => fullTables.get(t)[n] && Object.keys(fullTables.get(t)[n]).length)));
-    const only = has.length === 1 ? has[0] : null;
-    kindCtl.selectAll("button")
-      .attr("hidden", function () { const k = this.dataset.kind; return (k === "all" ? has.length > 1 : has.includes(k)) ? null : ""; })
-      .classed("only", function () { return this.dataset.kind === only; })
-      .classed("active", function () { return this.dataset.kind === (only || kindShown); });
+    kindCtl.selectAll("button").classed("active", function () { return this.dataset.kind === kindShown; });
   }
   function showKind(kind) {
     kindShown = kind;
@@ -2453,7 +2598,6 @@
   }
   function syncKindCtl() {
     const names = selectedPeople();
-    kindCtl.attr("hidden", names.length ? null : "");
     // "✕ name": deselect in one click, in the selected person's colour —
     // not shown when everyone selected already has a search chip (that
     // would be the same name twice)
@@ -2461,13 +2605,7 @@
       .style("--chip", names.length === 1 ? personColor(names[0]) : "var(--ink)")
       .attr("title", "Deselect (Esc, or click an empty part of the graph)")
       .text(`\u2715 ${names.length === 1 ? names[0] : `${names.length} selected`}`);
-    if (names.join("|") === kindFor) return;
     kindFor = names.join("|");
-    if (kindShown === "all") return applyKind();
-    // a new selection starts from All: the last person gets their marks back
-    kindShown = "all";
-    applyKind();
-    setTimeout(rerenderKeepingSelection);
   }
   // the sidebar is hidden, so the search box (and the chips of people
   // added with it) move onto the graph, with the kind switch under them
@@ -2477,7 +2615,7 @@
   d3.select("#search-input").attr("placeholder", "Search a person, work or year…");
   const selClear = graphTools.append("button").attr("class", "sel-clear").attr("hidden", "")
     .on("click", () => clearSelection());
-  const kindCtl = graphTools.append("div").attr("class", "kind-filter").attr("hidden", "");
+  const kindCtl = graphTools.append("div").attr("class", "kind-filter");
   kindSlot.append(document.getElementById("year-zoom-bar")); // same row, so they never overlap
   // the row sits just under the year labels' baseline, wherever a redraw puts it
   function placeGraphTools() {
@@ -2486,9 +2624,17 @@
   }
   new MutationObserver(placeGraphTools).observe(svg.node(), { childList: true });
   window.addEventListener("resize", placeGraphTools);
-  [["all", "All"], ["letters", "Letters"], ["books", "Books"], ["works", "Publications"]].forEach(([kind, label]) =>
-    kindCtl.append("button").attr("data-kind", kind).classed("active", kind === "all").text(label)
-      .on("click", function () { if (kind !== kindShown && !this.classList.contains("only")) showKind(kind); }));
+  // icons, not words: the graph's own marks (envelope, book, pen), plus a
+  // stack for All; the name is in the tooltip
+  const KIND_ALL_ICON = "M12 3.5 3 8l9 4.5L21 8zM3 12l9 4.5 9-4.5M3 16l9 4.5 9-4.5";
+  [["all", "All records", KIND_ALL_ICON, "var(--ink)"],
+   ["letters", "Letters", CONTACT_ICONS.letters, repartoAccents.letters],
+   ["books", "Books (library)", CONTACT_ICONS.library, repartoAccents.library],
+   ["works", "Publications on Gadda", CONTACT_ICONS.secondaryBib, repartoAccents.secondaryBib]].forEach(([kind, label, icon, color]) =>
+    kindCtl.append("button").attr("data-kind", kind).classed("active", kind === "all")
+      .attr("title", label).attr("aria-label", label)
+      .html(`<svg viewBox="0 0 24 24" width="16" height="16" style="width:16px;height:16px;display:block" fill="none" stroke="${color}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="${icon}"/></svg>`)
+      .on("click", function () { if (kind !== kindShown) showKind(kind); }));
 
   // --- research: save the current view (who is selected, the year zoomed
   // on, the kind switch, the brick open) to a list kept in this browser,
@@ -2502,10 +2648,12 @@
   }
   const researchBox = graphTools.append("div").attr("class", "research");
   const researchBtn = researchBox.append("button").attr("class", "research-btn")
+    .attr("title", "Research: save this view, reopen saved views, export them").attr("aria-label", "Research")
     .on("click", event => { event.stopPropagation(); researchPanel.attr("hidden", researchPanel.attr("hidden") == null ? "" : null); });
   const researchPanel = researchBox.append("div").attr("class", "research-panel").attr("hidden", "")
     .on("click", event => event.stopPropagation());
   d3.select(document).on("click.research", () => researchPanel.attr("hidden", ""));
+  researchBox.node().after(kindCtl.node()); // the kind filter sits right after Research
   // snapshot: its own button beside Research, a small menu of ways to
   // save what's on screen — the graph as an image (PNG, JPG) or as a
   // vector file (SVG), or its records as a spreadsheet (CSV, opens in Excel)
@@ -2513,7 +2661,7 @@
   snapBox.append("button").attr("class", "research-btn snapshot-btn")
     .attr("title", "Save the graph as it is now")
     .attr("aria-label", "Snapshot of the graph")
-    .html(`<svg class="snap-ico" viewBox="0 0 24 24" style="width:15px;height:15px;flex:0 0 auto" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.3"/></svg>Snapshot`)
+    .html(`<svg class="snap-ico" viewBox="0 0 24 24" style="width:15px;height:15px;flex:0 0 auto" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.3"/></svg>`)
     .on("click", event => { event.stopPropagation(); snapPanel.attr("hidden", snapPanel.attr("hidden") == null ? "" : null); });
   const snapPanel = snapBox.append("div").attr("class", "research-panel snap-panel").attr("hidden", "")
     .on("click", event => event.stopPropagation());
@@ -2538,12 +2686,13 @@
     return {
       name, saved: new Date().toISOString().slice(0, 10),
       selected, pinned: [...pinnedNames], kind: kindShown,
-      year: activeYear, pxPerYear, scrollX: Math.round(window.scrollX),
+      year: activeYear, yearEnd: timeFocus && yearCast ? yearCast.hi : null, cast: !!yearCast, pxPerYear, scrollX: Math.round(window.scrollX),
       exploded: explodedBar, picked: pickedLetterId,
     };
   }
   function restoreView(v) {
     activeYear = null; timeFocus = null; beforeYearZoom = null;
+    yearCast = null; beforeYearCast = null;
     yearZoomBar.attr("hidden", true).html("");
     pinnedNames = new Set(v.pinned);
     searchEntries = v.pinned.map(personEntry);
@@ -2554,7 +2703,8 @@
     applyKind();
     explodedBar = v.exploded;
     pickedLetterId = v.picked;
-    if (v.year != null) openYear(v.year);
+    if (v.year != null && v.cast && v.yearEnd != null && v.yearEnd !== v.year) openRange(v.year, v.yearEnd, { cast: true, keepSelection: true });
+    else if (v.year != null) openYear(v.year, { cast: !!v.cast, keepSelection: true });
     else { pxPerYear = v.pxPerYear; rerenderKeepingSelection(); }
     window.scrollTo(v.scrollX || 0, window.scrollY);
     pinLabels();
@@ -2612,7 +2762,7 @@
   }
 
   function drawResearch() {
-    researchBtn.html(`Research${research.length ? ` <span class="research-n">${research.length}</span>` : ""}`);
+    researchBtn.html(`<svg viewBox="0 0 24 24" width="15" height="15" style="width:15px;height:15px;flex:0 0 auto;display:block" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></svg>${research.length ? ` <span class="research-n">${research.length}</span>` : ""}`);
     researchPanel.html("");
     researchPanel.append("button").attr("class", "research-save").text("+ Save this view")
       .on("click", () => { research.push(currentView()); storeResearch(); drawResearch(); });
@@ -2971,6 +3121,12 @@
   // BAR_ZOOM_PX on-screen pixels per year (or more if already closer),
   // with that year in the middle of the window
   const BAR_ZOOM_PX = 300;
+  // centres the window on a year, at the current scale
+  function scrollToYear(year) {
+    if (!zoomState) return;
+    const centre = zoomState.x(year) / zoomState.unitsPerPx - (sidebarW() + (window.innerWidth - sidebarW()) / 2);
+    window.scrollTo(Math.max(0, centre), window.scrollY);
+  }
   function zoomOnYear(year) {
     pxPerYear = Math.min(MAX_PX_PER_YEAR, Math.max(pxPerYear, fitPxPerYear(), BAR_ZOOM_PX));
     rerenderKeepingSelection();
