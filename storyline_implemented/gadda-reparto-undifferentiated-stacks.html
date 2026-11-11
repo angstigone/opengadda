@@ -192,6 +192,7 @@
 
   /* names drawn on their lines (see "label-layer" in the script) */
   .label-layer .line-label { font-size: var(--label-size, 11px); }
+  .label-layer { transition: opacity 0.2s; }
   .label-bg { fill: var(--bg); }
   .time-label { font-size: var(--axis-size, 10px); }
 
@@ -606,7 +607,6 @@
   // counted over EVERYONE matching the current filters — not just the people
   // drawn — so the reduced view never hides the real numbers.
   let topNStats = { shown: 0, total: 0 };
-  let stackZoomBack = null; // the zoom to return to once nobody is selected (see zoomToStacks)
   let updateDiscover = () => {}; // set once the tools row is built
   let lastEligible = [], lastDrawn = new Set(); // for the "Discover more people" list
   let updateReadout = () => {};
@@ -1183,6 +1183,9 @@
         .attr("width", this.__w + 6 * unitsPerPx)
         .attr("height", labelBoxH)
         .attr("rx", 2 * unitsPerPx)
+        // the box behind a name selects that person too, like the name
+        .style("cursor", "pointer")
+        .on("click", () => rows.filter(r => r.name === d.name).dispatch("click"))
         .node();
     });
     // the y of a person's line at x (it runs left to right, so a binary
@@ -1562,8 +1565,9 @@
     const pxPerYearNow = (x(yearMin + 1) - x(yearMin)) / unitsPerPx;
     // a clicked bar, or any year of a selected person, shows its stack
     const stackedPeople = new Set(lastSelectedNames);
-    const isExploded = d => pxPerYearNow >= EXPLODE_MIN_PX &&
-      ((explodedBar && explodedBar.name === d.name && explodedBar.year === d.year) || stackedPeople.has(d.name));
+    // at any zoom: a selected person's years are always stacks
+    const isExploded = d => stackedPeople.has(d.name) ||
+      (explodedBar && pxPerYearNow >= EXPLODE_MIN_PX && explodedBar.name === d.name && explodedBar.year === d.year);
     letterMarks.classed("exploded", isExploded);
     letterMarks.filter(d => !isExploded(d)).selectAll(".letter-bar")
       .data(recordSegments)
@@ -1641,7 +1645,7 @@
           // a month's initial, unless it would sit on the previous one (not
           // in a year's storyline: its axis already shows the months)
           // (in a squeezed tower)
-          if (monthYear == null && month && month !== lastMonth && Math.abs(t.brickY(i) - lastLabelY) >= 9 * unitsPerPx) {
+          if (monthYear == null && pxPerYearNow >= EXPLODE_MIN_PX && month && month !== lastMonth && Math.abs(t.brickY(i) - lastLabelY) >= 9 * unitsPerPx) {
             lastLabelY = t.brickY(i);
             g.append("text").attr("class", "month-initial")
               .attr("x", rightCx + (BRICK_W / 2 + 4) * unitsPerPx)
@@ -1736,6 +1740,12 @@
     // the earliest year of contact with Gadda for a person, within the
     // years drawn (same behaviour as the letters graph): their first dated
     // record here, or the start of their known span when there is none
+    function contactYears(name) {
+      const p = people.find(q => q.name === name);
+      if (!p) return [];
+      return [...contactKinds.flatMap(k => k.yearsOf(name)), ...(p.interactions || [])]
+        .filter(yr => Number.isFinite(yr) && yr >= yearMin && yr <= yearMax);
+    }
     function firstContactYear(name) {
       const p = people.find(q => q.name === name);
       if (!p) return null;
@@ -1758,8 +1768,6 @@
         // clicking someone brings the view to their first contact with
         // Gadda (picking someone in the search doesn't: see pickSearched)
         const newlySelected = [...selected].filter(n => !lastSelectedNames.includes(n) && n !== "Gadda Carlo Emilio");
-        if (newlySelected.length) scrollToFirstContact(newlySelected);
-        if (!selected.size && !selectedContact && stackZoomBack) setTimeout(leaveStacks);
         lastSelectedNames = [...selected];
         if (typeof syncKindCtl === "function") syncKindCtl();
         updateCrossLinks(lastSelectedNames);
@@ -1818,7 +1826,7 @@
       }
     }
 
-    function toggleSelection(name) {
+    function toggleSelection(name, clientX) {
       selectedContact = null;
       if (name === "Gadda Carlo Emilio") {
         gaddaOnlyMode = !gaddaOnlyMode; // his works, alongside whoever is selected
@@ -1830,11 +1838,10 @@
         selected.delete(name);
         if (pinnedNames.has(name)) return forgetSearched([name]);
       } else {
+        // just their line with its stacks, where the view already is
         selected.add(name);
         applyHighlight();
-        // straight to their stacks: zoomed in at their first contact
-        const first = firstContactYear(name);
-        if (first != null) setTimeout(() => zoomToStacks(first));
+        setTimeout(() => { rerenderKeepingSelection(); pinLabels(); });
         return;
       }
       applyHighlight();
@@ -1854,7 +1861,24 @@
       applyHighlight();
     }
 
-    rows.style("cursor", "pointer").on("click", (event, d) => toggleSelection(d.name));
+    // where several lines run close together (near Gadda's line their click
+    // strips overlap), a click goes to the line actually nearest the mouse,
+    // not to whichever strip happens to be on top
+    function nearestLine(event, d) {
+      // a click passed on from a name label has no position: it's that line
+      if (!Number.isFinite(event.clientX) || !Number.isFinite(event.clientY)) return d;
+      const under = document.elementsFromPoint(event.clientX, event.clientY)
+        .filter(e => e.classList && e.classList.contains("life-hit") && e.__data__).map(e => e.__data__);
+      if (under.length < 2) return d;
+      const [px, py] = d3.pointer(event, svg.node());
+      let best = d, bestDist = Infinity;
+      under.forEach(c => {
+        const ly = lineYAt(c, px);
+        if (ly != null && Math.abs(ly - py) < bestDist) { best = c; bestDist = Math.abs(ly - py); }
+      });
+      return best;
+    }
+    rows.style("cursor", "pointer").on("click", (event, d) => toggleSelection(nearestLine(event, d).name, event.clientX));
     // deselecting: one click on any empty part of the graph, Esc, or the
     // "✕ name" button in the tools row (see clearSelection's callers)
     clearSelection = () => {
@@ -1872,7 +1896,7 @@
     });
     contactG.on("click", (event, d) => {
       event.stopPropagation();
-      toggleSelection(d.name);
+      toggleSelection(d.name, event.clientX);
     });
 
     // hover declutter: with up to 87 lines on screen at once, scanning for
@@ -1888,27 +1912,8 @@
       previewing = false;
       selected = real;
     }
-    // the preview waits until the pointer rests on a line for HOVER_DELAY ms,
-    // and never fires while the page is scrolling — so scrolling across the
-    // graph doesn't light up every line it passes
-    const HOVER_DELAY = 350;
-    let hoverTimer = null;
-    rows
-      .on("mouseenter", (event, d) => {
-        if (d.name === "Gadda Carlo Emilio" || selected.size > 0) return;
-        clearTimeout(hoverTimer);
-        hoverTimer = setTimeout(() => {
-          if (selected.size > 0 || Date.now() - lastScrollAt < HOVER_DELAY) return;
-          previewHighlight(d.name);
-          labelBoost = d.name; pinLabels();
-        }, HOVER_DELAY);
-      })
-      .on("mouseleave", () => {
-        clearTimeout(hoverTimer);
-        if (labelBoost) { labelBoost = null; pinLabels(); }
-        if (selected.size > 0) return;
-        applyHighlight();
-      });
+    // (no hover preview in this version: resting the mouse on a line used to
+    // show that person's one-piece bars; lines now react to clicks only)
 
     // hover tooltip: every record any of the three merged reparti has for
     // this person in THIS exact year — a library book, a secondary-
@@ -2230,7 +2235,6 @@
     pinnedNames = back.pinned; searchEntries = back.entries; lastSelectedNames = back.selected;
   }
   function openYear(year, opts = {}) {
-    stackZoomBack = null;
     if (year != null && (opts.cast || yearCast)) enterCast(year, year, opts.keepSelection);
     if (year == null) {
       if (activeYear == null) return;
@@ -2279,7 +2283,6 @@
   }
   // like openYear, for any span of years (from the search: "1950-1955")
   function openRange(lo, hi, opts = {}) {
-    stackZoomBack = null;
     if (opts.cast) enterCast(lo, hi, opts.keepSelection);
     if (activeYear == null) beforeYearZoom = { pxPerYear, scrollX: window.scrollX };
     if (yearCast) {
@@ -3290,29 +3293,6 @@
     if (!zoomState) return;
     const centre = zoomState.x(year) / zoomState.unitsPerPx - (sidebarW() + (window.innerWidth - sidebarW()) / 2);
     window.scrollTo(Math.max(0, centre), window.scrollY);
-  }
-  // clicking a person zooms in to stack level (one brick per record), their
-  // first contact near the left; with nobody selected any more the view goes
-  // back to the zoom and place it had before (stackZoomBack, declared above)
-  function zoomToStacks(year) {
-    if (!stackZoomBack) stackZoomBack = { pxPerYear, scrollX: window.scrollX };
-    pxPerYear = Math.min(MAX_PX_PER_YEAR, Math.max(pxPerYear, BAR_ZOOM_PX));
-    rerenderKeepingSelection();
-    window.scrollTo(Math.max(0, zoomState.x(year) / zoomState.unitsPerPx - 140), window.scrollY);
-    pinLabels();
-    updateReadout();
-    updateZoomLabel();
-  }
-  function leaveStacks() {
-    const back = stackZoomBack;
-    stackZoomBack = null;
-    if (!back) return;
-    pxPerYear = back.pxPerYear;
-    rerenderKeepingSelection();
-    window.scrollTo(back.scrollX, window.scrollY);
-    pinLabels();
-    updateReadout();
-    updateZoomLabel();
   }
   function zoomOnYear(year) {
     pxPerYear = Math.min(MAX_PX_PER_YEAR, Math.max(pxPerYear, fitPxPerYear(), BAR_ZOOM_PX));
