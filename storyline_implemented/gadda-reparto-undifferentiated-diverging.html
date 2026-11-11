@@ -322,6 +322,15 @@
     box-shadow: 0 2px 10px rgba(0,0,0,0.08); display: inline-flex; align-items: center; gap: 0.35rem;
   }
   .research-btn:hover { background: color-mix(in srgb, var(--ink) 6%, var(--bg)); }
+  .discover[hidden], .discover-panel[hidden] { display: none; }
+  .discover-panel { width: 340px; }
+  .discover-head { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.55; padding: 0.1rem 0.3rem; }
+  .discover-item { display: flex; align-items: center; gap: 0.5rem; width: 100%; text-align: left; font: inherit; font-size: 0.8rem;
+    border: none; background: transparent; color: var(--ink); padding: 0.3rem 0.4rem; border-radius: 6px; cursor: pointer; }
+  .discover-item:hover { background: color-mix(in srgb, var(--ink) 6%, transparent); }
+  .discover-item .di-dot { flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; background: var(--chip); }
+  .discover-item .di-name { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .discover-item .di-counts { flex: 0 0 auto; display: flex; gap: 0.5rem; font-size: 0.72rem; opacity: 0.75; }
   .research-n { font-size: 0.68rem; padding: 0 0.4rem; border-radius: 999px; background: var(--ink); color: var(--bg); }
   .research-panel {
     position: absolute; top: calc(100% + 6px); right: 0; width: 320px; white-space: normal;
@@ -597,6 +606,9 @@
   // counted over EVERYONE matching the current filters — not just the people
   // drawn — so the reduced view never hides the real numbers.
   let topNStats = { shown: 0, total: 0 };
+  let stackZoomBack = null; // the zoom to return to once nobody is selected (see zoomToStacks)
+  let updateDiscover = () => {}; // set once the tools row is built
+  let lastEligible = [], lastDrawn = new Set(); // for the "Discover more people" list
   let updateReadout = () => {};
   const readout = d3.select("body").append("div").attr("class", "year-readout");
   const contactKinds = [
@@ -728,6 +740,8 @@
       shownCorrespondents = eligible.filter(d => keep.has(d.name) || pinnedNames.has(d.name) || [...initialSelected].includes(d.name));
     }
     topNStats = { shown: shownCorrespondents.length, total: eligible.length };
+    lastEligible = eligible;
+    lastDrawn = new Set(shownCorrespondents.map(d => d.name));
     // in a focused period, contacts a few years apart are separate events,
     // not one long stretch: dips group only contacts within ~a tenth of the
     // period of each other, and ease in/out over a proportionally short time
@@ -1001,7 +1015,9 @@
       .join("text")
         .attr("class", "time-label")
         .classed("active", d => d === activeYear)
-        .on("click", (event, d) => { if (monthYear == null) openYear(d === activeYear ? null : d); })
+        // a year on the axis opens that year's storyline, as searching it does
+        // (in a year's storyline the labels are months: nothing to open)
+        .on("click", (event, d) => { if (monthYear == null) openYear(d === activeYear ? null : d, { cast: true }); })
         .attr("x", d => x(d))
         .attr("y", margin.top - 10)
         .attr("text-anchor", "middle")
@@ -1544,8 +1560,10 @@
     // the bar that was clicked, broken into bricks (see explodedBar)
     const EXPLODE_MIN_PX = 200; // on-screen px per year needed to show the bricks
     const pxPerYearNow = (x(yearMin + 1) - x(yearMin)) / unitsPerPx;
-    const isExploded = d => explodedBar && pxPerYearNow >= EXPLODE_MIN_PX &&
-      explodedBar.name === d.name && explodedBar.year === d.year;
+    // a clicked bar, or any year of a selected person, shows its stack
+    const stackedPeople = new Set(lastSelectedNames);
+    const isExploded = d => pxPerYearNow >= EXPLODE_MIN_PX &&
+      ((explodedBar && explodedBar.name === d.name && explodedBar.year === d.year) || stackedPeople.has(d.name));
     letterMarks.classed("exploded", isExploded);
     letterMarks.filter(d => !isExploded(d)).selectAll(".letter-bar")
       .data(recordSegments)
@@ -1620,9 +1638,10 @@
               showNote(item);
             });
           const month = item.date.length > 4 ? +item.date.slice(5, 7) || null : null;
-          // a month's initial, unless it would sit on the previous one
+          // a month's initial, unless it would sit on the previous one (not
+          // in a year's storyline: its axis already shows the months)
           // (in a squeezed tower)
-          if (month && month !== lastMonth && Math.abs(t.brickY(i) - lastLabelY) >= 9 * unitsPerPx) {
+          if (monthYear == null && month && month !== lastMonth && Math.abs(t.brickY(i) - lastLabelY) >= 9 * unitsPerPx) {
             lastLabelY = t.brickY(i);
             g.append("text").attr("class", "month-initial")
               .attr("x", rightCx + (BRICK_W / 2 + 4) * unitsPerPx)
@@ -1740,6 +1759,7 @@
         // Gadda (picking someone in the search doesn't: see pickSearched)
         const newlySelected = [...selected].filter(n => !lastSelectedNames.includes(n) && n !== "Gadda Carlo Emilio");
         if (newlySelected.length) scrollToFirstContact(newlySelected);
+        if (!selected.size && !selectedContact && stackZoomBack) setTimeout(leaveStacks);
         lastSelectedNames = [...selected];
         if (typeof syncKindCtl === "function") syncKindCtl();
         updateCrossLinks(lastSelectedNames);
@@ -1806,8 +1826,26 @@
         return;
       }
       selected = new Set(selected);
-      if (selected.has(name)) selected.delete(name); else selected.add(name);
+      if (selected.has(name)) {
+        selected.delete(name);
+        if (pinnedNames.has(name)) return forgetSearched([name]);
+      } else {
+        selected.add(name);
+        applyHighlight();
+        // straight to their stacks: zoomed in at their first contact
+        const first = firstContactYear(name);
+        if (first != null) setTimeout(() => zoomToStacks(first));
+        return;
+      }
       applyHighlight();
+    }
+    // a searched person who is deselected stops being searched: their chip
+    // goes, and they leave the graph unless they are among the most active
+    function forgetSearched(names) {
+      searchEntries = searchEntries.filter(e => !e.names.some(n => names.includes(n)));
+      names.forEach(n => { pinnedNames.delete(n); searchSelected.delete(n); });
+      applyHighlight();
+      setTimeout(() => { applyKind(); applyFilter(); pinLabels(); });
     }
     function toggleContact(contact) {
       gaddaOnlyMode = false;
@@ -1821,10 +1859,11 @@
     // "✕ name" button in the tools row (see clearSelection's callers)
     clearSelection = () => {
       if (!selected.size && !selectedContact && !gaddaOnlyMode) return false;
+      const searched = [...selected].filter(n => pinnedNames.has(n));
       gaddaOnlyMode = false;
       selectedContact = null;
       selected = new Set();
-      applyHighlight();
+      if (searched.length) forgetSearched(searched); else applyHighlight();
       return true;
     };
     svg.on("click.deselect", event => {
@@ -1833,8 +1872,7 @@
     });
     contactG.on("click", (event, d) => {
       event.stopPropagation();
-      if (!selected.has(d.name) && d !== selectedContact) return;
-      toggleContact(d);
+      toggleSelection(d.name);
     });
 
     // hover declutter: with up to 87 lines on screen at once, scanning for
@@ -2168,11 +2206,13 @@
     monthYear = null; monthTables = null; monthStats = new Map();
     applyKind();
   }
+  let castSize = TOP_N_DEFAULT; // people in a year's storyline
   function castFor(lo, hi) {
-    const top = yearPreview(lo, hi).people.slice(0, TOP_N_DEFAULT);
+    const top = yearPreview(lo, hi).people.slice(0, castSize);
     return { lo, hi, names: new Set(top.map(c => c.name)), count: new Map(top.map(c => [c.name, c.total])) };
   }
   function enterCast(lo, hi, keepSelection) {
+    if (!yearCast || yearCast.lo !== lo || yearCast.hi !== hi) castSize = TOP_N_DEFAULT;
     if (!yearCast && !keepSelection) {
       beforeYearCast = { pinned: new Set(pinnedNames), entries: [...searchEntries], selected: [...lastSelectedNames] };
       pinnedNames = new Set(); searchEntries = []; lastSelectedNames = []; searchSelected = new Set();
@@ -2190,6 +2230,7 @@
     pinnedNames = back.pinned; searchEntries = back.entries; lastSelectedNames = back.selected;
   }
   function openYear(year, opts = {}) {
+    stackZoomBack = null;
     if (year != null && (opts.cast || yearCast)) enterCast(year, year, opts.keepSelection);
     if (year == null) {
       if (activeYear == null) return;
@@ -2238,6 +2279,7 @@
   }
   // like openYear, for any span of years (from the search: "1950-1955")
   function openRange(lo, hi, opts = {}) {
+    stackZoomBack = null;
     if (opts.cast) enterCast(lo, hi, opts.keepSelection);
     if (activeYear == null) beforeYearZoom = { pxPerYear, scrollX: window.scrollX };
     if (yearCast) {
@@ -2305,6 +2347,7 @@
     // who was not yet born or already dead gets no line there)
     const aliveThen = d => monthYear == null || (d.birth <= monthYear && d.death >= monthYear);
     render([...shown, ...selectedExtra].filter(aliveThen), keepSelected);
+    updateDiscover();
 
     d3.select("#count-panel").html(
       `<div>Shown</div><strong>${shown.length}</strong>` +
@@ -2731,6 +2774,60 @@
   const snapPanel = snapBox.append("div").attr("class", "research-panel snap-panel").attr("hidden", "")
     .on("click", event => event.stopPropagation());
   d3.select(document).on("click.snapshot", () => snapPanel.attr("hidden", ""));
+  // "Discover more people (N)": how many people the graph is leaving out
+  // right now (beyond the most active; in a year's storyline, that year's
+  // people beyond its top ones). Clicking it opens the list of them, most
+  // active first, with their records as the graph's icons (in a year: that
+  // year's records); picking a name adds just that person, as the search
+  // does. Gone when nobody is left out.
+  const discoverBox = graphTools.append("div").attr("class", "research discover").attr("hidden", "");
+  const discoverBtn = discoverBox.append("button").attr("class", "research-btn discover-btn")
+    .on("click", event => {
+      event.stopPropagation();
+      const open = discoverPanel.attr("hidden") != null;
+      discoverPanel.attr("hidden", open ? null : "");
+      if (open) fillDiscover();
+    });
+  const discoverPanel = discoverBox.append("div").attr("class", "research-panel discover-panel").attr("hidden", "")
+    .on("click", event => event.stopPropagation());
+  d3.select(document).on("click.discover", () => discoverPanel.attr("hidden", ""));
+  function hiddenList() {
+    if (yearCast) {
+      return yearPreview(yearCast.lo, yearCast.hi).people
+        .filter(c => !yearCast.names.has(c.name) && !lastDrawn.has(c.name))
+        .map(c => ({ name: c.name, counts: countIcons(c.them + c.gadda, c.books, c.works) }));
+    }
+    return lastEligible.filter(d => !lastDrawn.has(d.name))
+      .sort((a, b) => (b.weight ?? 0) - (a.weight ?? 0))
+      .map(d => ({ name: d.name, counts: recordPreview(d.name) }));
+  }
+  function fillDiscover() {
+    const people = hiddenList();
+    discoverPanel.html("");
+    discoverPanel.append("div").attr("class", "discover-head")
+      .text(yearCast ? `Also in ${yearCast.lo === yearCast.hi ? yearCast.lo : `${yearCast.lo}\u2013${yearCast.hi}`}, not drawn` : "Not drawn, most active first");
+    discoverPanel.append("div").attr("class", "research-list")
+      .selectAll("button").data(people).join("button")
+        .attr("class", "discover-item")
+        .attr("title", d => `Add ${d.name} to the graph`)
+        .style("--chip", d => personColor(d.name))
+        .html(d => `<span class="di-dot"></span><span class="di-name">${esc(d.name)}</span><span class="di-counts sg-count">${d.counts}</span>`)
+        .on("click", (event, d) => { discoverPanel.attr("hidden", ""); pickSearched({ type: "person", name: d.name }); });
+  }
+  function hiddenPeople() {
+    if (yearCast) return hiddenList().length;
+    return topN == null ? 0 : lastEligible.filter(d => !lastDrawn.has(d.name)).length;
+  }
+  updateDiscover = () => {
+    const n = hiddenPeople();
+    discoverBox.attr("hidden", n ? null : "");
+    // a people icon with the count beside it; the words are in the tooltip
+    discoverBtn.attr("title", `Discover more people: ${n} not drawn in this view (click for the list)`)
+      .attr("aria-label", `Discover more people (${n})`)
+      .html(`<svg viewBox="0 0 24 24" width="15" height="15" style="width:15px;height:15px;flex:0 0 auto;display:block" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="16.5" cy="9" r="2.6"/><path d="M15.8 14.1c2.5-.2 4.4 1.4 4.8 4.4"/></svg><span class="research-n">${n}</span>`);
+    if (discoverPanel.attr("hidden") == null) fillDiscover();
+  };
+  updateDiscover();
   [
     ["Image (PNG)", "The graph as it is now, as an image", () => downloadSelection("png")],
     ["Image (JPG)", "The graph as it is now, as a smaller image", () => downloadSelection("jpg")],
@@ -3194,6 +3291,29 @@
     const centre = zoomState.x(year) / zoomState.unitsPerPx - (sidebarW() + (window.innerWidth - sidebarW()) / 2);
     window.scrollTo(Math.max(0, centre), window.scrollY);
   }
+  // clicking a person zooms in to stack level (one brick per record), their
+  // first contact near the left; with nobody selected any more the view goes
+  // back to the zoom and place it had before (stackZoomBack, declared above)
+  function zoomToStacks(year) {
+    if (!stackZoomBack) stackZoomBack = { pxPerYear, scrollX: window.scrollX };
+    pxPerYear = Math.min(MAX_PX_PER_YEAR, Math.max(pxPerYear, BAR_ZOOM_PX));
+    rerenderKeepingSelection();
+    window.scrollTo(Math.max(0, zoomState.x(year) / zoomState.unitsPerPx - 140), window.scrollY);
+    pinLabels();
+    updateReadout();
+    updateZoomLabel();
+  }
+  function leaveStacks() {
+    const back = stackZoomBack;
+    stackZoomBack = null;
+    if (!back) return;
+    pxPerYear = back.pxPerYear;
+    rerenderKeepingSelection();
+    window.scrollTo(back.scrollX, window.scrollY);
+    pinLabels();
+    updateReadout();
+    updateZoomLabel();
+  }
   function zoomOnYear(year) {
     pxPerYear = Math.min(MAX_PX_PER_YEAR, Math.max(pxPerYear, fitPxPerYear(), BAR_ZOOM_PX));
     rerenderKeepingSelection();
@@ -3256,7 +3376,9 @@
   // focus mode: a plain vertical wheel/trackpad scroll moves along the
   // timeline, since there's nothing to scroll vertically anymore.
   window.addEventListener("wheel", event => {
-    if (event.target.closest && event.target.closest(".side-panel")) return; // let the sidebar scroll normally
+    // let the sidebar and the drop-down lists (people not drawn, search
+    // suggestions, saved views, legend) scroll normally
+    if (event.target.closest && event.target.closest(".side-panel, .research-panel, .search-suggestions, .legend-box")) return;
     if (event.ctrlKey || event.metaKey) {
       // pinch on a trackpad (reported as ctrl + wheel) or Ctrl/⌘ + wheel: zoom
       event.preventDefault();
