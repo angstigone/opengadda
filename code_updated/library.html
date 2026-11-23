@@ -1053,8 +1053,8 @@ function entryHtml(d) {
   const fondoTags = getFondi(d).map(f => '<span class="type-tag" style="cursor:pointer" data-fondo="' + f.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();activeFondo=activeFondo===this.dataset.fondo?null:this.dataset.fondo;applyFilters()">' + f + (FONDO_LABELS[f] ? '<span class="tag-full">' + FONDO_LABELS[f] + '</span>' : '') + '</span>').join('');
   const badges = connBadges(d.id, 'library');
   const siglaTags = (d.themes||[]).map(t => '<span class="type-tag sigla-tag" style="cursor:pointer" data-opera="' + t.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();setOperaFilter(this.dataset.opera)">' + t + ((SIGLE[t]&&SIGLE[t].titolo_completo) ? '<span class="tag-full">' + SIGLE[t].titolo_completo + '</span>' : '') + '</span>').join(' ');
-  // Genre sits in the record line, before the sigla tags.
-  const operaTags = (typeTag || siglaTags) ? '<div class="conn-badges entry-tags" style="margin-top:4px">' + typeTag + (typeTag && siglaTags ? ' ' : '') + siglaTags + '</div>' : '';
+  // The record line shows the works (opera siglas) only, as on the other pages.
+  const operaTags = siglaTags ? '<div class="conn-badges entry-tags" style="margin-top:4px">' + siglaTags + '</div>' : '';
   return '<div class="entry" onclick="openDetail(\'' + d.id + '\')">' +
     '<div class="entry-year">' + (d.year !== null ? d.year : 's.d.') + '</div>' +
     '<div>' +
