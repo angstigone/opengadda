@@ -1062,14 +1062,14 @@ if (!item) {
     if (item.luogo_di_pubblicazione) metaRows.push(['Città', item.luogo_di_pubblicazione]);
     if (item.fondo) {
       metaRows.push(['Fondo', item.fondo]);
-      if (item.genere) metaRows.push(['Tipo', item.genere]);
+      if (item.genere) metaRows.push(['Genere', item.genere]);
     } else {
       // fallback until items.json is regenerated: strip editore/luogo from detail to find fondo/genere
       const libRemainder = dp(item.detail).filter(v =>
         v !== (item.casa_editrice || '') && v !== (item.luogo_di_pubblicazione || '')
       );
       if (libRemainder[0]) metaRows.push(['Fondo', libRemainder[0]]);
-      if (libRemainder[1]) metaRows.push(['Tipo', libRemainder[1]]);
+      if (libRemainder[1]) metaRows.push(['Genere', libRemainder[1]]);
     }
 
   } else if (item.category === 'archive') {
