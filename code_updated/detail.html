@@ -1149,7 +1149,7 @@ if (!item) {
       const themeChips = letterThemes.length
         ? ' ' + letterThemes.map(t =>
             `<span style="display:inline-flex;align-items:center;gap:3px;margin:0 4px 4px 0">` +
-              `<a href="epistolario.html?theme=${encodeURIComponent(t)}" style="display:inline-block;background:#dff0e8;color:#1a6a40;padding:2px 8px;border-radius:2px;font-family:'DM Mono',monospace;font-size:10px;text-decoration:none;letter-spacing:0.05em;border:1px solid #b8dfc8">${t}</a>` +
+              `<a href="epistolario.html?theme=${encodeURIComponent(t)}" style="display:inline-block;background:#fdfaf5;color:#2596be;padding:2px 8px;border-radius:3px;font-family:'DM Mono',monospace;font-size:10px;text-decoration:none;letter-spacing:0.05em;border:1px solid #c8bfaa">${t}</a>` +
               `<a href="search.html?q=${encodeURIComponent(t)}" title="Cerca sul database" style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--muted);white-space:nowrap">cerca sul database</a>` +
             `</span>`
           ).join('')
@@ -1175,7 +1175,7 @@ if (!item) {
     const themeBase = CAT_PAGES_MAP[item.category] || 'primary_bibliography.html';
     const chips = itemThemes.map(t =>
       `<span style="display:inline-flex;align-items:center;gap:3px;margin:0 4px 4px 0">` +
-        `<a href="${themeBase}?theme=${encodeURIComponent(t)}" style="display:inline-block;background:#dff0e8;color:#1a6a40;padding:2px 8px;border-radius:2px;font-family:'DM Mono',monospace;font-size:10px;text-decoration:none;letter-spacing:0.05em;border:1px solid #b8dfc8">${t}</a>` +
+        `<a href="${themeBase}?theme=${encodeURIComponent(t)}" style="display:inline-block;background:#fdfaf5;color:#2596be;padding:2px 8px;border-radius:3px;font-family:'DM Mono',monospace;font-size:10px;text-decoration:none;letter-spacing:0.05em;border:1px solid #c8bfaa">${t}</a>` +
         `<a href="search.html?q=${encodeURIComponent(t)}" title="Cerca sul database" style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--muted);white-space:nowrap">cerca sul database</a>` +
       `</span>`
     ).join('');

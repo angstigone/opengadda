@@ -219,9 +219,9 @@ header p { color:#9a9080; font-size:1rem; }
 .type-tag:hover { background:var(--accent); color:var(--white); cursor:pointer; white-space:normal; }
 .tag-full { display:none; font-style:italic; text-transform:none; letter-spacing:0; }
 .tag-full::before { content:' · '; font-style:normal; opacity:0.6; }
-.type-tag:hover .tag-full { display:inline; }
+.type-tag:hover .tag-full, .corpus-tag:hover .tag-full { display:inline; }
 .corpus-tag { font-family:'DM Mono',monospace; font-size:9px; padding:2px 7px; border-radius:2px; white-space:nowrap; background:#5a1e7a18; color:#5a1e7a; border:1px solid #5a1e7a40; cursor:pointer; display:inline-block; }
-.corpus-tag:hover { background:#5a1e7a28; }
+.corpus-tag:hover { background:#5a1e7a28; white-space:normal; } /* like the other tags: the full title wraps instead of pushing */
 
 /* Published letters: volume covers on the cards and in the letter list */
 .sender-pub { display:flex; align-items:center; gap:6px; flex-wrap:nowrap; overflow:hidden; margin-top:auto; padding-top:6px; border-top:1px dashed var(--border); }
@@ -345,6 +345,9 @@ header p { color:#9a9080; font-size:1rem; }
 
 /* Sigla (work) tags on each record — change the size of all of them here. */
 .sigla-tag { font-size: 13px; padding: 4px 10px; }
+/* opera chips look like the sigla boxes in the Opere section */
+.sigla-tag { background: #fdfaf5; color: #2596be; border: 1px solid #c8bfaa; border-radius: 3px; }
+.sigla-tag:hover { background: #fdfaf5; color: #2596be; border-color: #2596be; }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -1010,7 +1013,9 @@ function renderLetters() {
     const typeTag = (d.subtitle || d.genere) ? `<span class="type-tag">${d.subtitle || d.genere}</span>` : '';
     const sigla = (d.themes||[])[0];
     const pubName = sigla ? (SIGLA_TO_NAME[sigla] || d.sigla_sciolta || sigla) : '';
-    const pubTag = pubName ? `<div style="margin-top:3px"><span class="corpus-tag sigla-tag" onclick="event.stopPropagation();setThemeFilter(${JSON.stringify(sigla)})">✉ ${pubName}</span></div>` : '';
+    // the sigla, as on the other pages; the full name shows on hover
+    const pubFull = pubName && pubName !== sigla ? `<span class="tag-full">${pubName}</span>` : '';
+    const pubTag = sigla ? `<div style="margin-top:3px"><span class="corpus-tag sigla-tag" title="${pubName.replace(/"/g, '&quot;')}" onclick="event.stopPropagation();setThemeFilter(${JSON.stringify(sigla)})">✉ ${sigla}${pubFull}</span></div>` : '';
     return `<div class="entry" onclick="goDetail('${d.id}')">
       <div class="entry-year">${d.year !== null ? d.year : 's.d.'}</div>
       <div>
