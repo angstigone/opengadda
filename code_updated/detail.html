@@ -1004,7 +1004,7 @@ if (!item) {
       const corpusLetters = ALL_DATA.filter(d => d.category === 'letter' && (d.themes||[]).includes(item.corpus_lettere));
       const countHint = corpusLetters.length ? ` <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">(${corpusLetters.length} lett.)</span>` : '';
       metaRows.push(['Corpus lettere',
-        `<a href="epistolario.html?theme=${encodeURIComponent(item.corpus_lettere)}" style="color:#5a1e7a;text-decoration:none;border-bottom:1px dotted #5a1e7a">✉ ${(DEST_BY_SIGLA[item.corpus_lettere] && DEST_BY_SIGLA[item.corpus_lettere].titolo) || item.corpus_lettere}</a>${countHint}`
+        `<a href="epistolario.html?theme=${encodeURIComponent(item.corpus_lettere)}" style="display:inline-block;background:#fdfaf5;color:#2596be;border:1px solid #c8bfaa;border-radius:3px;padding:2px 8px;text-decoration:none;line-height:1.4">✉ ${(DEST_BY_SIGLA[item.corpus_lettere] && DEST_BY_SIGLA[item.corpus_lettere].titolo) || item.corpus_lettere}</a>${countHint}`
       ]);
     }
 
@@ -1071,7 +1071,7 @@ if (!item) {
       const corpusLetters = ALL_DATA.filter(d => d.category === 'letter' && (d.themes||[]).includes(item.corpus_lettere));
       const countHint = corpusLetters.length ? ` <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">(${corpusLetters.length} lett.)</span>` : '';
       metaRows.push(['Corpus lettere',
-        `<a href="epistolario.html?theme=${encodeURIComponent(item.corpus_lettere)}" style="color:#5a1e7a;text-decoration:none;border-bottom:1px dotted #5a1e7a">✉ ${(DEST_BY_SIGLA[item.corpus_lettere] && DEST_BY_SIGLA[item.corpus_lettere].titolo) || item.corpus_lettere}</a>${countHint}`
+        `<a href="epistolario.html?theme=${encodeURIComponent(item.corpus_lettere)}" style="display:inline-block;background:#fdfaf5;color:#2596be;border:1px solid #c8bfaa;border-radius:3px;padding:2px 8px;text-decoration:none;line-height:1.4">✉ ${(DEST_BY_SIGLA[item.corpus_lettere] && DEST_BY_SIGLA[item.corpus_lettere].titolo) || item.corpus_lettere}</a>${countHint}`
       ]);
     }
     if (item.sito_web) metaRows.push(['Sito web', `<a href="${item.sito_web}" target="_blank" rel="noopener" style="color:var(--accent)">${item.sito_web}</a>`]);
@@ -1129,7 +1129,7 @@ if (!item) {
     if (letterSigla && (DEST_BY_SIGLA[letterSigla] || item.sigla_sciolta)) {
       const pub = DEST_BY_SIGLA[letterSigla];
       const citText = (pub && (pub.riferimento || pub.titolo)) || item.sigla_sciolta;
-      metaRows.push(['Pubblicato in', `<a href="epistolario.html?theme=${encodeURIComponent(letterSigla)}" style="color:#5a1e7a;text-decoration:none;border-bottom:1px dotted #5a1e7a">✉ ${citText}</a>`]);
+      metaRows.push(['Pubblicato in', `<a href="epistolario.html?theme=${encodeURIComponent(letterSigla)}" style="display:inline-block;background:#fdfaf5;color:#2596be;border:1px solid #c8bfaa;border-radius:3px;padding:2px 8px;text-decoration:none;line-height:1.4">✉ ${citText}</a>`]);
     }
     if (item.archivio) {
       metaRows.push(['Archivio',
