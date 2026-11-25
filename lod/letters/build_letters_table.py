@@ -15,6 +15,8 @@ OpenRefine exports, applies the agreed corrections, and writes:
   letters.csv       one row per letter (several recipients → one row each,
                     linked by `document`)
   places.csv        every place in the letters: city / address / GeoNames, with id
+  sources.csv       where the information comes from: the editions the letters
+                    are published in, and the two archives (Bonsanti, Liberati)
   report.md         what is missing or needs a decision
 
 Authorities: ONLY the corrected exports in lod/openrefine/tables (the VIAF ids in
@@ -41,6 +43,8 @@ VIAF_CHECK_CSV = HERE / 'viaf_to_check.csv'
 VIAF_CHECKED = False  # set to True once viaf_to_check.csv has been gone through
 
 GADDA = 'Gadda Carlo Emilio'
+ITEMS_JSON = LOD.parent / 'code_updated' / 'items.json'  # only to link editions to their record on the site
+SITE_RECORD = 'https://angstigone.github.io/opengadda/code_updated/detail.html?id='
 # the senders-file category that is never a single person ("Editori, riviste e
 # quotidiani" also holds people such as Garzanti Livio, so it doesn't decide)
 ORG_CATEGORIES = {'Istituzioni, associazioni ed enti pubblici'}
@@ -228,6 +232,43 @@ def letter_viaf(name, letter_id):
     return occ[VIAF_COL] if occ else ''
 
 
+# --- sources: where each letter and correspondence is documented ------------------
+# an edition (published letters) or an archival collection (unpublished ones,
+# and the two inventories that count each correspondence). Editions keep their
+# sigla as id; each gets a link to its primary-bibliography record on the site
+# when there is one (secondary-bibliography items that discuss a correspondence
+# carry the sigla too, but they are not the edition).
+import json
+edition_record = collections.defaultdict(list)
+for it in json.load(open(ITEMS_JSON, encoding='utf-8')):
+    if it.get('corpus_lettere') and it.get('category') == 'primary bibliography':
+        edition_record[it['corpus_lettere']].append(it['id'])
+ARCHIVES = {
+    'archivio a. bonsanti': ('archivio-bonsanti', 'Archivio A. Bonsanti'),
+    'archivio bonsanti': ('archivio-bonsanti', 'Archivio A. Bonsanti'),
+    'archivio liberati': ('archivio-liberati', 'Archivio Liberati'),
+}
+sources = {}
+
+
+def edition_source(sigla, reference):
+    if not sigla:
+        return ''
+    s = sources.setdefault(sigla, {'id': sigla, 'type': 'edition', 'sigla': sigla, 'label': reference,
+                                   'opengadda_record': ' '.join(SITE_RECORD + i for i in sorted(edition_record.get(sigla, []))),
+                                   'letters': 0})
+    if reference and not s['label']:
+        s['label'] = reference
+    return s['id']
+
+
+def archive_source(name):
+    sid, label = ARCHIVES.get(key(name), (re.sub(r'\W+', '-', key(name)).strip('-'), clean(name)))
+    sources.setdefault(sid, {'id': sid, 'type': 'archival collection', 'sigla': '', 'label': label,
+                             'opengadda_record': '', 'letters': 0})
+    return sid
+
+
 letters, problems = [], collections.defaultdict(list)
 for r in pd.read_excel(LETTERS_XLSX).to_dict('records'):
     lid = clean(r['Id'])
@@ -264,9 +305,14 @@ for r in pd.read_excel(LETTERS_XLSX).to_dict('records'):
             'to_address': pto['address'], 'to_geonames': pto['geonames'],
             'edition_sigla': clean(r['Opera']), 'edition': clean(r['Sigla sciolta']),
             'archive': clean(r['Archivio']),
+            # published letters: their edition; unpublished ones: the archive holding them
+            'source_id': edition_source(clean(r['Opera']), clean(r['Sigla sciolta'])) or
+                         (archive_source(r['Archivio']) if clean(r['Archivio']) else ''),
             'tie_ids': '; '.join(ties[p['id']]['tie'] for p in others),
             'category': clean(r['Genere']),
         })
+        if not letters[-1]['source_id']:
+            problems['letter without source'].append(lid)
         if not senders:
             problems['letter without sender'].append(lid)
         if not rcp:
@@ -280,6 +326,36 @@ for r in pd.read_excel(LETTERS_XLSX).to_dict('records'):
             v = letter_viaf(n, lid)
             if v and v not in people[key(n)]['viaf']:
                 problems[f'VIAF of {n} differs in this letter ({v})'].append(lid)
+
+# sources of each correspondence: the inventories that count it, plus the
+# editions/archives of its individual letters; an actor's sources are those of
+# their correspondences (Gadda: of every letter)
+for x in letters:
+    if i_ := x['source_id']:
+        sources[i_]['letters'] += 1 if x['letter'] == x['document'] or x['letter'].endswith('-1') else 0
+tie_sources = collections.defaultdict(set)
+for t in ties.values():
+    if t['bonsanti']:
+        tie_sources[t['tie']].add(archive_source('Archivio Bonsanti'))
+    if t['liberati']:
+        tie_sources[t['tie']].add(archive_source('Archivio Liberati'))
+for x in letters:
+    for tid in filter(None, x['tie_ids'].split('; ')):
+        if x['source_id']:
+            tie_sources[tid].add(x['source_id'])
+for t in ties.values():
+    t['source_ids'] = '; '.join(sorted(tie_sources[t['tie']]))
+actor_sources = collections.defaultdict(set)
+for t in ties.values():
+    actor_sources[t['correspondent_id']] |= tie_sources[t['tie']]
+for x in letters:
+    if x['source_id']:
+        for pid in filter(None, x['sender_ids'].split('; ') + [x['recipient_id']]):
+            actor_sources[pid].add(x['source_id'])
+for p in people.values():
+    p['source_ids'] = '; '.join(sorted(actor_sources[p['id']]))
+    if not p['source_ids']:
+        problems['actor without source'].append(p['id'])
 
 # statistics from the senders file onto each actor
 for t in ties.values():
@@ -311,7 +387,9 @@ write(HERE / 'people.csv', sorted(people.values(), key=lambda p: p['id']), list(
 write(HERE / 'ties.csv', [dict(t, range=' | '.join(t['range']), range_bonsanti=' | '.join(t['range_bonsanti']),
                                range_liberati=' | '.join(t['range_liberati'])) for t in sorted(ties.values(), key=lambda t: t['tie'])],
       ['tie', 'correspondent_id', 'correspondent', 'category', 'total', 'bonsanti', 'liberati',
-       'range', 'range_bonsanti', 'range_liberati', 'rows', 'described_letters'])
+       'range', 'range_bonsanti', 'range_liberati', 'rows', 'described_letters', 'source_ids'])
+write(HERE / 'sources.csv', sorted(sources.values(), key=lambda s: (s['type'], s['id'])),
+      ['id', 'type', 'sigla', 'label', 'opengadda_record', 'letters'])
 write(HERE / 'letters.csv', letters, list(letters[0]))
 places = {}
 for x in letters:

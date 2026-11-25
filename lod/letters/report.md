@@ -61,6 +61,10 @@
 - Segreteria Facoltà (p1171, 1 letters)
 - Sereni Vittorio (p1172, 2 letters)
 
+## actor without source: 1
+
+- p0772
+
 ## letter without date: 19
 
 - Let364, Let396, Let409, Let588, Let649, Let982, Let1090, Let1672, Let1737, Let1954, Let3919, Let3920, Let3921, Let3922, Let3923, Let3924, Let3925, Let3928, Let3929
