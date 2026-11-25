@@ -1,0 +1,513 @@
+field,value,city,GeoNames ID,address,count
+luogo_di_pubblicazione,Milano,Milan,6542283,,976
+,,,3173435,,
+luogo_di_pubblicazione,Firenze,Florence,6542285,,397
+luogo_di_pubblicazione,Paris,Paris,2968815,,305
+,,,2988507,,
+luogo_di_pubblicazione,Torino,Turin,3165525,,302
+luogo_di_invio,Milano,Milan,6542283,,268
+,,,3173435,,
+luogo_di_invio,Roma,Rome,3169070,,268
+luogo_di_invio,Firenze,Florence,6542285,,267
+luogo_di_pubblicazione,Roma,Rome,3169070,,240
+luogo_di_invio,Roma (Blumenstihl 19),Rome,3169070,Blumenstihl 19,159
+luogo_di_invio,Firenze (Repetti 11),Florence,6542285,Repetti 11,95
+luogo_destinatario,Milano (Simpliciano 2),Milan,6542283,Simpliciano 2,73
+,,,3173435,,
+luogo_di_pubblicazione,Bari,Bari,1276948,,62
+luogo_di_invio,Roma (Blumestihl 19),Rome,3169070,Blumestihl 19,58
+luogo_di_pubblicazione,Bologna,Bologna,6541998,,49
+luogo_di_pubblicazione,Venezia,Venice,6542284,,46
+luogo_di_invio,Roma (Innocenzo X 21),Rome,3169070,Innocenzo X 21,39
+luogo_destinatario,Milano,Milan,6542283,,38
+,,,3173435,,
+luogo_di_invio,Domodossola,Domodossola,6539444,,38
+luogo_di_invio,Roma (Bluemnstihl 19),Rome,3169070,Bluemnstihl 19,37
+luogo_di_invio,Buenos Aires,Buenos Aires,3435910,,35
+luogo_di_pubblicazione,Lanciano,Lanciano,6541930,,34
+luogo_destinatario,Parma,Parma,6540120,,33
+luogo_destinatario,Milano (Caccianino 25),Milan,6542283,Caccianino 25,31
+,,,3173435,,
+luogo_destinatario,Longone,Longone al Segrino,6543115,,29
+luogo_destinatario,Milano (Rio De Janeiro 5),Milan,6542283,Rio De Janeiro 5,29
+,,,3173435,,
+luogo_di_pubblicazione,Napoli,Naples,3172395,,25
+luogo_destinatario,Firenze (Repetti 11),Florence,6542285,Repetti 11,25
+luogo_di_invio,Roma (Crescenzo 63),Rome,3169070,Crescenzo 63,23
+luogo_di_pubblicazione,Leipzig,Leipzig,2879137,,22
+,,,2879139,,
+luogo_di_invio,Edolo,Edolo,6537169,,22
+luogo_di_invio,Longone,Longone al Segrino,6543115,,21
+luogo_destinatario,Roma (Mazzini 134),Rome,3169070,Mazzini 134,20
+luogo_di_pubblicazione,Parma,Parma,6540120,,19
+luogo_di_pubblicazione,London,London,2643743,,19
+luogo_di_invio,Milano (Simpliciano 2),Milan,6542283,Simpliciano 2,19
+,,,3173435,,
+luogo_di_pubblicazione,Modena,Modena,6541461,,19
+luogo_destinatario,Firenze (Cavalleggeri),Florence,6542285,Cavalleggeri,19
+luogo_di_pubblicazione,Madrid,Madrid city,3117735,,18
+luogo_di_pubblicazione,Sesto San Giovanni,Sesto San Giovanni,6536522,,18
+luogo_destinatario,Lagonegro,Lagonegro,6540774,,18
+luogo_di_invio,Milano (Caccianino 25),Milan,6542283,Caccianino 25,18
+,,,3173435,,
+luogo_di_pubblicazione,Milano-Napoli,Milano-Napoli,,,17
+luogo_di_pubblicazione,Milano-Roma,Milano-Roma,,,17
+luogo_di_invio,Milano (San Simpliciano 2),Milan,6542283,San Simpliciano 2,17
+,,,3173435,,
+luogo_di_invio,Roma (Crescenzio 63),Rome,3169070,Crescenzio 63,17
+luogo_di_invio,Terni,Terni,6542114,,16
+luogo_di_invio,Milano (Rio de Janeiro 5),Milan,6542283,Rio de Janeiro 5,16
+,,,3173435,,
+luogo_di_invio,Roma (Asiago 10),Rome,3169070,Asiago 10,16
+luogo_destinatario,Milano (Valazze 46),Milan,6542283,Valazze 46,15
+,,,3173435,,
+luogo_di_invio,Venezia,Venice,6542284,,15
+luogo_di_invio,Roma (Colonna 39),Rome,3169070,Colonna 39,14
+luogo_di_invio,Cagliari,Cagliari,6540125,,13
+luogo_destinatario,Roma,Rome,3169070,,12
+luogo_destinatario,Milano (Monte Leone),Milan,6542283,Monte Leone,12
+,,,3173435,,
+luogo_di_pubblicazione,Padova,Padua,6542281,,11
+luogo_di_pubblicazione,Berlin,Berlin,2950159,,11
+,,,2950157,,
+,,,6547383,,
+,,,6547539,,
+luogo_di_pubblicazione,Livorno,Livorno,6540122,,11
+luogo_di_pubblicazione,Bergamo,Bergamo,6542116,,11
+luogo_di_invio,Parma,Parma,6540120,,11
+luogo_di_invio,Torino,Turin,3165525,,11
+luogo_di_invio,Roma (Colonna 11),Rome,3169070,Colonna 11,11
+luogo_di_invio,Parigi,Paris,2968815,,11
+,,,2988507,,
+luogo_di_pubblicazione,Milano-Roma-Napoli,Milano-Roma-Napoli,,,10
+luogo_destinatario,Edolo,Edolo,6537169,,10
+luogo_di_invio,Forte dei Marmi,Forte dei Marmi,6541880,,10
+luogo_di_pubblicazione,Novara,Novara,6542119,,9
+luogo_di_pubblicazione,Genova,Genoa,6542282,,9
+luogo_di_invio,Roma (Mazzini 134),Rome,3169070,Mazzini 134,9
+luogo_destinatario,San Domenico Fiesole,Fiesole,6541088,,9
+luogo_di_invio,Verona,Verona,6541865,,8
+luogo_destinatario,Modica,Modica,6541972,,8
+luogo_di_invio,Rastatt,Rastatt,6558045,,8
+luogo_di_invio,Bergamo,Bergamo,6542116,,8
+luogo_destinatario,Milano (Legnano 16),Milan,6542283,Legnano 16,8
+,,,3173435,,
+luogo_destinatario,Forte dei Marmi,Forte dei Marmi,6541880,,8
+luogo_destinatario,Firenze,Florence,6542285,,8
+luogo_di_invio,Roma (Bluemenstihl 19),Rome,3169070,Bluemenstihl 19,8
+luogo_di_pubblicazione,Brescia,Brescia,6542113,,7
+luogo_di_invio,Altopiano di Asiago,Asiago,6540982,,7
+luogo_destinatario,Roma (Colonna 39),Rome,3169070,Colonna 39,7
+luogo_di_pubblicazione,Verona,Verona,6541865,,6
+luogo_di_pubblicazione,Como,Como,6542055,,6
+luogo_di_invio,Ponte di Legno,Ponte di Legno,6540193,,6
+luogo_di_invio,Perugia,Perugia,6542125,,6
+luogo_di_pubblicazione,Treviso,Treviso,6540118,,6
+luogo_di_invio,Roma (Ortigara 10),Rome,3169070,Ortigara 10,6
+luogo_di_invio,Roma (Botteghe Oscure 54),Rome,3169070,Botteghe Oscure 54,6
+luogo_di_invio,Vicenza,Vicenza,6541465,,5
+luogo_di_invio,Stresa,Stresa,6539447,,5
+luogo_di_invio,Porto Vesme,Portovesme,,,5
+luogo_di_invio,Campana,Campana,3480746,,5
+luogo_destinatario,Milano (Monte Leone 2),Milan,6542283,Monte Leone 2,5
+,,,3173435,,
+luogo_di_invio,Milano (Monte Leone 2),Milan,6542283,Monte Leone 2,5
+,,,3173435,,
+luogo_di_invio,Milano (Legnano 16),Milan,6542283,Legnano 16,5
+,,,3173435,,
+luogo_di_invio,Milano (Caccianino  25),Milan,6542283,Caccianino  25,5
+,,,3173435,,
+luogo_di_invio,Bocca di Magra,Bocca di Magra,8951711,,5
+luogo_di_invio,Antignano,Antignano,6542845,,5
+luogo_destinatario,Milano (Morone 3),Milan,6542283,Morone 3,5
+,,,3173435,,
+luogo_di_pubblicazione,Stuttgart,Stuttgart,6690189,,4
+luogo_di_invio,Iseo,Iseo,6536180,,4
+luogo_di_pubblicazione,Pavia,Pavia,6541854,,4
+luogo_di_pubblicazione,Milano-Palermo-Napoli,Milano-Palermo-Napoli,,,4
+luogo_destinatario,Val di Ledro,Val di Ledro,3174930,,4
+luogo_di_invio,Celle,Celle,6557432,,4
+luogo_di_invio,Resistencia,Resistencia,3429577,,4
+luogo_destinatario,Buenos Aires,Buenos Aires,3435910,,4
+luogo_destinatario,Torno,Torno,6539616,,4
+luogo_di_invio,Castellamonte,Castellamonte,6538049,,4
+luogo_destinatario,Roma (Palestrina 63),Rome,3169070,Palestrina 63,4
+luogo_di_invio,Roma (Parlamento 9),Rome,3169070,Parlamento 9,4
+luogo_di_invio,Roma (SS. Apostoli),Rome,3169070,SS. Apostoli,4
+luogo_di_pubblicazione,Fi renze,Florence,6542285,,4
+luogo_destinatario,Sterkrade,Sterkrader Fronleichnamskirmes,,,4
+luogo_di_invio,Sterkrade,Sterkrader Fronleichnamskirmes,,,4
+luogo_di_pubblicazione,Oxford,Oxford,2640729,,4
+luogo_destinatario,Gresmatten,Gresmatten,,,4
+luogo_di_pubblicazione,Reggio Emilia,Reggio Emilia,6542002,,4
+luogo_di_pubblicazione,Trieste,Trieste,3165186,,4
+luogo_di_invio,Genova,Genoa,6542282,,4
+luogo_di_pubblicazione,Urbino,Urbino,6541472,,4
+luogo_di_invio,Firenze (Grazie 2),Florence,6542285,Grazie 2,4
+luogo_destinatario,Padova,Padua,6542281,,4
+luogo_di_invio,Roma (Ortigiara 10),Rome,3169070,Ortigiara 10,4
+luogo_destinatario,Torino (Biancamano 20),Turin,3165525,Biancamano 20,4
+luogo_di_pubblicazione,Siena,Siena,6541466,,3
+luogo_di_pubblicazione,Grosseto,Grosseto,6541868,,3
+luogo_di_pubblicazione,Città di Castello,Città di Castello,6541649,,3
+luogo_di_pubblicazione,Roma-Milano,Roma-Milano,,,3
+luogo_di_pubblicazione,Milano-Torino-Roma,Milano-Torino-Roma,,,3
+luogo_di_invio,Bormio,Bormio,6536122,,3
+luogo_destinatario,Ponte di Legno,Ponte di Legno,6540193,,3
+luogo_di_invio,Zona di Guerra,Zona di Guerra,,,3
+luogo_di_invio,Cima della Caldiera,Cima della Caldiera,6694419,,3
+luogo_di_invio,Romans,Romans,6453507,,3
+,,,2983013,,
+luogo_di_invio,Lagonegro,Lagonegro,6540774,,3
+luogo_destinatario,Celle Lager,Celle Lager,,,3
+luogo_di_invio,Mafalda,Mafalda,6538907,,3
+luogo_di_invio,Roma (Umiltà 79),Rome,3169070,Umiltà 79,3
+luogo_di_invio,Carling,Carling,6437429,,3
+luogo_di_invio,Cavalcaselle,Cavalcaselle,8063841,,3
+luogo_destinatario,Roma (Colonna 11),Rome,3169070,Colonna 11,3
+luogo_destinatario,Roma (Colonna 29),Rome,3169070,Colonna 29,3
+luogo_destinatario,Milano (Pontaccio 16),Milan,6542283,Pontaccio 16,3
+,,,3173435,,
+luogo_destinatario,Milano (Rovello 10),Milan,6542283,Rovello 10,3
+,,,3173435,,
+luogo_di_invio,Firenze (Lungarno 2),Florence,6542285,Lungarno 2,3
+luogo_destinatario,Firenze (Palazzo Strozzi),Florence,6542285,Palazzo Strozzi,3
+luogo_di_pubblicazione,London-New York,London-New York,,,3
+luogo_di_invio,Treviso,Treviso,6540118,,3
+luogo_di_pubblicazione,Amsterdam,Amsterdam,2759794,,2
+luogo_di_pubblicazione,Udine,Udine,6540119,,2
+luogo_di_pubblicazione,Foligno,Foligno,6538616,,2
+luogo_di_pubblicazione,Tours,Tours,2972191,,2
+luogo_di_pubblicazione,Genève,Geneva,7285902,,2
+luogo_di_pubblicazione,Pistoia,Pistoia,6541867,,2
+,,,3170621,,
+luogo_di_pubblicazione,Palermo,Palermo,6542127,,2
+luogo_destinatario,Forcella di Montorzo,Forcella di Montorzo,,,2
+luogo_destinatario,Bormio,Bormio,6536122,,2
+luogo_destinatario,Busto Arsizio,Busto Arsizio,6537075,,2
+luogo_destinatario,Preccasaglio,Preccasaglio,,,2
+luogo_di_invio,Temù,Temù,6537182,,2
+luogo_di_invio,Treschè Conca,Treschè Conca,8950370,,2
+luogo_di_invio,Val d'Assa,Val d'Assa,,,2
+luogo_destinatario,Val d'Assa,Val d'Assa,,,2
+luogo_di_invio,Gallarate,Gallarate,6537078,,2
+luogo_destinatario,Canove,Canove,9036120,,2
+luogo_di_invio,Canove,Canove,9036120,,2
+luogo_destinatario,Spiazzo Langabisa,Spiazzo Langabisa,,,2
+luogo_di_pubblicazione,New York,New York City,5128581,,2
+luogo_destinatario,Risano,Risano,3169288,,2
+luogo_di_invio,Clodig,Clodig,3219932,,2
+luogo_destinatario,Celle,Celle,6557432,,2
+luogo_di_invio,Celle-Lager,Celle-Lager,,,2
+luogo_di_invio,Lione,Lyon,2996944,,2
+luogo_di_invio,Livorno,Livorno,6540122,,2
+luogo_di_invio,Sterkade,Sterkrade,,,2
+luogo_di_pubblicazione,s.l,s.l,,,2
+luogo_di_pubblicazione,Monza,Monza,6537122,,2
+luogo_di_pubblicazione,Torino-Milano-Firenze-Roma-Napoli-Palermo,Torino-Milano-Firenze-Roma-Napoli-Palermo,,,2
+luogo_di_pubblicazione,Torino-Milano-Firenze-Roma-NapoliPalermo,Torino-Milano-Firenze-Roma-NapoliPalermo,,,2
+luogo_di_pubblicazione,Treviglio,Treviglio,6536160,,2
+luogo_destinatario,Parigi Petrotel,Paris,2968815,,2
+,,,2988507,,
+luogo_di_invio,Ostenda,Ostend,2789788,,2
+luogo_destinatario,Terni,Terni,6542114,,2
+luogo_destinatario,Roma (Bruxelles),Rome,3169070,Bruxelles,2
+luogo_destinatario,Roma (Cesalpino),Rome,3169070,Cesalpino,2
+luogo_di_invio,Roma (Adriana 31),Rome,3169070,Adriana 31,2
+luogo_di_pubblicazione,Milano-Verona,Milano-Verona,,,2
+luogo_di_invio,Roma (Guattani 20),Rome,3169070,Guattani 20,2
+luogo_di_pubblicazione,Messina-Milano,Messina-Milano,,,2
+luogo_di_invio,MIlano,Milan,6542283,,2
+,,,3173435,,
+luogo_di_pubblicazione,Pisa-Roma,Pisa-Roma,,,2
+luogo_di_invio,Friburgo,Fribourg,7285870,,2
+luogo_destinatario,Lucca,Lucca,6542121,,2
+luogo_di_invio,Margherita a Montici,Margherita a Montici,,,2
+luogo_di_pubblicazione,Casarsa,Casarsa,8952331,,2
+luogo_di_pubblicazione,Barcelona,Barcelona,6356055,,2
+luogo_di_pubblicazione,Lugano,Lugano,2659836,,2
+luogo_di_pubblicazione,Ivrea,Ivrea,3175385,,2
+luogo_di_pubblicazione,Ferrara,Ferrara,6542120,,2
+luogo_di_invio,Roma (Botte Oscure 54),Rome,3169070,Botte Oscure 54,2
+luogo_di_pubblicazione,Pisa,Pisa,6542122,,2
+luogo_destinatario,Roma (Bluemnstihl 19),Rome,3169070,Bluemnstihl 19,2
+luogo_destinatario,Milano (Borgonovo 3),Milan,6542283,Borgonovo 3,2
+,,,3173435,,
+luogo_destinatario,Roma (Blumenstihl 19),Rome,3169070,Blumenstihl 19,2
+luogo_di_pubblicazione,München,Munich,2867714,,2
+luogo_di_pubblicazione,Frankfurt,Frankfurt,2925533,,2
+,,,3220968,,
+luogo_di_invio,Pocol,Pocol,3170544,,2
+luogo_destinatario,Milano (Spiga 30),Milan,6542283,Spiga 30,2
+,,,3173435,,
+luogo_di_invio,Abertone,Abertone,,,2
+luogo_di_pubblicazione,Turin,Turin,3165525,,1
+luogo_di_pubblicazione,Filadelfia,Philadelphia,4560349,,1
+,,,4560347,,
+luogo_di_pubblicazione,Paris-Bruxelles,Paris-Bruxelles,,,1
+luogo_di_pubblicazione,Bruxelles,Brussels,2800866,,1
+luogo_di_pubblicazione,Lucca,Lucca,6542121,,1
+luogo_di_pubblicazione,St Hilaire,St Hilaire,,,1
+luogo_di_pubblicazione,Savona,Savona,6542009,,1
+luogo_di_pubblicazione,BruxellesLivourne-Leipzig,BruxellesLivourne-Leipzig,,,1
+luogo_di_pubblicazione,London-New YorkCincinnati-Chicago,London-New YorkCincinnati-Chicago,,,1
+luogo_di_pubblicazione,Francfort,Frankfurt,2925533,,1
+,,,3220968,,
+luogo_di_pubblicazione,New York-Chicago,New York-Chicago,,,1
+luogo_di_pubblicazione,Milan,Milan,6542283,,1
+,,,3173435,,
+luogo_di_pubblicazione,Mantova,Mantua,6541855,,1
+luogo_di_pubblicazione,L’Aja,The Hague,2747372,,1
+,,,2747373,,
+luogo_di_pubblicazione,New York-London,New York-London,,,1
+luogo_di_pubblicazione,Alpignano,Alpignano,6537016,,1
+luogo_di_pubblicazione,Torino-Roma-Milano-Firenze-Napoli,Torino-Roma-Milano-Firenze-Napoli,,,1
+luogo_di_pubblicazione,Torino-Roma-Firenze-Napoli,Torino-Roma-Firenze-Napoli,,,1
+luogo_di_pubblicazione,Tornio,Tornio,634096,,1
+luogo_di_pubblicazione,a. Milano-Palermo-Napoli-Genova,a. Milano-Palermo-Napoli-Genova,,,1
+luogo_di_pubblicazione,TorinoRoma-Milano-Firenze-Napoli,TorinoRoma-Milano-Firenze-Napoli,,,1
+luogo_di_pubblicazione,Prato,Prato,6540124,,1
+luogo_di_pubblicazione,Torino-Roma-Firenze-Napoli-Palermo,Torino-Roma-Firenze-Napoli-Palermo,,,1
+luogo_di_pubblicazione,MilanoTorino-Roma,MilanoTorino-Roma,,,1
+luogo_di_pubblicazione,Perugia,Perugia,6542125,,1
+luogo_di_invio,St. Jerréol,St. Jerréol,,,1
+luogo_di_invio,Gressoney S. Jean,Gressoney-Saint-Jean,6535880,,1
+luogo_di_pubblicazione,Berlin-Schöneberg-Milano,Berlin-Schöneberg-Milano,,,1
+luogo_di_pubblicazione,o. Torino-Roma-Milano-FirenzeNapoli,o. Torino-Roma-Milano-FirenzeNapoli,,,1
+luogo_di_pubblicazione,Torino-Milano-Roma,Torino-Milano-Roma,,,1
+luogo_di_invio,Rogeno,Rogeno,6543341,,1
+luogo_di_invio,Porlezza,Porlezza,6539615,,1
+luogo_di_pubblicazione,St. GallenNeuchâtel,St. GallenNeuchâtel,,,1
+luogo_destinatario,Stresa,Stresa,6539447,,1
+luogo_di_pubblicazione,Berlino,Berlin,2950159,,1
+,,,2950157,,
+,,,6547383,,
+,,,6547539,,
+luogo_di_pubblicazione,Buenos Aires,Buenos Aires,3435910,,1
+luogo_di_pubblicazione,Strasburgo,Strasbourg,2973783,,1
+luogo_di_pubblicazione,Todi,Todi,6536883,,1
+luogo_destinatario,Laveno,Laveno,8958001,,1
+luogo_di_invio,Kandertseg,Kandertseg,,,1
+luogo_di_pubblicazione,Milano-Palermo-NapoliGenova,Milano-Palermo-NapoliGenova,,,1
+luogo_di_pubblicazione,Paris-Nancy,Paris-Nancy,,,1
+luogo_di_pubblicazione,Breno,Breno,2661402,,1
+luogo_di_pubblicazione,Milano-Palermo,Milano-Palermo,,,1
+luogo_di_pubblicazione,Milano.Roma,Milano.Roma,,,1
+luogo_di_invio,Modena,Modena,6541461,,1
+luogo_di_invio,Cremia,Cremia,6542533,,1
+luogo_di_invio,Preccasaglio,Preccasaglio,,,1
+luogo_destinatario,Brescia,Brescia,6542113,,1
+luogo_di_invio,Val di Ledro,Val di Ledro,3174930,,1
+luogo_destinatario,Vesio di Tremosine,Vesio di Tremosine,,,1
+luogo_destinatario,Zona di Guerrra,Zona di Guerrra,,,1
+luogo_di_pubblicazione,Piacenza  L’arte bodoniana,Piacenza,6542025,,1
+luogo_di_invio,Treviglio,Treviglio,6536160,,1
+luogo_di_invio,Vezzo d'Oglio,Vezzo d'Oglio,,,1
+luogo_di_invio,Cesena,Cesena,6541838,,1
+luogo_di_invio,Tresché Conca,Treschè Conca,8950370,,1
+luogo_di_invio,Monte Sperone,Monte Sperone,,,1
+luogo_destinatario,Thiene,Thiene,6540386,,1
+luogo_di_invio,Thierne,Thiene,6540386,,1
+luogo_di_invio,Campiello,Campieḷḷu,,,1
+luogo_destinatario,Campiello,Campieḷḷu,,,1
+luogo_di_invio,Lognone,Longone al Segrino,6543115,,1
+luogo_di_invio,Spazzo Langabisa,Spazzo Langabisa,,,1
+luogo_di_invio,Busto Arsizio,Busto Arsizio,6537075,,1
+luogo_di_invio,Spiazzo Langabisa,Spiazzo Langabisa,,,1
+luogo_di_invio,Modica,Modica,6541972,,1
+luogo_destinatario,Malga Fossetta,Malga Fossetta,,,1
+luogo_di_invio,Logo di Vicenza,Logo di Vicenza,,,1
+luogo_di_invio,Foggia,Foggia,6541857,,1
+,,,3176885,,
+luogo_di_invio,Napoli,Naples,3172395,,1
+luogo_di_invio,Chiasottis,Chiasottis,3217528,,1
+luogo_destinatario,Santa Giustina,Santa Giustina,6539689,,1
+luogo_di_invio,Faiti,Faiti,,,1
+luogo_di_invio,San Vito al Torre,San Vito al Torre,6536691,,1
+luogo_di_invio,Corno di Rosazzo,Corno di Rosazzo,6536310,,1
+luogo_di_invio,Monte Sabotino,Sabotin,,,1
+luogo_destinatario,Chiasottis,Chiasottis,3217528,,1
+luogo_di_invio,Ponte San Pietro,Ponte San Pietro,6539622,,1
+luogo_destinatario,Rastatt,Rastatt,6558045,,1
+luogo_di_pubblicazione,Weimar,Weimar,2812479,,1
+luogo_di_invio,Bagnorea,Bagnoregio,6540496,,1
+luogo_di_pubblicazione,Bruges,Bruges,2800931,,1
+luogo_di_pubblicazione,Bagnoregio,Bagnoregio,,,1
+luogo_destinatario,Sant'Ulrico,Sant'Ulrico,,,1
+luogo_destinatario,Cagliari,Cagliari,6540125,,1
+luogo_di_invio,Iglesias,Iglesias,6539584,,1
+luogo_di_pubblicazione,Roma-Milano-Firenze,Roma-Milano-Firenze,,,1
+luogo_di_pubblicazione,Jena,Jena,2895042,,1
+luogo_di_invio,Giessen,Giessen,6559130,,1
+luogo_di_invio,Keokuk,Keokuk,4863349,,1
+luogo_di_pubblicazione,Torino-Milano-FirenzeRoma-Napoli-Palermo,Torino-Milano-FirenzeRoma-Napoli-Palermo,,,1
+luogo_di_pubblicazione,Torino-Milano-Firenze-Roma-NapoliPlermo,Torino-Milano-Firenze-Roma-NapoliPlermo,,,1
+luogo_di_invio,Montevideo,Montevideo,3441575,,1
+luogo_di_pubblicazione,Halle,Halle,2796697,,1
+luogo_di_pubblicazione,Alba,Biała Podlaska,776175,,1
+luogo_di_pubblicazione,Milano-Como-Bergamo,Milano-Como-Bergamo,,,1
+luogo_di_invio,Roma (Palestrina 63),Rome,3169070,Palestrina 63,1
+luogo_di_invio,Musella,Musella,8976870,,1
+luogo_di_invio,Piacenza,Piacenza,6542025,,1
+luogo_di_pubblicazione,Jesi,Jesi,6541474,,1
+luogo_di_invio,Roma (Parlamentare 9),Rome,3169070,Parlamentare 9,1
+luogo_di_invio,Viège,Visp,7287487,,1
+,,,2658112,,
+luogo_destinatario,Roma (Parlamento 9),Rome,3169070,Parlamento 9,1
+luogo_di_invio,Roma (Apostoli 73),Rome,3169070,Apostoli 73,1
+luogo_di_pubblicazione,Torino-Milano-FirenzeNapoli-Roma-Palermo,Torino-Milano-FirenzeNapoli-Roma-Palermo,,,1
+luogo_di_pubblicazione,Roma-Napoli-Palermo-TorinoMilano-Firenze,Roma-Napoli-Palermo-TorinoMilano-Firenze,,,1
+luogo_di_pubblicazione,Jersey City,Jersey City,5099836,,1
+luogo_di_invio,Pegli,Pegli,3171309,,1
+luogo_di_pubblicazione,Postumia,Postojna,3192673,,1
+luogo_destinatario,Rheinland,Rhineland-Palatinate,2847618,,1
+luogo_di_invio,Oberhausen-Holten,Holten,,,1
+luogo_di_invio,Bruxelles,Brussels,2800866,,1
+luogo_di_invio,Mons,Mons,2790871,,1
+luogo_di_pubblicazione,Ginevra,Geneva,7285902,,1
+luogo_di_pubblicazione,Parigi,Paris,2968815,,1
+,,,2988507,,
+luogo_destinatario,Firenze (Indipendenza 10),Florence,6542285,Indipendenza 10,1
+luogo_di_invio,Isola del Giglio,Giglio,3176122,,1
+luogo_di_invio,Giglio (Grosseto),Giglio,3176122,Grosseto,1
+luogo_destinatario,Levanto,Levanto,6541582,,1
+luogo_destinatario,Castelnuovo del Garda,Castelnuovo del Garda,6542299,,1
+luogo_di_pubblicazione,Hamburg-Paris-Milano,Hamburg-Paris-Milano,,,1
+luogo_di_pubblicazione,Milano  Mon dadori,Milan,6542283,,1
+,,,3173435,,
+luogo_di_pubblicazione,Pescara,Pescara,6540108,,1
+luogo_destinatario,Roma (Burxelles 67),Rome,3169070,Burxelles 67,1
+luogo_di_invio,Roma (Bruxelles 67),Rome,3169070,Bruxelles 67,1
+luogo_di_pubblicazione,Città del Vaticano,Vatican City,3164670,,1
+luogo_destinatario,Roma (Toscana 13),Rome,3169070,Toscana 13,1
+luogo_destinatario,Firenze (Indipendenza 9),Florence,6542285,Indipendenza 9,1
+luogo_di_invio,Città del Vaticano,Vatican City,3164670,,1
+luogo_destinatario,Roma (Colonna),Rome,3169070,Colonna,1
+luogo_di_invio,Brno,Brno,3078610,,1
+luogo_di_invio,L'Aquila,L'Aquila,6541999,,1
+luogo_di_pubblicazione,Ancona,Ancona,6542126,,1
+luogo_di_invio,Feltre,Feltre,6536272,,1
+luogo_di_invio,Brugherio,Brugherio,6537112,,1
+luogo_di_invio,Firenze (Tintori 9),Florence,6542285,Tintori 9,1
+luogo_di_invio,Salò sul Garda,Salò sul Garda,,,1
+luogo_di_invio,Sestri Levante,Sestri Levante,6540153,,1
+luogo_di_invio,Sestri-Levante,Sestri Levante,6540153,,1
+luogo_destinatario,Città del Vaticano,Vatican City,3164670,,1
+luogo_destinatario,Napoli,Naples,3172395,,1
+luogo_destinatario,Roma (Bari 11),Rome,3169070,Bari 11,1
+luogo_di_pubblicazione,Roma-Paris,Roma-Paris,,,1
+luogo_di_pubblicazione,Ginevra-Parigi-Firenze,Ginevra-Parigi-Firenze,,,1
+luogo_di_invio,Firenze (Sansetti 2),Florence,6542285,Sansetti 2,1
+luogo_destinatario,Roma (Hotel Bologna),Rome,3169070,Hotel Bologna,1
+luogo_destinatario,Sarzana,Sarzana,6539672,,1
+luogo_di_invio,Firenze (Sassetti 2),Florence,6542285,Sassetti 2,1
+luogo_di_invio,Cortina d'Ampezzo,Cortina d'Ampezzo,6538275,,1
+luogo_di_invio,Rapallo,Rapallo,6537063,,1
+luogo_di_pubblicazione,Asti,Asti,6539606,,1
+luogo_di_pubblicazione,Rom,Rome,3169070,,1
+luogo_di_invio,Losanna,Lausanne,7286283,,1
+luogo_di_invio,Rma,Rome,3169070,,1
+luogo_di_invio,Firenze (Puccinotti 11),Florence,6542285,Puccinotti 11,1
+luogo_destinatario,Firenze (Grazie 2),Florence,6542285,Grazie 2,1
+luogo_destinatario,Roma (Guttaroni 20),Rome,3169070,Guttaroni 20,1
+luogo_di_invio,Arenzano,Arenzano,6537056,,1
+luogo_di_pubblicazione,Milano  Ce schina,Milan,6542283,,1
+,,,3173435,,
+luogo_di_pubblicazione,Firenza,Florence,6542285,,1
+luogo_destinatario,Firenze (Repetti 5),Florence,6542285,Repetti 5,1
+luogo_destinatario,Firenze (Lungarno 2),Florence,6542285,Lungarno 2,1
+luogo_destinatario,Milano (Legnano 10),Milan,6542283,Legnano 10,1
+,,,3173435,,
+luogo_di_invio,Pico,General Pico,3855075,,1
+luogo_di_pubblicazione,Milano  Garzanti,Milan,6542283,,1
+,,,3173435,,
+luogo_di_pubblicazione,Vigevano,Vigevano,6540634,,1
+luogo_di_pubblicazione,Torino-Milano-GenovaParma-Roma-Catania,Torino-Milano-GenovaParma-Roma-Catania,,,1
+luogo_di_pubblicazione,Milanp,Milan,6542283,,1
+,,,3173435,,
+luogo_di_invio,Padova,Padua,6542281,,1
+luogo_di_pubblicazione,Fribourg,Fribourg,7285870,,1
+luogo_di_pubblicazione,Madison,Madison,5261457,,1
+,,,5261482,,
+luogo_di_pubblicazione,Roma  Colombo,Rome,3169070,,1
+luogo_di_pubblicazione,Roma-Firenze-Milano,Roma-Firenze-Milano,,,1
+luogo_di_pubblicazione,Civitanova Alta,Civitanova Alta,3178592,,1
+luogo_di_pubblicazione,Harmondsworth,Harmondsworth,6951076,,1
+luogo_di_pubblicazione,Nevers,Nevers,2990474,,1
+luogo_di_pubblicazione,Vesenaz-Genève,Vesenaz-Genève,,,1
+luogo_di_pubblicazione,Roma-Lanciano,Roma-Lanciano,,,1
+luogo_destinatario,Marina di Petrasanta,Marina di Petrasanta,,,1
+luogo_di_pubblicazione,Mexico,Mexico City,3527646,,1
+,,,3530597,,
+luogo_di_pubblicazione,Firenze  L’Arte della Stampa,Florence,6542285,,1
+luogo_di_pubblicazione,Catania,Catania,6541468,,1
+luogo_di_pubblicazione,Estratto da «Quaderni ACI»,Estratto da «Quaderni ACI»,,,1
+luogo_di_invio,Taranto,Taranto,6542154,,1
+luogo_destinatario,Firenze (Piazza della Repubblica),Florence,6542285,Piazza della Repubblica,1
+luogo_di_invio,S. Margherita Ligure,Santa Margherita Ligure,6537065,,1
+luogo_destinatario,Vicenza (S. Michele 13),Vicenza,6541465,S. Michele 13,1
+luogo_destinatario,Roma (Asiago 10),Rome,3169070,Asiago 10,1
+luogo_di_pubblicazione,Valencia,Valencia,6362115,,1
+luogo_di_pubblicazione,Torino  Einaudi,Turin,3165525,,1
+luogo_di_pubblicazione,Milano-Firenze,Milano-Firenze,,,1
+luogo_destinatario,Cortina d'Ampezzo,Cortina d'Ampezzo,6538275,,1
+luogo_di_pubblicazione,Estratto da «La civiltà delle macchine»,Estratto da «La civiltà delle macchine»,,,1
+luogo_di_pubblicazione,Tricesimo,Tricesimo,6541603,,1
+luogo_di_pubblicazione,Lausanne,Lausanne,7286283,,1
+luogo_di_invio,Roma (Cesalpino 1-A),Rome,3169070,Cesalpino 1-A,1
+luogo_di_invio,Avila,Ávila,6355632,,1
+luogo_di_invio,Saint Moritz,St. Moritz,7287245,,1
+luogo_di_invio,Agrigento,Agrigento,6541860,,1
+,,,2525764,,
+luogo_di_pubblicazione,Salamanca,Salamanca,8261138,,1
+luogo_di_pubblicazione,Bogotà,Bogotá,3688689,,1
+luogo_di_pubblicazione,Faenza,Faenza,6540434,,1
+luogo_di_invio,Roma (Decimo 21),Rome,3169070,Decimo 21,1
+luogo_di_pubblicazione,Cal tanissetta,Caltanissetta,6541861,,1
+luogo_di_pubblicazione,Sarzana,Sarzana,6539672,,1
+luogo_di_pubblicazione,London-New York-Toronto,London-New York-Toronto,,,1
+luogo_di_pubblicazione,New-York,New York City,5128581,,1
+luogo_di_pubblicazione,Fiorentino,Fiorentino (kapital sa munisipyo sa San Marino),3176966,,1
+luogo_di_pubblicazione,Torino-Roma,Torino-Roma,,,1
+luogo_di_pubblicazione,Stresa,Stresa,6539447,,1
+luogo_di_invio,Roma (Posta Centrale),Rome,3169070,Posta Centrale,1
+luogo_di_invio,Antiganano,Antignano,6542845,,1
+luogo_di_pubblicazione,Cremona,Cremona,6541851,,1
+luogo_di_pubblicazione,Pompei,Pompeii,3170336,,1
+luogo_di_invio,Santa Margherita Ligure,Santa Margherita Ligure,6537065,,1
+luogo_destinatario,Barberino di Mugello,Barberino di Mugello,6541086,,1
+luogo_di_invio,Roma (Blumenstihl 19,Rome,3169070,,1
+luogo_di_invio,Barcellona,Barcelona,6356055,,1
+luogo_di_pubblicazione,Viareggio,Viareggio,6541645,,1
+luogo_di_pubblicazione,Washington,"Washington, D.C.",4140963,,1
+,,,11789030,,
+luogo_destinatario,Firenze (Tornabuoni 15),Florence,6542285,Tornabuoni 15,1
+luogo_destinatario,Treviso (Quattro Novembre),Treviso,6540118,Quattro Novembre,1
+luogo_di_pubblicazione,Bolzano,Bolzano,6535953,,1
+luogo_di_pubblicazione,Pozzuoli (Napoli),Pozzuoli,6541681,Napoli,1
+luogo_di_pubblicazione,Messina,Messina,6541859,,1
+luogo_destinatario,Cinquale,Cinquale,3178670,,1
+luogo_di_invio,San Domenico Fiesole,Fiesole,6541088,,1
+luogo_di_pubblicazione,Messina-Firenze,Messina-Firenze,,,1
+luogo_di_pubblicazione,Arezzo,Arezzo,6542153,,1
+luogo_destinatario,Grosseto,Grosseto,6541868,,1
+luogo_di_pubblicazione,Bern,Bern,7285212,,1
+luogo_di_pubblicazione,Comune di Ferrara,Ferrara,6542120,,1
+luogo_di_invio,Bologna,Bologna,6541998,,1
+luogo_di_invio,Rio de Janeiro,Rio de Janeiro,6322060,,1
+luogo_di_pubblicazione,Azzate,Azzate,6536477,,1
+luogo_di_pubblicazione,Messina- Firenze,Messina- Firenze,,,1
+luogo_di_pubblicazione,AnnoniStresa,Stresa,6539447,,1
+luogo_di_pubblicazione,Milano-Palermo-Napoli-Genova-Bologna,Milano-Palermo-Napoli-Genova-Bologna,,,1
+luogo_di_pubblicazione,LeipzigWien,Leipzig,2879137,,1
+,,,2879139,,
+luogo_di_pubblicazione,Lyon,Lyon,2996944,,1
+luogo_di_pubblicazione,Torino-Milano-Firenze-Napoli-RomaPalermo,Torino-Milano-Firenze-Napoli-RomaPalermo,,,1
+luogo_di_pubblicazione,MilanoNapoli-Bologna-Firenze-RomaTorino,MilanoNapoli-Bologna-Firenze-RomaTorino,,,1
+luogo_di_pubblicazione,Milano-Parigi,Milano-Parigi,,,1
+luogo_di_pubblicazione,Spoleto,Spoleto,6541116,,1
+luogo_di_pubblicazione,Strasbourg,Strasbourg,2973783,,1
+luogo_di_pubblicazione,Liepzig,Leipzig,2879137,,1
+,,,2879139,,
+luogo_di_pubblicazione,Pascal,Pascal,,,1
+luogo_di_pubblicazione,Milano-Palermo- Napoli,Milano-Palermo- Napoli,,,1
