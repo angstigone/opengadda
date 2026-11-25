@@ -545,7 +545,7 @@ function updateArchivoBanner(label) {
   }
 }
 
-// Opera = d.themes; Schede tematiche = d.subtitle (opera2)
+// Opera = d.themes (the work's sigla), as in the other sections
 
 function themeColor(t) {
   const palette = ['#7a3b1e','#1e4a7a','#1a6a40','#6a3a1a','#5a1e7a','#6a5a1a','#2a5a6a','#7a1e4a','#3a5a1a','#1a3a6a','#6a1a1a','#1a6a5a'];
@@ -647,7 +647,7 @@ function applyFilters() {
   const yt = parseInt(document.getElementById('yearTo').value) || 9999;
 
   if (themeFilter) {
-    filtered = ALL_DATA.filter(d => (d.themes||[]).includes(themeFilter) || d.subtitle === themeFilter);
+    filtered = ALL_DATA.filter(d => (d.themes||[]).includes(themeFilter));
     updateFacetCounts('#tipo-filters .filter-btn', 'tipo', filtered, getTipo, activeType);
     doSort(); currentPage = 1; render(); return;
   }
@@ -764,7 +764,6 @@ function entryHtml(d) {
     const fullTitle = (SIGLE[t] && SIGLE[t].titolo_completo) ? SIGLE[t].titolo_completo : '';
     return `<span class="opera-tag sigla-tag" onclick="event.stopPropagation();setOperaFilter('${safe}')">${t}${fullTitle ? '<span class=\"tag-full\">'+fullTitle+'</span>' : ''}</span>`;
   }).join('');
-  const schedaTag = '';
   const rawTitle = (d.title||'').replace(/\n/g,' ');
   const shortTitle = rawTitle.length > 90 ? rawTitle.slice(0, 90).replace(/\s\S*$/, '') + '…' : rawTitle;
   const briefDesc = d.brief_description ? d.brief_description.replace(/\n/g,' ').replace(/ \| /g, ' · ') : '';
@@ -776,7 +775,7 @@ function entryHtml(d) {
     <div>
       <div class="entry-line">${lineParts.join(' · ')}</div>
       ${briefShort ? `<div class="entry-source" style="font-style:italic">${briefShort}</div>` : ''}
-      ${(operaTags || schedaTag) ? `<div style="margin-top:4px">${operaTags}${schedaTag ? ' ' + schedaTag : ''}</div>` : ''}
+      ${operaTags ? `<div style="margin-top:4px">${operaTags}</div>` : ''}
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
       ${typeTag}
