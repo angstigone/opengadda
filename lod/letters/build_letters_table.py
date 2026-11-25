@@ -1,13 +1,25 @@
-"""Letters → one checkable table, following the LetterSampo-style mapping.
+"""Gadda's correspondence → checkable tables, ready for the RDF conversion
+(LetterSampo-style model: Letter, Actor, Place, Tie).
 
-Reads (never writes) the two Excel files in OneDrive and the OpenRefine
-authority exports, applies the agreed corrections, and writes:
-  letters.csv       one row per letter (letters with several recipients are
-                    split into one row per recipient, linked by `document`)
-  people.csv        every person/organisation in the letters, with ids
-  places.csv        every place value in the letters, with city / address / GeoNames
-  ties.csv          one row per correspondent (overall correspondence with Gadda)
+The senders file is the backbone: every correspondent in it is an actor with
+their whole correspondence (a Tie); the letters file adds the individual
+letters, attached to those ties.
+
+Reads (never writes) the two Excel files in OneDrive and the corrected
+OpenRefine exports, applies the agreed corrections, and writes:
+  ids.csv           the OpenGadda ids (kept between runs: an existing name keeps
+                    its number, a new one gets the next free number)
+  people.csv        every actor (person or organisation), with id, VIAF/Wikidata
+                    and statistics
+  ties.csv          one row per correspondence with Gadda
+  letters.csv       one row per letter (several recipients → one row each,
+                    linked by `document`)
+  places.csv        every place in the letters: city / address / GeoNames, with id
   report.md         what is missing or needs a decision
+
+Authorities: ONLY the corrected exports in lod/openrefine/tables (the VIAF ids in
+mittenti_enriched.json proved unreliable). viaf_to_check.csv is read only once
+VIAF_CHECKED below is set to True, i.e. after the user has checked it.
 
 Run:  python3 lod/letters/build_letters_table.py
 """
@@ -24,9 +36,14 @@ ONEDRIVE = Path('/Users/martinapensalfini/Library/CloudStorage/OneDrive-AlmaMate
 LETTERS_XLSX = ONEDRIVE / 'lettere.xlsx'
 SENDERS_XLSX = ONEDRIVE / 'dati_mittenti_Gadda.xlsx'
 TABLES = LOD / 'openrefine' / 'tables'
-LIFESPANS = LOD.parent / 'storyline' / 'people_birth_death.json'
+IDS_CSV = HERE / 'ids.csv'
+VIAF_CHECK_CSV = HERE / 'viaf_to_check.csv'
+VIAF_CHECKED = False  # set to True once viaf_to_check.csv has been gone through
 
 GADDA = 'Gadda Carlo Emilio'
+# the senders-file category that is never a single person ("Editori, riviste e
+# quotidiani" also holds people such as Garzanti Livio, so it doesn't decide)
+ORG_CATEGORIES = {'Istituzioni, associazioni ed enti pubblici'}
 
 # --- agreed corrections (2026-11-25) ------------------------------------------
 DATE_FIX = {
@@ -52,61 +69,143 @@ def clean(v):
 
 
 def key(name):
-    return re.sub(r'\s+', ' ', name.replace(',', '')).strip().lower()
+    return re.sub(r'\s+', ' ', str(name).replace(',', '')).strip().lower()
 
 
 def split_names(v):
     return [n for n in (clean(x) for x in clean(v).split(';')) if n and n != '?']
 
 
-# --- authority files ----------------------------------------------------------
+# --- OpenGadda ids, stable between runs --------------------------------------
+PREFIX = {'person': 'p', 'place': 'pl'}
+ids = {}  # (kind, key) → id
+if IDS_CSV.exists():
+    with open(IDS_CSV, encoding='utf-8-sig') as f:
+        for r in csv.DictReader(f):
+            ids[(r['kind'], r['key'])] = r['id']
+labels = {}
+
+
+def og_id(kind, k, label):
+    labels[(kind, k)] = label
+    if (kind, k) not in ids:
+        used = [int(re.sub(r'\D', '', v)) for (kd, _), v in ids.items() if kd == kind]
+        ids[(kind, k)] = f'{PREFIX[kind]}{(max(used) + 1 if used else 1):04d}'
+    return ids[(kind, k)]
+
+
+# --- corrected authorities ------------------------------------------------------
 names = pd.read_csv(TABLES / 'names-in-items-csv.csv', dtype=str).fillna('')
-names = names[names.category == 'letter']
-# (letter id, name) → VIAF / type, as reconciled per occurrence in OpenRefine
-# matched on the spelling as written (name_plain now holds VIAF's form of the name)
+VIAF_COL = 'VIAF cluster ID'
+# per letter occurrence (letter id, name as written) → row
 by_item = {}
-for r in names.itertuples():
-    for n in {r.name_as_written, r.name_plain}:
-        by_item.setdefault((r.item_id, key(n)), r)
-# name → VIAF / type over all letters (to fill names whose occurrence has none)
-by_name = {}
-for r in names.itertuples():
-    for n in {r.name_as_written, r.name_plain}:
-        e = by_name.setdefault(key(n), {'viaf': '', 'type': ''})
-        if r._7 and not e['viaf']:  # 'VIAF cluster ID'
-            e['viaf'] = r._7
-        if r.type and not e['type']:
-            e['type'] = r.type
+# per name, over the whole dataset → VIAF ids and type
+viaf_by_name = collections.defaultdict(set)
+type_by_name = {}
+for r in names.to_dict('records'):
+    for n in {r['name_as_written'], r['name_plain']}:
+        k = key(n)
+        if r['category'] == 'letter':
+            by_item.setdefault((r['item_id'], k), r)
+        if r[VIAF_COL]:
+            viaf_by_name[k].add(r[VIAF_COL])
+        if r['type'] and k not in type_by_name:
+            type_by_name[k] = r['type']
 
 people_tab = pd.read_csv(TABLES / 'people-csv.csv', dtype=str).fillna('')
-people_extra = {key(r.name): r for r in people_tab.itertuples()}
+extra = {}
+for r in people_tab.to_dict('records'):
+    k = key(r['name'])
+    extra[k] = r
+    if r[VIAF_COL]:
+        viaf_by_name[k].add(r[VIAF_COL])
+
+# the user's checked list (only once VIAF_CHECKED is True)
+checked = {}
+if VIAF_CHECKED and VIAF_CHECK_CSV.exists():
+    with open(VIAF_CHECK_CSV, encoding='utf-8-sig') as f:
+        for r in csv.DictReader(f):
+            v = clean(r.get('your_viaf')) or clean(r.get('old_viaf'))
+            checked[key(r['correspondent'])] = v  # '' = no VIAF
 
 place_rows = pd.read_csv(TABLES / 'places-csv.csv', dtype=str).fillna('')
 place_auth = {}
 cur = None
-for r in place_rows.itertuples():
-    if r.field:
-        cur = {'field': r.field, 'value': clean(r.value), 'city': clean(r.city),
-               'ids': [r._4] if r._4 else [], 'address': clean(r.address)}
-        if r.field in ('luogo_di_invio', 'luogo_destinatario'):
+for r in place_rows.to_dict('records'):
+    if r['field']:
+        cur = {'value': clean(r['value']), 'city': clean(r['city']),
+               'ids': [r['GeoNames ID']] if r['GeoNames ID'] else [], 'address': clean(r['address'])}
+        if r['field'] in ('luogo_di_invio', 'luogo_destinatario'):
             place_auth.setdefault(cur['value'], cur)
-    elif cur is not None and r._4:
-        cur['ids'].append(r._4)
+    elif cur is not None and r['GeoNames ID']:
+        cur['ids'].append(r['GeoNames ID'])
 
 
 def place_of(raw):
     raw = clean(raw)
     if not raw:
-        return {'raw': '', 'city': '', 'geonames': '', 'address': ''}
+        return {'raw': '', 'id': '', 'city': '', 'address': '', 'geonames': '', 'city_id': ''}
     a = place_auth.get(raw)
-    if not a:
-        return {'raw': raw, 'city': '', 'geonames': '', 'address': ''}
-    ids = a['ids']
-    gid = CITY_ID.get(frozenset(ids), ids[0]) if ids else ''
-    return {'raw': raw, 'city': a['city'], 'geonames': gid, 'address': a['address']}
+    city = a['city'] if a else ''
+    gid = (CITY_ID.get(frozenset(a['ids']), a['ids'][0]) if a and a['ids'] else '')
+    address = a['address'] if a else ''
+    # the city is a place; an address is its own place, within the city
+    city_key = gid or key(city or raw)
+    city_id = og_id('place', city_key, city or raw)
+    pid = og_id('place', f'{city_key}|{key(address)}', f'{city}, {address}') if address else city_id
+    return {'raw': raw, 'id': pid, 'city': city, 'address': address, 'geonames': gid, 'city_id': city_id}
 
 
-# --- dates --------------------------------------------------------------------
+# --- actors -----------------------------------------------------------------------
+people = {}
+
+
+def actor(name, category=''):
+    k = key(name)
+    p = people.get(k)
+    if p is None:
+        viafs = sorted(viaf_by_name.get(k, set()))
+        if k in checked:
+            viafs = [checked[k]] if checked[k] else []
+        x = extra.get(k, {})
+        typ = 'organization' if category in ORG_CATEGORIES else (type_by_name.get(k) or 'person')
+        p = people[k] = {
+            'id': og_id('person', k, name), 'name': name, 'type': typ,
+            'viaf': ' | '.join(viafs), 'wikidata': x.get('wikidata_id', ''),
+            'birth': x.get('birth', ''), 'death': x.get('death', ''), 'category': category,
+            'known_total': 0, 'known_bonsanti': 0, 'known_liberati': 0, 'known_range': '',
+            'described_sent': 0, 'described_received': 0, 'first_year': '', 'last_year': '',
+        }
+    if category and not p['category']:
+        p['category'] = category
+        if category in ORG_CATEGORIES:
+            p['type'] = 'organization'
+    return p
+
+
+actor(GADDA)
+
+# the senders file: every correspondence with Gadda
+ties = {}
+for r in pd.read_excel(SENDERS_XLSX).to_dict('records'):
+    name = clean(r['Mittenti'])
+    if not name:
+        continue
+    p = actor(name, clean(r['Tipologia']))
+    t = ties.setdefault(p['id'], {'tie': f't{p["id"][1:]}', 'correspondent_id': p['id'], 'correspondent': name,
+                                  'category': clean(r['Tipologia']), 'total': 0, 'bonsanti': 0, 'liberati': 0,
+                                  'range': [], 'range_bonsanti': [], 'range_liberati': [], 'rows': 0})
+    t['rows'] += 1  # five people are split over two rows: merged here
+    for f, col in (('total', 'Numero dei pezzi'), ('bonsanti', 'Archivio Bonsanti'), ('liberati', 'Archivio Liberati')):
+        if not pd.isna(r[col]):
+            t[f] += int(r[col])
+    for f, col in (('range', 'Estremi cronologici'), ('range_bonsanti', 'Estremi cronologici Archivio Bonsanti'),
+                   ('range_liberati', 'Estremi cronologici Archivio Liberati')):
+        if clean(r[col]):
+            t[f].append(clean(r[col]))
+
+
+# --- letters ------------------------------------------------------------------------
 def date_of(letter_id, v):
     """→ (start, end, original text, precision)"""
     if letter_id in DATE_FIX:
@@ -123,56 +222,50 @@ def date_of(letter_id, v):
     return '', '', text, 'unknown'
 
 
-# --- letters --------------------------------------------------------------------
-L = pd.read_excel(LETTERS_XLSX)
+def letter_viaf(name, letter_id):
+    """the VIAF reconciled for this very occurrence, if any"""
+    occ = by_item.get((letter_id, key(name)))
+    return occ[VIAF_COL] if occ else ''
+
+
 letters, problems = [], collections.defaultdict(list)
-people = {}
-
-
-def person(name, letter_id, role):
-    k = key(name)
-    occ = by_item.get((letter_id, k))
-    viaf = (occ._7 if occ is not None else '') or by_name.get(k, {}).get('viaf', '')
-    typ = (occ.type if occ is not None else '') or by_name.get(k, {}).get('type', '') or 'person'
-    p = people.setdefault(k, {'name': name, 'type': typ, 'viaf': viaf, 'wikidata': '',
-                              'birth': '', 'death': '', 'sent': 0, 'received': 0})
-    if viaf and not p['viaf']:
-        p['viaf'] = viaf
-    x = people_extra.get(k)
-    if x is not None:
-        p['wikidata'] = p['wikidata'] or x.wikidata_id
-        p['birth'] = p['birth'] or x.birth
-        p['death'] = p['death'] or x.death
-    p['sent' if role == 'sender' else 'received'] += 1
-    return p
-
-
-for r in L.itertuples():
-    lid = clean(r.Id)
-    senders = split_names(r.Mittente)
-    recipients = split_names(r.Destinatario) or ['']
-    start, end, date_text, precision = date_of(lid, r.Data)
-    pfrom, pto = place_of(r._6), place_of(r._7)  # Luogo di invio / destinatario
-    for s in senders:  # counted once per document, even when it is split
-        person(s, lid, 'sender')
+for r in pd.read_excel(LETTERS_XLSX).to_dict('records'):
+    lid = clean(r['Id'])
+    senders = split_names(r['Mittente'])
+    recipients = split_names(r['Destinatario']) or ['']
+    start, end, date_text, precision = date_of(lid, r['Data'])
+    pfrom, pto = place_of(r['Luogo di invio']), place_of(r['Luogo destinatario'])
+    year = start[:4]
+    sender_actors = [actor(s) for s in senders]
+    for p in sender_actors:  # counted once per document, even when it is split
+        p['described_sent'] += 1
     for i, rcp in enumerate(recipients, 1):
         rid = lid if len(recipients) == 1 else f'{lid}-{i}'
-        if rcp:
-            person(rcp, lid, 'recipient')
-        others = [n for n in senders + [rcp] if n and n != GADDA]
+        ra = actor(rcp) if rcp else None
+        if ra:
+            ra['described_received'] += 1
+        # the correspondence this letter belongs to: the person other than Gadda
+        others = [p for p in sender_actors + ([ra] if ra else []) if p['name'] != GADDA]
+        for p in others:
+            if year:
+                p['first_year'] = min(filter(None, [p['first_year'], year]))
+                p['last_year'] = max(filter(None, [p['last_year'], year]))
+            ties.setdefault(p['id'], {'tie': f't{p["id"][1:]}', 'correspondent_id': p['id'], 'correspondent': p['name'],
+                                      'category': clean(r['Genere']), 'total': 0, 'bonsanti': 0, 'liberati': 0,
+                                      'range': [], 'range_bonsanti': [], 'range_liberati': [], 'rows': 0})
         letters.append({
             'letter': rid, 'document': lid,
-            'senders': '; '.join(senders),
-            'sender_viaf': '; '.join(people[key(s)]['viaf'] for s in senders),
-            'recipient': rcp,
-            'recipient_viaf': people[key(rcp)]['viaf'] if rcp else '',
+            'sender_ids': '; '.join(p['id'] for p in sender_actors), 'senders': '; '.join(senders),
+            'recipient_id': ra['id'] if ra else '', 'recipient': rcp,
             'date_start': start, 'date_end': end, 'date_text': date_text, 'date_precision': precision,
-            'from_raw': pfrom['raw'], 'from_city': pfrom['city'], 'from_address': pfrom['address'], 'from_geonames': pfrom['geonames'],
-            'to_raw': pto['raw'], 'to_city': pto['city'], 'to_address': pto['address'], 'to_geonames': pto['geonames'],
-            'edition_sigla': clean(r.Opera), 'edition': clean(r._9),  # Sigla sciolta
-            'archive': clean(r.Archivio),
-            'tie': '; '.join(others),
-            'category': clean(r.Genere),
+            'from_place_id': pfrom['id'], 'from_raw': pfrom['raw'], 'from_city': pfrom['city'],
+            'from_address': pfrom['address'], 'from_geonames': pfrom['geonames'],
+            'to_place_id': pto['id'], 'to_raw': pto['raw'], 'to_city': pto['city'],
+            'to_address': pto['address'], 'to_geonames': pto['geonames'],
+            'edition_sigla': clean(r['Opera']), 'edition': clean(r['Sigla sciolta']),
+            'archive': clean(r['Archivio']),
+            'tie_ids': '; '.join(ties[p['id']]['tie'] for p in others),
+            'category': clean(r['Genere']),
         })
         if not senders:
             problems['letter without sender'].append(lid)
@@ -180,76 +273,80 @@ for r in L.itertuples():
             problems['letter without recipient'].append(lid)
         if precision == 'unknown':
             problems['letter without date'].append(lid)
-        for side, p in (('from', pfrom), ('to', pto)):
+        for p in (pfrom, pto):
             if p['raw'] and not p['geonames']:
-                problems[f'place without GeoNames id ({p["raw"]})'].append(lid)
+                problems[f'place without GeoNames id: {p["raw"]}'].append(lid)
+        for n in senders + ([rcp] if rcp else []):
+            v = letter_viaf(n, lid)
+            if v and v not in people[key(n)]['viaf']:
+                problems[f'VIAF of {n} differs in this letter ({v})'].append(lid)
 
-# possible duplicates: same sender, recipient, no date
-seen = collections.defaultdict(list)
+# statistics from the senders file onto each actor
+for t in ties.values():
+    p = next(p for p in people.values() if p['id'] == t['correspondent_id'])
+    p['known_total'], p['known_bonsanti'], p['known_liberati'] = t['total'], t['bonsanti'], t['liberati']
+    p['known_range'] = ' | '.join(t['range'])
+    t['described_letters'] = p['described_sent'] + p['described_received']
+
+# possible duplicates: undated, same sender, recipient and edition
+seen = collections.defaultdict(set)
 for x in letters:
     if x['date_precision'] == 'unknown':
-        seen[(x['senders'], x['recipient'], x['edition_sigla'])].append(x['document'])
-dupes = [v for v in seen.values() if len(set(v)) > 1]
+        seen[(x['senders'], x['recipient'], x['edition_sigla'])].add(x['document'])
+dupes = [sorted(v) for v in seen.values() if len(v) > 1]
 
-# --- ties: one per correspondent, from the senders Excel ---------------------
-M = pd.read_excel(SENDERS_XLSX)
-ties = {}
-for r in M.itertuples():
-    name = clean(r.Mittenti)
-    if not name:
-        continue
-    t = ties.setdefault(key(name), {'correspondent': name, 'total': 0, 'bonsanti': 0, 'liberati': 0,
-                                   'range': [], 'range_bonsanti': [], 'range_liberati': [], 'category': clean(r.Tipologia),
-                                   'rows': 0})
-    t['rows'] += 1  # five people are split over two rows: merged here
-    for f, col in (('total', r._4), ('bonsanti', r._2), ('liberati', r._3)):
-        if not pd.isna(col):
-            t[f] += int(col)
-    for f, col in (('range', r._5), ('range_bonsanti', r._11), ('range_liberati', r._12)):
-        if clean(col):
-            t[f].append(clean(col))
 
-described = collections.Counter()
-for x in letters:
-    for n in x['tie'].split('; '):
-        if n:
-            described[key(n)] += 1
-
-# --- write --------------------------------------------------------------------
-def write(name, rows, fields):
-    with open(HERE / name, 'w', newline='', encoding='utf-8-sig') as f:
-        w = csv.DictWriter(f, fieldnames=fields)
+# --- write ---------------------------------------------------------------------------
+def write(path, rows, fields):
+    with open(path, 'w', newline='', encoding='utf-8-sig') as f:
+        w = csv.DictWriter(f, fieldnames=fields, extrasaction='ignore')
         w.writeheader()
         w.writerows(rows)
 
 
-write('letters.csv', letters, list(letters[0]))
-write('people.csv', sorted(people.values(), key=lambda p: p['name']),
-      ['name', 'type', 'viaf', 'wikidata', 'birth', 'death', 'sent', 'received'])
-place_values = collections.Counter(v for x in letters for v in (x['from_raw'], x['to_raw']) if v)
-write('places.csv', [dict(place_of(v), count=n) for v, n in place_values.most_common()],
-      ['raw', 'city', 'address', 'geonames', 'count'])
-write('ties.csv', [{**{k: v for k, v in t.items() if k not in ('range', 'range_bonsanti', 'range_liberati')},
-                    'range': ' | '.join(t['range']), 'range_bonsanti': ' | '.join(t['range_bonsanti']),
-                    'range_liberati': ' | '.join(t['range_liberati']),
-                    'described_letters': described.get(k, 0)} for k, t in sorted(ties.items())],
-      ['correspondent', 'category', 'total', 'bonsanti', 'liberati', 'range', 'range_bonsanti', 'range_liberati', 'rows', 'described_letters'])
+write(IDS_CSV, [{'kind': kd, 'key': k, 'id': v, 'label': labels.get((kd, k), '')}
+                for (kd, k), v in sorted(ids.items(), key=lambda kv: (kv[0][0], kv[1]))],
+      ['kind', 'key', 'id', 'label'])
+write(HERE / 'people.csv', sorted(people.values(), key=lambda p: p['id']), list(next(iter(people.values()))))
+write(HERE / 'ties.csv', [dict(t, range=' | '.join(t['range']), range_bonsanti=' | '.join(t['range_bonsanti']),
+                               range_liberati=' | '.join(t['range_liberati'])) for t in sorted(ties.values(), key=lambda t: t['tie'])],
+      ['tie', 'correspondent_id', 'correspondent', 'category', 'total', 'bonsanti', 'liberati',
+       'range', 'range_bonsanti', 'range_liberati', 'rows', 'described_letters'])
+write(HERE / 'letters.csv', letters, list(letters[0]))
+places = {}
+for x in letters:
+    for side in ('from', 'to'):
+        if x[f'{side}_raw']:
+            pl = places.setdefault(x[f'{side}_raw'], {'id': x[f'{side}_place_id'], 'raw': x[f'{side}_raw'],
+                                                       'city': x[f'{side}_city'], 'address': x[f'{side}_address'],
+                                                       'geonames': x[f'{side}_geonames'], 'letters': 0})
+            pl['letters'] += 1
+write(HERE / 'places.csv', sorted(places.values(), key=lambda p: -p['letters']),
+      ['id', 'raw', 'city', 'address', 'geonames', 'letters'])
 
-no_tie = sorted({n for n in described if n not in ties})
-lines = ['# Letters: what needs checking', '',
-         f'- letters (rows, after splitting several recipients): {len(letters)} from {L.shape[0]} documents',
-         f'- people: {len(people)}, with VIAF {sum(1 for p in people.values() if p["viaf"])}, '
-         f'with Wikidata {sum(1 for p in people.values() if p["wikidata"])}, organisations {sum(1 for p in people.values() if p["type"] == "organization")}',
-         f'- correspondences (ties): {len(ties)}; merged from two rows: '
-         + ', '.join(t['correspondent'] for t in ties.values() if t['rows'] > 1), '']
-lines += ['## Possible duplicates (undated, same sender, recipient and edition)', '']
-lines += [f'- {", ".join(sorted(set(v)))}' for v in dupes] or ['- none']
-lines += ['', '## People in the letters with no correspondence row in dati_mittenti_Gadda.xlsx', '']
-lines += [f'- {people[n]["name"]} ({described[n]} letters)' for n in no_tie] or ['- none']
-lines += ['', '## People without VIAF (they get an OpenGadda id)', '']
-lines += [f'- {p["name"]} ({p["sent"] + p["received"]} letters)'
-          for p in sorted(people.values(), key=lambda p: -(p['sent'] + p['received'])) if not p['viaf'] and p['name'] != GADDA]
-for what, ids in sorted(problems.items()):
-    lines += ['', f'## {what}: {len(set(ids))}', '', '- ' + ', '.join(sorted(set(ids), key=lambda s: int(re.sub(r"\D", "", s) or 0)))]
+# --- report ----------------------------------------------------------------------------
+P = list(people.values())
+in_senders = {t['correspondent_id'] for t in ties.values() if t['rows']}
+not_in_senders = [p for p in P if p['name'] != GADDA and p['id'] not in in_senders
+                  and (p['described_sent'] or p['described_received'])]
+lines = ['# Gadda\'s correspondence: what needs checking', '',
+         f'- actors: {len(P)} ({sum(p["type"] == "organization" for p in P)} organisations); '
+         f'with VIAF {sum(1 for p in P if p["viaf"])}, with Wikidata {sum(1 for p in P if p["wikidata"])}',
+         f'- correspondences (ties): {len(ties)}, of which {sum(1 for t in ties.values() if t["described_letters"])} '
+         f'with individual letters; merged from two rows: '
+         + ', '.join(t['correspondent'] for t in ties.values() if t['rows'] > 1),
+         f'- letters: {len(letters)} rows from {len({x["document"] for x in letters})} documents',
+         f'- places: {len(places)} as written, {sum(1 for p in places.values() if p["geonames"])} with GeoNames',
+         f'- VIAF list checked by the user: {"yes" if VIAF_CHECKED else "not yet (viaf_to_check.csv not used)"}', '']
+lines += ['## Actors with two VIAF ids (choose one)', '']
+lines += [f'- {p["name"]} ({p["id"]}): {p["viaf"]}' for p in P if '|' in p['viaf']] or ['- none']
+lines += ['', '## Possible duplicate letters (undated, same sender, recipient and edition)', '']
+lines += [f'- {", ".join(v)}' for v in dupes] or ['- none']
+lines += ['', '## People in the letters with no row in dati_mittenti_Gadda.xlsx (spelling difference, or missing)', '']
+lines += [f'- {p["name"]} ({p["id"]}, {p["described_sent"] + p["described_received"]} letters)'
+          for p in sorted(not_in_senders, key=lambda p: p['name'])] or ['- none']
+for what, lids in sorted(problems.items()):
+    lids = sorted(set(lids), key=lambda s: int(re.sub(r'\D', '', s) or 0))
+    lines += ['', f'## {what}: {len(lids)}', '', '- ' + ', '.join(lids)]
 (HERE / 'report.md').write_text('\n'.join(lines) + '\n', encoding='utf-8')
-print('\n'.join(lines[:6]))
+print('\n'.join(lines[:8]))
