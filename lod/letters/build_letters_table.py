@@ -40,7 +40,7 @@ SENDERS_XLSX = ONEDRIVE / 'dati_mittenti_Gadda.xlsx'
 TABLES = LOD / 'openrefine' / 'tables'
 IDS_CSV = HERE / 'ids.csv'
 VIAF_CHECK_CSV = HERE / 'viaf_to_check.csv'
-VIAF_CHECKED = False  # set to True once viaf_to_check.csv has been gone through
+VIAF_CHECKED = True  # viaf_to_check.csv gone through by the user (2026-11-25)
 
 GADDA = 'Gadda Carlo Emilio'
 ITEMS_JSON = LOD.parent / 'code_updated' / 'items.json'  # only to link editions to their record on the site
@@ -128,9 +128,21 @@ for r in people_tab.to_dict('records'):
 checked = {}
 if VIAF_CHECKED and VIAF_CHECK_CSV.exists():
     with open(VIAF_CHECK_CSV, encoding='utf-8-sig') as f:
-        for r in csv.DictReader(f):
-            v = clean(r.get('your_viaf')) or clean(r.get('old_viaf'))
-            checked[key(r['correspondent'])] = v  # '' = no VIAF
+        text = f.read()
+    # saved from Excel: ';' separated, and long ids may have become "1,29152E+20";
+    # those are recovered from the viaf_link column, which Excel left intact
+    for r in csv.DictReader(text.splitlines(), delimiter=';' if text.split('\n', 1)[0].count(';') > text.split('\n', 1)[0].count(',') else ','):
+        def viaf(col):
+            v = clean(r.get(col))
+            if re.search(r'[eE]\+', v):
+                m = re.search(r'viaf/(\d+)', r.get('viaf_link', ''))
+                v = m[1] if m else ''
+            return v
+        v = viaf('your_viaf') or viaf('old_viaf')
+        if v:
+            checked[key(r['correspondent'])] = v
+        else:
+            checked[key(r['correspondent'])] = ''  # '' = checked: no VIAF
 
 place_rows = pd.read_csv(TABLES / 'places-csv.csv', dtype=str).fillna('')
 place_auth = {}
@@ -177,7 +189,8 @@ def actor(name, category=''):
             'id': og_id('person', k, name), 'name': name, 'type': typ,
             'viaf': ' | '.join(viafs), 'wikidata': x.get('wikidata_id', ''),
             'birth': x.get('birth', ''), 'death': x.get('death', ''), 'category': category,
-            'known_total': 0, 'known_bonsanti': 0, 'known_liberati': 0, 'known_range': '',
+            # the inventories (senders file) count only the letters Gadda RECEIVED
+            'to_gadda_inventories': 0, 'to_gadda_bonsanti': 0, 'to_gadda_liberati': 0, 'to_gadda_range': '',
             'described_sent': 0, 'described_received': 0, 'first_year': '', 'last_year': '',
         }
     if category and not p['category']:
@@ -360,9 +373,12 @@ for p in people.values():
 # statistics from the senders file onto each actor
 for t in ties.values():
     p = next(p for p in people.values() if p['id'] == t['correspondent_id'])
-    p['known_total'], p['known_bonsanti'], p['known_liberati'] = t['total'], t['bonsanti'], t['liberati']
-    p['known_range'] = ' | '.join(t['range'])
+    p['to_gadda_inventories'], p['to_gadda_bonsanti'], p['to_gadda_liberati'] = t['total'], t['bonsanti'], t['liberati']
+    p['to_gadda_range'] = ' | '.join(t['range'])
     t['described_letters'] = p['described_sent'] + p['described_received']
+    # of the individually described letters: written to Gadda / written by Gadda
+    t['described_to_gadda'] = p['described_sent']
+    t['described_from_gadda'] = p['described_received']
 
 # possible duplicates: undated, same sender, recipient and edition
 seen = collections.defaultdict(set)
@@ -384,10 +400,17 @@ write(IDS_CSV, [{'kind': kd, 'key': k, 'id': v, 'label': labels.get((kd, k), '')
                 for (kd, k), v in sorted(ids.items(), key=lambda kv: (kv[0][0], kv[1]))],
       ['kind', 'key', 'id', 'label'])
 write(HERE / 'people.csv', sorted(people.values(), key=lambda p: p['id']), list(next(iter(people.values()))))
-write(HERE / 'ties.csv', [dict(t, range=' | '.join(t['range']), range_bonsanti=' | '.join(t['range_bonsanti']),
-                               range_liberati=' | '.join(t['range_liberati'])) for t in sorted(ties.values(), key=lambda t: t['tie'])],
-      ['tie', 'correspondent_id', 'correspondent', 'category', 'total', 'bonsanti', 'liberati',
-       'range', 'range_bonsanti', 'range_liberati', 'rows', 'described_letters', 'source_ids'])
+# the inventory figures are letters received by Gadda only, so they are named so
+write(HERE / 'ties.csv', [{'tie': t['tie'], 'correspondent_id': t['correspondent_id'], 'correspondent': t['correspondent'],
+                           'category': t['category'], 'to_gadda_inventories': t['total'],
+                           'to_gadda_bonsanti': t['bonsanti'], 'to_gadda_liberati': t['liberati'],
+                           'to_gadda_range': ' | '.join(t['range']), 'to_gadda_range_bonsanti': ' | '.join(t['range_bonsanti']),
+                           'to_gadda_range_liberati': ' | '.join(t['range_liberati']), 'rows': t['rows'],
+                           'described_to_gadda': t.get('described_to_gadda', 0), 'described_from_gadda': t.get('described_from_gadda', 0),
+                           'source_ids': t['source_ids']} for t in sorted(ties.values(), key=lambda t: t['tie'])],
+      ['tie', 'correspondent_id', 'correspondent', 'category', 'to_gadda_inventories', 'to_gadda_bonsanti',
+       'to_gadda_liberati', 'to_gadda_range', 'to_gadda_range_bonsanti', 'to_gadda_range_liberati', 'rows',
+       'described_to_gadda', 'described_from_gadda', 'source_ids'])
 write(HERE / 'sources.csv', sorted(sources.values(), key=lambda s: (s['type'], s['id'])),
       ['id', 'type', 'sigla', 'label', 'opengadda_record', 'letters'])
 write(HERE / 'letters.csv', letters, list(letters[0]))
@@ -416,6 +439,17 @@ lines = ['# Gadda\'s correspondence: what needs checking', '',
          f'- letters: {len(letters)} rows from {len({x["document"] for x in letters})} documents',
          f'- places: {len(places)} as written, {sum(1 for p in places.values() if p["geonames"])} with GeoNames',
          f'- VIAF list checked by the user: {"yes" if VIAF_CHECKED else "not yet (viaf_to_check.csv not used)"}', '']
+# what is simply missing: it stays missing in the RDF (the property is left out,
+# nothing is invented), and the record keeps its own OpenGadda id
+docs = {x['document']: x for x in letters}
+lines += ['## Missing information (left out of the RDF, never invented)', '',
+          f'- letters without a date: {sum(1 for x in docs.values() if x["date_precision"] == "unknown")}',
+          f'- letters without a recipient: {sum(1 for x in letters if not x["recipient"])}',
+          f'- letters without a sender: {sum(1 for x in letters if not x["senders"])}',
+          f'- place mentions without GeoNames (kept as named places, no coordinates): '
+          f'{sum(1 for x in letters for sd in ("from", "to") if x[sd + "_raw"] and not x[sd + "_geonames"])}',
+          f'- actors with neither VIAF nor Wikidata (OpenGadda id only): {sum(1 for p in P if not p["viaf"] and not p["wikidata"])} of {len(P)}',
+          f'- actors with VIAF but no Wikidata: {sum(1 for p in P if p["viaf"] and not p["wikidata"])}', '']
 lines += ['## Actors with two VIAF ids (choose one)', '']
 lines += [f'- {p["name"]} ({p["id"]}): {p["viaf"]}' for p in P if '|' in p['viaf']] or ['- none']
 lines += ['', '## Possible duplicate letters (undated, same sender, recipient and edition)', '']

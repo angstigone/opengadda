@@ -1,9 +1,8 @@
-﻿id,name,type,viaf,wikidata,birth,death,category,known_total,known_bonsanti,known_liberati,known_range,described_sent,described_received,first_year,last_year,source_ids
-p0001,Gadda Carlo Emilio,person,56610080,Q378645,1893,1973,,0,0,0,,1524,957,,,AF; CAC; CEGFRVR; CNS; CaBo; CaCe; CaGia; CarRec; Conf; DLF; FondoTD; GG; GIGPF; GIMA; GZoGu; IF; IMSFDE; LAM; LAMa; LAlMo; LFM; LGC; LGS; LNP; LPBi; LPI; LS; Lso; Luf; MioGa; OmLi; PeS; QI12010GCR; QI1MF; QI22011AS; QI2GE; QI3; QI32012AM; QI32012VS; QI3GBA; QI42013LT; QI4LG; QI5; RitrG; SIPELZDMS; SMVCSF; STG; StuElCL; TrGu; UG; archivio-bonsanti; archivio-liberati
-p0002,Accademia Nazionale dei Lincei,organization,,,,,"Istituzioni, associazioni ed enti pubblici",7,7,6,1939-1969,0,0,,,archivio-bonsanti; archivio-liberati
+﻿id,name,type,viaf,wikidata,birth,death,category,to_gadda_inventories,to_gadda_bonsanti,to_gadda_liberati,to_gadda_range,described_sent,described_received,first_year,last_year,source_ids
+p0001,Gadda Carlo Emilio,person,56610080,Q378645,1893,1973,,0,0,0,,1517,955,,,AF; CAC; CEGFRVR; CNS; CaBo; CaCe; CaGia; CarRec; Conf; DLF; FondoTD; GG; GIGPF; GIMA; GZoGu; IF; IMSFDE; LAM; LAMa; LAlMo; LFM; LGC; LGS; LNP; LPBi; LPI; LS; Lso; Luf; MioGa; OmLi; PeS; QI12010GCR; QI1MF; QI22011AS; QI2GE; QI3; QI32012AM; QI32012VS; QI3GBA; QI42013LT; QI4LG; QI5; RitrG; SIPELZDMS; SMVCSF; STG; StuElCL; TrGu; UG; archivio-bonsanti; archivio-liberati
+p0002,Accademia Nazionale dei Lincei,organization,159293044,,,,"Istituzioni, associazioni ed enti pubblici",7,7,6,1939-1969,0,0,,,archivio-bonsanti; archivio-liberati
 p0003,Accademia Reale d'Italia,organization,,,,,"Istituzioni, associazioni ed enti pubblici",3,0,3,1942-1943,0,0,,,archivio-liberati
-p0004,(Regia) Accademia Scientifico Letteraria,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,1,0,1922,1,0,1922,1922,archivio-bonsanti
-p0005,Accetti Carlo E.,person,,,1882,1996,Contatti letterari,2,2,0,1936,0,0,,,archivio-bonsanti
+p0004,(Regia) Accademia Scientifico Letteraria,organization,126682466,,,,"Istituzioni, associazioni ed enti pubblici",1,1,0,1922,1,0,1922,1922,archivio-bonsanti
 p0006,Agenzia viaggi e navigazione Riboni,person,,,,,Varia,2,2,0,1931,1,0,1931,1931,archivio-bonsanti
 p0007,Agosto Carlo,person,,,,,Varia,1,0,1,1939,1,0,1939,1939,archivio-liberati
 p0008,Airoldi Aldo,person,,,1899,1963,Contatti letterari,4,4,0,1940-1942,0,0,,,archivio-bonsanti
@@ -12,8 +11,8 @@ p0010,Albergo “Passo dello Stelvio”,person,,,,,Varia,1,1,0,1935,0,0,,,archiv
 p0011,"Albergo Pensione Villa San Camillo, Forte dei Marmi",person,,,,,Varia,1,0,1,1942,1,0,1942,1942,archivio-liberati
 p0012,Alberti Lucia e Guido,person,,,,,Contatti letterari,2,0,2,1960-1970,0,0,,,archivio-liberati
 p0013,Alberti Teresa,person,,,,,Varia,2,2,0,1936,1,0,1936,1936,archivio-bonsanti
-p0014,Alberto Mondadori Editore,person,,,,,"Editori, riviste e quotidiani",54,0,54,1969/12/15,0,0,,,archivio-liberati
-p0015,Alfred Lorentz,person,,,,,Varia,13,13,0,1928-1931,0,0,,,archivio-bonsanti
+p0014,Alberto Mondadori Editore,person,9973589,,,,"Editori, riviste e quotidiani",54,0,54,1969/12/15,0,0,,,archivio-liberati
+p0015,Alfred Lorentz,person,129151776794718011088,,,,Varia,13,13,0,1928-1931,0,0,,,archivio-bonsanti
 p0016,Alimento Mario,person,,,,,Ingegneria e divulgazione tecnica,2,2,0,1926-1930,1,0,1930,1930,archivio-bonsanti
 p0017,All'insegna del pesce d'oro (casa editrice),organization,,,,,"Editori, riviste e quotidiani",2,0,2,1963-1969,2,0,1963,1969,archivio-liberati
 p0018,Allemano Giuseppe,person,,,,,Contatti letterari,1,1,0,1917,0,0,,,archivio-bonsanti
@@ -21,8 +20,8 @@ p0019,Allodoli Ettore,person,,,,,Contatti letterari,3,2,1,1935-1942,0,0,,,archiv
 p0020,Ambrosi E.,person,,,,,Varia,1,1,0,1941,0,0,,,archivio-bonsanti
 p0021,Ambrosi Paolo,person,56433041,,1875,1950,Familiari,140,119,21,1928-1944,2,1,1929,1930,CarRec; DLF; archivio-bonsanti; archivio-liberati
 p0022,L'Ambrosiano,person,,,,,"Editori, riviste e quotidiani",6,6,0,1923-1932,0,0,,,archivio-bonsanti
-p0023,Amicucci Ermanno,person,25409558,Q799111,1890,1955,Contatti letterari,3,2,1,1934-1939,1,1,1923,1934,CarRec; archivio-bonsanti; archivio-liberati
-p0024,Ammonia Casale,person,,,,,Ingegneria e divulgazione tecnica,251,28,223,1905-1931,15,13,1927,1931,CAC; CarRec; archivio-bonsanti; archivio-liberati
+p0023,Amicucci Ermanno,person,25409558,Q799111,1890,1955,Contatti letterari,3,2,1,1934-1939,2,1,1923,1934,CarRec; archivio-bonsanti; archivio-liberati
+p0024,Ammonia Casale,person,60155042851872402594,,,,Ingegneria e divulgazione tecnica,251,28,223,1905-1931,14,12,1927,1931,CAC; CarRec; archivio-bonsanti; archivio-liberati
 p0025,Anceschi Luciano,person,71406254,Q3838517,1911,1995,Contatti letterari,6,4,2,1940-1953,0,0,,,archivio-bonsanti; archivio-liberati
 p0026,Andres Stefan,person,54194656,,,,Contatti letterari,1,0,1,1965,1,0,1965,1965,archivio-liberati
 p0027,Angeletti Giovanni Battista,person,,,,,Ingegneria e divulgazione tecnica,4,0,4,1938,0,0,,,archivio-liberati
@@ -41,7 +40,7 @@ p0039,Antongini Gianni,person,,,,,Varia,1,0,1,1938,0,0,,,archivio-liberati
 p0040,Antonicelli Franco,person,,,,,Contatti letterari,3,3,0,1939-1942,0,0,,,archivio-bonsanti
 p0041,Antonini Giacomo,person,262356857,Q3023996,1901,1983,Contatti letterari,5,3,2,1934-1953,0,0,,,archivio-bonsanti; archivio-liberati
 p0042,Antonini Gianni,person,,,1926,,Contatti letterari,1,0,1,1961,2,37,1938,1961,QI1MF; archivio-liberati
-p0043,Apollonio Umbro,person,,,1911,1981,Contatti letterari,26,20,6,1934-1939,0,0,,,archivio-bonsanti; archivio-liberati
+p0043,Apollonio Umbro,person,172050647,,1911,1981,Contatti letterari,26,20,6,1934-1939,0,0,,,archivio-bonsanti; archivio-liberati
 p0044,Appenzeller E.,person,,,,,Varia,2,2,0,1917-1918,1,0,1918,1918,archivio-bonsanti
 p0045,L'Approdo Letterario,organization,,,,,"Editori, riviste e quotidiani",2,0,2,1971-1972,2,0,1971,1972,archivio-liberati
 p0046,Arbasino Alberto,person,39372959,Q521191,1930,2020,Contatti letterari,61,0,61,1960-1970,0,0,,,archivio-liberati
@@ -49,18 +48,18 @@ p0047,Arcurio Bruno,person,,,,,Varia,1,0,1,1971,1,0,1971,1971,archivio-liberati
 p0048,Ardigò Dina,person,,,,,Contatti letterari,1,1,0,1941,0,0,,,archivio-bonsanti
 p0049,Ardigò Fausto,person,90212238,,1911,1944,Contatti letterari,11,7,4,1936-1942,0,1,1936,1936,CEGFRVR; archivio-bonsanti; archivio-liberati
 p0050,Aretusa,organization,295602606,,,,"Editori, riviste e quotidiani",1,0,1,1946,1,0,1946,1946,archivio-liberati
-p0051,Argomenti,person,,,,,"Editori, riviste e quotidiani",1,1,0,1941,0,0,,,archivio-bonsanti
+p0051,Argomenti,person,185910547,,,,"Editori, riviste e quotidiani",1,1,0,1941,0,0,,,archivio-bonsanti
 p0052,Arrigoni Giuseppe,person,,,,,Varia,7,7,0,1933-1936,0,0,,,archivio-bonsanti
 p0053,Arrigoni Giuseppe e Angela,person,,,,,Varia,5,0,5,1936/12/08 – 1937/07/17,0,0,,,archivio-liberati
 p0054,Arrowsmith William,person,28142942,,,,Contatti letterari,1,0,1,1960,1,0,1960,1960,archivio-liberati
-p0055,Arte e società,person,,,,,"Editori, riviste e quotidiani",1,0,1,1973,1,0,1973,1973,archivio-liberati
+p0055,Arte e società,person,185034658,,,,"Editori, riviste e quotidiani",1,0,1,1973,1,0,1973,1973,archivio-liberati
 p0056,Artoni Giancarlo,person,,,1923,2017,Contatti letterari,9,0,9,1957,0,0,,,archivio-liberati
-p0057,Association Guillaume Budé,organization,,,,,"Istituzioni, associazioni ed enti pubblici",10,4,6,1928-1932,0,0,,,archivio-bonsanti; archivio-liberati
+p0057,Association Guillaume Budé,organization,136117158,,,,"Istituzioni, associazioni ed enti pubblici",10,4,6,1928-1932,0,0,,,archivio-bonsanti; archivio-liberati
 p0058,Associazione Giosuè Carducci,organization,,,,,"Istituzioni, associazioni ed enti pubblici",3,0,3,1948,0,0,,,archivio-liberati
 p0059,Associazione Goffredo Bellonci,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1968,0,0,,,archivio-liberati
 p0060,Associazione italiana di amici della musica,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,1,0,1920,1,0,1920,1920,archivio-bonsanti
-p0061,Associazione italiana per i rapporti culturali con la Polonia,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1981,0,0,,,archivio-liberati
-p0062,Associazione italiana per la libertà della cultura,organization,,,,,"Istituzioni, associazioni ed enti pubblici",2,0,2,1951-1953,2,0,1951,1953,archivio-liberati
+p0061,Associazione italiana per i rapporti culturali con la Polonia,organization,309873061,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1981,0,0,,,archivio-liberati
+p0062,Associazione italiana per la libertà della cultura,organization,138078113,,,,"Istituzioni, associazioni ed enti pubblici",2,0,2,1951-1953,2,0,1951,1953,archivio-liberati
 p0063,Associazione per la diffusione del libro “Sodalizio del libro”,organization,,,,,"Istituzioni, associazioni ed enti pubblici",2,0,2,1956,2,0,1956,1956,archivio-liberati
 p0064,Autocombattente,person,,,,,Varia,1,1,0,1929,0,0,,,archivio-bonsanti
 p0065,Avetta Alessandro,person,,,,,Ingegneria e divulgazione tecnica,6,6,0,1934,0,0,,,archivio-bonsanti
@@ -75,10 +74,9 @@ p0073,Baldacci Luigi,person,89585510,Q3839298,1930,2002,Contatti letterari,9,0,9
 p0074,Baldini Antonio,person,54169117,Q599687,1889,1962,Contatti letterari,40,40,0,1931-1942,1,0,1934,1934,CarRec; archivio-bonsanti
 p0075,Ballo Ferdinando,person,60844274,,1906,1959,"Editori, riviste e quotidiani",2,2,0,1944,0,6,1943,1946,QI5; archivio-bonsanti
 p0076,Balzaretti Lina,person,,,,,Varia,1,1,0,1917,0,0,,,archivio-bonsanti
-p0077,Banca Commerciale Italiana,person,,,,,Varia,11,9,2,1923-1953,0,0,,,archivio-bonsanti; archivio-liberati
-p0078,Banca Italo-Britannica,person,,,,,Varia,1,1,0,1928,0,0,,,archivio-bonsanti
+p0078,Banca Italo-Britannica,person,2026145857006422920914,,,,Varia,1,1,0,1928,0,0,,,archivio-bonsanti
 p0079,Banca Popolare Cooperativa Anonima di Novara,person,,,,,Varia,1,1,0,1928,0,0,,,archivio-bonsanti
-p0080,Banco di Santo Spirito,person,,,,,Varia,2,1,1,1927-1968,0,0,,,archivio-bonsanti; archivio-liberati
+p0080,Banco di Santo Spirito,person,131980360,,,,Varia,2,1,1,1927-1968,0,0,,,archivio-bonsanti; archivio-liberati
 p0081,Banco Italo-Sud Americano,organization,,,,,Varia,2,2,0,1924-1925,2,0,1924,1925,archivio-bonsanti
 p0082,Banti Anna,person,66479430,Q470147,1895,1985,Contatti letterari,3,0,3,1952-1957,0,0,,,archivio-liberati
 p0083,Barassi Ermanno,person,,,,,Varia,3,3,0,1928,0,0,,,archivio-bonsanti
@@ -87,7 +85,7 @@ p0085,Barbieri Enrico,person,305848075,,,,Varia,1,0,1,1905,1,0,1905,1905,archivi
 p0086,Bargellini Piero,person,76311664,Q3903157,1897,1980,Contatti letterari,1,1,0,1941,0,0,,,archivio-bonsanti
 p0087,"Barni Ferruccio, Paola e Gianluigi",person,,,,,Varia,1,1,0,1924,0,0,,,archivio-bonsanti
 p0088,Bartolini Luigi,person,,,,,Contatti letterari,1,1,0,1940,0,0,,,archivio-bonsanti
-p0089,Bassani,person,,,,,Varia,1,0,1,1943,0,0,,,archivio-liberati
+p0089,Bassani,person,108729325,,,,Varia,1,0,1,1943,0,0,,,archivio-liberati
 p0090,Bassani Giorgio,person,108729325,Q318309,1916,2000,Contatti letterari,1,0,1,1957,2,0,1943,1957,archivio-liberati
 p0091,Bassani Valeria,person,,,,,Contatti letterari,1,0,1,Senza data,0,0,,,archivio-liberati
 p0092,"Bassani, G. L.",person,,,,,Varia,3,3,0,1942,0,0,,,archivio-bonsanti
@@ -138,8 +136,8 @@ p0136,Boggio Marzet Albino,person,,,1878,1969,Compagni di guerra e di prigionia,
 p0137,Bognetti Giovanni,person,,,,,Varia,1,1,0,1923,0,0,,,archivio-bonsanti
 p0138,Boldini M. G.,person,,,,,Varia,1,1,0,1925,0,0,,,archivio-bonsanti
 p0139,Bollati Giulio,person,59099373,,1924,1996,Contatti letterari,1,0,1,Senza data,0,1,1965,1965,QI2GE; archivio-liberati
-p0140,Bompiani (casa editrice),person,,,,,"Editori, riviste e quotidiani",49,4,45,1938-1963,0,0,,,archivio-bonsanti; archivio-liberati
-p0141,Bompiani Valentino,person,109376432,,1898,1992,"Editori, riviste e quotidiani",1,1,0,1944,0,3,1942,1943,CaBo; archivio-bonsanti
+p0140,Bompiani (casa editrice),person,151880538,,,,"Editori, riviste e quotidiani",49,4,45,1938-1963,0,0,,,archivio-bonsanti; archivio-liberati
+p0141,Bompiani Valentino,person,109376432,,1898,1992,"Editori, riviste e quotidiani",1,1,0,1944,1,3,1942,1943,CaBo; archivio-bonsanti
 p0142,Bonacci Libreria Editrice,person,,,,,"Editori, riviste e quotidiani",1,0,1,1973,1,0,1973,1973,archivio-liberati
 p0143,Bonacelli Paolo,person,,,,,Varia,1,0,1,1967,0,0,,,archivio-liberati
 p0144,Bonalumi Louis,person,12305435,Q88800210,1922,2004,Contatti letterari,2,0,2,1960-1962,2,0,1960,1962,archivio-liberati
@@ -188,12 +186,12 @@ p0186,Carabba R. (casa editrice),organization,,,,,"Editori, riviste e quotidiani
 p0187,Carboncini Enzo,person,,,,,Varia,2,0,2,1946-1947,0,0,,,archivio-liberati
 p0188,Caretti Lanfranco,person,76354271,Q3826843,1915,1995,Contatti letterari,1,0,1,1953,1,0,1953,1953,archivio-liberati
 p0189,Carli O.,person,,,,,Varia,3,3,0,1930,0,0,,,archivio-bonsanti
-p0190,Carocci Alberto,person,72191994,Q3608203,1904,1972,Contatti letterari,141,141,0,1926-1936,4,0,1926,1932,CarRec; Lso; archivio-bonsanti
+p0190,Carocci Alberto,person,72191994,Q3608203,1904,1972,Contatti letterari,141,141,0,1926-1936,4,56,1926,1953,CarRec; Lso; archivio-bonsanti
 p0191,Carocci Eva,person,,,,,Contatti letterari,1,1,0,1933,0,0,,,archivio-bonsanti
-p0192,Carolina Power & Light Company,person,,,,,Varia,1,1,0,1922,0,0,,,archivio-bonsanti
+p0192,Carolina Power & Light Company,person,135945016,,,,Varia,1,1,0,1922,0,0,,,archivio-bonsanti
 p0193,Carrozzari R.,person,,,,,Varia,1,1,0,1917-1922,0,0,,,archivio-bonsanti
 p0194,Carusi Nicolina,person,,,,,Varia,2,0,2,1946-1948,2,0,1946,1948,archivio-liberati
-p0195,Casa d'Europa,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1970,1,0,1970,1970,archivio-liberati
+p0195,Casa d'Europa,organization,126696876,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1970,1,0,1970,1970,archivio-liberati
 p0196,Casella Alberto,person,,,,,Contatti letterari,1,0,1,Senza data,0,0,,,archivio-liberati
 p0197,Cases Anna e Cesare,person,,,,,Contatti letterari,1,0,1,1964,0,0,,,archivio-liberati
 p0198,Cassa nazionale di assistenza e previdenza tra gli scrittori italiani,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1963,1,0,1963,1963,archivio-liberati
@@ -231,7 +229,7 @@ p0229,Cima Giovanni Vincenzo,person,,,1893,1968,Contatti letterari,33,33,0,1934-
 p0230,Cimatti A.,person,,,,,Varia,8,8,0,1934-1936,0,0,,,archivio-bonsanti
 p0231,Cinquetti,person,44566940,,,,Varia,1,0,1,1952,1,0,1952,1952,archivio-liberati
 p0232,Cioci Piero,person,,,,,Varia,1,0,1,1971,1,0,1971,1971,archivio-liberati
-p0233,Circolo Filologico Milanese,organization,,,,,"Istituzioni, associazioni ed enti pubblici",8,8,0,1911-1933,0,0,,,archivio-bonsanti
+p0233,Circolo Filologico Milanese,organization,150378319,,,,"Istituzioni, associazioni ed enti pubblici",8,8,0,1911-1933,0,0,,,archivio-bonsanti
 p0234,Circolo Unione Taranto,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1953,1,0,1953,1953,archivio-liberati
 p0235,Cirella Adelchi,person,,,,,Varia,1,1,0,1925,0,0,,,archivio-bonsanti
 p0236,Cirese Mario,person,,,,,Compagni di guerra e di prigionia,3,3,0,1916-1917,0,0,,,archivio-bonsanti
@@ -245,8 +243,8 @@ p0243,Cogenel,person,,,,,Varia,1,0,1,1938,1,0,1938,1938,archivio-liberati
 p0244,Cognetti Lina,person,,,,,Varia,3,3,0,1941,0,0,,,archivio-bonsanti
 p0245,Colacicchi Giovanni,person,,,,,Contatti letterari,1,1,0,1944,0,0,,,archivio-bonsanti
 p0246,Colombo Antonio,person,,,,,Varia,1,1,0,[1924 – 1925],0,0,,,archivio-bonsanti
-p0247,Colombo Carlo,person,,,,,Varia,1,1,0,1923,0,0,,,archivio-bonsanti
-p0248,Colombo Elisa,person,,,,,Varia,2,2,0,1908-1913,0,0,,,archivio-bonsanti
+p0247,Colombo Carlo,person,110167198350067630625,,,,Varia,1,1,0,1923,0,0,,,archivio-bonsanti
+p0248,Colombo Elisa,person,282520377,,,,Varia,2,2,0,1908-1913,0,0,,,archivio-bonsanti
 p0249,Colombo Emilio,person,,,,,Varia,1,1,0,1923,0,0,,,archivio-bonsanti
 p0250,Colombo Enrico,person,168896678,,,,Varia,1,0,1,1942,1,0,1942,1942,archivio-liberati
 p0251,Colonna A.,person,,,,,Varia,3,3,0,1933,0,0,,,archivio-bonsanti
@@ -256,18 +254,18 @@ p0254,"Comando Scuole del Corpo Reale Equipaggi Marittimi, Pola",organization,,,
 p0255,Comisso Giovanni,person,54169350,Q51186,1895,1969,Contatti letterari,8,1,7,1932-1957,0,0,,,archivio-bonsanti; archivio-liberati
 p0256,Comitato per gli Istituti di beneficenza della città di Viareggio,organization,,,,,"Istituzioni, associazioni ed enti pubblici",3,0,3,1953,0,0,,,archivio-liberati
 p0257,Comité Bernois Section Italienne,organization,,,,,"Istituzioni, associazioni ed enti pubblici",2,2,0,1918,2,0,1918,1918,archivio-bonsanti
-p0258,Comité de Genève,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,1,0,1918,0,0,,,archivio-bonsanti
+p0258,Comité de Genève,organization,131930135,,,,"Istituzioni, associazioni ed enti pubblici",1,1,0,1918,0,0,,,archivio-bonsanti
 p0259,Como Marina,person,,,,,Varia,3,0,3,1971-1972,0,0,,,archivio-liberati
 p0260,Compañia General de Fósforos,person,,,,,Ingegneria e divulgazione tecnica,2,2,0,1923-1925,0,0,,,archivio-bonsanti
-p0261,Comunità europea degli scrittori,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1963,1,0,1963,1963,archivio-liberati
+p0261,Comunità europea degli scrittori,organization,48157523414427032800,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1963,1,0,1963,1963,archivio-liberati
 p0262,Conenna,person,,,,,Varia,2,0,2,1966,2,0,1966,1966,archivio-liberati
 p0263,Congresso nazionale delle arti figurative,organization,,,,,Varia,1,0,1,1946,1,0,1946,1946,archivio-liberati
-p0264,Consociazione Turistica Italiana,organization,,,,,"Istituzioni, associazioni ed enti pubblici",16,2,14,1938-1941,0,0,,,archivio-bonsanti; archivio-liberati
+p0264,Consociazione Turistica Italiana,organization,151952602,,,,"Istituzioni, associazioni ed enti pubblici",16,2,14,1938-1941,0,0,,,archivio-bonsanti; archivio-liberati
 p0265,Consorzio grande bonificazione ferrarese,organization,,,,,"Istituzioni, associazioni ed enti pubblici",2,0,2,1939,2,0,1939,1939,archivio-liberati
 p0266,Conti,person,,,,,Varia,1,1,0,[1926 – 1929]/04/24,0,0,,,archivio-bonsanti
 p0267,Conti Primo,person,,,,,Contatti letterari,1,1,0,1931,0,0,,,archivio-bonsanti
 p0268,Conti Vincenzo,person,96102920,,,,Amici,1,1,0,1931,1,0,1931,1931,archivio-bonsanti
-p0269,Contini Gianfranco,person,109606833,Q689563,1912,1990,Amici,128,63,65,1934-1967,56,101,1934,1968,CaGia; LGC; archivio-bonsanti; archivio-liberati
+p0269,Contini Gianfranco,person,109606833,Q689563,1912,1990,Amici,128,63,65,1934-1967,55,100,1934,1968,CaGia; LGC; archivio-bonsanti; archivio-liberati
 p0270,Contini Riccardo,person,44422871,,,,Varia,1,1,0,1935,0,1,1967,1967,LGC; archivio-bonsanti
 p0271,Convegno internazionale Leone Tolstoj,organization,,,,,Varia,1,0,1,1960,1,0,1960,1960,archivio-liberati
 p0272,Corbellini Adele,person,,,,,Varia,6,6,0,1920,0,0,,,archivio-bonsanti
@@ -280,7 +278,7 @@ p0278,Corsini Gianfranco,person,,,,,Contatti letterari,8,4,4,1941-1948,0,0,,,arc
 p0279,Cortellini Elena,person,,,,,Varia,1,0,1,1972,1,0,1972,1972,archivio-liberati
 p0280,Cossetti Bisagli Itala,person,,,,,Varia,2,0,2,1905,0,0,,,archivio-liberati
 p0281,Costa G.,person,,,,,Contatti letterari,1,1,0,1934,0,0,,,archivio-bonsanti
-p0282,Credito Italiano,person,,,,,Varia,10,1,9,1935-1965,0,0,,,archivio-bonsanti; archivio-liberati
+p0282,Credito Italiano,person,125498375,,,,Varia,10,1,9,1935-1965,0,0,,,archivio-bonsanti; archivio-liberati
 p0283,Credito Piemontese,person,,,,,Varia,3,3,0,1919-1922,0,0,,,archivio-bonsanti
 p0284,Crespi Emilio,person,,,,,Varia,1,1,0,1913,0,0,,,archivio-bonsanti
 p0285,Croce Oreste,person,,,,,Varia,1,1,0,1913,0,0,,,archivio-bonsanti
@@ -296,7 +294,7 @@ p0294,Dabalà Maria e Andrea,person,,,,,Varia,7,2,5,1935-1940,0,0,,,archivio-bon
 p0295,Dal Fabbro Beniamino,person,59893050,Q3638186,1910,1989,Contatti letterari,1,0,1,1939,1,0,1939,1939,archivio-liberati
 p0296,Damiano Andrea,person,,,,,Contatti letterari,8,8,0,1940-1941,0,0,,,archivio-bonsanti
 p0297,Debenedetti [?],person,11235716,,,,Varia,1,0,1,1968,1,0,1968,1968,archivio-liberati
-p0298,Debenedetti Giacomo,person,34469924,Q472856,1901,1967,Contatti letterari,1,0,1,1957,1,0,1957,1957,archivio-liberati
+p0298,Debenedetti Giacomo,person,34469924,Q472856,1901,1967,Contatti letterari,1,0,1,1957,2,0,1942,1957,CaBo; archivio-liberati
 p0299,Debenedetti Renata,person,,,,,Contatti letterari,1,1,0,1942,0,0,,,archivio-bonsanti
 p0300,De Giorgi Elsa,person,214558132,Q518000,1914,1997,Contatti letterari,11,0,11,1958-1971,0,0,,,archivio-liberati
 p0301,De Grada Raffaele,person,12578946,,1916,2010,Contatti letterari,2,2,0,1940-1942,2,0,1940,1942,archivio-bonsanti
@@ -314,7 +312,7 @@ p0312,Dell’Oro Tina,person,,,,,Varia,2,2,0,1940-1941,2,0,1940,1941,archivio-bo
 p0313,Dell’Orto Luigi,person,,,,,Compagni di guerra e di prigionia,1,1,0,1918,1,0,1918,1918,archivio-bonsanti
 p0314,Del Tredici Giulio,person,161712993,,,,Varia,1,0,1,1905,1,0,1905,1905,archivio-liberati
 p0315,De Marchi A.,person,,,,,Varia,1,1,0,1910,0,0,,,archivio-bonsanti
-p0316,De Matteis Carlo,person,103217462 | 62144928034754341838,Q95306745,1941,,Varia,1,0,1,1970,1,0,1970,1970,archivio-liberati
+p0316,De Matteis Carlo,person,103217462,Q95306745,1941,,Varia,1,0,1,1970,1,0,1970,1970,archivio-liberati
 p0317,De Pisis Filippo,person,68940882,Q661473,1896,1956,Contatti letterari,3,0,3,1942,0,0,,,archivio-liberati
 p0318,De Robertis Giuseppe,person,24622523,Q100933371,1888,1963,Contatti letterari,10,8,2,1939-1957,2,3,1932,1956,CNS; CarRec; RitrG; STG; archivio-bonsanti; archivio-liberati
 p0319,De Rosa Andrea,person,233183934,,,,Varia,1,0,1,1969,1,0,1969,1969,archivio-liberati
@@ -324,7 +322,7 @@ p0322,De Tavonati Wragovitz Marsura Olga,person,,,,,Varia,5,5,0,1908-1920,0,0,,,
 p0323,Dettori Ugo,person,,,,,Contatti letterari,2,2,0,1941,0,0,,,archivio-bonsanti
 p0324,Devoto Giacomo,person,19672578,Q964032,1897,1974,Contatti letterari,5,1,4,1937-1943,0,0,,,archivio-bonsanti; archivio-liberati
 p0325,Didoni Domenica,person,,,,,Varia,1,1,0,1913,0,0,,,archivio-bonsanti
-p0326,Die Tat,person,,,,,"Editori, riviste e quotidiani",1,0,1,1947,1,0,1947,1947,archivio-liberati
+p0326,Die Tat,person,7263173669164707660006,,,,"Editori, riviste e quotidiani",1,0,1,1947,1,0,1947,1947,archivio-liberati
 p0327,Dini Camilla,person,,,,,Varia,1,0,1,1953,1,0,1953,1953,archivio-liberati
 p0328,Dini Giorgio,person,,,,,Varia,14,12,2,1940-1944,0,0,,,archivio-bonsanti; archivio-liberati
 p0329,Doering Maria,person,,,,,Varia,2,2,0,1927-1934,1,0,1934,1934,archivio-bonsanti
@@ -345,7 +343,7 @@ p0343,Electa (casa editrice),person,,,,,"Editori, riviste e quotidiani",1,0,1,[1
 p0344,Emanuelli Enrico,person,66692375,,,,Contatti letterari,1,1,0,1940,1,0,1940,1940,archivio-bonsanti
 p0345,"Emerenziana, suora",person,,,,,Varia,1,1,0,1940,1,0,1940,1940,archivio-bonsanti
 p0346,“Emilia”,organization,85720605,,,,Varia,1,0,1,1953,1,0,1953,1953,archivio-liberati
-p0347,Ente Italiano per le Audizioni Radiofoniche,organization,,,,,"Istituzioni, associazioni ed enti pubblici",3,0,1,1939-1943,0,0,,,archivio-liberati
+p0347,Ente Italiano per le Audizioni Radiofoniche,organization,144291359,,,,"Istituzioni, associazioni ed enti pubblici",3,0,1,1939-1943,0,0,,,archivio-liberati
 p0348,Ente Radiofonico Italiano (E.R.I.),organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1965,1,0,1965,1965,archivio-liberati
 p0349,“Epoca”,organization,,,,,"Editori, riviste e quotidiani",2,0,2,1957-1959,2,0,1957,1959,archivio-liberati
 p0350,Errante Vincenzo,person,,,1890,1951,Contatti letterari,10,5,5,1941-1943,0,0,,,archivio-bonsanti; archivio-liberati
@@ -374,27 +372,26 @@ p0372,Ferrando Gloria,person,,,,,Varia,1,0,1,1966,0,0,,,archivio-liberati
 p0373,Ferrari F.,person,,,,,Varia,1,1,0,1925,0,0,,,archivio-bonsanti
 p0374,Ferraris Felicina,person,,,,,Varia,3,3,0,1915,0,0,,,archivio-bonsanti
 p0375,Ferraris Vittoria,person,,,,,Varia,1,1,0,1915,0,0,,,archivio-bonsanti
-p0376,Ferraro Pietro,person,29196071 | 6043496,Q39990432,1908,1974,Ingegneria e divulgazione tecnica,13,13,0,1940-1941,0,0,,,archivio-bonsanti
+p0376,Ferraro Pietro,person,,Q39990432,1908,1974,Ingegneria e divulgazione tecnica,13,13,0,1940-1941,0,0,,,archivio-bonsanti
 p0377,Ferrata Giansiro,person,12373454,,,,Contatti letterari,12,4,8,1939-1942,0,0,,,archivio-bonsanti; archivio-liberati
 p0378,Ferrata Ginetta,person,,,,,Varia,2,2,0,1940-1941,0,0,,,archivio-bonsanti
 p0379,Ferrero Leo,person,,,,,Contatti letterari,1,1,0,1931,0,0,,,archivio-bonsanti
 p0380,Ferreti Giancarlo,person,,,,,Contatti letterari,1,0,1,1958,0,0,,,archivio-liberati
 p0381,Ferri Luigi,person,80697262,,,,Varia,1,0,1,1938,1,0,1938,1938,archivio-liberati
 p0382,Fersen,person,,,,,Varia,1,0,1,Senza data,0,0,,,archivio-liberati
-p0383,“Fiera Letteraria”,person,,,,,"Editori, riviste e quotidiani",3,0,1,1946-1948,0,0,,,archivio-liberati
-p0384,“(Le) Figarò”,person,,,,,"Editori, riviste e quotidiani",1,0,1,Senza data,0,0,,,archivio-liberati
+p0383,“Fiera Letteraria”,person,33168105627643321147,,,,"Editori, riviste e quotidiani",3,0,1,1946-1948,0,0,,,archivio-liberati
+p0384,“(Le) Figarò”,person,185190680,,,,"Editori, riviste e quotidiani",1,0,1,Senza data,0,0,,,archivio-liberati
 p0385,Filippini Felice,person,34475466,Q3742151,1917,1988,Contatti letterari,1,0,1,1951,1,0,1951,1951,archivio-liberati
 p0386,Finzi Bruno,person,,,,,Ingegneria e divulgazione tecnica,1,1,0,1925,0,0,,,archivio-bonsanti
 p0387,Fiorani Mario,person,,,,,Varia,1,0,1,1952,1,0,1952,1952,archivio-liberati
 p0388,Fiorelli Fernando,person,,,,,Varia,1,0,1,1939,1,0,1939,1939,archivio-liberati
 p0389,Fiorentini Felice,person,,,1894,1945,Ingegneria e divulgazione tecnica,3,3,0,1934,2,0,1934,1934,CarRec; archivio-bonsanti
-p0390,Flora Francesco,person,100955172 | 12677354,Q3749992,1891,1962,Contatti letterari,1,1,0,1931,0,0,,,archivio-bonsanti
-p0391,Flores Enrico,person,119075791 | 90312120,Q101473872,1936,2021,Contatti letterari,5,0,5,1965,0,0,,,archivio-liberati
+p0390,Flora Francesco,person,12677354,Q3749992,1891,1962,Contatti letterari,1,1,0,1931,0,0,,,archivio-bonsanti
+p0391,Flores Enrico,person,119075791,Q101473872,1936,2021,Contatti letterari,5,0,5,1965,0,0,,,archivio-liberati
 p0392,“Florida. Arte e cultura”,person,,,,,"Editori, riviste e quotidiani",1,0,1,Senza data,0,0,,,archivio-liberati
 p0393,Forlano F.,person,,,,,Varia,1,0,1,1945,1,0,1945,1945,archivio-liberati
 p0394,Fornasini Emilio,person,,,1893,1971,Familiari,123,101,22,1904-1970,2,1,1909,1955,CaCe; CarRec; archivio-bonsanti; archivio-liberati
 p0395,Fornasini Franca,person,,,,,Familiari,3,0,3,1939,0,0,,,archivio-liberati
-p0396,Fornasini Gandoldi Anita,person,,,,,Familiari,137,54,83,1916-1942,0,0,,,archivio-bonsanti; archivio-liberati
 p0397,Fornasini Letizia,person,,,,,Familiari,33,32,1,1914-1941,0,0,,,archivio-bonsanti; archivio-liberati
 p0398,Fornasini Riccardo,person,,,,,Familiari,69,65,4,1915-1938,0,0,,,archivio-bonsanti; archivio-liberati
 p0399,Franceschi Nora,person,,,,,Varia,1,0,1,1936,1,0,1936,1936,archivio-liberati
@@ -418,8 +415,8 @@ p0416,Frullini Andrea,person,27280615,,,,Varia,1,0,1,1967,1,0,1967,1967,archivio
 p0417,Fulchignoni Enrico,person,80149841971402841205,,,,Contatti letterari,2,2,0,1941,2,0,1941,1941,archivio-bonsanti
 p0418,Fumagalli Moroni Paola,person,,,,,Varia,1,0,1,Senza data,0,0,,,archivio-liberati
 p0419,Fumagalli Paola,person,,,,,Varia,4,4,0,1910,0,0,,,archivio-bonsanti
-p0420,Gabinetto scientifico letterario G. P. Vieusseux,organization,,,,,"Istituzioni, associazioni ed enti pubblici",2,0,2,1973,0,0,,,archivio-liberati
-p0421,Gadda Belloni Carlotta,person,,,,,Familiari,14,14,0,1909-1919,0,0,,,archivio-bonsanti
+p0420,Gabinetto scientifico letterario G. P. Vieusseux,organization,152022372,,,,"Istituzioni, associazioni ed enti pubblici",2,0,2,1973,0,0,,,archivio-liberati
+p0421,Gadda Belloni Carlotta,person,,,,,Familiari,14,14,0,1909-1919,1,0,1909,1909,CarRec; archivio-bonsanti
 p0422,Gadda Belloni Luisa,person,,,1894,1971,Familiari,4,4,0,1910,1,0,1910,1910,CarRec; archivio-bonsanti
 p0423,Gadda Bossi Ida,person,,,,,Familiari,4,4,0,1931-1936,0,0,,,archivio-bonsanti
 p0424,Gadda Carlo Macario,person,,,,,Familiari,1,0,1,1971,1,0,1971,1971,archivio-liberati
@@ -431,7 +428,7 @@ p0429,Gadda Cucchi Carlotta,person,,,,,Familiari,21,21,0,1912-1931,0,0,,,archivi
 p0430,Gadda Emilio,person,,,,,Familiari,9,9,0,1929-1965,0,0,,,archivio-bonsanti
 p0431,Gadda Enrico,person,5146574939938151851,,1896,1918,Familiari,66,56,10,1909-1913 | 1906-1917,11,18,1911,1918,CarRec; GG; MioGa; archivio-bonsanti; archivio-liberati
 p0432,Gadda Fornasini Emilia,person,,,1867,1952,Familiari,169,127,42,1906-1951,3,0,1915,1940,CarRec; archivio-bonsanti; archivio-liberati
-p0433,Gadda Francesco Ippolito,person,,,,,Familiari,17,17,0,1905-1909,3,0,1905,1906,CarRec; OmLi; archivio-bonsanti
+p0433,Gadda Francesco Ippolito,person,,,,,Familiari,17,17,0,1905-1909,3,1,1905,1906,CarRec; OmLi; archivio-bonsanti
 p0434,Gadda G.,person,,,,,Familiari,1,1,0,1909,0,0,,,archivio-bonsanti
 p0435,Gadda Giuseppe,person,3337069,,,,Familiari,2,46,7,1969/07/17 – 1969/09/19,3,0,1923,1969,CarRec; archivio-bonsanti; archivio-liberati
 p0436,Lehr Adele,person,,,1861,1936,Familiari,745,736,9,1905-1936,22,140,1905,1936,CEGFRVR; CarRec; GG; LAMa; MioGa; PeS; archivio-bonsanti; archivio-liberati
@@ -464,7 +461,7 @@ p0462,Garin Eugenio,person,24425,,,,Contatti letterari,1,0,1,1952,1,0,1952,1952,
 p0463,Garzanti (casa editrice),person,,,,,"Editori, riviste e quotidiani",240,2,238,1941,0,0,,,archivio-bonsanti; archivio-liberati
 p0464,Garzanti Livio,person,17238074,,1921,2015,"Editori, riviste e quotidiani",22,0,22,1952-1963,0,75,1953,1969,QI4LG; archivio-liberati
 p0465,Gatto Alfonso,person,32036388,Q2755854,1909,1976,Contatti letterari,2,2,0,1940,0,0,,,archivio-bonsanti
-p0466,“Gazzetta del Popolo”,person,,,,,"Editori, riviste e quotidiani",15,3,12,1934-1942,0,0,,,archivio-bonsanti; archivio-liberati
+p0466,“Gazzetta del Popolo”,person,154976259,,,,"Editori, riviste e quotidiani",15,3,12,1934-1942,0,0,,,archivio-bonsanti; archivio-liberati
 p0467,“Il Gazzettino”,person,,,,,"Editori, riviste e quotidiani",3,0,3,1939-1943,0,0,,,archivio-liberati
 p0468,Gazzo Emanuel,person,,,,,Varia,1,1,0,1931,0,0,,,archivio-bonsanti
 p0469,Gelli Pietro,person,,,,,Contatti letterari,5,0,5,1968-1969,0,0,,,archivio-liberati
@@ -494,7 +491,7 @@ p0492,Giudici Luigi,person,,,,,Varia,1,1,0,Senza data,0,0,,,archivio-bonsanti
 p0493,Giuseppe Massimo,person,235506185,,,,Varia,1,0,1,1969,1,0,1969,1969,archivio-liberati
 p0494,Giuso,person,,,,,Varia,2,0,2,1967,2,0,1967,1967,archivio-liberati
 p0495,Gnesutta Bruno,person,,,,,Varia,1,0,1,1967,1,0,1967,1967,archivio-liberati
-p0496,Gobbi Ambrogio,person,,,1895,1968,Amici,92,77,15,1913-1968,3,23,1913,1966,CarRec; LAM; archivio-bonsanti; archivio-liberati
+p0496,Gobbi Ambrogio,person,,,1895,1968,Amici,92,77,15,1913-1968,3,22,1913,1966,CarRec; LAM; archivio-bonsanti; archivio-liberati
 p0497,Gobbi Lina,person,,,,,Varia,8,8,0,1917-1936,0,0,,,archivio-bonsanti
 p0498,Gobbi Mario,person,,,,,Varia,1,1,0,[1931 – 1935],0,0,,,archivio-bonsanti
 p0499,Gobbi Sigismondo,person,,,,,Varia,3,3,0,1927-1934,0,0,,,archivio-bonsanti
@@ -534,8 +531,8 @@ p0532,Haefely Arthur,person,,,,,Varia,1,1,0,1921,0,0,,,archivio-bonsanti
 p0533,Handley V. F.,person,,,,,Ingegneria e divulgazione tecnica,5,5,0,1927-1929,0,0,,,archivio-bonsanti
 p0534,Harrold A. W.,person,,,,,Ingegneria e divulgazione tecnica,1,1,0,1927,0,0,,,archivio-bonsanti
 p0535,Hederer Felix,person,,,,,Varia,1,0,1,1942,1,0,1942,1942,archivio-liberati
-p0536,“L'Herne”,organization,,,,,"Editori, riviste e quotidiani",1,0,1,1962,1,0,1962,1962,archivio-liberati
-p0537,Hoepli (casa editrice),organization,,,,,"Editori, riviste e quotidiani",1,0,1,1957,1,0,1957,1957,archivio-liberati
+p0536,“L'Herne”,organization,142096498,,,,"Editori, riviste e quotidiani",1,0,1,1962,1,0,1962,1962,archivio-liberati
+p0537,Hoepli (casa editrice),organization,128560002,,,,"Editori, riviste e quotidiani",1,0,1,1957,1,0,1957,1957,archivio-liberati
 p0538,Hofer,person,,,,,Varia,1,1,0,1926,0,0,,,archivio-bonsanti
 p0539,Hruber Irene,person,,,,,Varia,1,1,0,1927,0,0,,,archivio-bonsanti
 p0540,Invernici Enrico,person,,,,,Compagni di guerra e di prigionia,2,2,0,1916-1920,1,0,1920,1920,archivio-bonsanti
@@ -543,17 +540,17 @@ p0541,Invernizzi Emilio,person,,,,,Ingegneria e divulgazione tecnica,4,4,0,1922-
 p0542,Isella Dante,person,88039974,Q674132,1922,2007,Contatti letterari,4,0,4,1960-1964,0,0,,,archivio-liberati
 p0543,Isotta Fraschini (fabbrica automobili),person,,,,,Varia,1,1,0,1931,1,0,1931,1931,archivio-bonsanti
 p0544,Issopi,person,,,,,Ingegneria e divulgazione tecnica,1,1,0,1936,0,0,,,archivio-bonsanti
-p0545,Istituto d'alta cultura,organization,,,,,"Istituzioni, associazioni ed enti pubblici",2,0,2,1942-1943,2,0,1942,1943,archivio-liberati
+p0545,Istituto d'alta cultura,organization,168806265,,,,"Istituzioni, associazioni ed enti pubblici",2,0,2,1942-1943,2,0,1942,1943,archivio-liberati
 p0546,Istituto de cultura hispanica,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1963,1,0,1963,1963,archivio-liberati
-p0547,(Reale) Istituto di studi romani,organization,,,,,"Istituzioni, associazioni ed enti pubblici",2,0,2,1942,0,0,,,archivio-liberati
+p0547,(Reale) Istituto di studi romani,organization,268092550,,,,"Istituzioni, associazioni ed enti pubblici",2,0,2,1942,0,0,,,archivio-liberati
 p0548,Istituto espagnol de la lengua y la literatura,organization,,,,,"Istituzioni, associazioni ed enti pubblici",2,0,2,1952-1953,2,0,1952,1953,archivio-liberati
-p0549,Istituto italiano di studi germanici,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1938,1,0,1938,1938,archivio-liberati
-p0550,Istituto Nazionale della Previdenza Sociale,organization,,,,,"Istituzioni, associazioni ed enti pubblici",3,0,3,1936,0,0,,,archivio-liberati
-p0551,Istituto nazionale per le relazioni culturali con l'estero,organization,,,,,"Istituzioni, associazioni ed enti pubblici",2,0,2,1942,2,0,1942,1942,archivio-liberati
+p0549,Istituto italiano di studi germanici,organization,148534203,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1938,1,0,1938,1938,archivio-liberati
+p0550,Istituto Nazionale della Previdenza Sociale,organization,169537627,,,,"Istituzioni, associazioni ed enti pubblici",3,0,3,1936,0,0,,,archivio-liberati
+p0551,Istituto nazionale per le relazioni culturali con l'estero,organization,133588707,,,,"Istituzioni, associazioni ed enti pubblici",2,0,2,1942,2,0,1942,1942,archivio-liberati
 p0552,"(Regio) Istituto Nautico Vittorio Emanuele II, Genova",organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,1,0,1922,1,0,1922,1922,archivio-bonsanti
 p0553,Istituto Orsoline in Salò,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,1,0,1936,0,0,,,archivio-bonsanti
-p0554,Istituto per la storia del Risorgimento italiano,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1953,1,0,1953,1953,archivio-liberati
-p0555,(Regio) Istituto Tecnico Superiore di Milano,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,1,0,1913,1,0,1913,1913,archivio-bonsanti
+p0554,Istituto per la storia del Risorgimento italiano,organization,134803317,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1953,1,0,1953,1953,archivio-liberati
+p0555,(Regio) Istituto Tecnico Superiore di Milano,organization,124529739,,,,"Istituzioni, associazioni ed enti pubblici",1,1,0,1913,1,0,1913,1913,archivio-bonsanti
 p0556,“Italia”,person,,,,,"Editori, riviste e quotidiani",4,0,4,1943,0,0,,,archivio-liberati
 p0557,“Italianistica”,organization,,,,,"Editori, riviste e quotidiani",1,0,1,1973,1,0,1973,1973,archivio-liberati
 p0558,Janner Arminio,person,165845394,Q55675039,1886,1949,Varia,1,1,0,1935,0,0,,,archivio-bonsanti
@@ -582,9 +579,9 @@ p0580,Lehr Luigia,person,,,1862,1939,Familiari,11,9,2,1910-1938,1,0,1910,1910,Ca
 p0581,Lehr Razzini Maria,person,,,,,Familiari,5,5,0,1912-1915,0,0,,,archivio-bonsanti
 p0582,Lehr Vatta Carolina,person,,,,,Familiari,18,18,0,1914-1936,0,0,,,archivio-bonsanti
 p0583,Le Monnier (casa editrice),person,,,,,"Editori, riviste e quotidiani",4,1,3,1942-1955,0,0,,,archivio-bonsanti; archivio-liberati
-p0584,Leonetto Leoni,person,,,,,Varia,4,0,4,1953-1968,0,0,,,archivio-liberati
+p0584,Leonetto Leoni,person,90319489,,,,Varia,4,0,4,1953-1968,0,0,,,archivio-liberati
 p0585,Lequesne André,person,,,,,Varia,1,1,0,1928,0,0,,,archivio-bonsanti
-p0586,“Letteratura”,person,,,,,"Editori, riviste e quotidiani",4,0,4,1937-1946,0,0,,,archivio-liberati
+p0586,“Letteratura”,person,180326041,,,,"Editori, riviste e quotidiani",4,0,4,1937-1946,0,0,,,archivio-liberati
 p0587,“La Letteratura Italiana”,organization,,,,,"Editori, riviste e quotidiani",1,0,1,1951,1,0,1951,1951,archivio-liberati
 p0588,“Lettere d'oggi”,organization,,,,,"Editori, riviste e quotidiani",1,0,1,1942,1,0,1942,1942,archivio-liberati
 p0589,“Lettere ed Arti”,organization,,,,,"Editori, riviste e quotidiani",2,0,2,1946,2,0,1946,1946,archivio-liberati
@@ -594,19 +591,19 @@ p0592,Liberati Giovanni e famiglia,person,,,,,Varia,21,0,21,1967-1972,0,0,,,arch
 p0593,Liberati Giuseppina,person,,,,,Varia,7,0,7,1964-1969,0,0,,,archivio-liberati
 p0594,Liberati Mario,person,,,,,Varia,1,0,1,1969,1,0,1969,1969,archivio-liberati
 p0595,Librairie Louis Laffitte,person,,,,,Varia,2,2,0,1928,0,0,,,archivio-bonsanti
-p0596,Libreria Internazionale Fratelli Treves,organization,,,,,Varia,1,1,0,1935,1,0,1935,1935,archivio-bonsanti
-p0597,Libreria Internazionale Seeber,organization,,,,,Varia,1,1,0,1934,1,0,1934,1934,archivio-bonsanti
-p0598,“Libri e riviste d'Italia”,person,,,,,"Editori, riviste e quotidiani",1,0,1,1958,1,0,1958,1958,archivio-liberati
+p0596,Libreria Internazionale Fratelli Treves,organization,267203230,,,,Varia,1,1,0,1935,1,0,1935,1935,archivio-bonsanti
+p0597,Libreria Internazionale Seeber,organization,139389501,,,,Varia,1,1,0,1934,1,0,1934,1934,archivio-bonsanti
+p0598,“Libri e riviste d'Italia”,person,181138726,,,,"Editori, riviste e quotidiani",1,0,1,1958,1,0,1958,1958,archivio-liberati
 p0599,(Regio) Liceo-Ginnasio “G. Parini”,organization,,,,,"Istituzioni, associazioni ed enti pubblici",2,2,0,1924-1925,2,0,1924,1925,archivio-bonsanti
 p0600,Lignarolo Giovanni,person,,,,,Varia,1,1,0,1921,1,0,1921,1921,archivio-bonsanti
 p0601,Linati Carlo,person,19694629,Q3659525,1878,1949,Contatti letterari,40,33,7,1931-1944,0,17,1931,1947,StuElCL; archivio-bonsanti; archivio-liberati
 p0602,Lind Siv,person,,,,,Varia,1,0,1,1966,1,0,1966,1966,archivio-liberati
 p0603,Lisi Giuseppe,person,50503691,,,,Varia,1,0,1,1954,1,0,1954,1954,archivio-liberati
-p0604,Lloyd Sabaudo,person,,,,,Varia,2,2,0,1931,0,0,,,archivio-bonsanti
+p0604,Lloyd Sabaudo,person,148220508,,,,Varia,2,2,0,1931,0,0,,,archivio-bonsanti
 p0605,Lombardi Cesare,person,90208672,,,,Varia,2,2,0,1915,1,0,1915,1915,archivio-bonsanti
 p0606,Longanesi (casa editrice),person,,,,,"Editori, riviste e quotidiani",6,0,6,1948-1949,0,0,,,archivio-liberati
 p0607,Longanesi Leo,person,,,,,"Editori, riviste e quotidiani",1,1,0,1929,0,0,,,archivio-bonsanti
-p0608,Longhi Antonio,person,,,,,Varia,3,3,0,1924-1936,0,0,,,archivio-bonsanti
+p0608,Longhi Antonio,person,240159474177527661267,,,,Varia,3,3,0,1924-1936,0,0,,,archivio-bonsanti
 p0609,Longhi Roberto,person,39380437,Q1361667,1890,1970,Contatti letterari,2,0,2,1952-1957,2,0,1952,1957,archivio-liberati
 p0610,Longor Mario,person,,,,,Varia,1,1,0,1912,0,0,,,archivio-bonsanti
 p0611,Lorenzetti Nella,person,,,,,Varia,1,0,1,1948,1,0,1948,1948,archivio-liberati
@@ -615,7 +612,7 @@ p0613,Loyé Franz,person,,,,,Varia,1,1,0,1911,0,0,,,archivio-bonsanti
 p0614,Lucarelli Margherita,person,,,,,Varia,5,5,0,1932-1933,0,0,,,archivio-bonsanti
 p0615,Luna Enrico,person,,,,,Varia,1,1,0,1929,0,0,,,archivio-bonsanti
 p0616,Lunetta Mario,person,79127592,Q3848740,1934,2017,Varia,1,0,1,1967,1,0,1967,1967,archivio-liberati
-p0617,Lux Film,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1953,1,0,1953,1953,archivio-liberati
+p0617,Lux Film,organization,173587365,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1953,1,0,1953,1953,archivio-liberati
 p0618,Luzi Mario,person,71402748,Q723569,1914,2005,Contatti letterari,1,0,1,1957,1,0,1957,1957,archivio-liberati
 p0619,Macchi Gino,person,,,,,Varia,1,1,0,1921,0,0,,,archivio-bonsanti
 p0620,Macchia Giovanni,person,67131644,Q1403600,1912,2001,Contatti letterari,4,4,0,1941-1942,0,0,,,archivio-bonsanti
@@ -650,7 +647,7 @@ p0648,Mariani Rocco,person,,,,,Varia,1,0,1,1969,1,0,1969,1969,archivio-liberati
 p0649,Marris Anna,person,,,,,Varia,1,0,1,1964,1,0,1964,1964,archivio-liberati
 p0650,Martegiani Carlo,person,,,,,Varia,1,1,0,1917,0,0,,,archivio-bonsanti
 p0651,Martinelli Onofrio,person,,,,,Contatti letterari,3,0,3,1948-1951,0,0,,,archivio-liberati
-p0652,Martinetti Piero,person,49250069,Q2092904,1872,1943,Contatti letterari,21,20,1,1925-1932,17,0,1926,1932,CarRec; QI5; archivio-bonsanti; archivio-liberati
+p0652,Martinetti Piero,person,49250069,Q2092904,1872,1943,Contatti letterari,21,20,1,1925-1932,18,0,1925,1932,CarRec; QI5; archivio-bonsanti; archivio-liberati
 p0653,Martini Quinto,person,71537350,Q3927942,1908,1990,Contatti letterari,2,0,2,Senza data | 1953/09/03,1,0,1953,1953,archivio-liberati
 p0654,Martini Raul,person,,,,,Varia,1,0,1,1957,1,0,1957,1957,archivio-liberati
 p0655,Marussi Garibaldo,person,,,,,Contatti letterari,1,1,0,1940,0,0,,,archivio-bonsanti
@@ -658,7 +655,7 @@ p0656,Mattai del Moro Ercole,person,,,,,Amici,1,1,0,1936,0,0,,,archivio-bonsanti
 p0657,Mattai del Moro Giuseppe,person,,,,,Amici,1,1,0,1936,0,0,,,archivio-bonsanti
 p0658,Mattai del Moro Linda,person,,,,,Amici,1,1,0,1936,0,0,,,archivio-bonsanti
 p0659,Mattai del Moro Maria,person,,,,,Amici,1,1,0,1935,0,0,,,archivio-bonsanti
-p0660,“Il Mattino”,person,,,,,"Editori, riviste e quotidiani",3,0,3,1942,0,0,,,archivio-liberati
+p0660,“Il Mattino”,person,193958058,,,,"Editori, riviste e quotidiani",3,0,3,1942,0,0,,,archivio-liberati
 p0661,“Il Mattino dell'Italia Centrale”,organization,,,,,"Editori, riviste e quotidiani",1,0,1,1948,1,0,1948,1948,archivio-liberati
 p0662,“Il Mattino di Roma”,organization,,,,,"Editori, riviste e quotidiani",1,0,1,1948,1,0,1948,1948,archivio-liberati
 p0663,Melani Raffaello,person,,,,,Varia,1,0,1,1953,1,0,1953,1953,archivio-liberati
@@ -675,9 +672,9 @@ p0673,Militz Carl,person,,,,,Varia,2,2,0,1912/10/25 – senza data,0,0,,,archivi
 p0674,“Minerva. Rivista delle riviste”,organization,,,,,"Editori, riviste e quotidiani",1,0,1,1943,1,0,1943,1943,archivio-liberati
 p0675,Miniati Gianni,person,,,,,Varia,7,2,5,1905-1942,0,0,,,archivio-bonsanti; archivio-liberati
 p0676,"Ministero dell’Agricoltura e delle Foreste. Ente di colonizzazione del latifondo siciliano, Palermo",organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,1,0,1940,1,0,1940,1940,archivio-bonsanti
-p0677,Ministero dell’Educazione Nazionale,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,1,0,1942,1,0,1942,1942,archivio-bonsanti
+p0677,Ministero dell’Educazione Nazionale,organization,130704381,,,,"Istituzioni, associazioni ed enti pubblici",1,1,0,1942,1,0,1942,1942,archivio-bonsanti
 p0678,Miretti Alessandrina,person,,,,,Varia,5,5,0,1910-1915,0,0,,,archivio-bonsanti
-p0679,Mississippi River Power Company,person,,,,,Varia,1,1,0,1922,1,0,1922,1922,archivio-bonsanti
+p0679,Mississippi River Power Company,person,129444392,,,,Varia,1,1,0,1922,1,0,1922,1922,archivio-bonsanti
 p0680,Modello Spiga Imelde,person,,,,,Varia,2,2,0,1906,2,0,1906,1906,archivio-bonsanti
 p0681,Molanti (casa editrice),person,,,,,"Editori, riviste e quotidiani",3,0,3,1943,0,0,,,archivio-liberati
 p0682,Monachesi Graziella,person,,,,,Varia,1,1,0,1936,0,0,,,archivio-bonsanti
@@ -686,7 +683,7 @@ p0684,Monsalvato (casa editrice),person,,,,,"Editori, riviste e quotidiani",1,0,
 p0685,Monsati Giannina,person,,,,,Varia,2,2,0,1936,2,0,1936,1936,archivio-bonsanti
 p0686,Montale Eugenio,person,73857542,Q83174,1896,1981,Contatti letterari,30,25,5,1932-1969,2,0,1932,1936,CarRec; archivio-bonsanti; archivio-liberati
 p0687,Montanari Carlotta,person,266260547,,,,Varia,2,2,0,1920,1,0,1920,1920,archivio-bonsanti
-p0688,Montanari E.,person,,,,,Varia,2,2,0,1920,2,0,1920,1920,archivio-bonsanti
+p0688,Montanari E.,person,12170283952962402929,,,,Varia,2,2,0,1920,2,0,1920,1920,archivio-bonsanti
 p0689,Montanelli Indro,person,27079675,,,,Contatti letterari,1,0,1,1939,1,0,1939,1939,archivio-liberati
 p0690,Montano Lorenzo,person,47571816,,,,Contatti letterari,4,3,1,1931/11/28 – 1934/09/23 | 1953/09/10,1,0,1953,1953,archivio-bonsanti; archivio-liberati
 p0691,Montecatini. Società Generale per l'industria mineraria ed agricoltura,organization,,,,,Varia,1,0,1,1937,1,0,1937,1937,archivio-liberati
@@ -699,9 +696,9 @@ p0697,Moroni Paola,person,,,,,Varia,1,0,1,Senza data,0,0,,,archivio-liberati
 p0698,Morosini,person,,,,,Varia,3,3,0,1942,0,0,,,archivio-bonsanti
 p0699,Morucchio Berto,person,,,,,Varia,2,0,2,1946,2,0,1946,1946,archivio-liberati
 p0700,Morucchio Guzzetti Gabriella,person,,,,,Varia,1,0,1,1972,1,0,1972,1972,archivio-liberati
-p0701,Mosca Giovanni,person,,,,,Contatti letterari,1,1,0,1942,0,0,,,archivio-bonsanti
+p0701,Mosca Giovanni,person,89637504,,,,Contatti letterari,1,1,0,1942,0,0,,,archivio-bonsanti
 p0702,Moser Wladimir,person,,,,,Varia,2,2,0,1933,0,0,,,archivio-bonsanti
-p0703,Mostra di Lorenzo Lotto,person,,,,,Varia,1,0,1,1953,1,0,1953,1953,archivio-liberati
+p0703,Mostra di Lorenzo Lotto,person,131027371,,,,Varia,1,0,1,1953,1,0,1953,1953,archivio-liberati
 p0704,Mostra di Pablo Picasso,person,,,,,Varia,1,0,1,1953,1,0,1953,1953,archivio-liberati
 p0705,Mueller,person,,,,,Varia,1,1,0,1927,0,0,,,archivio-bonsanti
 p0706,Murani Eliseo,person,,,,,Varia,1,1,0,1920,0,0,,,archivio-bonsanti
@@ -709,7 +706,7 @@ p0707,Murru Giampaolo,person,,,,,Varia,1,0,1,1953,1,0,1953,1953,archivio-liberat
 p0708,Musizza,person,,,,,Compagni di guerra e di prigionia,8,8,0,1916-1917,0,0,,,archivio-bonsanti
 p0709,Muzio A.,person,,,,,Varia,1,1,0,1921,0,0,,,archivio-bonsanti
 p0710,Nascimbeni Carolina,person,,,,,Varia,1,0,1,1937,1,0,1937,1937,archivio-liberati
-p0711,Natoli Glauco,person,79107282,,1908,1965,Contatti letterari,12,12,0,1931-1942,0,3,1931,1931,RitrG; STG; archivio-bonsanti
+p0711,Natoli Glauco,person,79107282,,1908,1965,Contatti letterari,12,12,0,1931-1942,0,2,1931,1931,RitrG; STG; archivio-bonsanti
 p0712,“La Nazione”,person,,,,,"Editori, riviste e quotidiani",1,1,0,1932,1,0,1932,1932,archivio-bonsanti
 p0713,Neri Pozza editore,organization,144255365,,,,"Editori, riviste e quotidiani",2,0,2,1958-1959,23,22,1951,1966,LNP; archivio-liberati
 p0714,Ney Ernesto,person,,,,,Contatti letterari,2,2,0,1912,1,0,1912,1912,archivio-bonsanti
@@ -726,15 +723,15 @@ p0724,Notari Umberto,person,41938770,,1878,1950,Contatti letterari,1,1,0,[1919 �
 p0725,Nous Mario,person,,,,,Varia,1,0,1,1948,1,0,1948,1948,archivio-liberati
 p0726,Novaro Angiolo Silvio,person,,,,,Contatti letterari,1,1,0,1931,0,0,,,archivio-bonsanti
 p0727,Novelli Gino,person,,,,,Varia,7,0,7,1948,0,0,,,archivio-liberati
-p0728,“Nuova Antologia”,person,,,,,"Editori, riviste e quotidiani",10,5,5,1939-1955,0,0,,,archivio-bonsanti; archivio-liberati
+p0728,“Nuova Antologia”,person,183887949,,,,"Editori, riviste e quotidiani",10,5,5,1939-1955,0,0,,,archivio-bonsanti; archivio-liberati
 p0729,“Nuove edizioni italiane”,person,,,,,"Editori, riviste e quotidiani",6,0,6,1944-1946,0,0,,,archivio-liberati
-p0730,“Nuovi argomenti”,person,,,,,"Editori, riviste e quotidiani",4,0,4,1959,0,0,,,archivio-liberati
+p0730,“Nuovi argomenti”,person,7982175417522004080009,,,,"Editori, riviste e quotidiani",4,0,4,1959,0,0,,,archivio-liberati
 p0731,“Il Nuovo Corriere”,organization,,,,,"Editori, riviste e quotidiani",1,0,1,1946,1,0,1946,1946,archivio-liberati
-p0732,“Officina”,organization,,,,,"Editori, riviste e quotidiani",1,0,1,1956,1,0,1956,1956,archivio-liberati
+p0732,“Officina”,organization,61587424,,,,"Editori, riviste e quotidiani",1,0,1,1956,1,0,1956,1956,archivio-liberati
 p0733,Officina Tipografica Gregoriana Editrice,organization,,,,,"Editori, riviste e quotidiani",1,1,0,1936,1,0,1936,1936,archivio-bonsanti
-p0734,Officine Meccaniche Stigler,organization,,,,,Varia,1,1,0,1920,1,0,1920,1920,archivio-bonsanti
-p0735,“Oficina de cooperacion intelectual”,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1905,1,0,1905,1905,archivio-liberati
-p0736,“Oggi”,person,,,,,"Editori, riviste e quotidiani",4,0,4,1939,0,0,,,archivio-liberati
+p0734,Officine Meccaniche Stigler,organization,2320145857039722921198,,,,Varia,1,1,0,1920,1,0,1920,1920,archivio-bonsanti
+p0735,“Oficina de cooperacion intelectual”,organization,136754880,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1905,1,0,1905,1905,archivio-liberati
+p0736,“Oggi”,person,32828948,,,,"Editori, riviste e quotidiani",4,0,4,1939,0,0,,,archivio-liberati
 p0737,Oliva Antonio,person,,,,,Varia,2,2,0,1919,1,0,1919,1919,archivio-bonsanti
 p0738,Oppo Cipriano Efisio,person,,,,,Contatti letterari,1,1,0,1934,0,0,,,archivio-bonsanti
 p0739,Orlandi Giulia,person,,,,,Varia,1,0,1,1941,1,0,1941,1941,archivio-liberati
@@ -747,26 +744,26 @@ p0745,Osti Gino,person,,,,,Varia,2,2,0,1920,1,0,1920,1920,archivio-bonsanti
 p0746,Owen Peter (casa editrice),organization,,,,,"Editori, riviste e quotidiani",1,0,1,1969,1,0,1969,1969,archivio-liberati
 p0747,Pagani Enrico,person,,,,,Varia,4,4,0,1919,0,0,,,archivio-bonsanti
 p0748,Paganini Angelina,person,,,,,Varia,1,1,0,1915,0,0,,,archivio-bonsanti
-p0749,“Palatina”,organization,,,,,"Editori, riviste e quotidiani",1,0,1,1957,1,0,1957,1957,archivio-liberati
+p0749,“Palatina”,organization,22182131,,,,"Editori, riviste e quotidiani",1,0,1,1957,1,0,1957,1957,archivio-liberati
 p0750,Palestrino Gustavo,person,,,,,Varia,1,1,0,1922,0,0,,,archivio-bonsanti
 p0751,Paletti Gino,person,,,,,Varia,2,2,0,1928-1931,1,0,1931,1931,archivio-bonsanti
 p0752,Pancrazi Pietro,person,36931460,Q3904127,1893,1952,Contatti letterari,5,4,1,1931-1940,0,0,,,archivio-bonsanti; archivio-liberati
 p0753,Panigatti F.lli,person,,,,,Varia,4,0,4,1938,0,0,,,archivio-liberati
-p0754,“Panorama”,organization,,,,,"Editori, riviste e quotidiani",1,0,1,1938,1,0,1938,1938,archivio-liberati
-p0755,Papi Roberto,person,,,,,Contatti letterari,1,0,1,1959,1,0,1959,1959,archivio-liberati
+p0754,“Panorama”,organization,127475344,,,,"Editori, riviste e quotidiani",1,0,1,1938,1,0,1938,1938,archivio-liberati
+p0755,Papi Roberto,person,5556170592508110550009,,,,Contatti letterari,1,0,1,1959,1,0,1959,1959,archivio-liberati
 p0756,Pappalepore Nicolai,person,,,,,Varia,2,2,0,1926,2,0,1926,1926,archivio-bonsanti
-p0757,“Paragone”,organization,,,,,"Editori, riviste e quotidiani",2,0,2,1952-1960,2,0,1952,1960,archivio-liberati
-p0758,“Parallelo”,person,,,,,"Editori, riviste e quotidiani",7,0,7,1943,0,0,,,archivio-liberati
+p0757,“Paragone”,organization,3031162238568213810009,,,,"Editori, riviste e quotidiani",2,0,2,1952-1960,2,0,1952,1960,archivio-liberati
+p0758,“Parallelo”,person,202159474046727660300,,,,"Editori, riviste e quotidiani",7,0,7,1943,0,0,,,archivio-liberati
 p0759,Parenti Carlo,person,,,,,Contatti letterari,12,12,0,1929-1935,0,0,,,archivio-bonsanti
 p0760,Parenti F.lli (casa editrice),person,,,,,"Editori, riviste e quotidiani",10,0,10,1934-1939,0,0,,,archivio-liberati
 p0761,Parini Colombi Rosetta,person,,,,,Varia,6,6,0,1933-1935,0,0,,,archivio-bonsanti
 p0762,Parini Silvio,person,,,,,Varia,2,2,0,1913-1916,1,0,1916,1916,archivio-bonsanti
 p0763,Parise Goffredo,person,66494679,Q1132008,1929,1986,Contatti letterari,4,0,4,1963-1965,3,15,1962,1963,SMVCSF; archivio-liberati
 p0764,Parronchi Alessandro,person,109142839,Q3610195,1914,2007,Contatti letterari,1,0,1,1953,1,0,1953,1953,archivio-liberati
-p0765,Partito Liberale Italiano,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1952,1,0,1952,1952,archivio-liberati
+p0765,Partito Liberale Italiano,organization,158291413,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1952,1,0,1952,1952,archivio-liberati
 p0766,Partito nazionale fascista. Direttorio nazionale,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,1,0,1927,1,0,1927,1927,archivio-bonsanti
 p0767,Partito nazionale fascista. Fascio di Buenos Aires,organization,,,,,"Istituzioni, associazioni ed enti pubblici",3,3,0,1923,0,0,,,archivio-bonsanti
-p0768,Partito nazionale fascista. Gruppo universitario fascista,organization,,,,,"Istituzioni, associazioni ed enti pubblici",2,2,0,1935,2,0,1935,1935,archivio-bonsanti
+p0768,Partito nazionale fascista. Gruppo universitario fascista,organization,1615151051896533530007,,,,"Istituzioni, associazioni ed enti pubblici",2,2,0,1935,2,0,1935,1935,archivio-bonsanti
 p0769,Pasolini Pier Paolo,person,54152375,Q25120,1922,1975,Contatti letterari,6,0,6,1953-1959,0,0,,,archivio-liberati
 p0770,Pasquali Giorgio,person,14784978,Q325105,1885,1952,Contatti letterari,2,2,0,1933-1934,1,0,1934,1934,CarRec; archivio-bonsanti
 p0771,Pasqualini Maria,person,,,,,Varia,1,1,0,1935,0,0,,,archivio-bonsanti
@@ -797,7 +794,7 @@ p0795,Picchi Mario,person,99853573,Q64745934,1927,1996,Varia,1,0,1,1957,1,0,1957
 p0796,Piccinelli,person,,,,,Varia,1,1,0,1935,0,0,,,archivio-bonsanti
 p0797,Piccioni Leone,person,39390827,Q3830536,1925,2018,Contatti letterari,14,0,14,1952-1971,14,22,1950,1971,CNS; archivio-liberati
 p0798,Piccioni Osanna,person,,,,,Varia,2,0,2,1968/12/11 – Senza data,0,0,,,archivio-liberati
-p0799,“(Il) Piccolo”,organization,,,,,"Editori, riviste e quotidiani",1,1,0,1941,1,0,1941,1941,archivio-bonsanti
+p0799,“(Il) Piccolo”,organization,191342002,,,,"Editori, riviste e quotidiani",1,1,0,1941,1,0,1941,1941,archivio-bonsanti
 p0800,Pieraccini Cecchi Leonetta,person,,,,,Varia,1,0,1,1964,1,0,1964,1964,archivio-liberati
 p0801,Pieraccini Rolando,person,65965059,,,,Varia,1,0,1,1963,1,0,1963,1963,archivio-liberati
 p0802,Pietrantoni Antonio,person,,,,,Ingegneria e divulgazione tecnica,8,6,2,1934-1943,0,0,,,archivio-bonsanti; archivio-liberati
@@ -816,11 +813,11 @@ p0814,"Podestà, famiglia",person,,,,,Familiari,1,0,1,03/11/1939,1,0,1939,1939,a
 p0815,Podestà Giuseppe,person,,,,,Familiari,1,0,1,1943,1,0,1943,1943,archivio-liberati
 p0816,Podestà Luisa,person,,,,,Familiari,1,0,1,1942,1,0,1942,1942,archivio-liberati
 p0817,Poidomani Cartia Giorgia,person,,,,,Varia,1,0,1,1971,1,0,1971,1971,archivio-liberati
-p0818,“Il Polifilo”,organization,,,,,"Editori, riviste e quotidiani",2,0,2,1947-1966,2,0,1947,1966,archivio-liberati
+p0818,“Il Polifilo”,organization,132744708,,,,"Editori, riviste e quotidiani",2,0,2,1947-1966,2,0,1947,1966,archivio-liberati
 p0819,Pollini Maria,person,,,,,Varia,1,1,0,1918,0,0,,,archivio-bonsanti
 p0820,Pompilj Luigi,person,,,,,Varia,1,1,0,1931,0,0,,,archivio-bonsanti
 p0821,Ponchiroli Daniele,person,,,,,Varia,4,0,4,1963-1966,0,0,,,archivio-liberati
-p0822,“Il Ponte”,organization,,,,,"Editori, riviste e quotidiani",1,0,1,1968,1,0,1968,1968,archivio-liberati
+p0822,“Il Ponte”,organization,12171261923025281750,,,,"Editori, riviste e quotidiani",1,0,1,1968,1,0,1968,1968,archivio-liberati
 p0823,Pontiggia Giuseppe,person,115536427,Q1179618,1934,2003,Contatti letterari,1,1,0,1918,0,0,,,archivio-bonsanti
 p0824,“Il Popolo d’Italia”,organization,,,,,"Editori, riviste e quotidiani",1,1,0,1931,1,0,1931,1931,archivio-bonsanti
 p0825,“Il Popolo di Roma”,organization,,,,,"Editori, riviste e quotidiani",2,0,2,1943,2,0,1943,1943,archivio-liberati
@@ -831,15 +828,15 @@ p0829,Prati Francisco,person,,,,,Ingegneria e divulgazione tecnica,10,10,0,1923/
 p0830,Pratolini Vasco,person,27090398,Q558295,1913,1991,Contatti letterari,5,5,0,1940-1942,0,0,,,archivio-bonsanti
 p0831,Praz Mario,person,39382862,Q981971,1896,1982,Contatti letterari,1,1,0,1931,0,0,,,archivio-bonsanti
 p0832,Prefetto di Roma,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1963,1,0,1963,1963,archivio-liberati
-p0833,Premio Campiello,organization,,,,,Contatti letterari,1,0,1,1970,1,0,1970,1970,archivio-liberati
+p0833,Premio Campiello,organization,527151433022756420000,,,,Contatti letterari,1,0,1,1970,1,0,1970,1970,archivio-liberati
 p0834,Premio Giacomo Debenedetti,organization,,,,,Contatti letterari,1,0,1,1969,1,0,1969,1969,archivio-liberati
-p0835,Premio Letterario Viareggio,person,,,,,Contatti letterari,8,0,1,1953-1959,0,0,,,archivio-liberati
-p0836,Premio Strega,person,,,,,Contatti letterari,7,0,1,1952-1972,0,0,,,archivio-liberati
+p0835,Premio Letterario Viareggio,person,123167696,,,,Contatti letterari,8,0,1,1953-1959,0,0,,,archivio-liberati
+p0836,Premio Strega,person,135345235,,,,Contatti letterari,7,0,1,1952-1972,0,0,,,archivio-liberati
 p0837,Premio Taranto,organization,,,,,Contatti letterari,2,0,2,1951,2,0,1951,1951,archivio-liberati
 p0838,Preziotti Vincenzo,person,,,,,Varia,1,1,0,1922,1,0,1922,1922,archivio-bonsanti
 p0839,Primaria Sartoria Toma,person,,,,,Varia,1,1,0,1935,0,0,,,archivio-bonsanti
 p0840,“Primato: lettere e arti d’Italia”,person,,,,,"Editori, riviste e quotidiani",29,2,27,1942-1949,0,0,,,archivio-bonsanti; archivio-liberati
-p0841,“Primi piani”,organization,,,,,"Editori, riviste e quotidiani",1,0,1,1938,1,0,1938,1938,archivio-liberati
+p0841,“Primi piani”,organization,3586173973178823810002,,,,"Editori, riviste e quotidiani",1,0,1,1938,1,0,1938,1938,archivio-liberati
 p0842,Prina Virginia e Alice,person,,,,,Varia,1,1,0,1911,1,0,1911,1911,archivio-bonsanti
 p0843,Prisco Michele,person,98131431,,,,Contatti letterari,1,0,1,1953,1,0,1953,1953,archivio-liberati
 p0844,Prodotti Chimici Napoli,person,,,,,Varia,1,1,0,1931,0,0,,,archivio-bonsanti
@@ -853,7 +850,7 @@ p0851,Querini di S. Moisé Angelo,person,,,,,Varia,1,1,0,1936,0,0,,,archivio-bon
 p0852,Quintavalle Adele,person,,,,,Varia,1,1,0,1936,0,0,,,archivio-bonsanti
 p0853,Quintavalle Aldo,person,,,,,Varia,1,0,1,Senza data,0,0,,,archivio-liberati
 p0854,Quintavalle Carlo,person,,,,,Varia,2,0,2,1905,0,0,,,archivio-liberati
-p0855,R.A.I.,organization,,,,,"Istituzioni, associazioni ed enti pubblici",14,0,14,1953-1971,0,0,,,archivio-liberati
+p0855,R.A.I.,organization,137832947,,,,"Istituzioni, associazioni ed enti pubblici",14,0,14,1953-1971,0,0,,,archivio-liberati
 p0856,Radice (Montecatini – Società Generale per l’Industria Mineraria ed Agricola Anonima),organization,,,,,Varia,1,1,0,1936,1,0,1936,1936,archivio-bonsanti
 p0857,Radius Emilio,person,,,,,Contatti letterari,1,1,0,1934,0,0,,,archivio-bonsanti
 p0858,Raineri Andrea,person,,,,,Compagni di guerra e di prigionia,6,6,0,1919-1920,0,0,,,archivio-bonsanti
@@ -872,7 +869,7 @@ p0870,Ravasio G.,person,,,,,Varia,1,1,0,1921,1,0,1921,1921,archivio-bonsanti
 p0871,Re Domenico,person,,,,,Varia,1,1,0,1915,0,0,,,archivio-bonsanti
 p0872,Re Vittorio,person,,,,,Varia,1,1,0,1925,0,0,,,archivio-bonsanti
 p0873,Rea Domenico,person,2502103,,,,Contatti letterari,1,0,1,1957,1,0,1957,1957,archivio-liberati
-p0874,Reggimento Alpini,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,1,0,1915,0,0,,,archivio-bonsanti
+p0874,Reggimento Alpini,organization,305985517,,,,"Istituzioni, associazioni ed enti pubblici",1,1,0,1915,0,0,,,archivio-bonsanti
 p0875,Regione Sicilia. Assessorato alla Pubblica Istruzione,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1953,1,0,1953,1953,archivio-liberati
 p0876,Regondi Maffi Fiordalice,person,,,,,Varia,2,1,0,1912/11/04 – 1913/11/03,1,0,1913,1913,archivio-bonsanti
 p0877,Reia Letizia,person,,,,,Varia,1,0,1,1943,1,0,1943,1943,archivio-liberati
@@ -895,7 +892,7 @@ p0893,Roberti Giuseppe,person,,,,,Varia,5,5,0,1911-1912,0,0,,,archivio-bonsanti
 p0894,Rocca Enrico,person,,,,,Varia,2,2,0,1911-1936,0,0,,,archivio-bonsanti
 p0895,Rocca Ernesto,person,,,,,Varia,2,2,0,1915-1936,0,0,,,archivio-bonsanti
 p0896,Rochotti Aldo,person,,,,,Varia,2,2,0,1932,1,0,1932,1932,archivio-bonsanti
-p0897,Rodocanachi Lucia,person,67995475,Q42315480,1901,1978,Contatti letterari,98,39,59,1935-1960,0,149,1927,1964,LGS; archivio-bonsanti; archivio-liberati
+p0897,Rodocanachi Lucia,person,67995475,Q42315480,1901,1978,Contatti letterari,98,39,59,1935-1960,0,150,1927,1964,LGS; archivio-bonsanti; archivio-liberati
 p0898,Rogeno (Comune),person,,,,,Varia,1,0,1,1953,1,0,1953,1953,archivio-liberati
 p0899,Romagnoli Mosca Giuseppe,person,,,,,Varia,1,1,0,1927,0,0,,,archivio-bonsanti
 p0900,Rompani,person,,,,,Varia,5,5,0,1940-1941,0,0,,,archivio-bonsanti
@@ -920,26 +917,26 @@ p0918,Rosa & Ballo Editori,person,,,,,"Editori, riviste e quotidiani",3,0,3,1943
 p0919,Rosa Letizia,person,,,,,Varia,1,0,1,1957,1,0,1957,1957,archivio-liberati
 p0920,Rosario Assunto,person,109795618,,,,Varia,1,0,1,1933,1,0,1933,1933,archivio-liberati
 p0921,Rosati Salvatore,person,89602055,Q80194911,1895,1976,Varia,3,3,0,1931-1932,0,0,,,archivio-bonsanti
-p0922,Roscioni Giancarlo,person,,,,,Contatti letterari,15,0,15,1963-1972,0,0,,,archivio-liberati
+p0922,Roscioni Giancarlo,person,,,,,Contatti letterari,15,0,15,1963-1972,0,3,1963,1963,QI12010GCR; QI3; archivio-liberati
 p0923,Rosenthal Raymond,person,73903152,,,,Contatti letterari,1,0,1,1961,1,0,1961,1961,archivio-liberati
 p0924,Rosina Tito,person,89773462,Q57037288,1899,1958,Varia,2,0,2,1957,2,0,1957,1957,archivio-liberati
 p0925,Rospi Daniele,person,,,,,Varia,1,0,1,1938,1,0,1938,1938,archivio-liberati
 p0926,Rossi Daniele,person,,,,,Ingegneria e divulgazione tecnica,23,23,0,1927-1936,0,0,,,archivio-bonsanti
-p0927,Rossi Franco,person,87040612,,1919,2000,Ingegneria e divulgazione tecnica,129,114,15,1926-1942,1,10,1929,1963,CEGFRVR; CarRec; archivio-bonsanti; archivio-liberati
+p0927,Rossi Franco,person,87040612,,1919,2000,Ingegneria e divulgazione tecnica,129,114,15,1926-1942,1,9,1929,1963,CEGFRVR; CarRec; archivio-bonsanti; archivio-liberati
 p0928,Rossi Vera,person,,,,,Ingegneria e divulgazione tecnica,46,28,18,1933-1944,1,3,1935,1943,CEGFRVR; CarRec; archivio-bonsanti; archivio-liberati
 p0929,Rossini Flaviana,person,,,,,Varia,1,0,1,1953,1,0,1953,1953,archivio-liberati
-p0930,Rotary Internazionale,person,,,,,Varia,1,0,1,1960,1,0,1960,1960,archivio-liberati
+p0930,Rotary Internazionale,person,159165695,,,,Varia,1,0,1,1960,1,0,1960,1960,archivio-liberati
 p0931,Ruggieri,person,,,,,Varia,1,1,0,1927,0,0,,,archivio-bonsanti
 p0932,Rugiadini,person,,,,,Varia,1,1,0,1922,0,0,,,archivio-bonsanti
 p0933,Rumor Mariano,person,,,,,Varia,1,1,0,1942,0,0,,,archivio-bonsanti
-p0934,“La Ruota”,person,,,,,"Editori, riviste e quotidiani",22,1,21,1940-1943,0,0,,,archivio-bonsanti; archivio-liberati
+p0934,“La Ruota”,person,22150380522713372449,,,,"Editori, riviste e quotidiani",22,1,21,1940-1943,0,0,,,archivio-bonsanti; archivio-liberati
 p0935,Rusca Carla,person,,,,,Varia,3,3,0,1934-1935,0,0,,,archivio-bonsanti
 p0936,Rusca Luigi,person,,,,,Contatti letterari,9,8,1,1931-1943,0,0,,,archivio-bonsanti; archivio-liberati
 p0937,Russo Labriola Gaetano,person,,,,,Varia,1,1,0,1923,0,0,,,archivio-bonsanti
-p0938,Russo Luigi,person,27253011 | 94578083,Q3840116,1892,1961,Contatti letterari,1,1,0,1942,0,0,,,archivio-bonsanti
+p0938,Russo Luigi,person,94578083,Q3840116,1892,1961,Contatti letterari,1,1,0,1942,0,0,,,archivio-bonsanti
 p0939,Russo Paolo,person,,,,,Varia,2,0,2,1905,0,0,,,archivio-liberati
 p0940,Russo Sara,person,,,,,Varia,1,0,1,Senza data,0,0,,,archivio-liberati
-p0941,“Il Saggiatore”,organization,,,,,"Editori, riviste e quotidiani",1,0,1,1968,1,0,1968,1968,archivio-liberati
+p0941,“Il Saggiatore”,organization,174578714,,,,"Editori, riviste e quotidiani",1,0,1,1968,1,0,1968,1968,archivio-liberati
 p0942,Sala Antonino,person,,,,,Varia,1,1,0,1940,0,0,,,archivio-bonsanti
 p0943,Salaris Carlo,person,,,,,Varia,1,1,0,1935,0,0,,,archivio-bonsanti
 p0944,Salavoli Antonio,person,,,,,Varia,16,16,0,1914-1932,0,0,,,archivio-bonsanti
@@ -947,14 +944,14 @@ p0945,Salvadori Giancarlo,person,,,,,Varia,1,0,1,Senza data,0,0,,,archivio-liber
 p0946,Sameghini Valtorta Elena,person,,,,,Varia,1,1,0,1925,0,0,,,archivio-bonsanti
 p0947,Samson,person,53570158,,,,Varia,1,1,0,1922,1,0,1922,1922,archivio-bonsanti
 p0948,Sani Massimo,person,486145858188723022447,,,,Varia,1,0,1,1969,1,0,1969,1969,archivio-liberati
-p0949,Sansoni (casa editrice),person,,,,,"Editori, riviste e quotidiani",72,0,72,1939-1964,0,0,,,archivio-liberati
+p0949,Sansoni (casa editrice),person,127849663,,,,"Editori, riviste e quotidiani",72,0,72,1939-1964,0,0,,,archivio-liberati
 p0950,Santagostino Guido,person,,,,,Ingegneria e divulgazione tecnica,69,62,7,1925-1939,2,1,1927,1939,CAC; CarRec; archivio-bonsanti; archivio-liberati
 p0951,Santagostino R.,person,,,,,Varia,2,2,0,1929,1,0,1929,1929,archivio-bonsanti
 p0952,Santi Piero,person,90251019,Q28665927,1923,2007,Contatti letterari,1,1,0,1942,1,0,1942,1942,archivio-bonsanti
 p0953,Santoloce Maria,person,,,,,Varia,4,4,0,1934-1936,0,0,,,archivio-bonsanti
 p0954,Sassella Stefano,person,,,1876,,Compagni di guerra e di prigionia,25,25,0,1919-1922,1,0,1919,1919,CarRec; archivio-bonsanti
 p0955,Saurgnani Teresina,person,,,,,Varia,1,1,0,1935,0,0,,,archivio-bonsanti
-p0956,Savinio Alberto,person,90634868,Q691973,1891,1952,Contatti letterari,1,1,0,1942,0,0,,,archivio-bonsanti
+p0956,Savinio Alberto,person,90634868,Q691973,1891,1952,Contatti letterari,1,1,0,1942,1,0,1942,1942,CaBo; archivio-bonsanti
 p0957,Scarpa Gino,person,,,,,Contatti letterari,8,8,0,1931-1932,0,0,,,archivio-bonsanti
 p0958,Scerbanenco Giorgio,person,,,,,Contatti letterari,1,1,0,1940,0,0,,,archivio-bonsanti
 p0959,Schiaffini Alfredo,person,32009816,Q2646367,1895,1971,Contatti letterari,1,0,1,Senza data,0,0,,,archivio-liberati
@@ -983,11 +980,11 @@ p0981,Seroni Adriano,person,24672032,Q21541834,1918,1990,Contatti letterari,1,1,
 p0982,“Sette giorni”,organization,,,,,"Editori, riviste e quotidiani",1,0,1,1943,1,0,1943,1943,archivio-liberati
 p0983,Siciliano Enzo,person,110067108,Q1180362,1934,2006,Contatti letterari,1,0,1,1969,1,0,1969,1969,archivio-liberati
 p0984,Siemens,person,77108808,,,,Varia,1,0,1,1938,1,0,1938,1938,archivio-liberati
-p0985,Siemens/Schuckert werke,person,,,,,Varia,1,1,0,1922,1,0,1922,1922,archivio-bonsanti
+p0985,Siemens/Schuckert werke,person,151242925,,,,Varia,1,1,0,1922,1,0,1922,1922,archivio-bonsanti
 p0986,Sigaux Gabriel,person,,,,,Varia,3,3,0,1917,0,0,,,archivio-bonsanti
-p0987,Simon Michel,person,,,,,Varia,1,1,0,1936,0,0,,,archivio-bonsanti
-p0988,Sindacato interprovinciale fascista dei giornalisti,organization,,,,,"Istituzioni, associazioni ed enti pubblici",6,2,4,1935-1941,0,0,,,archivio-bonsanti; archivio-liberati
-p0989,Sindacato nazionale scrittori,organization,,,,,"Istituzioni, associazioni ed enti pubblici",3,0,3,1964-1965,0,0,,,archivio-liberati
+p0987,Simon Michel,person,49216163,,,,Varia,1,1,0,1936,0,0,,,archivio-bonsanti
+p0988,Sindacato interprovinciale fascista dei giornalisti,organization,10150807382718862894,,,,"Istituzioni, associazioni ed enti pubblici",6,2,4,1935-1941,0,0,,,archivio-bonsanti; archivio-liberati
+p0989,Sindacato nazionale scrittori,organization,144875072,,,,"Istituzioni, associazioni ed enti pubblici",3,0,3,1964-1965,0,0,,,archivio-liberati
 p0990,Sinistro Eva,person,,,,,Varia,2,2,0,1916,0,0,,,archivio-bonsanti
 p0991,Società anonima “Mario Alberto”,organization,,,,,Varia,2,0,2,1948,2,0,1948,1948,archivio-liberati
 p0992,Società Anonima Franco Tosi,organization,,,,,Varia,1,1,0,1922,1,0,1922,1922,archivio-bonsanti
@@ -1042,7 +1039,7 @@ p1040,Tapparelli Giuseppina,person,,,,,Varia,6,0,6,1905,0,0,,,archivio-liberati
 p1041,Tarchiani Lucio,person,,,,,Varia,1,1,0,1924,0,0,,,archivio-bonsanti
 p1042,Tarchini Maria,person,,,,,Varia,1,1,0,1925,0,0,,,archivio-bonsanti
 p1043,Taverna Piero,person,,,,,Varia,1,0,1,1968,1,0,1968,1968,archivio-liberati
-p1044,Tecchi Bonaventura,person,59126327,Q660260,1896,1968,Compagni di guerra e di prigionia,181,167,14,1919-1953,3,136,1919,1963,AF; CarRec; archivio-bonsanti; archivio-liberati
+p1044,Tecchi Bonaventura,person,59126327,Q660260,1896,1968,Compagni di guerra e di prigionia,181,167,14,1919-1953,3,135,1919,1963,AF; CarRec; archivio-bonsanti; archivio-liberati
 p1045,Tecchi Clara,person,,,,,Varia,1,0,1,1938,1,0,1938,1938,archivio-liberati
 p1046,Techner Henrietta M.,person,,,,,Varia,1,1,0,1933,0,0,,,archivio-bonsanti
 p1047,Temella Ada,person,,,,,Varia,2,2,0,1935-1936,1,0,1936,1936,archivio-bonsanti
@@ -1089,7 +1086,7 @@ p1087,(Regia) Università di Milano,organization,,,,,"Istituzioni, associazioni 
 p1088,Università di Roma. Istituto di Patologia Medica,organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,0,1,1959,1,0,1959,1959,archivio-liberati
 p1089,Vaglia F.,person,,,,,Varia,1,1,0,1921,0,0,,,archivio-bonsanti
 p1090,Valdani Vittorio,person,,,,,Ingegneria e divulgazione tecnica,9,9,0,1922-1928,0,1,1922,1922,CarRec; archivio-bonsanti
-p1091,Valeri Diego,person,315072818 | 34498977,Q2325983,1887,1976,Contatti letterari,1,1,0,1934,0,0,,,archivio-bonsanti
+p1091,Valeri Diego,person,34498977,Q2325983,1887,1976,Contatti letterari,1,1,0,1934,0,0,,,archivio-bonsanti
 p1092,Valeri Manera Mario,person,,,1921,2014,Contatti letterari,2,0,2,1971,2,0,1971,1971,archivio-liberati
 p1093,Valgimigli Manara,person,36957502,Q3844245,1876,1965,Contatti letterari,2,1,1,1939-1940,1,0,1939,1939,archivio-bonsanti; archivio-liberati
 p1094,Valier Caronetto Marietta,person,,,,,Varia,1,0,1,1955,1,0,1955,1955,archivio-liberati
@@ -1145,32 +1142,26 @@ p1143,Zuccala Oreste,person,,,,,Varia,2,2,0,1929-1936,0,0,,,archivio-bonsanti
 p1144,Zürcherbureau für Aufsuchung Vermisster,person,,,,,Varia,3,3,0,1918,0,0,,,archivio-bonsanti
 p1145,Bonsanti Marcella,person,,,,,,0,0,0,,0,3,1963,1966,SIPELZDMS
 p1146,Consolato Italia Lugano,person,,,,,,0,0,0,,1,0,1929,1929,CAC
-p1147,Banca Commerciale Italiana Milano,organization,,,,,,0,0,0,,0,1,1930,1930,CAC
+p1147,Banca Commerciale Italiana Milano,organization,,,,,Varia,11,9,2,1923-1953,0,1,1930,1930,CAC; archivio-bonsanti; archivio-liberati
 p1148,Ajazzi-Mancini Elena,person,,,,,,0,0,0,,0,1,1950,1950,LPBi
-p1149,Fornasini Gandolfi Anita,person,,,1888,,,0,0,0,,1,28,1918,1962,CaCe; CarRec; GIMA
+p1149,Fornasini Gandolfi Anita,person,,,1888,,Familiari,137,54,83,1916-1942,1,28,1918,1962,CaCe; CarRec; GIMA; archivio-bonsanti; archivio-liberati
 p1150,Contini Roberto,person,49376652,,,,,0,0,0,,0,1,1967,1967,LGC
-p1151,Rodocanachi Paolo,person,,,1891,1958,,0,0,0,,0,5,1940,1957,LGS
-p1152,Rodocanachi Paolo Rodocanachi Lucia,person,,,,,,0,0,0,,0,1,1956,1956,LGS
+p1151,Rodocanachi Paolo,person,,,1891,1958,,0,0,0,,0,6,1940,1957,LGS
 p1153,Il Popolo d'Italia,organization,,,,,,0,0,0,,0,1,1915,1915,LPI
-p1154,Carrocci Alberto,person,,,,,,0,0,0,,0,56,1926,1953,Lso
 p1155,Mattioli Raffaele,person,41853720,,1895,1973,,0,0,0,,0,4,1957,1959,PeS; QI1MF
 p1156,Fruttero Carlo,person,100232450,,1926,2012,,0,0,0,,0,3,1955,1955,QI2GE
 p1157,Calvino Italo,person,8520,Q154756,1923,1985,,0,0,0,,0,1,1959,1959,QI2GE
-p1158,Piero Marinetti,person,,,,,,0,0,0,,1,0,1925,1925,QI5
-p1159,Debenedetti Giacomo Bompiani Valentino Savinio Alberto,person,,,,,,0,0,0,,1,0,1942,1942,CaBo
-p1160,Gadda Ippolito Francesco,person,,,,,,0,0,0,,0,2,1905,1907,CarRec
-p1161,Gadda Belloni Carla,person,,,,,,0,0,0,,1,0,1909,1909,CarRec
 p1162,Maggiore,person,,,,,,0,0,0,,0,1,1916,1916,CarRec
 p1163,Mississippi,person,,,,,,0,0,0,,1,0,1922,1922,CarRec
 p1164,Partito Nazionale Fascista,organization,,,,,,0,0,0,,1,0,1923,1923,CarRec
 p1165,Preside Parini,person,,,,,,0,0,0,,1,0,1925,1925,CarRec
 p1166,Governatorato Città del Vaticano,organization,,,,,,0,0,0,,1,0,1934,1934,CarRec
 p1167,Lucia Rodocanachi,person,67995475,Q42315480,1901,1978,,0,0,0,,1,0,1940,1940,CarRec
-p1168,Amicucchi Ermanno,person,,,,,,0,0,0,,1,0,1934,1934,CarRec
-p1169,Roscioni Gian Carlo,person,64018867,Q3762607,1927,2012,,0,0,0,,0,3,1963,1963,QI12010GCR; QI3
 p1170,Preside Facoltà,person,,,,,,0,0,0,,0,1,1951,1951,Luf
 p1171,Segreteria Facoltà,person,,,,,,0,0,0,,0,1,1951,1951,Luf
 p1172,Sereni Vittorio,person,112035088,Q1227375,1913,1983,,0,0,0,,0,2,1959,1959,QI32012VS
-p1173,Accetti Carlo Ernesto,person,169590979,,,,,0,0,0,,2,0,1936,1936,archivio-bonsanti
-p1174,Cases Anna Cases Cesare,person,,,,,,0,0,0,,1,0,1964,1964,archivio-liberati
-p1175,Ferreti Gian Carlo,person,,,,,,0,0,0,,1,0,1958,1958,archivio-liberati
+p1173,Accetti Carlo Ernesto,person,169590979,,,,Contatti letterari,2,2,0,1936,2,0,1936,1936,archivio-bonsanti
+p1177,Gadda Francesco Ippolito Francesco,person,,,,,,0,0,0,,0,1,1907,1907,CarRec
+p1178,Cases Anna,person,,,,,,0,0,0,,1,0,1964,1964,archivio-liberati
+p1179,Cases Cesare,person,7410147,Q3665376,1920,2005,,0,0,0,,1,0,1964,1964,archivio-liberati
+p1180,Ferretti Gian Carlo,person,112172076,Q19357523,1930,2022,,0,0,0,,1,0,1958,1958,archivio-liberati

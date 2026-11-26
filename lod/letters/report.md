@@ -1,50 +1,40 @@
 # Gadda's correspondence: what needs checking
 
-- actors: 1175 (135 organisations); with VIAF 213, with Wikidata 128
-- correspondences (ties): 1174, of which 516 with individual letters; merged from two rows: Gadda Enrico, Martini Quinto, Montano Lorenzo, Ronchetti Marisa, Ronchetti Tina
-- letters: 2489 rows from 2482 documents
+- actors: 1166 (135 organisations); with VIAF 296, with Wikidata 129
+- correspondences (ties): 1165, of which 513 with individual letters; merged from two rows: Gadda Enrico, Martini Quinto, Montano Lorenzo, Ronchetti Marisa, Ronchetti Tina
+- letters: 2481 rows from 2473 documents
 - places: 219 as written, 190 with GeoNames
-- VIAF list checked by the user: not yet (viaf_to_check.csv not used)
+- VIAF list checked by the user: yes
+
+## Missing information (left out of the RDF, never invented)
+
+- letters without a date: 10
+- letters without a recipient: 3
+- letters without a sender: 2
+- place mentions without GeoNames (kept as named places, no coordinates): 60
+- actors with neither VIAF nor Wikidata (OpenGadda id only): 865 of 1166
+- actors with VIAF but no Wikidata: 172
 
 ## Actors with two VIAF ids (choose one)
 
-- De Matteis Carlo (p0316): 103217462 | 62144928034754341838
-- Ferraro Pietro (p0376): 29196071 | 6043496
-- Flora Francesco (p0390): 100955172 | 12677354
-- Flores Enrico (p0391): 119075791 | 90312120
-- Russo Luigi (p0938): 27253011 | 94578083
-- Valeri Diego (p1091): 315072818 | 34498977
+- none
 
 ## Possible duplicate letters (undated, same sender, recipient and edition)
 
-- Let364, Let3919
-- Let3920, Let396
-- Let3921, Let409
-- Let3922, Let588
-- Let3923, Let649
-- Let3924, Let982
-- Let1090, Let3925
-- Let1737, Let3928
-- Let1954, Let3929
+- none
 
 ## People in the letters with no row in dati_mittenti_Gadda.xlsx (spelling difference, or missing)
 
-- Accetti Carlo Ernesto (p1173, 2 letters)
 - Ajazzi-Mancini Elena (p1148, 1 letters)
-- Amicucchi Ermanno (p1168, 1 letters)
-- Banca Commerciale Italiana Milano (p1147, 1 letters)
 - Bonsanti Marcella (p1145, 3 letters)
 - Calvino Italo (p1157, 1 letters)
-- Carrocci Alberto (p1154, 56 letters)
-- Cases Anna Cases Cesare (p1174, 1 letters)
+- Cases Anna (p1178, 1 letters)
+- Cases Cesare (p1179, 1 letters)
 - Consolato Italia Lugano (p1146, 1 letters)
 - Contini Roberto (p1150, 1 letters)
-- Debenedetti Giacomo Bompiani Valentino Savinio Alberto (p1159, 1 letters)
-- Ferreti Gian Carlo (p1175, 1 letters)
-- Fornasini Gandolfi Anita (p1149, 29 letters)
+- Ferretti Gian Carlo (p1180, 1 letters)
 - Fruttero Carlo (p1156, 3 letters)
-- Gadda Belloni Carla (p1161, 1 letters)
-- Gadda Ippolito Francesco (p1160, 2 letters)
+- Gadda Francesco Ippolito Francesco (p1177, 1 letters)
 - Governatorato Città del Vaticano (p1166, 1 letters)
 - Il Popolo d'Italia (p1153, 1 letters)
 - Lucia Rodocanachi (p1167, 1 letters)
@@ -52,26 +42,27 @@
 - Mattioli Raffaele (p1155, 4 letters)
 - Mississippi (p1163, 1 letters)
 - Partito Nazionale Fascista (p1164, 1 letters)
-- Piero Marinetti (p1158, 1 letters)
 - Preside Facoltà (p1170, 1 letters)
 - Preside Parini (p1165, 1 letters)
-- Rodocanachi Paolo (p1151, 5 letters)
-- Rodocanachi Paolo Rodocanachi Lucia (p1152, 1 letters)
-- Roscioni Gian Carlo (p1169, 3 letters)
+- Rodocanachi Paolo (p1151, 6 letters)
 - Segreteria Facoltà (p1171, 1 letters)
 - Sereni Vittorio (p1172, 2 letters)
+
+## VIAF of De Matteis Carlo differs in this letter (62144928034754341838): 1
+
+- Let4047
 
 ## actor without source: 1
 
 - p0772
 
-## letter without date: 19
+## letter without date: 10
 
-- Let364, Let396, Let409, Let588, Let649, Let982, Let1090, Let1672, Let1737, Let1954, Let3919, Let3920, Let3921, Let3922, Let3923, Let3924, Let3925, Let3928, Let3929
+- Let364, Let396, Let409, Let588, Let649, Let982, Let1090, Let1672, Let1737, Let1954
 
-## letter without recipient: 4
+## letter without recipient: 3
 
-- Let333, Let409, Let3921, Let3926
+- Let333, Let409, Let3926
 
 ## letter without sender: 2
 

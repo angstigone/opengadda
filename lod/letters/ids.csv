@@ -3,7 +3,7 @@ person,gadda carlo emilio,p0001,Gadda Carlo Emilio
 person,accademia nazionale dei lincei,p0002,Accademia Nazionale dei Lincei
 person,accademia reale d'italia,p0003,Accademia Reale d'Italia
 person,(regia) accademia scientifico letteraria,p0004,(Regia) Accademia Scientifico Letteraria
-person,accetti carlo e.,p0005,Accetti Carlo E.
+person,accetti carlo e.,p0005,
 person,agenzia viaggi e navigazione riboni,p0006,Agenzia viaggi e navigazione Riboni
 person,agosto carlo,p0007,Agosto Carlo
 person,airoldi aldo,p0008,Airoldi Aldo
@@ -75,7 +75,7 @@ person,baldacci luigi,p0073,Baldacci Luigi
 person,baldini antonio,p0074,Baldini Antonio
 person,ballo ferdinando,p0075,Ballo Ferdinando
 person,balzaretti lina,p0076,Balzaretti Lina
-person,banca commerciale italiana,p0077,Banca Commerciale Italiana
+person,banca commerciale italiana,p0077,
 person,banca italo-britannica,p0078,Banca Italo-Britannica
 person,banca popolare cooperativa anonima di novara,p0079,Banca Popolare Cooperativa Anonima di Novara
 person,banco di santo spirito,p0080,Banco di Santo Spirito
@@ -394,7 +394,7 @@ person,“florida. arte e cultura”,p0392,“Florida. Arte e cultura”
 person,forlano f.,p0393,Forlano F.
 person,fornasini emilio,p0394,Fornasini Emilio
 person,fornasini franca,p0395,Fornasini Franca
-person,fornasini gandoldi anita,p0396,Fornasini Gandoldi Anita
+person,fornasini gandoldi anita,p0396,
 person,fornasini letizia,p0397,Fornasini Letizia
 person,fornasini riccardo,p0398,Fornasini Riccardo
 person,franceschi nora,p0399,Franceschi Nora
@@ -1150,30 +1150,36 @@ person,ajazzi-mancini elena,p1148,Ajazzi-Mancini Elena
 person,fornasini gandolfi anita,p1149,Fornasini Gandolfi Anita
 person,contini roberto,p1150,Contini Roberto
 person,rodocanachi paolo,p1151,Rodocanachi Paolo
-person,rodocanachi paolo rodocanachi lucia,p1152,Rodocanachi Paolo Rodocanachi Lucia
+person,rodocanachi paolo rodocanachi lucia,p1152,
 person,il popolo d'italia,p1153,Il Popolo d'Italia
-person,carrocci alberto,p1154,Carrocci Alberto
+person,carrocci alberto,p1154,
 person,mattioli raffaele,p1155,Mattioli Raffaele
 person,fruttero carlo,p1156,Fruttero Carlo
 person,calvino italo,p1157,Calvino Italo
-person,piero marinetti,p1158,Piero Marinetti
-person,debenedetti giacomo bompiani valentino savinio alberto,p1159,Debenedetti Giacomo Bompiani Valentino Savinio Alberto
-person,gadda ippolito francesco,p1160,Gadda Ippolito Francesco
-person,gadda belloni carla,p1161,Gadda Belloni Carla
+person,piero marinetti,p1158,
+person,debenedetti giacomo bompiani valentino savinio alberto,p1159,
+person,gadda ippolito francesco,p1160,
+person,gadda belloni carla,p1161,
 person,maggiore,p1162,Maggiore
 person,mississippi,p1163,Mississippi
 person,partito nazionale fascista,p1164,Partito Nazionale Fascista
 person,preside parini,p1165,Preside Parini
 person,governatorato città del vaticano,p1166,Governatorato Città del Vaticano
 person,lucia rodocanachi,p1167,Lucia Rodocanachi
-person,amicucchi ermanno,p1168,Amicucchi Ermanno
-person,roscioni gian carlo,p1169,Roscioni Gian Carlo
+person,amicucchi ermanno,p1168,
+person,roscioni gian carlo,p1169,
 person,preside facoltà,p1170,Preside Facoltà
 person,segreteria facoltà,p1171,Segreteria Facoltà
 person,sereni vittorio,p1172,Sereni Vittorio
 person,accetti carlo ernesto,p1173,Accetti Carlo Ernesto
-person,cases anna cases cesare,p1174,Cases Anna Cases Cesare
-person,ferreti gian carlo,p1175,Ferreti Gian Carlo
+person,cases anna cases cesare,p1174,
+person,ferreti gian carlo,p1175,
+person,piero martinetti,p1176,
+person,gadda francesco ippolito francesco,p1177,Gadda Francesco Ippolito Francesco
+person,cases anna,p1178,Cases Anna
+person,cases cesare,p1179,Cases Cesare
+person,ferretti gian carlo,p1180,Ferretti Gian Carlo
+person,mississippi river power companyriver power company,p1181,
 place,6542285,pl0001,Florence
 place,2847618,pl0002,Rhineland-Palatinate
 place,3173435,pl0003,Milan

@@ -1,10 +1,10 @@
 ﻿id,raw,city,address,geonames,letters
-pl0003,Milano,Milan,,3173435,310
+pl0003,Milano,Milan,,3173435,307
 pl0008,Roma,Rome,,3169070,281
 pl0001,Firenze,Florence,,6542285,275
 pl0148,Roma (Blumenstihl 19),Rome,Blumenstihl 19,3169070,161
 pl0028,Firenze (Repetti 11),Florence,Repetti 11,6542285,120
-pl0004,Milano (Simpliciano 2),Milan,Simpliciano 2,3173435,92
+pl0004,Milano (Simpliciano 2),Milan,Simpliciano 2,3173435,91
 pl0064,Roma (Blumestihl 19),Rome,Blumestihl 19,3169070,58
 pl0021,Milano (Caccianino 25),Milan,Caccianino 25,3173435,54
 pl0011,Longone,Longone al Segrino,,6543115,50
@@ -14,8 +14,8 @@ pl0039,Roma (Bluemnstihl 19),Rome,Bluemnstihl 19,3169070,39
 pl0056,Buenos Aires,Buenos Aires,,3435910,39
 pl0072,Domodossola,Domodossola,,6539444,38
 pl0087,Edolo,Edolo,,6537169,32
-pl0015,Roma (Mazzini 134),Rome,Mazzini 134,3169070,29
 pl0024,Milano (Rio De Janeiro 5),Milan,Rio De Janeiro 5,3173435,29
+pl0015,Roma (Mazzini 134),Rome,Mazzini 134,3169070,28
 pl0147,Roma (Crescenzo 63),Rome,Crescenzo 63,3169070,23
 pl0013,Roma (Colonna 39),Rome,Colonna 39,3169070,21
 pl0114,Lagonegro,Lagonegro,,6540774,21
@@ -40,19 +40,19 @@ pl0091,Ponte di Legno,Ponte di Legno,,6540193,9
 pl0108,Modica,Modica,,6541972,9
 pl0125,Rastatt,Rastatt,,6558045,9
 pl0046,Sterkrade,Sterkrader Fronleichnamskirmes,,,8
-pl0049,Verona,Verona,,6541865,8
 pl0069,Bergamo,Bergamo,,6542116,8
 pl0140,Roma (Bluemenstihl 19),Rome,Bluemenstihl 19,3169070,8
+pl0049,Verona,Verona,,6541865,7
 pl0111,Altopiano di Asiago,Asiago,,6540982,7
 pl0032,Roma (Ortigara 10),Rome,Ortigara 10,3169070,6
 pl0035,Roma (Botteghe Oscure 54),Rome,Botteghe Oscure 54,3169070,6
-pl0074,Perugia,Perugia,,6542125,6
 pl0126,Celle,Celle,,6557432,6
 pl0155,Stresa,Stresa,,6539447,6
 pl0030,Padova,Padua,,6542281,5
 pl0051,Porto Vesme,Portovesme,,,5
 pl0059,Campana,Campana,,3480746,5
 pl0066,Antignano,Antignano,,6542845,5
+pl0074,Perugia,Perugia,,6542125,5
 pl0079,Firenze (Grazie 2),Florence,Grazie 2,6542285,5
 pl0088,Bormio,Bormio,,6536122,5
 pl0092,Val di Ledro,Val di Ledro,,3174930,5
