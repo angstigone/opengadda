@@ -428,7 +428,7 @@ p0429,Gadda Cucchi Carlotta,person,,,,,Familiari,21,21,0,1912-1931,0,0,,,archivi
 p0430,Gadda Emilio,person,,,,,Familiari,9,9,0,1929-1965,0,0,,,archivio-bonsanti
 p0431,Gadda Enrico,person,5146574939938151851,,1896,1918,Familiari,66,56,10,1909-1913 | 1906-1917,11,18,1911,1918,CarRec; GG; MioGa; archivio-bonsanti; archivio-liberati
 p0432,Gadda Fornasini Emilia,person,,,1867,1952,Familiari,169,127,42,1906-1951,3,0,1915,1940,CarRec; archivio-bonsanti; archivio-liberati
-p0433,Gadda Francesco Ippolito,person,,,,,Familiari,17,17,0,1905-1909,3,1,1905,1906,CarRec; OmLi; archivio-bonsanti
+p0433,Gadda Francesco Ippolito,person,,,,,Familiari,17,17,0,1905-1909,3,2,1905,1907,CarRec; OmLi; archivio-bonsanti
 p0434,Gadda G.,person,,,,,Familiari,1,1,0,1909,0,0,,,archivio-bonsanti
 p0435,Gadda Giuseppe,person,3337069,,,,Familiari,2,46,7,1969/07/17 – 1969/09/19,3,0,1923,1969,CarRec; archivio-bonsanti; archivio-liberati
 p0436,Lehr Adele,person,,,1861,1936,Familiari,745,736,9,1905-1936,22,140,1905,1936,CEGFRVR; CarRec; GG; LAMa; MioGa; PeS; archivio-bonsanti; archivio-liberati
@@ -674,7 +674,7 @@ p0675,Miniati Gianni,person,,,,,Varia,7,2,5,1905-1942,0,0,,,archivio-bonsanti; a
 p0676,"Ministero dell’Agricoltura e delle Foreste. Ente di colonizzazione del latifondo siciliano, Palermo",organization,,,,,"Istituzioni, associazioni ed enti pubblici",1,1,0,1940,1,0,1940,1940,archivio-bonsanti
 p0677,Ministero dell’Educazione Nazionale,organization,130704381,,,,"Istituzioni, associazioni ed enti pubblici",1,1,0,1942,1,0,1942,1942,archivio-bonsanti
 p0678,Miretti Alessandrina,person,,,,,Varia,5,5,0,1910-1915,0,0,,,archivio-bonsanti
-p0679,Mississippi River Power Company,person,129444392,,,,Varia,1,1,0,1922,1,0,1922,1922,archivio-bonsanti
+p0679,Mississippi River Power Company,person,129444392,,,,Varia,1,1,0,1922,2,0,1922,1922,CarRec; archivio-bonsanti
 p0680,Modello Spiga Imelde,person,,,,,Varia,2,2,0,1906,2,0,1906,1906,archivio-bonsanti
 p0681,Molanti (casa editrice),person,,,,,"Editori, riviste e quotidiani",3,0,3,1943,0,0,,,archivio-liberati
 p0682,Monachesi Graziella,person,,,,,Varia,1,1,0,1936,0,0,,,archivio-bonsanti
@@ -892,7 +892,7 @@ p0893,Roberti Giuseppe,person,,,,,Varia,5,5,0,1911-1912,0,0,,,archivio-bonsanti
 p0894,Rocca Enrico,person,,,,,Varia,2,2,0,1911-1936,0,0,,,archivio-bonsanti
 p0895,Rocca Ernesto,person,,,,,Varia,2,2,0,1915-1936,0,0,,,archivio-bonsanti
 p0896,Rochotti Aldo,person,,,,,Varia,2,2,0,1932,1,0,1932,1932,archivio-bonsanti
-p0897,Rodocanachi Lucia,person,67995475,Q42315480,1901,1978,Contatti letterari,98,39,59,1935-1960,0,150,1927,1964,LGS; archivio-bonsanti; archivio-liberati
+p0897,Rodocanachi Lucia,person,67995475,Q42315480,1901,1978,Contatti letterari,98,39,59,1935-1960,1,150,1927,1964,CarRec; LGS; archivio-bonsanti; archivio-liberati
 p0898,Rogeno (Comune),person,,,,,Varia,1,0,1,1953,1,0,1953,1953,archivio-liberati
 p0899,Romagnoli Mosca Giuseppe,person,,,,,Varia,1,1,0,1927,0,0,,,archivio-bonsanti
 p0900,Rompani,person,,,,,Varia,5,5,0,1940-1941,0,0,,,archivio-bonsanti
@@ -1152,16 +1152,13 @@ p1155,Mattioli Raffaele,person,41853720,,1895,1973,,0,0,0,,0,4,1957,1959,PeS; QI
 p1156,Fruttero Carlo,person,100232450,,1926,2012,,0,0,0,,0,3,1955,1955,QI2GE
 p1157,Calvino Italo,person,8520,Q154756,1923,1985,,0,0,0,,0,1,1959,1959,QI2GE
 p1162,Maggiore,person,,,,,,0,0,0,,0,1,1916,1916,CarRec
-p1163,Mississippi,person,,,,,,0,0,0,,1,0,1922,1922,CarRec
 p1164,Partito Nazionale Fascista,organization,,,,,,0,0,0,,1,0,1923,1923,CarRec
 p1165,Preside Parini,person,,,,,,0,0,0,,1,0,1925,1925,CarRec
 p1166,Governatorato Città del Vaticano,organization,,,,,,0,0,0,,1,0,1934,1934,CarRec
-p1167,Lucia Rodocanachi,person,67995475,Q42315480,1901,1978,,0,0,0,,1,0,1940,1940,CarRec
 p1170,Preside Facoltà,person,,,,,,0,0,0,,0,1,1951,1951,Luf
 p1171,Segreteria Facoltà,person,,,,,,0,0,0,,0,1,1951,1951,Luf
 p1172,Sereni Vittorio,person,112035088,Q1227375,1913,1983,,0,0,0,,0,2,1959,1959,QI32012VS
 p1173,Accetti Carlo Ernesto,person,169590979,,,,Contatti letterari,2,2,0,1936,2,0,1936,1936,archivio-bonsanti
-p1177,Gadda Francesco Ippolito Francesco,person,,,,,,0,0,0,,0,1,1907,1907,CarRec
 p1178,Cases Anna,person,,,,,,0,0,0,,1,0,1964,1964,archivio-liberati
 p1179,Cases Cesare,person,7410147,Q3665376,1920,2005,,0,0,0,,1,0,1964,1964,archivio-liberati
 p1180,Ferretti Gian Carlo,person,112172076,Q19357523,1930,2022,,0,0,0,,1,0,1958,1958,archivio-liberati

@@ -1,7 +1,7 @@
 # Gadda's correspondence: what needs checking
 
-- actors: 1166 (135 organisations); with VIAF 296, with Wikidata 129
-- correspondences (ties): 1165, of which 513 with individual letters; merged from two rows: Gadda Enrico, Martini Quinto, Montano Lorenzo, Ronchetti Marisa, Ronchetti Tina
+- actors: 1163 (135 organisations); with VIAF 295, with Wikidata 128
+- correspondences (ties): 1162, of which 510 with individual letters; merged from two rows: Gadda Enrico, Martini Quinto, Montano Lorenzo, Ronchetti Marisa, Ronchetti Tina
 - letters: 2481 rows from 2473 documents
 - places: 219 as written, 190 with GeoNames
 - VIAF list checked by the user: yes
@@ -12,7 +12,7 @@
 - letters without a recipient: 3
 - letters without a sender: 2
 - place mentions without GeoNames (kept as named places, no coordinates): 60
-- actors with neither VIAF nor Wikidata (OpenGadda id only): 865 of 1166
+- actors with neither VIAF nor Wikidata (OpenGadda id only): 863 of 1163
 - actors with VIAF but no Wikidata: 172
 
 ## Actors with two VIAF ids (choose one)
@@ -23,38 +23,19 @@
 
 - none
 
-## People in the letters with no row in dati_mittenti_Gadda.xlsx (spelling difference, or missing)
+## People who wrote to Gadda but have no row in dati_mittenti_Gadda.xlsx (spelling difference, or missing from the inventories)
 
-- Ajazzi-Mancini Elena (p1148, 1 letters)
-- Bonsanti Marcella (p1145, 3 letters)
-- Calvino Italo (p1157, 1 letters)
-- Cases Anna (p1178, 1 letters)
-- Cases Cesare (p1179, 1 letters)
-- Consolato Italia Lugano (p1146, 1 letters)
-- Contini Roberto (p1150, 1 letters)
-- Ferretti Gian Carlo (p1180, 1 letters)
-- Fruttero Carlo (p1156, 3 letters)
-- Gadda Francesco Ippolito Francesco (p1177, 1 letters)
-- Governatorato Città del Vaticano (p1166, 1 letters)
-- Il Popolo d'Italia (p1153, 1 letters)
-- Lucia Rodocanachi (p1167, 1 letters)
-- Maggiore (p1162, 1 letters)
-- Mattioli Raffaele (p1155, 4 letters)
-- Mississippi (p1163, 1 letters)
-- Partito Nazionale Fascista (p1164, 1 letters)
-- Preside Facoltà (p1170, 1 letters)
-- Preside Parini (p1165, 1 letters)
-- Rodocanachi Paolo (p1151, 6 letters)
-- Segreteria Facoltà (p1171, 1 letters)
-- Sereni Vittorio (p1172, 2 letters)
+- Cases Anna (p1178, 1 letters to Gadda)
+- Cases Cesare (p1179, 1 letters to Gadda)
+- Consolato Italia Lugano (p1146, 1 letters to Gadda)
+- Ferretti Gian Carlo (p1180, 1 letters to Gadda)
+- Governatorato Città del Vaticano (p1166, 1 letters to Gadda)
+- Partito Nazionale Fascista (p1164, 1 letters to Gadda)
+- Preside Parini (p1165, 1 letters to Gadda)
 
 ## VIAF of De Matteis Carlo differs in this letter (62144928034754341838): 1
 
 - Let4047
-
-## actor without source: 1
-
-- p0772
 
 ## letter without date: 10
 
