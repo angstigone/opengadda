@@ -97,8 +97,8 @@
   .letter-brick.picked { stroke: var(--ink); stroke-width: 2; }
   .contact-icon-g { cursor: pointer; }
   /* EXPERIMENT: hover focus while comparing (see focusPerson) */
-  .row.focus-dim .life, .row.focus-dim .life-halo, .year-mark.focus-dim, .contact.focus-dim,
-  .line-label.focus-dim { opacity: 0.12 !important; }
+  /* names never fade: you always see who is who */
+  .row.focus-dim .life, .row.focus-dim .life-halo, .year-mark.focus-dim, .contact.focus-dim { opacity: 0.12 !important; }
   .spread-name { font-weight: 600; paint-order: stroke; stroke: var(--bg); stroke-linejoin: round; pointer-events: none; }
   text.brick-note { pointer-events: none; }
   .brick-note, .bn-link { fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-linejoin: round; }
