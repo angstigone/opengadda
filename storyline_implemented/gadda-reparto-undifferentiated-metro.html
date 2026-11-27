@@ -51,11 +51,12 @@
   .life-halo { stroke: var(--bg); stroke-linecap: round; fill: none; pointer-events: stroke; }
   .life { stroke-linecap: round; fill: none; opacity: 0.55; pointer-events: stroke; }
   .life-hit { fill: none; stroke: transparent; stroke-linecap: round; pointer-events: stroke; }
-  .mark-link { stroke: var(--ink); stroke-opacity: 1; stroke-width: 2; stroke-dasharray: 4 3; vector-effect: non-scaling-stroke; pointer-events: none; }
+  .mark-link { stroke: var(--ink); stroke-opacity: 1; stroke-width: 3.5; stroke-dasharray: 4 3; vector-effect: non-scaling-stroke; pointer-events: none; }
   /* selecting / deselecting fades instead of jumping */
   .life, .life-halo, .line-label, .label-bg, .pt, .contact-pt, .year-mark > g, .contact {
     transition: opacity 0.25s ease, stroke-width 0.25s ease;
   }
+  svg.redrawing * { transition: none !important; }
   .graph-tools .sel-clear {
     font: inherit; font-size: 0.75rem; font-weight: 600; height: 1.95rem; padding: 0 0.7rem; cursor: pointer;
     border: 1px solid var(--chip); border-radius: 8px; color: var(--chip);
@@ -738,6 +739,11 @@
   const TOOLS_ROOM = 52; // screen px kept free under the axis for the search row
   function render(shownCorrespondents, initialSelected = []) {
     svg.selectAll("*").remove();
+    // a redraw (filter switch, zoom, a new comparison…) shows the new state at
+    // once: the fade below is for selecting/deselecting, and on freshly drawn
+    // lines it would first show everyone at full strength, then fade them
+    svg.classed("redrawing", true);
+    requestAnimationFrame(() => requestAnimationFrame(() => svg.classed("redrawing", false)));
     shownCorrespondents = shownCorrespondents.map(focusWindow);
     const eligible = shownCorrespondents;
     if (topN != null && eligible.length > topN) {
