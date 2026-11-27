@@ -113,7 +113,7 @@
   .letter-count-gadda { fill: var(--ink); }
   .letter-bar-out { fill: var(--ink); }
   .contact-icon { fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-  .contact-envelope { fill: none; stroke-width: 1; opacity: 0.5; }
+  .contact-envelope { fill: none; stroke-width: 1; opacity: 0; } /* the outline round a contact: hidden, kept only so a click on the contact still works */
   .compare-link { stroke-width: 2; }
   .compare-label { font-size: 12px; font-weight: 700; }
   .cutoff { font-size: 16px; font-weight: 700; }
@@ -3154,21 +3154,6 @@
         Object.entries(categoriaColors).map(([k, c]) => `<button class="lg-row lg-cat" data-cat="${k}">${lgLine(c)}${k}</button>`).join("") +
         `<button class="lg-row lg-cat" data-cat="__none">${lgLine(NO_LETTERS_COLOR)}no letters</button>` +
         `<div class="lg-row"><span class="lg-mark">\u25cf</span>birth \u00b7 \u00d7 death</div>` +
-      `</div></div>` +
-      `<div class="lg-group"><div class="lg-sec">Marks (on the line of whoever sent or wrote it)</div><div class="lg-grid lg-cols3">` +
-        `<div class="lg-row">${lgIcon("letters", repartoAccents.letters)}letters they sent</div>` +
-        `<div class="lg-row">${lgIcon("letters", "var(--ink)")}letters Gadda sent</div>` +
-        `<div class="lg-row"><span class="lg-link"></span>link between them that year</div>` +
-        `<div class="lg-row">${lgIcon("library", repartoAccents.library)}book in his library</div>` +
-        `<div class="lg-row">${lgIcon("secondaryBib", repartoAccents.secondaryBib)}publication on Gadda</div>` +
-        `<div class="lg-row"><svg class="lg-ico" viewBox="0 0 24 24"><path d="${GADDA_WORK_ICON}" stroke="${GADDA_WORK_COLOR}"/></svg>Gadda's works (click his line)</div>` +
-      `</div></div>` +
-      `<div class="lg-group"><div class="lg-sec">Bars and bricks (one per record)</div><div class="lg-grid lg-cols2">` +
-        `<div class="lg-row">${lgBar(repartoAccents.letters)}letters they sent Gadda</div>` +
-        `<div class="lg-row">${lgBar(repartoAccents.library)}books</div>` +
-        `<div class="lg-row">${lgBar("var(--ink)")}letters Gadda sent them</div>` +
-        `<div class="lg-row">${lgBar(repartoAccents.secondaryBib)}publications</div>` +
-      `</div></div>` +
     `</div>`);
   // the graph is drawn above the legend's band: when the band changes
   // height (folding, resizing) the graph is redrawn to fit
