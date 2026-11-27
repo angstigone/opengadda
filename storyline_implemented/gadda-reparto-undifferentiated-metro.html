@@ -1262,6 +1262,12 @@
     let labelBoost = null; // the hovered line, whose name wins a clash
     // (the first placement runs before the selection exists)
     const isSelectedName = name => { try { return selected.has(name); } catch (e) { return false; } };
+    // with someone selected (or Gadda's line, or a contact), only the names of
+    // the people shown at full strength stay — everyone else's name is hidden
+    // and takes no room, so it can't push a selected name away either
+    const nameFilter = () => {
+      try { return (selected.size || selectedContact || gaddaOnlyMode) ? isRelevant : null; } catch (e) { return null; }
+    };
     pinLabels = () => {
       const pad = 6 * unitsPerPx;
       const startGap = 2 * pad; // clear of the birth dot at the line's start
@@ -1308,7 +1314,13 @@
         y0: sy - labelBoxH / 2, y1: sy + labelBoxH / 2,
       });
       const clashes = box => kept.some(k => box.x0 < k.x1 && box.x1 > k.x0 && box.y0 < k.y1 && box.y1 > k.y0);
+      const shows = nameFilter();
       lineLabels.nodes().slice().sort((a, b) => priority(b) - priority(a)).forEach(n => {
+        if (shows && !shows(n.__data__.name)) {
+          n.setAttribute("visibility", "hidden");
+          n.__box.setAttribute("visibility", "hidden");
+          return;
+        }
         if (!n.__spot) return;
         let sy = n.__spot.y, box = boxOf(n, sy), ok = !clashes(box);
         // a name that meets another waits where its line comes back from
